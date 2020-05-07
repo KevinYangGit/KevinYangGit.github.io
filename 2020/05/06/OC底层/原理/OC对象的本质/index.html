@@ -77,13 +77,13 @@
 <meta property="og:site_name" content="Kevin&#39;s  blog">
 <meta property="og:description" content="Objective-C的本质 我们平时编写的Objective-C代码，底层实现其实都是C\C++代码 所以Objective-C的面向对象都是基于C\C++的数据结构(结构体)实现的   将Objective-C代码转换为C\C++代码终端打开 main.m 位置，输入下面的命令生成 main.cpp 文件。因为要生成的代码包括c/c++，所以使用 main.cpp 文件，main.cpp 文件">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/Images/ObjectiveC_C_C++_汇编语言_机器语言.png">
-<meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/Images/OC对象的本质.png">
-<meta property="og:updated_time" content="2020-05-07T05:52:21.696Z">
+<meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/ObjectiveC_C_C++_汇编语言_机器语言.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质.png">
+<meta property="og:updated_time" content="2020-05-07T05:54:33.370Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OC对象的本质">
 <meta name="twitter:description" content="Objective-C的本质 我们平时编写的Objective-C代码，底层实现其实都是C\C++代码 所以Objective-C的面向对象都是基于C\C++的数据结构(结构体)实现的   将Objective-C代码转换为C\C++代码终端打开 main.m 位置，输入下面的命令生成 main.cpp 文件。因为要生成的代码包括c/c++，所以使用 main.cpp 文件，main.cpp 文件">
-<meta name="twitter:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/Images/ObjectiveC_C_C++_汇编语言_机器语言.png">
+<meta name="twitter:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/ObjectiveC_C_C++_汇编语言_机器语言.png">
 
 
 
@@ -317,9 +317,9 @@
 <li>我们平时编写的Objective-C代码，底层实现其实都是C\C++代码</li>
 <li>所以Objective-C的面向对象都是基于C\C++的数据结构(结构体)实现的</li>
 </ul>
-<p><img src="/2020/05/06/OC底层/原理/OC对象的本质/Images/ObjectiveC_C_C++_汇编语言_机器语言.png" alt="ObjectiveC_C_C++_汇编语言_机器语言"></p>
+<p><img src="/2020/05/06/OC底层/原理/OC对象的本质/ObjectiveC_C_C++_汇编语言_机器语言.png" alt="ObjectiveC_C_C++_汇编语言_机器语言"></p>
 <h2 id="将Objective-C代码转换为C-C-代码"><a href="#将Objective-C代码转换为C-C-代码" class="headerlink" title="将Objective-C代码转换为C\C++代码"></a>将Objective-C代码转换为C\C++代码</h2><p>终端打开 main.m 位置，输入下面的命令生成 main.cpp 文件。因为要生成的代码包括c/c++，所以使用 main.cpp 文件，main.cpp 文件是 c++ 文件，支持 c。</p>
-<h3 id="创建一个项目"><a href="#创建一个项目" class="headerlink" title="创建一个项目"></a>创建一个项目</h3><p><img src="/2020/05/06/OC底层/原理/OC对象的本质/Images/OC对象的本质.png" alt="OC对象的本质"></p>
+<h3 id="创建一个项目"><a href="#创建一个项目" class="headerlink" title="创建一个项目"></a>创建一个项目</h3><p><img src="/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质.png" alt="OC对象的本质"></p>
 <h3 id="生成-main-cpp"><a href="#生成-main-cpp" class="headerlink" title="生成 main.cpp"></a>生成 main.cpp</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> clang -rewrite-objc main.m -o main.cpp</span></div></pre></td></tr></table></figure>
 <h3 id="生成-arm64-架构的-main-cpp"><a href="#生成-arm64-架构的-main-cpp" class="headerlink" title="生成 arm64 架构的 main.cpp"></a>生成 arm64 架构的 main.cpp</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main-arm64.cpp</span></div></pre></td></tr></table></figure>
 <p>报错：xcrun: error: SDK “iphoneos” cannot be located<br>解决：给Xcode命令行工具指定路径↓<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo xcode-select --<span class="keyword">switch</span> <span class="regexp">/Applications/</span>Xcode.app<span class="regexp">/Contents/</span>Developer<span class="regexp">/</span></div></pre></td></tr></table></figure></p>
