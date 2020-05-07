@@ -9,7 +9,7 @@ AFHTTPSessionManager 继承自 AFURLSessionManager，它是对 AFURLSessionManag
 
 <!-- more -->
 
-![AFHTTPSessionManager](AFHTTPSessionManager.png)
+![AFHTTPSessionManager](AFHTTPSessionManager/AFHTTPSessionManager.png)
 
 # AFHTTPSessionManager
 下面是 AFHTTPSessionManager 引用的类：
