@@ -82,7 +82,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/取消编译main_arm64_cpp.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质02.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质03.png">
-<meta property="og:updated_time" content="2020-05-08T06:17:30.342Z">
+<meta property="og:updated_time" content="2020-05-08T06:18:24.354Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OC对象的本质">
 <meta name="twitter:description" content="Objective-C的本质 Objective-C代码的底层实现其实是C\C++代码 Objective-C的面向对象是基于C\C++的数据结构(结构体)实现的">
@@ -370,7 +370,7 @@
 <nsobject: 0x10380ef00="">
 
 <p>(lldb) memory read 0x10380ef00<br>0x10380ef00: 41 81 8b 9a ff ff 1d 00 00 00 00 00 00 00 00 00  A……………<br>0x10380ef10: e0 ef 80 03 01 00 00 00 20 f2 80 03 01 00 00 00  …….. …….<br>(lldb) memory write 0x10380ef06 6<br>(lldb) x 0x10380ef00<br>0x10380ef00: 41 81 8b 9a ff ff 06 00 00 00 00 00 00 00 00 00  A……………<br>0x10380ef10: e0 ef 80 03 01 00 00 00 20 f2 80 03 01 00 00 00  …….. …….<br>(lldb)<br>```  </p>
-<p>po obj 获取到对象地址 0x10380ef00，所以第6个字节的地址就是 0x10380ef06。通过 memory write 0x10380ef06 6，将 0x10380ef06 处的字节改为 6。上面👆的打印中可以看到 x 0x10380ef00 打印出的结果中，第 6 个字节成功被修改为 06。</p>
+<p>po obj 获取到对象地址 0x10380ef00，所以第6个字节的地址就是 0x10380ef06。通过 memory write 0x10380ef06 6，将 0x10380ef06 处的字节改为 6。上面👆 x 0x10380ef00 打印出的结果中可以看到，第 6 个字节成功被修改为 06。</p>
 </nsobject:>
       
     </div>
