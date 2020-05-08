@@ -43,7 +43,9 @@ $ sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer/
 （如果需要链接其他框架，使用-framework参数。比如-framework UIKit。(未验证)）
 
 #### 取消 Xcode 对 main-arm64.cpp 的文件编译  
-删除 Build Phases -> Compile Sources -> main-arm64.cpp
+生成的 main-arm64.cpp 文件添加到项目后，运行会报错。main-arm64.cpp 是临时生成的，内部有一个 main 函数，没做适配。 
+
+解决：删除 Build Phases -> Compile Sources -> main-arm64.cpp
 ![main-arm64](OC对象的本质/取消编译main_arm64_cpp.png)
 
 
@@ -92,8 +94,9 @@ NSLog(@"%zd", class_getInstanceSize([NSObject class]));
 //2.打印，结果 16
 NSLog(@"%zd", malloc_size((__bridge const void *)obj));
 ```
-### class_getInstanceSize
-下载 runtime 源码 [objc4](https://opensource.apple.com/tarballs/objc4/)。打开源码搜索 class_getInstanceSize，找到 objc-class.mm 文件。
+### 窥视 class_getInstanceSize
+下载 runtime 源码 [objc4](https://opensource.apple.com/tarballs/objc4/)。  
+打开源码搜索 class_getInstanceSize，找到 objc-class.mm 文件中 class_getInstanceSize 的实现代码。
 ```
 size_t class_getInstanceSize(Class cls)
 {
@@ -108,7 +111,7 @@ uint32_t alignedInstanceSize() const {
     return word_align(unalignedInstanceSize());
 }
 ```
-通过翻译过来就是，class_getInstanceSize 内部根据成员变量的大小，四色五入得到 NSObject 实例对象的成员变量所占用的内存大小。
+翻译过来就是，class_getInstanceSize 内部根据成员变量的大小，四色五入得到 NSObject 实例对象里成员变量所占用的内存大小。
 
 ### alloc
 
@@ -140,7 +143,7 @@ class_createInstance(Class cls, size_t extraBytes)
 ```
 Jump to Definition -> _class_createInstanceFromZone：
 ```
-//创建 cls 类型的实例对象
+//创建 cls 的实例对象
 static ALWAYS_INLINE id
 _class_createInstanceFromZone(Class cls, size_t extraBytes, void *zone,
                               int construct_flags = OBJECT_CONSTRUCT_NONE,
@@ -155,7 +158,7 @@ _class_createInstanceFromZone(Class cls, size_t extraBytes, void *zone,
     bool fast = cls->canAllocNonpointer();
     size_t size;
 
-    size = cls->instanceSize(extraBytes);
+    size = cls->instanceSize(extraBytes); //分配空间
     if (outAllocatedSize) *outAllocatedSize = size;
 
     id obj;
@@ -188,7 +191,7 @@ _class_createInstanceFromZone(Class cls, size_t extraBytes, void *zone,
 }
 ```
 
-Jump to Definition -> instanceSize
+Jump to Definition -> instanceSize：
 ```
 size_t instanceSize(size_t extraBytes) const {
     if (fastpath(cache.hasFastInstanceSize(extraBytes))) {
@@ -201,13 +204,16 @@ size_t instanceSize(size_t extraBytes) const {
     return size;
 }
 ```
-可以看到，创建的实例对象的大小至少16个字节。至少16个字节 是 CoreFoundation 框架内部硬性规定的。
+可以看到，创建的实例对象的大小至少16个字节。CoreFoundation 框架内部就是这么硬性规定的。
 
 #### 总结：  
-通过 class_getInstanceSize 获取到的是 NSObject 实例对象的成员变量所占用的内存大小，当前的 NSObject 内部只有一个成员变量 isa，大小8个字节。  
-通过 malloc_size 获取到的事 obj 指针所指向的内存的大小。因为 alloc 内部的
 ```
 NSObject *obj = [[NSObject alloc] init];
-```
-这句代码实际上是在内存中生成了一个结构体，结构体内有一个类型为 Class 的 isa 指针，大小 8 个字节。Class 是一个指向结构体的指针。
+``` 
+* 上面👆这句代码实际上是在内存中生成了一个 c 语言定义的结构体，结构体内有一个类型为 Class 的 isa 指针，大小 8 个字节。Class 是一个指向结构体的指针。
+
+* alloc 方法让系统分配了16个字节给 NSObject 对象（可以通过 malloc_size 函数获取）  
+
+* NSObject 对象内部只有一个成员变量，即指针 isa，所以只使用了8个字节的空间（64bit环境下，可以通过 class_getInstanceSize 函数获得）
+
 
