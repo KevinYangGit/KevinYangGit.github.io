@@ -76,7 +76,7 @@ struct NSObject_IMPL {
     Class isa; // 8个字节
 };
 ```
-Class 是指向结构体的指针：typedef struct objc_class *Class。IMPL 是 implementation 的简写。
+Class 是指向结构体的指针：typedef struct objc_class *Class。IMPL 是 implementation 的简写。结构体中只有一个成员变量，所以这个结构体在内存中占用的大小就是指针 isa 的大小。
 
 ![OC对象的本质02](OC对象的本质/OC对象的本质02.png)
 
@@ -97,6 +97,8 @@ NSLog(@"%zd", class_getInstanceSize([NSObject class]));
 //2.打印，结果 16
 NSLog(@"%zd", malloc_size((__bridge const void *)obj));
 ```
+__bridge 可以实现 Objective-C 与 C 语言变量 和 Objective-C 与 Core Foundation 对象之间的互相转换。  
+
 
 ## 窥视 class_getInstanceSize
 下载 runtime 源码 [objc4](https://opensource.apple.com/tarballs/objc4/)。  
@@ -213,7 +215,7 @@ size_t instanceSize(size_t extraBytes) const {
 ```
 NSObject *obj = [[NSObject alloc] init];
 ```
-* 上面👆这句代码实际上是在内存中生成了一个 c 语言定义的结构体，结构体内有一个类型为 Class 的 isa 指针，大小 8 个字节。Class 是一个指向结构体的指针。
+* 上面👆这句代码实际上是在内存中生成了一个 c 语言定义的结构体，结构体内有一个类型为 Class 的 isa 指针，结构体的大小 8 个字节。Class 是一个指向结构体的指针。
 
 * alloc 方法让系统分配了16个字节给 NSObject 对象（可以通过 malloc_size 函数获取）  
 
