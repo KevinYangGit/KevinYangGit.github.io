@@ -211,7 +211,7 @@ size_t instanceSize(size_t extraBytes) const {
 ```
 可以看到，创建的实例对象的大小至少16个字节。CoreFoundation 框架内部就是这么硬性规定的。
 
-## 总结：  
+## 小结：  
 ```
 NSObject *obj = [[NSObject alloc] init];
 ```
@@ -224,13 +224,13 @@ NSObject *obj = [[NSObject alloc] init];
 * 创建的实例对象的大小至少16个字节.
 
 
-## 通过 Xcode 工具查看对象内存。  
+# 通过 Xcode 工具查看对象内存。  
 打开 Debug -> Debug Workflow -> View Memory，在 Address 输入对象的地址。  
 ![OC对象的本质03](OC对象的本质/OC对象的本质03.png)
 
 
-## 常用LLDB指令
-### print、p：打印
+# 常用LLDB指令
+## print、p：打印
 ```
 (lldb) print obj
 (NSObject *) $0 = 0x000000010380ef00
@@ -238,20 +238,20 @@ NSObject *obj = [[NSObject alloc] init];
 (NSObject *) $1 = 0x000000010380ef00
 ```
 
-### po：打印对象
+## po：打印对象
 ```
 (lldb) po obj
 <NSObject: 0x10380ef00>
 ```
 
-### 格式  
+## 格式  
 x是16进制，f是浮点，d是10进制
 
-### 字节大小  
+## 字节大小  
 b：byte 1字节，h：half word 2字节  
 w：word 4字节，g：giant word 8字节
 
-### 读取内存  
+## 读取内存  
 memory read/数量格式字节数  内存地址
 ```
 (lldb) memory read 0x10380ef00
@@ -281,7 +281,7 @@ x/数量格式字节数  内存地址
 
 打印结果中， x/3xg 0x10380ef00 打印的 0x001dffff9a8b8141 0x0000000000000000 部分是属于 obj 的内存。x/4xw 0x10380ef00 打印的 0x10380ef00: 0x9a8b8141 0x001dffff 0x00000000 0x00000000 部分属于 obj 的内存。
 
-### 修改内存中的值  
+## 修改内存中的值  
 memory  write  内存地址  数值  
 将内存中的第6个字节改成06：
 ```
