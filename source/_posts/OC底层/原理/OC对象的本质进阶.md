@@ -337,4 +337,6 @@ class_getInstanceSize([NSObject class]);
 malloc_size((__bridge const void *)obj);
 ```
 
+* sizeof() 是运算符，计算类型的大小，是在编译的时候就确定的。
+
 * 内存对齐原则，结构体的大小必须是最大成员大小的倍数，系统分配内存的大小必须是固定的大小（16的倍数）。
