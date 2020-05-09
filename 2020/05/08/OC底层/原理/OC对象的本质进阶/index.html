@@ -83,7 +83,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/05/08/OC底层/原理/OC对象的本质进阶/OC对象的本质进阶04.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/08/OC底层/原理/OC对象的本质进阶/OC对象的本质进阶05.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/08/OC底层/原理/OC对象的本质进阶/OC对象的本质进阶06.png">
-<meta property="og:updated_time" content="2020-05-09T07:59:21.541Z">
+<meta property="og:updated_time" content="2020-05-09T08:32:01.640Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OC对象的本质进阶">
 <meta name="twitter:description" content="Student 的本质定义一个继承 NSObject 的类 Student：123456789@interface Student : NSObject &amp;#123;    @public    int _no;    int _age;&amp;#125;@end@implementation Student@end">
@@ -358,6 +358,8 @@
 </li>
 <li><p>创建一个实例对象，实际上分配了多少内存？</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;malloc/malloc.h&gt;</span></span></div><div class="line">malloc_size((__bridge <span class="keyword">const</span> <span class="keyword">void</span> *)obj);</div></pre></td></tr></table></figure>
+</li>
+<li><p>sizeof() 是运算符，计算类型的大小，是在编译的时候就确定的。</p>
 </li>
 <li><p>内存对齐原则，结构体的大小必须是最大成员大小的倍数，系统分配内存的大小必须是固定的大小（16的倍数）。</p>
 </li>
