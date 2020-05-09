@@ -426,11 +426,8 @@ NSLog(@"person - %zd", class_getInstanceSize([Person class])); //打印结果 16
 NSLog(@"person - %zd", malloc_size((__bridge const void *)person)); //打印结果 16
 ```
 
-实例对象内存图解：
-![OC对象的本质进阶01](OC对象的本质/OC对象的本质进阶05.png) 
-
-## 小结
-Person 的成员变量的内存之和是12个字节，但是根据内存对齐的规则，分配了16字节的内存给 Person。Student 的成员变量之和是20字节，但是 Person 中有多余的4字节，所以成员变量 _no 的内存被放到了 Person 多余的内存空间里，最终分配给 Student 的内存大小为16字节。 
+Person、Student 的内存分配图解：
+![OC对象的本质进阶01](OC对象的本质/OC对象的本质进阶05.png)  
 
 ## @property 定义属性的内存分配
 ```
@@ -456,7 +453,9 @@ struct Person_IMPL {
 ```
 
 ## 小结
-创建出来的实列对象的内存中只存有成员变量，不包含方法。以 Person 为例，不同的 Person 实例对象的方法是相同的，所以方法放到类对象的方法列表里，供不同的 Person 实例对象调用。
+* Person 的成员变量的内存之和是12个字节，但是根据内存对齐的规则，分配了16字节的内存给 Person。Student 的成员变量之和是20字节，但是 Person 中有多余的4字节，所以成员变量 _no 的内存被放到了 Person 多余的内存空间里，最终分配给 Student 的内存大小为16字节。  
+
+* 创建出来的实列对象的内存中只存有成员变量，不包含方法。以 Person 为例，不同的 Person 实例对象的方法是相同的，所以方法放到类对象的方法列表里，供不同的 Person 实例对象调用。
 
 
 # 窥视 alignedInstanceSize
@@ -619,7 +618,7 @@ malloc_zone_calloc(malloc_zone_t *zone, size_t num_items, size_t size)
 #define NANO_MAX_SIZE			256 /* Buckets sized {16, 32, 48, 64, 80, 96, 112, ...} */
 ```
 
-malloc_zone_calloc 这里也存在内存对齐原则。前面在生成结构体的时候提到，根据内存对齐原则，结构体的大小必须是最大成员大小的倍数。而在这里，系统在分配内存时，分配的内存必须是16的倍数。因为 ios 系统为了提升内存分配的速度，固定了分配内存的大小（Buckets sized）。在需要分配内存的时候，会找到最接近的固定内存来分配给实例对象。
+malloc_zone_calloc 这里也存在内存对齐原则。前面在生成结构体的时候提到过，根据内存对齐原则，结构体的大小必须是最大成员大小的倍数。而在这里，系统在分配内存时，分配的内存必须是16的倍数。因为 ios 系统为了提升内存分配的速度，固定了分配内存的大小（Buckets sized）。在需要分配内存的时候，会找到最接近的固定内存来分配给实例对象。
 
 ## 小结
 * 创建一个实例对象，至少需要多少内存?
