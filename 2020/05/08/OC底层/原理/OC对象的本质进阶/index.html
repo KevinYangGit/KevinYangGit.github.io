@@ -69,12 +69,12 @@
 
 
 
-<meta name="description" content="Student 的本质定义一个继承 NSObject 的类 Student：12345678910@interface Student : NSObject &amp;#123;    @public    int _no;    int _age;&amp;#125;@end@implementation Student@end  创建一个 Student 的实例对象：1Student *stu = [[St">
+<meta name="description" content="Student 的本质定义一个继承 NSObject 的类 Student：12345678910@interface Student : NSObject &amp;#123;    @public    int _no;    int _age;&amp;#125;@end@implementation Student@end">
 <meta property="og:type" content="article">
 <meta property="og:title" content="OC对象的本质进阶">
 <meta property="og:url" content="http://yoursite.com/2020/05/08/OC底层/原理/OC对象的本质进阶/index.html">
 <meta property="og:site_name" content="Kevin&#39;s  blog">
-<meta property="og:description" content="Student 的本质定义一个继承 NSObject 的类 Student：12345678910@interface Student : NSObject &amp;#123;    @public    int _no;    int _age;&amp;#125;@end@implementation Student@end  创建一个 Student 的实例对象：1Student *stu = [[St">
+<meta property="og:description" content="Student 的本质定义一个继承 NSObject 的类 Student：12345678910@interface Student : NSObject &amp;#123;    @public    int _no;    int _age;&amp;#125;@end@implementation Student@end">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/05/08/OC底层/原理/OC对象的本质进阶/OC对象的本质进阶03.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/08/OC底层/原理/OC对象的本质进阶/OC对象的本质进阶01.png">
@@ -82,10 +82,10 @@
 <meta property="og:image" content="http://yoursite.com/2020/05/08/OC底层/原理/OC对象的本质进阶/OC对象的本质进阶04.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/08/OC底层/原理/OC对象的本质进阶/OC对象的本质进阶05.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/08/OC底层/原理/OC对象的本质进阶/OC对象的本质进阶06.png">
-<meta property="og:updated_time" content="2020-05-09T07:02:38.504Z">
+<meta property="og:updated_time" content="2020-05-09T07:06:48.885Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OC对象的本质进阶">
-<meta name="twitter:description" content="Student 的本质定义一个继承 NSObject 的类 Student：12345678910@interface Student : NSObject &amp;#123;    @public    int _no;    int _age;&amp;#125;@end@implementation Student@end  创建一个 Student 的实例对象：1Student *stu = [[St">
+<meta name="twitter:description" content="Student 的本质定义一个继承 NSObject 的类 Student：12345678910@interface Student : NSObject &amp;#123;    @public    int _no;    int _age;&amp;#125;@end@implementation Student@end">
 <meta name="twitter:image" content="http://yoursite.com/2020/05/08/OC底层/原理/OC对象的本质进阶/OC对象的本质进阶03.png">
 
 
@@ -316,9 +316,8 @@
       
 
       
-        <a id="more"></a>
-<h1 id="Student-的本质"><a href="#Student-的本质" class="headerlink" title="Student 的本质"></a>Student 的本质</h1><p>定义一个继承 NSObject 的类 Student：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Student</span> : <span class="title">NSObject</span> </span>&#123;</div><div class="line">    <span class="keyword">@public</span></div><div class="line">    <span class="keyword">int</span> _no;</div><div class="line">    <span class="keyword">int</span> _age;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Student</span></span></div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
-<!-- more -->
+        <h1 id="Student-的本质"><a href="#Student-的本质" class="headerlink" title="Student 的本质"></a>Student 的本质</h1><p>定义一个继承 NSObject 的类 Student：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Student</span> : <span class="title">NSObject</span> </span>&#123;</div><div class="line">    <span class="keyword">@public</span></div><div class="line">    <span class="keyword">int</span> _no;</div><div class="line">    <span class="keyword">int</span> _age;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Student</span></span></div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<a id="more"></a>
 <p>创建一个 Student 的实例对象：<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Student *stu = <span class="comment">[<span class="comment">[Student alloc]</span> init]</span>;</div></pre></td></tr></table></figure></p>
 <p>将 OC 代码转换为 C\C++ 代码，并在生成的 C/C++ 代码中找到 Student 的实现：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Student_IMPL</span> &#123;</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">NSObject_IMPL</span> <span class="title">NSObject_IVARS</span>;</span></div><div class="line">    <span class="keyword">int</span> _no;</div><div class="line">    <span class="keyword">int</span> _age;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
 <p>因为 NSObject_IMPL 内部只有一个成员变量指针 isa，所以上面👆的代码可以写成：<br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">struct Student_IMPL &#123;</div><div class="line">    Class isa<span class="comment">;</span></div><div class="line">    int _no<span class="comment">;</span></div><div class="line">    int _age<span class="comment">;</span></div><div class="line">&#125;<span class="comment">;</span></div></pre></td></tr></table></figure></p>
