@@ -69,12 +69,12 @@
 
 
 
-<meta name="description" content="Student 的本质定义一个继承 NSObject 的类 Student：12345678910@interface Student : NSObject &amp;#123;    @public    int _no;    int _age;&amp;#125;@end@implementation Student@end">
+<meta name="description" content="Student 的本质定义一个继承 NSObject 的类 Student：123456789@interface Student : NSObject &amp;#123;    @public    int _no;    int _age;&amp;#125;@end@implementation Student@end">
 <meta property="og:type" content="article">
 <meta property="og:title" content="OC对象的本质进阶">
 <meta property="og:url" content="http://yoursite.com/2020/05/08/OC底层/原理/OC对象的本质进阶/index.html">
 <meta property="og:site_name" content="Kevin&#39;s  blog">
-<meta property="og:description" content="Student 的本质定义一个继承 NSObject 的类 Student：12345678910@interface Student : NSObject &amp;#123;    @public    int _no;    int _age;&amp;#125;@end@implementation Student@end">
+<meta property="og:description" content="Student 的本质定义一个继承 NSObject 的类 Student：123456789@interface Student : NSObject &amp;#123;    @public    int _no;    int _age;&amp;#125;@end@implementation Student@end">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/05/08/OC底层/原理/OC对象的本质进阶/OC对象的本质进阶03.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/08/OC底层/原理/OC对象的本质进阶/OC对象的本质进阶01.png">
@@ -82,10 +82,10 @@
 <meta property="og:image" content="http://yoursite.com/2020/05/08/OC底层/原理/OC对象的本质进阶/OC对象的本质进阶04.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/08/OC底层/原理/OC对象的本质进阶/OC对象的本质进阶05.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/08/OC底层/原理/OC对象的本质进阶/OC对象的本质进阶06.png">
-<meta property="og:updated_time" content="2020-05-09T07:10:10.226Z">
+<meta property="og:updated_time" content="2020-05-09T07:14:15.144Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OC对象的本质进阶">
-<meta name="twitter:description" content="Student 的本质定义一个继承 NSObject 的类 Student：12345678910@interface Student : NSObject &amp;#123;    @public    int _no;    int _age;&amp;#125;@end@implementation Student@end">
+<meta name="twitter:description" content="Student 的本质定义一个继承 NSObject 的类 Student：123456789@interface Student : NSObject &amp;#123;    @public    int _no;    int _age;&amp;#125;@end@implementation Student@end">
 <meta name="twitter:image" content="http://yoursite.com/2020/05/08/OC底层/原理/OC对象的本质进阶/OC对象的本质进阶03.png">
 
 
@@ -316,7 +316,7 @@
       
 
       
-        <h1 id="Student-的本质"><a href="#Student-的本质" class="headerlink" title="Student 的本质"></a>Student 的本质</h1><p>定义一个继承 NSObject 的类 Student：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Student</span> : <span class="title">NSObject</span> </span>&#123;</div><div class="line">    <span class="keyword">@public</span></div><div class="line">    <span class="keyword">int</span> _no;</div><div class="line">    <span class="keyword">int</span> _age;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Student</span></span></div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+        <h1 id="Student-的本质"><a href="#Student-的本质" class="headerlink" title="Student 的本质"></a>Student 的本质</h1><p>定义一个继承 NSObject 的类 Student：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Student</span> : <span class="title">NSObject</span> </span>&#123;</div><div class="line">    <span class="keyword">@public</span></div><div class="line">    <span class="keyword">int</span> _no;</div><div class="line">    <span class="keyword">int</span> _age;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Student</span></span></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
 <a id="more"></a>
 <p>创建一个 Student 的实例对象：<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Student *stu = <span class="comment">[<span class="comment">[Student alloc]</span> init]</span>;</div></pre></td></tr></table></figure></p>
 <p>将 OC 代码转换为 C\C++ 代码，并在生成的 C/C++ 代码中找到 Student 的实现：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Student_IMPL</span> &#123;</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">NSObject_IMPL</span> <span class="title">NSObject_IVARS</span>;</span></div><div class="line">    <span class="keyword">int</span> _no;</div><div class="line">    <span class="keyword">int</span> _age;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
@@ -382,8 +382,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/05/07/OC底层/逆向/SSH/" rel="next" title="">
-                <i class="fa fa-chevron-left"></i> 
+              <a href="/2020/05/06/OC底层/原理/OC对象的本质/" rel="next" title="OC对象的本质">
+                <i class="fa fa-chevron-left"></i> OC对象的本质
               </a>
             
           </div>
@@ -472,7 +472,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
