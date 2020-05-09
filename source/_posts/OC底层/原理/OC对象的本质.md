@@ -128,7 +128,7 @@ _objc_rootAllocWithZone(Class cls, malloc_zone_t *zone)
     id obj;
 
     if (fastpath(!zone)) {
-        obj = class_createInstance(cls, 0);
+        obj = class_createInstance(cls, 0); //额外空间0
     } else {
         obj = class_createInstanceFromZone(cls, 0, zone);
     }
@@ -217,26 +217,20 @@ NSObject *obj = [[NSObject alloc] init];
 ```
 * 上面👆这句代码实际上是在内存中生成了一个 c 语言定义的结构体，结构体内有一个类型为 Class 的 isa 指针，结构体的大小 8 个字节。Class 是一个指向结构体的指针。
 
-* alloc 方法让系统分配了16个字节给 NSObject 对象（可以通过 malloc_size 函数获取）  
+* alloc 方法让系统分配了16个字节给 NSObject 对象（可以通过 malloc_size 函数获取）。
 
-* NSObject 对象内部只有一个成员变量，即指针 isa，所以只使用了8个字节的空间（64bit环境下，可以通过 class_getInstanceSize 函数获得）
+* NSObject 对象内部只有一个成员变量，即指针 isa，所以只使用了8个字节的空间（64bit环境下，可以通过 class_getInstanceSize 函数获得）。
 
-
-
-
----
+* 创建的实例对象的大小至少16个字节.
 
 
-
-
-## ps：
-### 通过 Xcode 工具查看对象内存。  
+## 通过 Xcode 工具查看对象内存。  
 打开 Debug -> Debug Workflow -> View Memory，在 Address 输入对象的地址。  
 ![OC对象的本质03](OC对象的本质/OC对象的本质03.png)
 
 
-### 常用LLDB指令
-#### print、p：打印
+## 常用LLDB指令
+### print、p：打印
 ```
 (lldb) print obj
 (NSObject *) $0 = 0x000000010380ef00
@@ -244,20 +238,20 @@ NSObject *obj = [[NSObject alloc] init];
 (NSObject *) $1 = 0x000000010380ef00
 ```
 
-#### po：打印对象
+### po：打印对象
 ```
 (lldb) po obj
 <NSObject: 0x10380ef00>
 ```
 
-#### 格式  
+### 格式  
 x是16进制，f是浮点，d是10进制
 
-#### 字节大小  
+### 字节大小  
 b：byte 1字节，h：half word 2字节  
 w：word 4字节，g：giant word 8字节
 
-#### 读取内存  
+### 读取内存  
 memory read/数量格式字节数  内存地址
 ```
 (lldb) memory read 0x10380ef00
@@ -287,7 +281,7 @@ x/数量格式字节数  内存地址
 
 打印结果中， x/3xg 0x10380ef00 打印的 0x001dffff9a8b8141 0x0000000000000000 部分是属于 obj 的内存。x/4xw 0x10380ef00 打印的 0x10380ef00: 0x9a8b8141 0x001dffff 0x00000000 0x00000000 部分属于 obj 的内存。
 
-#### 修改内存中的值  
+### 修改内存中的值  
 memory  write  内存地址  数值  
 将内存中的第6个字节改成06：
 ```

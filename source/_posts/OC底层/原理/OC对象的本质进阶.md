@@ -1,7 +1,7 @@
 ---
 title: OC对象的本质进阶
 date: 2020-05-08 18:25:55
-tags:
+tags: OC底层
 ---
 
 # Student 的本质
@@ -15,9 +15,9 @@ tags:
 @end
 
 @implementation Student
-
 @end
 ```
+
 <!-- more -->
 
 创建一个 Student 的实例对象：
@@ -75,7 +75,9 @@ iOS 平台是小端模式，所以从内存中读取数据的方式是从高地�
 (int) $3 = 9
 ```
 
-# Person 的内存大小
+通过 memory write 将实例对象的第8个字节 04 给为 09，打印 _no = 9。
+
+# 更复杂的继承关系
 
 ## 定义 Person、Student
 ```
@@ -111,10 +113,10 @@ struct Student_IMPL {
     int _no; // 4
 }; // 16
 ```
-
+继承关系图解：
 ![OC对象的本质进阶01](OC对象的本质进阶/OC对象的本质进阶04.png)  
 
-## Person、Student 的内存分配
+## Person、Student 的内存大小
 
 打印 Person、Student 实例变量的大小：  
 ```
@@ -127,11 +129,11 @@ NSLog(@"person - %zd", class_getInstanceSize([Person class])); //打印结果 16
 NSLog(@"person - %zd", malloc_size((__bridge const void *)person)); //打印结果 16
 ```
 
+实例对象内存图解：
+![OC对象的本质进阶01](OC对象的本质进阶/OC对象的本质进阶05.png) 
+
 ## 小结
-Person 的成员变量的内存之和是12个字节，但是根据内存对齐的规则，分配了16字节的内存给 Person。Student 的成员变量之和是20字节，但是 Person 中有多余的4字节，所以成员变量 _no 的内存被放到了 Person 多余的内存空间里，最终分配给 Student 的内存大小为16字节。
-
-![OC对象的本质进阶01](OC对象的本质进阶/OC对象的本质进阶05.png)  
-
+Person 的成员变量的内存之和是12个字节，但是根据内存对齐的规则，分配了16字节的内存给 Person。Student 的成员变量之和是20字节，但是 Person 中有多余的4字节，所以成员变量 _no 的内存被放到了 Person 多余的内存空间里，最终分配给 Student 的内存大小为16字节。 
 
 ## @property 定义属性的内存分配
 ```
@@ -262,7 +264,7 @@ _class_createInstanceFromZone(Class cls, size_t extraBytes, void *zone,
 }
 ```
 
-可以看出，代码最终是调用 obj = (id)calloc(1, size); 创建的实列对象。其中，size = cls->instanceSize(extraBytes); 是根据成员变量大小计算出来的需要开辟的内存大小。instanceSize(extraBytes) 的参数 extraBytes 来自 _objc_rootAllocWithZone，extraBytes = 0：
+可以看出，代码最终是调用 obj = (id)calloc(1, size); 创建的实列对象。其中，size = cls->instanceSize(extraBytes); 是根据成员变量大小计算出来的需要开辟的内存大小。instanceSize(extraBytes) 的参数 extraBytes 来自 _objc_rootAllocWithZone，_objc_rootAllocWithZone 传入的 extraBytes = 0：
 ```
 NEVER_INLINE
 id
@@ -274,9 +276,9 @@ _objc_rootAllocWithZone(Class cls, malloc_zone_t *zone __unused)
 }
 ```
 
-calloc 是 c 语言的标准库，需要下载 [libmalloc](https://opensource.apple.com/tarballs/libmalloc/)。libmalloc-283 文件里没有 malloc.c 文件了，这里下的是 libmalloc-166.200.60.tar.gz。
+calloc 是 c 语言的标准库，需要下载 [libmalloc](https://opensource.apple.com/tarballs/libmalloc/)（libmalloc-283 文件里没有 malloc.c 文件了，这里下的是 libmalloc-166.200.60.tar.gz）。
 
-打开 libmalloc 找到 malloc.c 文件，找到 calloc 方法：
+打开 libmalloc 项目找到 malloc.c 文件，再找到 calloc 方法：
 ```
 void *
 calloc(size_t num_items, size_t size)
@@ -290,7 +292,7 @@ calloc(size_t num_items, size_t size)
 }
 ```
 
--> malloc_zone_calloc
+Jump to Definition -> malloc_zone_calloc
 ```
 void *
 malloc_zone_calloc(malloc_zone_t *zone, size_t num_items, size_t size)
@@ -315,7 +317,7 @@ malloc_zone_calloc(malloc_zone_t *zone, size_t num_items, size_t size)
 }
 ```
 
-NANO_MAX_SIZE
+到了 malloc_zone_calloc 就可以找到系统分配内存的规则了。在系统分配提内存时有一个 NANO_MAX_SIZE：
 ```
 #define NANO_MAX_SIZE			256 /* Buckets sized {16, 32, 48, 64, 80, 96, 112, ...} */
 ```
@@ -334,3 +336,5 @@ class_getInstanceSize([NSObject class]);
 #import <malloc/malloc.h>
 malloc_size((__bridge const void *)obj);
 ```
+
+* 内存对齐原则，结构体的大小必须是最大成员大小的倍数，系统分配内存的大小必须是固定的大小（16的倍数）。
