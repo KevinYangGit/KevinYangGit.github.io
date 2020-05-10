@@ -69,15 +69,22 @@
 
 
 
+<meta name="description" content="Objective-C中的对象，简称OC对象，主要可以分为3种：    instance对象（实例对象） class对象（类对象） meta-class对象（元类对象）    instance 对象instance 对象就是通过类 alloc 出来的对象，每次调用 alloc 都会产生新的 instance 对象。12NSObject *object1 = [[NSObject alloc] in">
 <meta name="keywords" content="OC底层">
 <meta property="og:type" content="article">
 <meta property="og:title" content="OC对象的分类">
 <meta property="og:url" content="http://yoursite.com/2020/05/09/OC底层/原理/OC对象的分类/index.html">
 <meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="Objective-C中的对象，简称OC对象，主要可以分为3种：    instance对象（实例对象） class对象（类对象） meta-class对象（元类对象）    instance 对象instance 对象就是通过类 alloc 出来的对象，每次调用 alloc 都会产生新的 instance 对象。12NSObject *object1 = [[NSObject alloc] in">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-05-09T10:30:51.662Z">
+<meta property="og:image" content="http://yoursite.com/2020/05/09/OC底层/原理/OC对象的分类/OC对象的分类01.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/09/OC底层/原理/OC对象的分类/OC对象的分类02.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/09/OC底层/原理/OC对象的分类/OC对象的分类03.png">
+<meta property="og:updated_time" content="2020-05-10T03:13:44.634Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OC对象的分类">
+<meta name="twitter:description" content="Objective-C中的对象，简称OC对象，主要可以分为3种：    instance对象（实例对象） class对象（类对象） meta-class对象（元类对象）    instance 对象instance 对象就是通过类 alloc 出来的对象，每次调用 alloc 都会产生新的 instance 对象。12NSObject *object1 = [[NSObject alloc] in">
+<meta name="twitter:image" content="http://yoursite.com/2020/05/09/OC底层/原理/OC对象的分类/OC对象的分类01.png">
 
 
 
@@ -307,7 +314,42 @@
       
 
       
-        
+        <p>Objective-C中的对象，简称OC对象，主要可以分为3种：  </p>
+<ul>
+<li>instance对象（实例对象）</li>
+<li>class对象（类对象）</li>
+<li>meta-class对象（元类对象）  </li>
+</ul>
+<h1 id="instance-对象"><a href="#instance-对象" class="headerlink" title="instance 对象"></a>instance 对象</h1><p>instance 对象就是通过类 alloc 出来的对象，每次调用 alloc 都会产生新的 instance 对象。<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">NSObject *object1 = <span class="comment">[<span class="comment">[NSObject alloc]</span> init]</span>;</div><div class="line">NSObject *object2 = <span class="comment">[<span class="comment">[NSObject alloc]</span> init]</span>;</div></pre></td></tr></table></figure></p>
+<p>object1、object2 是 NSObject 的 instance 对象，它们是不同的两个对象，分别占据着两块不同的内存。  </p>
+<h2 id="instance-对象在内存中存储的信息"><a href="#instance-对象在内存中存储的信息" class="headerlink" title="instance 对象在内存中存储的信息"></a>instance 对象在内存中存储的信息</h2><ul>
+<li>isa指针</li>
+<li>其他成员变量</li>
+</ul>
+<p>定义 Person<br><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@interface</span> <span class="attribute">Person </span>: NSObject</div><div class="line">&#123;</div><div class="line">    <span class="variable">@public</span></div><div class="line">    int _age;</div><div class="line">&#125;</div><div class="line"><span class="variable">@end</span></div><div class="line"></div><div class="line"><span class="variable">@implementation</span> Person</div><div class="line"><span class="variable">@end</span></div></pre></td></tr></table></figure></p>
+<p>创建 Person 的实例对象<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">Person</span> *p1 = <span class="comment">[<span class="comment">[Person alloc]</span> init]</span>;</div><div class="line"><span class="keyword">Person</span> *p2 = <span class="comment">[<span class="comment">[Person alloc]</span> init]</span>;</div></pre></td></tr></table></figure></p>
+<p>p1、p2 对象在内存中存储的信息<br><img src="/2020/05/09/OC底层/原理/OC对象的分类/OC对象的分类01.png" alt="OC对象的分类"></p>
+<h1 id="class-对象"><a href="#class-对象" class="headerlink" title="class 对象"></a>class 对象</h1><p>每个类在内存中有且只有一个class对象，同一个类 alloc 出来的实例对象共同拥有唯一的 class 对象。</p>
+<p>获取 class 对象：<br><figure class="highlight monkey"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">Class</span> <span class="title">objectClass1</span> = [<span class="title">object1</span> <span class="title">class</span>];</span></div><div class="line"><span class="class"><span class="keyword">Class</span> <span class="title">objectClass2</span> = [<span class="title">object2</span> <span class="title">class</span>];</span></div><div class="line"><span class="class"><span class="keyword">Class</span> <span class="title">objectClass3</span> = <span class="title">object_getClass</span>(<span class="title">object1</span>);</span></div><div class="line"><span class="class"><span class="keyword">Class</span> <span class="title">objectClass4</span> = <span class="title">object_getClass</span>(<span class="title">object2</span>);</span></div><div class="line"><span class="class"><span class="keyword">Class</span> <span class="title">objectClass5</span> = [<span class="title">NSObject</span> <span class="title">class</span>];</span></div></pre></td></tr></table></figure></p>
+<p>objectClass1 ~ objectClass5 都是 NSObject 的 class 对象，它们是同一个对象。</p>
+<h2 id="class-对象在内存中存储的信息主要包括"><a href="#class-对象在内存中存储的信息主要包括" class="headerlink" title="class 对象在内存中存储的信息主要包括"></a>class 对象在内存中存储的信息主要包括</h2><ul>
+<li>isa指针</li>
+<li>superclass指针</li>
+<li>类的属性信息（@property）、类的对象方法信息（instance method）</li>
+<li>类的协议信息（protocol）、类的成员变量信息（ivar）<br>……  </li>
+</ul>
+<p><img src="/2020/05/09/OC底层/原理/OC对象的分类/OC对象的分类02.png" alt="OC对象的分类"></p>
+<p>不同的 instance 对象却拥有相同的属性、对象方法、协议和成员变量等等，这些信息都存放在 class 对象的内存中，保证了同样的信息只存储一份。</p>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>以下代码获取的 objectClass 是 class 对象，并不是 meta-class 对象<br><figure class="highlight cos"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">Class</span> objectClass = [[NSObject <span class="keyword">class</span>] <span class="keyword">class</span>]<span class="comment">;</span></div></pre></td></tr></table></figure></p>
+<h1 id="meta-class-对象"><a href="#meta-class-对象" class="headerlink" title="meta-class 对象"></a>meta-class 对象</h1><p>每个类在内存中有且只有一个meta-class对象。  </p>
+<p>将类对象当做参数传入，获得元类对象：<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">Class objectMetaClass</span> = object_getClass(objectClass5);</div></pre></td></tr></table></figure></p>
+<h2 id="meta-class-对象在内存中存储的信息主要包括"><a href="#meta-class-对象在内存中存储的信息主要包括" class="headerlink" title="meta-class 对象在内存中存储的信息主要包括"></a>meta-class 对象在内存中存储的信息主要包括</h2><ul>
+<li>isa指针</li>
+<li>superclass指针</li>
+<li>类的类方法信息（class method）<br>……</li>
+</ul>
+<p><img src="/2020/05/09/OC底层/原理/OC对象的分类/OC对象的分类03.png" alt="OC对象的分类"></p>
+<h2 id="查看-objecClass-是否为-meta-class"><a href="#查看-objecClass-是否为-meta-class" class="headerlink" title="查看 objecClass 是否为 meta-class"></a>查看 objecClass 是否为 meta-class</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;objc/runtime.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="built_in">BOOL</span> result = class_isMetaClass(objecClass)</div></pre></td></tr></table></figure>
       
     </div>
     
@@ -399,8 +441,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           
             <img class="site-author-image" itemprop="image"
@@ -470,6 +521,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#instance-对象"><span class="nav-number">1.</span> <span class="nav-text">instance 对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#instance-对象在内存中存储的信息"><span class="nav-number">1.1.</span> <span class="nav-text">instance 对象在内存中存储的信息</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#class-对象"><span class="nav-number">2.</span> <span class="nav-text">class 对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#class-对象在内存中存储的信息主要包括"><span class="nav-number">2.1.</span> <span class="nav-text">class 对象在内存中存储的信息主要包括</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意"><span class="nav-number">2.2.</span> <span class="nav-text">注意</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#meta-class-对象"><span class="nav-number">3.</span> <span class="nav-text">meta-class 对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#meta-class-对象在内存中存储的信息主要包括"><span class="nav-number">3.1.</span> <span class="nav-text">meta-class 对象在内存中存储的信息主要包括</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看-objecClass-是否为-meta-class"><span class="nav-number">3.2.</span> <span class="nav-text">查看 objecClass 是否为 meta-class</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
