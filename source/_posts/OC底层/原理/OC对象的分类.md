@@ -9,6 +9,8 @@ Objective-C中的对象，简称OC对象，主要可以分为3种：
 * class对象（类对象）
 * meta-class对象（元类对象）  
 
+<!-- more -->
+
 # instance 对象
 instance 对象就是通过类 alloc 出来的对象，每次调用 alloc 都会产生新的 instance 对象。
 ```
