@@ -374,6 +374,11 @@ Debug -> Debug Workflow -> View Memory
 
 通过 memory write 将实例对象的第8个字节 04 给为 09，打印 _no = 9。
 
+## 小结
+* iOS 平台是小端模式，所以从内存中读取数据的方式是从高地址开始读取。
+
+* 使用 memory write，可以通过修改内存中的值的方式来修改成员变量的值。
+
 # 更复杂的继承关系
 
 ## 定义 Person、Student
@@ -470,9 +475,9 @@ uint32_t alignedInstanceSize() const {
 align：对齐。word_align(unalignedInstanceSize())：传入一个未对齐（unaligned）的内存，word_align 将其对齐后返回。
 
 
-# 窥视 calloc
+# Person 对象的内存分配
 
-## Person 对象的内存分配
+## 定义 Person
 ```
 @interface Person : NSObject
 {
@@ -497,7 +502,7 @@ struct Person_IMPL {
 }; // 24
 ```
 
-创建 Person 实例变量，打印内存大小：
+## 创建 Person 实例变量，打印内存大小：
 ```
 Person *person = [[Person alloc] init];
 NSLog(@"person - %zd", sizeof(struct Person_IMPL)); //24
@@ -508,6 +513,7 @@ NSLog(@"person - %zd", malloc_size((__bridge const void *)person)); //32
 Person 内的成员变量的从内存图中可以确认，Person 分配的内存是32：
 ![OC对象的本质进阶01](OC对象的本质/OC对象的本质进阶06.png) 
 
+## 窥视 _class_createInstanceFromZone
 alloc -> allocWithZoone -> _objc_rootAllocWithZone -> class_createInstance -> _class_createInstanceFromZone
 
 _class_createInstanceFromZone 实现：
@@ -562,16 +568,25 @@ _class_createInstanceFromZone(Class cls, size_t extraBytes, void *zone,
 
 可以看出，代码最终是调用 obj = (id)calloc(1, size); 创建的实列对象。其中，size = cls->instanceSize(extraBytes); 是根据成员变量大小计算出来的需要开辟的内存大小。instanceSize(extraBytes) 的参数 extraBytes 来自 _objc_rootAllocWithZone，_objc_rootAllocWithZone 传入的 extraBytes = 0：
 ```
-NEVER_INLINE
 id
-_objc_rootAllocWithZone(Class cls, malloc_zone_t *zone __unused)
+_objc_rootAllocWithZone(Class cls, malloc_zone_t *zone)
 {
-    // allocWithZone under __OBJC2__ ignores the zone parameter
-    return _class_createInstanceFromZone(cls, 0, nil,
-                                         OBJECT_CONSTRUCT_CALL_BADALLOC);
+    id obj;
+
+    if (fastpath(!zone)) {
+        obj = class_createInstance(cls, 0);
+    } else {
+        obj = class_createInstanceFromZone(cls, 0, zone);
+    }
+
+    if (slowpath(!obj)) obj = _objc_callBadAllocHandler(cls);
+    return obj;
 }
 ```
 
+排查完 instanceSize(extraBytes) 后，可以确定 class_getInstanceSize() 与 malloc_size() 获取到的内存大小不同的原因来自 calloc。
+
+# 窥视 calloc
 calloc 是 c 语言的标准库，需要下载 [libmalloc](https://opensource.apple.com/tarballs/libmalloc/)（libmalloc-283 文件里没有 malloc.c 文件了，这里下的是 libmalloc-166.200.60.tar.gz）。
 
 打开 libmalloc 项目找到 malloc.c 文件，再找到 calloc 方法：
@@ -613,12 +628,14 @@ malloc_zone_calloc(malloc_zone_t *zone, size_t num_items, size_t size)
 }
 ```
 
-到了 malloc_zone_calloc 就可以找到系统分配内存的规则了。在系统分配提内存时有一个 NANO_MAX_SIZE：
+malloc_zone_calloc 中就是系统分配内存的具体实现。另外，在系统分配内存时有一个 NANO_MAX_SIZE：
 ```
 #define NANO_MAX_SIZE			256 /* Buckets sized {16, 32, 48, 64, 80, 96, 112, ...} */
 ```
 
-malloc_zone_calloc 这里也存在内存对齐原则。前面在生成结构体的时候提到过，根据内存对齐原则，结构体的大小必须是最大成员大小的倍数。而在这里，系统在分配内存时，分配的内存必须是16的倍数。因为 ios 系统为了提升内存分配的速度，固定了分配内存的大小（Buckets sized）。在需要分配内存的时候，会找到最接近的固定内存来分配给实例对象。
+Buckets sized：iOS 堆空间里内存分为一块一块的内存空间，大小都是16的倍数，最大的内存空间块是256。
+
+malloc_zone_calloc 这里也存在内存对齐原则。前面在生成结构体的时候提到过，根据内存对齐原则，结构体的大小必须是最大成员大小的倍数。而在这里，系统在分配内存时，分配的内存必须是16的倍数。因为 ios 系统为了提升内存分配的速度，固定了需要分配的内存空间块（Buckets sized）。在需要分配内存的时候，会找到最合适的内存空间块们来分配给实例对象。
 
 ## 小结
 * 创建一个实例对象，至少需要多少内存?
