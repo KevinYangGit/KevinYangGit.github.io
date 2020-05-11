@@ -40,7 +40,11 @@ xcrun -sdk iphoneos：指定 iphoneos。
 ```
 $ sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer/
 ```
+
 （如果需要链接其他框架，使用-framework参数。比如-framework UIKit。(未验证)）
+```
+$ xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main-arm64.cpp -framework UIKit
+```
 
 ### 取消 Xcode 对 main-arm64.cpp 的文件编译  
 生成的 main-arm64.cpp 文件添加到项目后，运行会报错。main-arm64.cpp 是临时生成的，内部有一个 main 函数，没做适配。 
@@ -101,7 +105,7 @@ __bridge 可以实现 Objective-C 与 C 语言变量 和 Objective-C 与 Core Fo
 
 
 ## 窥视 class_getInstanceSize
-下载 runtime 源码 [objc4](https://opensource.apple.com/tarballs/objc4/)。  
+下载 runtime 源码 [objc4-781](https://opensource.apple.com/tarballs/objc4/)。  
 打开源码搜索 class_getInstanceSize，找到 objc-class.mm 文件中 class_getInstanceSize 的实现代码。
 ```
 size_t class_getInstanceSize(Class cls)
