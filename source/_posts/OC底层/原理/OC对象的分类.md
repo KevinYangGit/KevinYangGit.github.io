@@ -115,12 +115,6 @@ Class object_getClass(id obj)
 }
 ```
 
-## 小结
-* object_getClass 的参数是 instance 对象/ class 对象/ meta-class 对象。  
-* object_getClass 返回的是 obj 的 isa 指针。
-* 如果 obj 是 instance 对象则返回 class 对象。如果 obj 是 class 对象则返回 meta-class 对象。如果 obj 是 meta-class 对象则返回 NSObject（基类） 的 meta-class 对象。
-
-
 ## objc_getClass
 打开 Runtime 源码，找到 runtime.mm，搜索 objc_getClass：
 ```
@@ -257,4 +251,8 @@ void *NXMapGet(NXMapTable *table, const void *key) {
 NXMapGet 根据传进来的类名返回了一个类对象。
 
 ## 小结
+* object_getClass 的参数是 instance 对象/ class 对象/ meta-class 对象。  
+* object_getClass 返回的是 obj 的 isa 指针。
+* 如果 obj 是 instance 对象则返回 class 对象。如果 obj 是 class 对象则返回 meta-class 对象。如果 obj 是 meta-class 对象则返回 NSObject（基类） 的 meta-class 对象。
 * Class objc_getClass(const char *aClassName) ：字符串类名 -> 对应的类对象
+* -(void)Class; 和 +(void)Class; 返回的是类对象。
