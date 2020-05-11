@@ -4,7 +4,7 @@ date: 2020-05-09 16:37:02
 tags: OC底层
 ---
 
-Objective-C中的对象，简称OC对象，主要可以分为3种：  
+Objective-C 中的对象主要可以分为3种：  
 * instance对象（实例对象）
 * class对象（类对象）
 * meta-class对象（元类对象）  
