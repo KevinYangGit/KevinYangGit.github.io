@@ -55,7 +55,7 @@ int main(int argc, const char * argv[]) {
 }
 ```
 
-### 将 OC 代码转换为 C\C++ 代码
+## 将 OC 代码转换为 C\C++ 代码
 找到 main.m 所在文件，在终端输入：
 ```
 $ xcrun -sdk iphoneos clang -arch arm64  -rewrite-objc main.m
@@ -91,11 +91,10 @@ objc_msgSend(person, sel_registerName("personInstanceMethod"));
 objc_msgSend(objc_getClass("Person"), sel_registerName("personClassMethod"));
 ```
 
-### 小结
-* [person personInstanceMethod] 的具体实现是 objc_msgSend(person, sel_registerName("personInstanceMethod"))。  
+[person personInstanceMethod] 的具体实现是 objc_msgSend(person, sel_registerName("personInstanceMethod"))。  
 即在实例对象 person 调用 -(void)personInstanceMethod 对象方法的时候，向实例对象 person 发送一条 "personInstanceMethod" 消息。  
 
-* [Person personClassMethod] 的具体实现是 objc_msgSend(objc_getClass("Person"), sel_registerName("personClassMethod"))。  
+[Person personClassMethod] 的具体实现是 objc_msgSend(objc_getClass("Person"), sel_registerName("personClassMethod"))。  
 即在类对象 Person 调用 +(void)personClassMethod 类方法的时候，向类对象 Person 发送一条 "personClassMethod" 消息。  
 
 ## 方法调用与对象的关系
@@ -106,7 +105,7 @@ objc_msgSend(objc_getClass("Person"), sel_registerName("personClassMethod"));
 
 上面👆两个方法调用表现出来的是，实例对象 person 可以调用存在 Person 类对象里的对象方法， Person 类对象可以调用存储在 Person 元类对象里的类方法。
 
-### 小结
+## 小结
 * instance 对象的 isa 指针指向 class 对象。当调用对象方法时，通过 instance 对象的 isa 指针找到 class 对象，最后找到对象方法的实现进行调用。
 
 * class 对象的 isa 指针指向 meta-class 对象。当调用类方法时，通过 class 对象的 isa 指针找到 meta-class对象，最后找到类方法的实现进行调用。
@@ -114,12 +113,7 @@ objc_msgSend(objc_getClass("Person"), sel_registerName("personClassMethod"));
 
 # superclass
 
-## class 对象的 superclass 指针
-
-### Student 类对象、Person 类对象 和 NSObject 类对象之间的 superclass 关系：
-![isa和superclass](isa和superclass/isa和superclass03.png)
-
-### 定义 Studen 继承自 Person
+## 定义 Studen 继承自 Person
 ```
 @interface Student : Person <NSCoding>
 {
@@ -132,12 +126,59 @@ objc_msgSend(objc_getClass("Person"), sel_registerName("personClassMethod"));
 @end
 
 @implementation Student
+- (void)test
+{
+    
+}
+- (void)studentInstanceMethod
+{
+    
+}
++ (void)studentClassMethod
+{
+    
+}
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    return nil;
+}
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    
+}
 @end
 ```
 
+创建 Student 的实例对象
+```
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        
+         Student *student = [[Student alloc] init];
+         
+         [student test];
+         
+         [student personInstanceMethod];
+         
+         [student init];
+         
+         [Student studentClassMethod];
+         
+         [Student personClassMethod];
+         
+         [Student load];
+    }
+    return 0;
+}
+```
+
+## class 对象的 superclass 指针
+
+### Student 类对象、Person 类对象 和 NSObject 类对象之间的 superclass 关系：
+![isa和superclass](isa和superclass/isa和superclass03.png)
+
 ### Student 的实例对象调用父类 Person 里的对象方法：
 ```
-Student *student = [[Student alloc] init];
 [student personInstanceMethod];
 ```
 
@@ -145,7 +186,6 @@ Student *student = [[Student alloc] init];
 
 ### Student 的实例对象调用父类 NSObject 里的对象方法：
 ```
-Student *student = [[Student alloc] init];
 [student init];
 ```
 
@@ -159,3 +199,26 @@ Student *student = [[Student alloc] init];
 
 ## meta-class 对象的 superclass 指针
 
+### Student 元类对象、Person 元类对象 和 NSObject 元类对象之间的 superclass 关系：
+![isa和superclass](isa和superclass/isa和superclass04.png)
+
+### Student 类对象调用 Student 元类对象里的类方法：
+```
+[Student studentClassMethod];
+```
+
+首先通过 Student 类对象里的 isa 指针找到 Student 元类对象，最终在 Student 元类对象里找到类方法 +(void)studentClassMethod。
+
+### Student 类对象调用父类 Person 元类对象里的类方法：
+```
+[Student personClassMethod];
+```
+
+首先通过 Student 类对象里的 isa 指针找到 Student 元类对象，再通过 Student 元类对象里的 superclass 找到 Person 元类对象，最终在 Person 元类对象里找到类方法 +(void)personClassMethod。
+
+### Student 类对象调用父类 NSObject 元类对象里的类方法：
+```
+[Student load];
+```
+
+首先通过 Student 类对象里的 isa 指针找到 Student 元类对象，再通过 Student 元类对象里的 superclass 找到 Person 元类对象，再通过 Person 元类对象里的 superclass 找到 NSObject 元类对象，最终在 NSObject 元类对象里找到类方法 +(void)load。
