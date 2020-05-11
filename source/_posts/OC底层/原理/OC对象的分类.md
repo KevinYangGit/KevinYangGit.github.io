@@ -18,7 +18,7 @@ NSObject *object1 = [[NSObject alloc] init];
 NSObject *object2 = [[NSObject alloc] init];
 ```
 
-object1、object2 是 NSObject 的 instance 对象，它们是不同的两个对象，分别占据着两块不同的内存。  
+object1、object2 是 NSObject 的 instance 对象，它们是不同的两个对象，分别占据着两块不同的内存。
 
 ## instance 对象在内存中存储的信息
 
@@ -73,7 +73,7 @@ objectClass1 ~ objectClass5 都是 NSObject 的 class 对象，它们是同一�
 
 不同的 instance 对象却拥有相同的属性、对象方法、协议和成员变量等等，这些信息都存放在 class 对象的内存中，保证了同样的信息只存储一份。
 
-## 注意
+## 👉 注意
 以下代码获取的 objectClass 是 class 对象，并不是 meta-class 对象
 ```
 Class objectClass = [[NSObject class] class];
