@@ -102,3 +102,159 @@ Class objectMetaClass = object_getClass(objectClass5);
 
 BOOL result = class_isMetaClass(objecClass)
 ```
+
+# 窥视 objc_getClass()、object_getClass()
+
+## object_getClass
+打开 Runtime 源码 [objc4-781](https://opensource.apple.com/tarballs/objc4/)，找到 objc-class.mm，搜索 object_getClass：
+```
+Class object_getClass(id obj)
+{
+    if (obj) return obj->getIsa();
+    else return Nil;
+}
+```
+
+## 小结
+* object_getClass 的参数是 instance 对象/ class 对象/ meta-class 对象。  
+* object_getClass 返回的是 obj 的 isa 指针。
+* 如果 obj 是 instance 对象则返回 class 对象。如果 obj 是 class 对象则返回 meta-class 对象。如果 obj 是 meta-class 对象则返回 NSObject（基类） 的 meta-class 对象。
+
+
+## objc_getClass
+打开 Runtime 源码，找到 runtime.mm，搜索 objc_getClass：
+```
+Class objc_getClass(const char *aClassName)
+{
+    if (!aClassName) return Nil;
+
+    // NO unconnected, YES class handler
+    return look_up_class(aClassName, NO, YES);
+}
+```
+
+上面👆的代码里可以确认 objc_getClass 的参数是一个类名。
+
+Jump To Definition -> look_up_class：
+```
+Class 
+look_up_class(const char *name, 
+              bool includeUnconnected __attribute__((unused)), 
+              bool includeClassHandler __attribute__((unused)))
+{
+    if (!name) return nil;
+
+    Class result;
+    bool unrealized;
+    {
+        runtimeLock.lock();
+        result = getClassExceptSomeSwift(name);
+        unrealized = result  &&  !result->isRealized();
+        if (unrealized) {
+            result = realizeClassMaybeSwiftAndUnlock(result, runtimeLock);
+            // runtimeLock is now unlocked
+        } else {
+            runtimeLock.unlock();
+        }
+    }
+
+    if (!result) {
+        // Ask Swift about its un-instantiated classes.
+
+        // We use thread-local storage to prevent infinite recursion
+        // if the hook function provokes another lookup of the same name
+        // (for example, if the hook calls objc_allocateClassPair)
+
+        auto *tls = _objc_fetch_pthread_data(true);
+
+        // Stop if this thread is already looking up this name.
+        for (unsigned i = 0; i < tls->classNameLookupsUsed; i++) {
+            if (0 == strcmp(name, tls->classNameLookups[i])) {
+                return nil;
+            }
+        }
+
+        // Save this lookup in tls.
+        if (tls->classNameLookupsUsed == tls->classNameLookupsAllocated) {
+            tls->classNameLookupsAllocated =
+                (tls->classNameLookupsAllocated * 2 ?: 1);
+            size_t size = tls->classNameLookupsAllocated *
+                sizeof(tls->classNameLookups[0]);
+            tls->classNameLookups = (const char **)
+                realloc(tls->classNameLookups, size);
+        }
+        tls->classNameLookups[tls->classNameLookupsUsed++] = name;
+
+        // Call the hook.
+        Class swiftcls = nil;
+        if (GetClassHook.get()(name, &swiftcls)) {
+            ASSERT(swiftcls->isRealized());
+            result = swiftcls;
+        }
+
+        // Erase the name from tls.
+        unsigned slot = --tls->classNameLookupsUsed;
+        ASSERT(slot >= 0  &&  slot < tls->classNameLookupsAllocated);
+        ASSERT(name == tls->classNameLookups[slot]);
+        tls->classNameLookups[slot] = nil;
+    }
+
+    return result;
+}
+```
+Jump To Definition -> getClassExceptSomeSwift：
+```
+static Class getClassExceptSomeSwift(const char *name)
+{
+    runtimeLock.assertLocked();
+
+    // Try name as-is
+    Class result = getClass_impl(name);
+    if (result) return result;
+
+    // Try Swift-mangled equivalent of the given name.
+    if (char *swName = copySwiftV1MangledName(name)) {
+        result = getClass_impl(swName);
+        free(swName);
+        return result;
+    }
+
+    return nil;
+}
+```
+
+Jump To Definition -> getClass_impl：
+```
+static Class getClass_impl(const char *name)
+{
+    runtimeLock.assertLocked();
+
+    // allocated in _read_images
+    ASSERT(gdb_objc_realized_classes);
+
+    // Try runtime-allocated table
+    Class result = (Class)NXMapGet(gdb_objc_realized_classes, name);
+    if (result) return result;
+
+    // Try table from dyld shared cache.
+    // Note we do this last to handle the case where we dlopen'ed a shared cache
+    // dylib with duplicates of classes already present in the main executable.
+    // In that case, we put the class from the main executable in
+    // gdb_objc_realized_classes and want to check that before considering any
+    // newly loaded shared cache binaries.
+    return getPreoptimizedClass(name);
+}
+```
+
+Jump To Definition -> NXMapGet：
+```
+void *NXMapGet(NXMapTable *table, const void *key) {
+    void	*value;
+    return (_NXMapMember(table, key, &value) != NX_MAPNOTAKEY) ? value : NULL;
+}
+```
+
+NXMapGet 根据传进来的类名返回了一个类对象。
+
+## 小结
+* Class objc_getClass(const char *aClassName) ：字符串类名 -> 对应的类对象
