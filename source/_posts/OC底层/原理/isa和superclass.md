@@ -34,7 +34,7 @@ tags: OC底层
 @end
 ```
 
-Person 的实例对象
+创建 Person 的实例对象
 ```
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
@@ -52,7 +52,7 @@ int main(int argc, const char * argv[]) {
 }
 ```
 
-将 OC 代码转换为 C\C++ 代码：
+### 将 OC 代码转换为 C\C++ 代码
 找到 main.m 所在文件，在终端输入：
 ```
 $ xcrun -sdk iphoneos clang -arch arm64  -rewrite-objc main.m
@@ -96,7 +96,11 @@ objc_msgSend(objc_getClass("Person"), sel_registerName("personClassMethod"));
 即在类对象 Person 调用 +(void)personClassMethod 类方法的时候，向类对象 Person 发送一条 "personClassMethod" 消息。  
 
 ## 方法调用与对象的关系
-上面两个方法调用表现出来的是，实例对象 person 可以调用存在类对象 Person 里的对象方法。类对象 Person 可以调用存在元类对象里的类方法。
+```
+[person personInstanceMethod];
+[Person personClassMethod];
+```
+上面👆两个方法调用表现出来的是，实例对象 person 可以调用存在类对象 Person 里的对象方法，类对象 Person 可以调用存在元类对象里的类方法。
 ![isa和superclass](isa和superclass/isa和superclass02.png)
 
 ### 小结
