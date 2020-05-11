@@ -16,7 +16,10 @@ tags: OC底层
 * instance 调用对象方法的轨迹：isa 找到 class，方法不存在，就通过 superclass 找父类
 * class 调用类方法的轨迹：isa 找 meta-class，方法不存在，就通过 superclass 找父类
 
-# isa 指针
+# isa
+
+## instance 对象、class 对象 和 meta-class 对象之间的 isa 关系
+![isa和superclass](isa和superclass/isa和superclass02.png)
 
 ## 定义 Person
 ```
@@ -100,13 +103,59 @@ objc_msgSend(objc_getClass("Person"), sel_registerName("personClassMethod"));
 [person personInstanceMethod];
 [Person personClassMethod];
 ```
-上面👆两个方法调用表现出来的是，实例对象 person 可以调用存在类对象 Person 里的对象方法，类对象 Person 可以调用存在元类对象里的类方法。
-![isa和superclass](isa和superclass/isa和superclass02.png)
+
+上面👆两个方法调用表现出来的是，实例对象 person 可以调用存在 Person 类对象里的对象方法， Person 类对象可以调用存储在 Person 元类对象里的类方法。
 
 ### 小结
-* instance 的 isa 指针指向 class。当调用对象方法时，通过 instance 的 isa 指针找到 class，最后找到对象方法的实现进行调用。
+* instance 对象的 isa 指针指向 class 对象。当调用对象方法时，通过 instance 对象的 isa 指针找到 class 对象，最后找到对象方法的实现进行调用。
 
-* class 的 isa 指针指向 meta-class。当调用类方法时，通过 class 的 isa 指针找到 meta-class，最后找到类方法的实现进行调用。
+* class 对象的 isa 指针指向 meta-class 对象。当调用类方法时，通过 class 对象的 isa 指针找到 meta-class对象，最后找到类方法的实现进行调用。
 
 
+# superclass
+
+## class 对象的 superclass 指针
+
+### Student 类对象、Person 类对象 和 NSObject 类对象之间的 superclass 关系：
+![isa和superclass](isa和superclass/isa和superclass03.png)
+
+### 定义 Studen 继承自 Person
+```
+@interface Student : Person <NSCoding>
+{
+    @public
+    int _weight;
+}
+@property (nonatomic, assign) int height;
+- (void)studentInstanceMethod;
++ (void)studentClassMethod;
+@end
+
+@implementation Student
+@end
+```
+
+### Student 的实例对象调用父类 Person 里的对象方法：
+```
+Student *student = [[Student alloc] init];
+[student personInstanceMethod];
+```
+
+对象方法 -(void)personInstanceMethod 方法保存在 Person 的类对象里，[student personInstanceMethod] 首先通过 student 的 isa 指针找到 Student 的类对象，再通过 Student 类对象里的 superclass 找到 Person 的类对象，最后在 Person 类对象里找到了对象方法 -(void)personInstanceMethod。
+
+### Student 的实例对象调用父类 NSObject 里的对象方法：
+```
+Student *student = [[Student alloc] init];
+[student init];
+```
+
+对象方法 -(void)init 方法保存在 NSObject 的类对象里，[student init] 首先通过 student 的 isa 指针找到 Student 的类对象，再通过 Student 类对象里的 superclass 找到 Person 的类对象，再通过 Person 类对象里的 superclass 找到 NSObject 的类对象，最后在 NSObject 类对象里找到了对象方法 -(void)init。
+
+### 小结
+* 具有继承关系的不同的类之间，是通过 superlass 指针连接的。有了 superlass 指针的连接，子类就实现了调用父类方法的逻辑。
+
+* 当 Student 的 instance 对象要调用 Person 的对象方法时，会先通过 isa 找到 Student 的 class，然后通过 superclass 找到 Person 的 class，最后找到对象方法的实现进行调用。
+
+
+## meta-class 对象的 superclass 指针
 
