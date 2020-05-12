@@ -4,16 +4,16 @@ date: 2020-05-06 14:36:30
 tags: OC底层
 ---
 
-# Objective-C的本质
-
-* Objective-C代码的底层实现其实是C\C++代码
-* Objective-C的面向对象是基于C\C++的数据结构(结构体)实现的
+* Objective-C 代码的底层实现其实是 C\C++ 代码
+* Objective-C 的面向对象是基于 C\C++ 的数据结构(结构体)实现的
 
 ![ObjectiveC_C_C++_汇编语言_机器语言](OC对象的本质/ObjectiveC_C_C++_汇编语言_机器语言.png)
 
 <!-- more -->
 
-## 将Objective-C代码转换为C\C++代码
+# Objective-C的本质
+
+## 将 Objective-C 代码转换为 C\C++ 代码
 
 ### 创建一个项目
 ![OC对象的本质](OC对象的本质/OC对象的本质.png)
@@ -55,7 +55,7 @@ $ xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main-arm64.cpp -
 
 
 
-# NSObject的底层实现
+# NSObject 的底层实现
 
 * 思考：一个OC对象在内存中是如何布局的？
 
@@ -121,7 +121,7 @@ uint32_t alignedInstanceSize() const {
     return word_align(unalignedInstanceSize());
 }
 ```
-翻译过来就是，class_getInstanceSize 内部根据成员变量的大小，四色五入得到 NSObject 实例对象里成员变量所占用的内存大小。
+翻译过来就是，class_getInstanceSize 内部根据成员变量的大小，根据内存对齐原则得到 NSObject 实例对象里成员变量所占用的内存大小。
 
 ## 窥视 alloc
 alloc 的内部实现是 allocWithZone，在源码中搜索 allocWithZone：
@@ -376,7 +376,7 @@ Debug -> Debug Workflow -> View Memory
 (int) $3 = 9
 ```
 
-通过 memory write 将实例对象的第8个字节 04 给为 09，打印 _no = 9。
+上面👆通过 memory write 将实例对象的第8个字节 04 给为 09，打印 _no = 9。
 
 ## 小结
 * iOS 平台是小端模式，所以从内存中读取数据的方式是从高地址开始读取。
@@ -435,8 +435,12 @@ NSLog(@"person - %zd", class_getInstanceSize([Person class])); //打印结果 16
 NSLog(@"person - %zd", malloc_size((__bridge const void *)person)); //打印结果 16
 ```
 
+虽然 Student 比 Person 多了一个成员变量 _no（4字节），但是 Student 和 Person 打印出来的内存大小都是16字节。
+
 Person、Student 的内存分配图解：
 ![OC对象的本质进阶01](OC对象的本质/OC对象的本质进阶05.png)  
+
+Person 的成员变量的内存之和是12个字节，根据内存对齐的规则，Person 的内存大小必须是内存最大的成员变量 isa（8字节）的倍数，所以分配了16字节的内存给 Person。Student 的成员变量之和是20字节，但是 Person 中有多余的4字节，所以成员变量 _no 的内存被放到了 Person 多余的内存空间里，最终分配给 Student 的内存大小为16字节。  
 
 ## @property 定义属性的内存分配
 ```
@@ -462,7 +466,9 @@ struct Person_IMPL {
 ```
 
 ## 小结
-* Person 的成员变量的内存之和是12个字节，但是根据内存对齐的规则，分配了16字节的内存给 Person。Student 的成员变量之和是20字节，但是 Person 中有多余的4字节，所以成员变量 _no 的内存被放到了 Person 多余的内存空间里，最终分配给 Student 的内存大小为16字节。  
+* 内存对齐原则：结构体的大小必须是最大成员大小的倍数。
+
+* 子类在分配内存时，如果父类的内存空间有剩余，优先使用父类的内存空间。
 
 * 创建出来的实列对象的内存中只存有成员变量，不包含方法。以 Person 为例，不同的 Person 实例对象的方法是相同的，所以方法放到类对象的方法列表里，供不同的 Person 实例对象调用。
 
@@ -544,7 +550,7 @@ _class_createInstanceFromZone(Class cls, size_t extraBytes, void *zone,
     if (zone) {
         obj = (id)malloc_zone_calloc((malloc_zone_t *)zone, 1, size);
     } else {
-        obj = (id)calloc(1, size); //c语言分配内存的函数，分配空间：size
+        obj = (id)calloc(1, size); //c语言分配内存的函数，需要分配的内存大小：size
     }
     if (slowpath(!obj)) {
         if (construct_flags & OBJECT_CONSTRUCT_CALL_BADALLOC) {
@@ -570,7 +576,7 @@ _class_createInstanceFromZone(Class cls, size_t extraBytes, void *zone,
 }
 ```
 
-可以看出，代码最终是调用 obj = (id)calloc(1, size); 创建的实列对象。其中，size = cls->instanceSize(extraBytes); 是根据成员变量大小计算出来的需要开辟的内存大小。instanceSize(extraBytes) 的参数 extraBytes 来自 _objc_rootAllocWithZone，_objc_rootAllocWithZone 传入的 extraBytes = 0：
+可以看出，代码最终是调用 obj = (id)calloc(1, size); 创建的实列对象。而 size = cls->instanceSize(extraBytes); 是根据成员变量大小计算出来的需要开辟的内存大小。instanceSize(extraBytes) 的参数 extraBytes 来自 _objc_rootAllocWithZone，_objc_rootAllocWithZone 传入的 extraBytes = 0：
 ```
 id
 _objc_rootAllocWithZone(Class cls, malloc_zone_t *zone)
