@@ -69,13 +69,13 @@
 
 
 
-<meta name="description" content="Objective-C的本质 Objective-C 代码的底层实现其实是 C\C++ 代码 Objective-C 的面向对象是基于 C\C++ 的数据结构(结构体)实现的">
+<meta name="description" content="Objective-C 代码的底层实现其实是 C\C++ 代码 Objective-C 的面向对象是基于 C\C++ 的数据结构(结构体)实现的">
 <meta name="keywords" content="OC底层">
 <meta property="og:type" content="article">
 <meta property="og:title" content="OC对象的本质">
 <meta property="og:url" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/index.html">
 <meta property="og:site_name" content="Kevin&#39;s  blog">
-<meta property="og:description" content="Objective-C的本质 Objective-C 代码的底层实现其实是 C\C++ 代码 Objective-C 的面向对象是基于 C\C++ 的数据结构(结构体)实现的">
+<meta property="og:description" content="Objective-C 代码的底层实现其实是 C\C++ 代码 Objective-C 的面向对象是基于 C\C++ 的数据结构(结构体)实现的">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/ObjectiveC_C_C++_汇编语言_机器语言.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质.png">
@@ -88,10 +88,10 @@
 <meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质进阶04.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质进阶05.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质进阶06.png">
-<meta property="og:updated_time" content="2020-05-12T08:02:25.124Z">
+<meta property="og:updated_time" content="2020-05-12T08:03:23.048Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OC对象的本质">
-<meta name="twitter:description" content="Objective-C的本质 Objective-C 代码的底层实现其实是 C\C++ 代码 Objective-C 的面向对象是基于 C\C++ 的数据结构(结构体)实现的">
+<meta name="twitter:description" content="Objective-C 代码的底层实现其实是 C\C++ 代码 Objective-C 的面向对象是基于 C\C++ 的数据结构(结构体)实现的">
 <meta name="twitter:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/ObjectiveC_C_C++_汇编语言_机器语言.png">
 
 
@@ -322,13 +322,13 @@
       
 
       
-        <h1 id="Objective-C的本质"><a href="#Objective-C的本质" class="headerlink" title="Objective-C的本质"></a>Objective-C的本质</h1><ul>
+        <ul>
 <li>Objective-C 代码的底层实现其实是 C\C++ 代码</li>
 <li>Objective-C 的面向对象是基于 C\C++ 的数据结构(结构体)实现的</li>
 </ul>
 <p><img src="/2020/05/06/OC底层/原理/OC对象的本质/ObjectiveC_C_C++_汇编语言_机器语言.png" alt="ObjectiveC_C_C++_汇编语言_机器语言"></p>
 <a id="more"></a>
-<h2 id="将-Objective-C-代码转换为-C-C-代码"><a href="#将-Objective-C-代码转换为-C-C-代码" class="headerlink" title="将 Objective-C 代码转换为 C\C++ 代码"></a>将 Objective-C 代码转换为 C\C++ 代码</h2><h3 id="创建一个项目"><a href="#创建一个项目" class="headerlink" title="创建一个项目"></a>创建一个项目</h3><p><img src="/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质.png" alt="OC对象的本质"></p>
+<h1 id="Objective-C的本质"><a href="#Objective-C的本质" class="headerlink" title="Objective-C的本质"></a>Objective-C的本质</h1><h2 id="将-Objective-C-代码转换为-C-C-代码"><a href="#将-Objective-C-代码转换为-C-C-代码" class="headerlink" title="将 Objective-C 代码转换为 C\C++ 代码"></a>将 Objective-C 代码转换为 C\C++ 代码</h2><h3 id="创建一个项目"><a href="#创建一个项目" class="headerlink" title="创建一个项目"></a>创建一个项目</h3><p><img src="/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质.png" alt="OC对象的本质"></p>
 <p>在终端打开 main.m 的位置，输入下面的命令生成 main.cpp 文件。因为要生成的代码包括c/c++，所以使用 main.cpp 文件，main.cpp 文件是 c++ 文件，支持 c/c++。</p>
 <h3 id="生成-main-cpp"><a href="#生成-main-cpp" class="headerlink" title="生成 main.cpp"></a>生成 main.cpp</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> clang -rewrite-objc main.m -o main.cpp</span></div></pre></td></tr></table></figure>
 <p>没有指定平台，默认生成的是多个平台的代码，代码量太大。</p>
