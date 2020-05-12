@@ -126,10 +126,6 @@ objc_msgSend(objc_getClass("Person"), sel_registerName("personClassMethod"));
 @end
 
 @implementation Student
-- (void)test
-{
-    
-}
 - (void)studentInstanceMethod
 {
     
@@ -155,8 +151,6 @@ int main(int argc, const char * argv[]) {
     @autoreleasepool {
         
          Student *student = [[Student alloc] init];
-         
-         [student test];
          
          [student personInstanceMethod];
          
@@ -222,3 +216,181 @@ int main(int argc, const char * argv[]) {
 ```
 
 首先通过 Student 类对象里的 isa 指针找到 Student 元类对象，再通过 Student 元类对象里的 superclass 找到 Person 元类对象，再通过 Person 元类对象里的 superclass 找到 NSObject 元类对象，最终在 NSObject 元类对象里找到类方法 +(void)load。
+
+
+# instance 对象调用对象方法流程
+
+## 流程图
+![isa和superclass](isa和superclass/isa和superclass05.png)
+
+## unrecoginzed selector sent to instance
+
+```
+[student unrecoginzedSelector];
+```
+
+向实例对象 student 发送一条 "unrecoginzedSelector" 消息。student 通过 isa 指针找到 Student 类对象，在类对象里查找对象方法 -(void)unrecoginzedSelector 。如果没有，Student 类对象会通过 superclass 指针找到 Student 父类的类对象，并在父类的类对象里查找对象方法 -(void)unrecoginzedSelector。如果还是没有找到，再通过 superclass 查找父类的类对象。以此往复，直找到基类 NSObject 的类对象。如果在 NSObject 的类对象里也没有查找到对象方法 -(void)unrecoginzedSelector，就会返回出现‘unrecoginzed selector sent to instance’错误。
+
+## 子类重写父类的对象方法
+
+```
+@interface Person : NSObject <NSCopying>
+- (void)test;
+@end
+
+@implementation Person
+- (void)test 
+{
+
+}
+@end
+
+@interface Student : Person <NSCoding>
+@end
+
+@implementation Student
+- (void)test
+{
+    
+}
+@end
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        
+         Student *student = [[Student alloc] init];
+         
+         [student test];
+    }
+    return 0;
+}
+```
+
+向实例对象 student 发送一条 "test" 消息。studnet 通过 isa 指针找到 Student 类对象，在类对象里查找对象方法 -(void)test，找到后返回，不在查找父类的类对象。
+
+# class 对象调用类方法流程
+
+## 流程图
+![isa和superclass](isa和superclass/isa和superclass06.png)
+
+## unrecoginzed selector sent to class
+```
+[Student unrecoginzedSelector];
+```
+
+向类对象 Student 发送一条 "unrecoginzedSelector" 消息。Student 通过 isa 指针找到 Student 元类对象，在元类对象里查找类方法 -(void)unrecoginzedSelector 。如果没有，Student 元类对象会通过 superclass 指针找到 Student 父类的元类对象，并在父类的元类对象里查找类方法 -(void)unrecoginzedSelector。如果还是没有找到，再通过 superclass 查找父类的元类对象。以此往复，直找到基类 NSObject 的元类对象。如果在 NSObject 的元类对象里也没有查找到类方法 -(void)unrecoginzedSelector，就会通过 superclass 指针找到 NSObject 的类对象，如果在 NSObject 的类对象里也没找到类方法 -(void)unrecoginzedSelector，就会返回出现‘unrecoginzed selector sent to class’错误。
+
+## 子类重写父类的类方法
+
+```
+@interface Person : NSObject <NSCopying>
++ (void)test;
+@end
+
+@implementation Person
++ (void)test 
+{
+
+}
+@end
+
+@interface Student : Person <NSCoding>
+@end
+
+@implementation Student
++ (void)test
+{
+    
+}
+@end
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+         
+         [Student test];
+    }
+    return 0;
+}
+```
+
+向类对象 Student 发送一条 "test" Student 通过 isa 指针找到 Student 元类对象，在元类对象里查找类方法 +(void)test，找到后返回，不在查找父类的元类对象。
+
+# class 对象调用对象方法流程
+
+## 定义 NSObject+test
+```
+@interface NSObject (Test)
++ (void)test;
+@end
+
+@implementation NSObject (Test)
+- (void)test
+{
+    NSLog(@"-[NSObject test] - %p", self);
+}
+@end
+
+@interface Person : NSObject <NSCopying>
+@end
+
+@implementation Person
+@end
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        NSLog(@"[Person class] - %p", [Person class]);
+        NSLog(@"[NSObject class] - %p", [NSObject class]);
+        
+        [Person test];
+        [NSObject test];
+    }
+    return 0;
+}
+```
+
+打印结果：
+```
+[Person class] - 0x1000011e0
+[NSObject class] - 0x7fffaa791140
+[NSObject test] - 0x1000011e0
+[NSObject test] - 0x7fffaa791140
+```
+
+## [Person test]
+
+### 流程图
+![isa和superclass](isa和superclass/isa和superclass07.png)
+
+```
+//打印结果：[NSObject test] - 0x1000011e0
+[Person test];
+```
+
+向类对象 Person 发送一条 "test" 消息。Person 通过 isa 指针找到 Person 元类对象，在元类对象里查找类方法 +(void)test 。如果没有，Person 元类对象会通过 superclass 指针找到 NSObject 的元类对象，并在 NSObject 的元类对象里查找类方法 +(void)test。如果还是没有找到，再通过 superclass 指针找到 NSObject 的类对象，在类对象中找到对象方法 -(void)test 并返回。  
+
+NSObject+test 里打印的 self，是 objc_msgSend() 里的对象，即接收‘test’消息的对象。[Person test] 中，因为是想 Person 发送了一条‘test’消息，所以打印的 self 是 Person 的类对象。
+
+## [NSObject test]
+
+### 流程图
+![isa和superclass](isa和superclass/isa和superclass08.png)
+
+```
+//打印结果：[NSObject test] - 0x7fffaa791140
+[NSObject test];
+```
+
+向类对象 NSObject 发送一条 "test" 消息。NSObject 通过 isa 指针找到 NSObject 元类对象，在元类对象里查找类方法 +(void)test 。如果没有，NSObject 元类对象再通过 superclass 指针找到 NSObject 的类对象，在类对象中找到对象方法 -(void)test 并返回。  
+
+### class 对象调用对象方法的可能性
+
+```
+[Person test];
+```
+
+上面👆这句代码的本质是：
+```
+objc_msgSend(objc_getClass("Person"), sel_registerName("test"));
+```
+
+向类对象 Person 发送一条 "test" 消息，这条消息里并没有包含方法的类型，即不区分类方法和对象方法。
