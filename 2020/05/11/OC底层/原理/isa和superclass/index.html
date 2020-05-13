@@ -88,7 +88,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/05/11/OC底层/原理/isa和superclass/isa和superclass11.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/11/OC底层/原理/isa和superclass/isa和superclass13.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/11/OC底层/原理/isa和superclass/isa和superclass14.png">
-<meta property="og:updated_time" content="2020-05-13T05:39:18.674Z">
+<meta property="og:updated_time" content="2020-05-13T05:40:14.875Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="isa和superclass">
 <meta name="twitter:image" content="http://yoursite.com/2020/05/11/OC底层/原理/isa和superclass/isa和superclass01.png">
@@ -438,7 +438,8 @@
 <p>studentClassData:<br><img src="/2020/05/11/OC底层/原理/isa和superclass/isa和superclass13.png" alt="isa和superclass"></p>
 <p>可以看到 Student 的类对象里存储了属性、对象方法、协议、成员变量信息。</p>
 <p>studentMetaClassData:<br><img src="/2020/05/11/OC底层/原理/isa和superclass/isa和superclass14.png" alt="isa和superclass"></p>
-<p>可以看到 Student 的元类对象里存储了类方法、协议。属性、成员变量信息都为 NULL。<br>元类对象中存储的协议信息与类对象中存储的协议信息地址相同，所以是同一份。如何确定协议信息是存储在类对象中还是元类对象中呢？还是两个都存储了？ </p>
+<p>可以看到 Student 的元类对象里存储了类方法、协议。属性、成员变量信息都为 NULL。  </p>
+<p>元类对象中存储的协议信息与类对象中存储的协议信息地址相同，所以是同一份。如何确定协议信息是存储在类对象中还是元类对象中呢？还是两个都存储了？ </p>
 <h2 id="小结-3"><a href="#小结-3" class="headerlink" title="小结"></a>小结</h2><ul>
 <li>OC 的类信息存放在哪里？<br>对象方法、属性、成员变量、协议信息，存放在 class 对象中；<br>类方法，存放在 meta-class 对象中；<br>成员变量的具体值，存放在 instance 对象；</li>
 </ul>
