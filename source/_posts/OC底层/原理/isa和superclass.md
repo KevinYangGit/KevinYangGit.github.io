@@ -18,6 +18,8 @@ tags: OC底层
 
 # isa
 
+* 思考：对象的 isa 指针指向哪里？
+
 ## instance 对象、class 对象 和 meta-class 对象之间的 isa 关系
 ![isa和superclass](isa和superclass/isa和superclass02.png)
 
@@ -247,6 +249,13 @@ struct test_objc_class *personClass2 = (__bridge struct test_objc_class *)(perso
 
 上面👆的打印结果可以看出，Person 类对象的 isa 指针 & ISA_MASK 就是 Person 元类对象的地址。
 
+
+## 小结
+
+* 对象的 isa 指针指向哪里？  
+instance 对象的 isa 指向 class 对象  
+class 对象的 isa 指向 meta-class 对象  
+meta-class 对象的 isa 指向基类的 meta-class 对象
 
 
 
@@ -574,3 +583,325 @@ objc_msgSend(objc_getClass("Person"), sel_registerName("test"));
 ```
 
 向类对象 Person 发送一条 "test" 消息，这条消息里并没有包含方法的类型，即不区分类方法和对象方法。
+
+
+# 窥探 struct objc_class 的结构
+
+## 废弃的 struct objc_class
+
+```
+Class personClass = [Person class];
+
+Class personMetaClass = object_getClass(personClass);
+```
+
+在上面👆类对象的 isa 处提到过，类对象和元类对象的类型 Class 是一个指向结构体 objc_class 的指针：
+```
+typedef struct objc_class *Class;
+```
+
+![isa和superclass](isa和superclass/isa和superclass12.png)
+
+Jump TO Definition -> objc_class：
+```
+struct objc_class {
+    Class _Nonnull isa  OBJC_ISA_AVAILABILITY;
+
+#if !__OBJC2__
+    Class _Nullable super_class                              OBJC2_UNAVAILABLE;
+    const char * _Nonnull name                               OBJC2_UNAVAILABLE;
+    long version                                             OBJC2_UNAVAILABLE;
+    long info                                                OBJC2_UNAVAILABLE;
+    long instance_size                                       OBJC2_UNAVAILABLE;
+    struct objc_ivar_list * _Nullable ivars                  OBJC2_UNAVAILABLE;
+    struct objc_method_list * _Nullable * _Nullable methodLists                    OBJC2_UNAVAILABLE;
+    struct objc_cache * _Nonnull cache                       OBJC2_UNAVAILABLE;
+    struct objc_protocol_list * _Nullable protocols          OBJC2_UNAVAILABLE;
+#endif
+
+} OBJC2_UNAVAILABLE;
+```
+
+代码中包含以下代码：
+```
+#if !__OBJC2__
+
+#endif
+
+OBJC2_UNAVAILABLE
+```
+
+说明，结构体 struct objc_class 在 __OBJC2__ 里被废弃掉了。
+
+## 新版 struct objc_class
+
+可以在 [objc4-781](https://opensource.apple.com/tarballs/objc4/) 找到最新的源码，打开 objc-runtime-new.h :
+
+objc_class：
+```
+struct objc_class : objc_object {
+    // Class ISA;
+    Class superclass;
+    cache_t cache;             // 方法缓存
+    class_data_bits_t bits;    // 用于获取具体的类信息
+
+    class_rw_t *data() const {
+        return bits.data();
+    }
+    void setData(class_rw_t *newData) {
+        bits.setData(newData);
+    }
+    ...
+    ...
+    ... 一堆方法
+};
+```
+
+objc_object：
+```
+struct objc_object {
+    Class _Nonnull isa  OBJC_ISA_AVAILABILITY;
+};
+```
+
+class_rw_ext_t、class_rw_t：
+```
+struct class_rw_ext_t {
+    const class_ro_t *ro;
+    method_array_t methods; //方法列表
+    property_array_t properties; //属性列表
+    protocol_array_t protocols; //协议列表
+    char *demangledName;
+    uint32_t version;
+};
+
+struct class_rw_t {
+    // Be warned that Symbolication knows the layout of this structure.
+    uint32_t flags;
+    uint16_t witness;
+#if SUPPORT_INDEXED_ISA
+    uint16_t index;
+#endif
+
+    explicit_atomic<uintptr_t> ro_or_rw_ext;
+
+    Class firstSubclass;
+    Class nextSiblingClass;
+
+private:
+    using ro_or_rw_ext_t = objc::PointerUnion<const class_ro_t *, class_rw_ext_t *>;
+
+    const ro_or_rw_ext_t get_ro_or_rwe() const {
+        return ro_or_rw_ext_t{ro_or_rw_ext};
+    }
+
+    void set_ro_or_rwe(const class_ro_t *ro) {
+        ro_or_rw_ext_t{ro}.storeAt(ro_or_rw_ext, memory_order_relaxed);
+    }
+
+    void set_ro_or_rwe(class_rw_ext_t *rwe, const class_ro_t *ro) {
+        // the release barrier is so that the class_rw_ext_t::ro initialization
+        // is visible to lockless readers
+        rwe->ro = ro;
+        ro_or_rw_ext_t{rwe}.storeAt(ro_or_rw_ext, memory_order_release);
+    }
+
+    class_rw_ext_t *extAlloc(const class_ro_t *ro, bool deep = false);
+
+public:
+    void setFlags(uint32_t set)
+    {
+        __c11_atomic_fetch_or((_Atomic(uint32_t) *)&flags, set, __ATOMIC_RELAXED);
+    }
+    ...
+    ...
+    ... 一堆方法
+};
+```
+
+class_rw_t 可以翻译为 class_readWrite_table，即读写表。在 objc4 的旧版本里，class_rw_ext_t 里的成员变量是直接定义在 class_rw_t 里的。
+
+class_ro_t：
+```
+struct class_ro_t {
+    uint32_t flags;
+    uint32_t instanceStart;
+    uint32_t instanceSize; // instance 对象占用的内存空间
+#ifdef __LP64__
+    uint32_t reserved;
+#endif
+
+    const uint8_t * ivarLayout;
+    
+    const char * name; //类名
+    method_list_t * baseMethodList; //方法列表
+    protocol_list_t * baseProtocols; //协议列表
+    const ivar_list_t * ivars; //成员变量列表
+
+    const uint8_t * weakIvarLayout;
+    property_list_t *baseProperties; //属性列表
+
+    // This field exists only when RO_HAS_SWIFT_INITIALIZER is set.
+    _objc_swiftMetadataInitializer __ptrauth_objc_method_list_imp _swiftMetadataInitializer_NEVER_USE[0];
+
+    _objc_swiftMetadataInitializer swiftMetadataInitializer() const {
+        if (flags & RO_HAS_SWIFT_INITIALIZER) {
+            return _swiftMetadataInitializer_NEVER_USE[0];
+        } else {
+            return nil;
+        }
+    }
+
+    method_list_t *baseMethods() const {
+        return baseMethodList;
+    }
+
+    class_ro_t *duplicate() const {
+        if (flags & RO_HAS_SWIFT_INITIALIZER) {
+            size_t size = sizeof(*this) + sizeof(_swiftMetadataInitializer_NEVER_USE[0]);
+            class_ro_t *ro = (class_ro_t *)memdup(this, size);
+            ro->_swiftMetadataInitializer_NEVER_USE[0] = this->_swiftMetadataInitializer_NEVER_USE[0];
+            return ro;
+        } else {
+            size_t size = sizeof(*this);
+            class_ro_t *ro = (class_ro_t *)memdup(this, size);
+            return ro;
+        }
+    }
+};
+```
+
+class_ro_t 可以翻译为 class_readOnly_table，即只读表。
+
+class_data_bits_t：
+```
+struct class_data_bits_t {
+    ...
+
+    class_rw_t* data() const {
+        return (class_rw_t *)(bits & FAST_DATA_MASK);
+    }
+
+    ...
+```
+
+class_data_bits_t 内部通过 bits & FAST_DATA_MASK 找到 class_rw_t。
+
+objc_class、class_rw_t 和 class_ro_t 之间的关系可以简化为：
+![isa和superclass](isa和superclass/isa和superclass11.png)
+
+## 查看 objc_class 对象的真实结构
+
+导入 MJClassInfo.h，定义 MJPerson、MJStudent：
+```
+#import <Foundation/Foundation.h>
+#import <objc/runtime.h>
+#import "MJClassInfo.h"
+
+// MJPerson
+@interface MJPerson : NSObject <NSCopying>
+{
+@public
+    int _age;
+}
+@property (nonatomic, assign) int no;
+- (void)personInstanceMethod;
++ (void)personClassMethod;
+@end
+
+@implementation MJPerson
+
+- (void)test
+{
+    
+}
+
+- (void)personInstanceMethod
+{
+    
+}
++ (void)personClassMethod
+{
+    
+}
+- (id)copyWithZone:(NSZone *)zone
+{
+    return nil;
+}
+@end
+
+// MJStudent
+@interface MJStudent : MJPerson <NSCoding>
+{
+@public
+    int _weight;
+}
+@property (nonatomic, assign) int height;
+- (void)studentInstanceMethod;
++ (void)studentClassMethod;
+@end
+
+@implementation MJStudent
+- (void)test
+{
+    
+}
+- (void)studentInstanceMethod
+{
+    
+}
++ (void)studentClassMethod
+{
+    
+}
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    return nil;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    
+}
+@end
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        MJStudent *stu = [[MJStudent alloc] init];
+        stu->_weight = 10;
+        
+        mj_objc_class *studentClass = (__bridge mj_objc_class *)([MJStudent class]);
+        mj_objc_class *personClass = (__bridge mj_objc_class *)([MJPerson class]);
+        
+        class_rw_t *studentClassData = studentClass->data();
+        class_rw_t *personClassData = personClass->data();
+        
+        class_rw_t *studentMetaClassData = studentClass->metaClass()->data();
+        class_rw_t *personMetaClassData = personClass->metaClass()->data();
+
+        NSLog(@"1111");
+    }
+    return 0;
+}
+```
+
+加断点后，可以在控制栏里看到每个类内部的具体信息了。
+
+studentClassData:
+![isa和superclass](isa和superclass/isa和superclass13.png)
+
+可以看到 Student 的类对象里存储了属性、对象方法、协议、成员变量信息。
+
+studentMetaClassData:
+![isa和superclass](isa和superclass/isa和superclass14.png)
+
+可以看到 Student 的元类对象里存储了类方法、协议。属性、成员变量信息都为 NULL。  
+
+元类对象中存储的协议信息与类对象中存储的协议信息地址相同，所以是同一份。如何确定协议信息是存储在类对象中还是元类对象中呢？还是两个都存储了？ 
+
+## 小结
+
+* OC 的类信息存放在哪里？  
+对象方法、属性、成员变量、协议信息，存放在 class 对象中；  
+类方法，存放在 meta-class 对象中；  
+成员变量的具体值，存放在 instance 对象；
