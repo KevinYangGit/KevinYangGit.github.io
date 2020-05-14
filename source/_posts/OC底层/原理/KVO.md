@@ -56,7 +56,7 @@ int main(int argc, const char * argv[]) {
 }
 ```
 
-打印
+打印结果：
 ```
 observeValueForKeyPath - {
     kind = 1;
