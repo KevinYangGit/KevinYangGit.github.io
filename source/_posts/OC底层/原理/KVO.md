@@ -216,18 +216,19 @@ int main(int argc, const char * argv[]) {
 利用 RuntimeAPI 动态生成一个子类，并且让 instance 对象的 isa 指向这个全新的子类。  
 当修改 instance 对象的属性时，会调用 Foundation 的 _NSSetXXXValueAndNotify 函数：  
 ```
-willChangeValueForKey:  
-父类原来的setter  
-didChangeValueForKey:  
-```  
-内部会触发监听器（Oberser）的监听方法( observeValueForKeyPath:ofObject:change:context:）
+willChangeValueForKey:
+父类原来的setter
+didChangeValueForKey:
+```
+
+didChangeValueForKey: 内部会触发监听器（Oberser）的监听方法( observeValueForKeyPath:ofObject:change:context:）
 
 * 如何手动触发KVO？  
-手动调用 willChangeValueForKey: 和 didChangeValueForKey:
+手动调用 willChangeValueForKey: 和 didChangeValueForKey:  
 ```
-[self willChangeValueForKey:@"age"];
-person->_age = 10;
-[self didChagneValueForKey:@"age"];
+willChangeValueForKey:
+person->age = 10;
+didChangeValueForKey:
 ```
 
 * 直接修改成员变量会触发KVO么？  
@@ -235,9 +236,7 @@ person->_age = 10;
 
 
 # KVC
-KVC 的全称是 Key-Value Coding，俗称“键值编码”，可以通过一个 key 来访问某个属性。
-
-常见的API有：
+KVC 的全称是 Key-Value Coding，俗称“键值编码”，可以通过一个 key 来访问某个属性。常见的API有：
 ```
 - (void)setValue:(id)value forKeyPath:(NSString *)keyPath;
 - (void)setValue:(id)value forKey:(NSString *)key;
@@ -245,9 +244,10 @@ KVC 的全称是 Key-Value Coding，俗称“键值编码”，可以通过一�
 - (id)valueForKey:(NSString *)key; 
 ```
 
-## setValue: forKey: 的原理
+## setValue: forKey: 原理
 ![isa和superclass](KVO/KVO05.png)
 
+定义 Person：
 ```
 @interface Person : NSObject
 {
@@ -288,8 +288,9 @@ Person *person = [[Person alloc] init];
 打断点后，可以在控制台看到 _age、_isAge、age、isAge 被依次赋值：
 ![isa和superclass](KVO/KVO07.png)
 
-## 思考：通过 KVC 修改属性会触发 KVO 么？
+## KVC 触发 KVO
 
+定义 Person：
 ```
 @interface Person : NSObject
 {
@@ -345,15 +346,30 @@ observeValueForKeyPath - {
 didChangeValueForKey - end - age
 ```
 
-如果 setKey 和 _setKey 存在，添加 KVO 监听时会调用一次 + (BOOL)accessInstanceVariablesDirectly， 调用 setValue:forKey: 时会调用一次 + (BOOL)accessInstanceVariablesDirectly，再去调用 willChangeValueForKey 和 didChangeValueForKey。 
+### setKey 和 _setKey 存在
+添加 KVO 监听时会调用一次 + (BOOL)accessInstanceVariablesDirectly， 调用 setValue:forKey: 时会调用一次 + (BOOL)accessInstanceVariablesDirectly，再去调用 willChangeValueForKey 和 didChangeValueForKey。 
 
-如果 setKey 和 _setKey 不存在，添加 KVO 监听时会调用两次 + (BOOL)accessInstanceVariablesDirectly， 调用 setValue:forKey: 时会调用两次 + (BOOL)accessInstanceVariablesDirectly，再去调用 willChangeValueForKey 和 didChangeValueForKey。 
+添加 KVO 监听第一次调用 accessInstanceVariablesDirectly 方法：
+![isa和superclass](KVO/accessInstanceVariablesDirectly_05.png)
+setValue:forKey: 第一次调用 accessInstanceVariablesDirectly 方法：
+![isa和superclass](KVO/accessInstanceVariablesDirectly_06.png)
 
-第一次调用 
+### setKey 和 _setKey 不存在
+添加 KVO 监听时会调用两次 + (BOOL)accessInstanceVariablesDirectly， 调用 setValue:forKey: 时会调用两次 + (BOOL)accessInstanceVariablesDirectly，再去调用 willChangeValueForKey 和 didChangeValueForKey。 
 
-## valueForKey: 的原理
+添加 KVO 监听第一次调用 accessInstanceVariablesDirectly 方法：
+![isa和superclass](KVO/accessInstanceVariablesDirectly_01.png)
+添加 KVO 监听第二次调用 accessInstanceVariablesDirectly 方法：
+![isa和superclass](KVO/accessInstanceVariablesDirectly_02.png)
+setValue:forKey: 第一次调用 accessInstanceVariablesDirectly 方法：
+![isa和superclass](KVO/accessInstanceVariablesDirectly_03.png)
+setValue:forKey: 第二次调用 accessInstanceVariablesDirectly 方法：
+![isa和superclass](KVO/accessInstanceVariablesDirectly_04.png)
+
+## valueForKey: 原理
 ![isa和superclass](KVO/KVO06.png)
 
+定义 Person：
 ```
 @interface Person : NSObject
 {
@@ -388,4 +404,16 @@ didChangeValueForKey - end - age
 @end
 ```
 
-依次注释掉 - (void)setAge:(int)age、- (void)_setAge:(int)age、- (int)getAge、- (int)age、- (int)isAge、- (int)_age 方法，从打印结果可以发现，setValue: forKey: 方法会优先调用 - (void)setAge:(int)age，- (void)setAge:(int)age 不存在时会调用 - (void)_setAge:(int)age 方法，以此类推。
+依次注释掉 - (int)getAge、- (int)age、- (int)isAge、- (int)_age 方法，从打印结果可以发现，setValue: forKey: 方法会优先调用 - (void)setAge:(int)age，- (void)setAge:(int)age 不存在时会调用 - (void)_setAge:(int)age 方法，以此类推。
+
+## 小结
+
+* 通过KVC修改属性会触发KVO么？  
+会触发KVO。通过KVC修改属性会调用 willChangeValueForKey: 和 didChangeValueForKey: 方法，而 didChangeValueForKey: 方法内部会触发 KVO 监听。  
+
+* KVC 的赋值和取值过程是怎样的？原理是什么？  
+赋值：setValue:forKey: 会按照 setKey:/_setKey: 顺序查找方法，如果方法存在，直接调用方法赋值。如果方法不存在，会调用 accessInstanceVariablesDirectly 方法，判断是否可以访问成员变量。如果可以，会按照 _key/_isKey/key/isKsy 顺序查找成员变量，找到后赋值。如果不可以访问成员变量，或者成员变量不存在，就会调用 setValue:forUndefinedKey: 并抛出异常 NSUnknownKeyException。  
+  
+  取值：valueForKey: 会按照 getKey/key/isKey/_key 顺序查找方法，如果方法存在，直接调用方法取值。如果方法不存在，会调用 accessInstanceVariablesDirectly 方法，判断是否可以访问成员变量。会按照 _key/_isKey/key/isKsy 顺序查找成员变量，找到成员变量后取值。如果不可以访问成员变量，或者成员变量不存在，就会调用 valueForUndefinedKey: 并抛出异常 NSUnknownKeyException。  
+
+
