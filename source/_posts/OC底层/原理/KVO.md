@@ -406,6 +406,16 @@ setValue:forKey: 第二次调用 accessInstanceVariablesDirectly 方法：
 
 依次注释掉 - (int)getAge、- (int)age、- (int)isAge、- (int)_age 方法，从打印结果可以发现，setValue: forKey: 方法会优先调用 - (void)setAge:(int)age，- (void)setAge:(int)age 不存在时会调用 - (void)_setAge:(int)age 方法，以此类推。
 
+### setKey 和 _setKey 存在
+添加 KVO 监听第一次调用 accessInstanceVariablesDirectly 方法：
+![isa和superclass](KVO/accessInstanceVariablesDirectly_07.png)
+
+### setKey 和 _setKey 不存在
+添加 KVO 监听第一次调用 accessInstanceVariablesDirectly 方法：
+![isa和superclass](KVO/accessInstanceVariablesDirectly_08.png)
+valueForKey: 第一次调用 accessInstanceVariablesDirectly 方法：
+![isa和superclass](KVO/accessInstanceVariablesDirectly_09.png)
+
 ## 小结
 
 * 通过KVC修改属性会触发KVO么？  
