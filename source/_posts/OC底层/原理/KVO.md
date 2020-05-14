@@ -12,13 +12,8 @@ KVO的全称是Key-Value Observing，俗称“键值监听”，可以用于监�
 # KVO 监听
 定义 Person、Observer
 ```
-@interface Cat : NSObject
-@property (assign, nonatomic) int weight;
-@end
-
 @interface Person : NSObject
 @property (assign, nonatomic) int age;
-@property (assign, nonatomic) Cat *cat;
 @end
 
 @implementation Person
@@ -131,6 +126,10 @@ person1添加KVO之后 - 0x7fff304afa0b 0x100001cf0
 ### _NSSetIntValueAndNotify 方法
 _NSSetIntValueAndNotify 方法实现猜想：
 ```
+- (void)setAge:(int)age {
+    _NSSetIntValueAndNotify();
+}
+
 void _NSSetIntValueAndNotify 
 {
     [self willChangeValueForKey:@"age"];
@@ -144,6 +143,27 @@ void _NSSetIntValueAndNotify
     [observer observeValueForKeyPath:key ofObject:nil change:nil context:nil];
 }
 ```
+
+查看_NSSet*AndNotify的存在：  
+![isa和superclass](KVO/KVO04.png)
+
+
+_NSSet*ValueAndNotify的内部实现：
+```
+void _NSSet*ValueAndNotify 
+{
+    [self willChangeValueForKey:@"key"];
+    // 原来的 setter 实现
+    [self didChagneValueForKey:@"key"];
+}
+```
+
+* 调用 willChangeValueForKey:  
+* 调用原来的 setter 实现  
+* 调用 didChangeValueForKey:  
+didChangeValueForKey: 内部会调用 observer 的 observeValueForKeyPath:ofObject:change:context: 方法
+
+
 
 ### NSKVONotifying_Person 元类对象
 打印 person1 的元类对象：
@@ -159,3 +179,213 @@ person1添加KVO之后，元类对象 - NSKVONotifying_Person, Person
 ```
 
 NSKVONotifying_Person 类对象的 isa 指针指向的是 NSKVONotifying_Person 元类对象。
+
+
+### 修改成员变量的值是否会触发 KVO
+```
+@interface MJPerson : NSObject
+{
+    @public
+    int _age;
+}
+@end
+
+@implementation MJPerson
+@end
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        MJObserver *observer = [[MJObserver alloc] init];
+        MJPerson *person = [[MJPerson alloc] init];
+        
+        [person addObserver:observer forKeyPath:@"age" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
+
+        person->_age = 10;
+
+        [person removeObserver:observer forKeyPath:@"age"];
+    }
+    return 0;
+}
+```
+
+运行后并没有出现打印。虽然 person 添加了 KVO 监听，但是修改 age 时并没有调用 -(void)setAge 方法。
+
+## 小结
+
+* iOS用什么方式实现对一个对象的KVO？(KVO的本质是什么？)  
+利用 RuntimeAPI 动态生成一个子类，并且让 instance 对象的 isa 指向这个全新的子类。  
+当修改 instance 对象的属性时，会调用 Foundation 的 _NSSetXXXValueAndNotify 函数：  
+```
+willChangeValueForKey:  
+父类原来的setter  
+didChangeValueForKey:  
+```  
+内部会触发监听器（Oberser）的监听方法( observeValueForKeyPath:ofObject:change:context:）
+
+* 如何手动触发KVO？  
+手动调用 willChangeValueForKey: 和 didChangeValueForKey:
+```
+[self willChangeValueForKey:@"age"];
+person->_age = 10;
+[self didChagneValueForKey:@"age"];
+```
+
+* 直接修改成员变量会触发KVO么？  
+不会触发，修改 age 时并没有调用 -(void)setAge 方法。
+
+
+# KVC
+KVC 的全称是 Key-Value Coding，俗称“键值编码”，可以通过一个 key 来访问某个属性。
+
+常见的API有：
+```
+- (void)setValue:(id)value forKeyPath:(NSString *)keyPath;
+- (void)setValue:(id)value forKey:(NSString *)key;
+- (id)valueForKeyPath:(NSString *)keyPath;
+- (id)valueForKey:(NSString *)key; 
+```
+
+## setValue: forKey: 的原理
+![isa和superclass](KVO/KVO05.png)
+
+```
+@interface Person : NSObject
+{
+    @public
+    int _age;
+    int _isAge;
+    int age;
+    int isAge;
+}
+@end
+
+@implementation Person
+- (void)setAge:(int)age
+{
+    NSLog(@"setAge: - %d", age);
+}
+
+- (void)_setAge:(int)age
+{
+    NSLog(@"_setAge: - %d", age);
+}
+
++ (BOOL)accessInstanceVariablesDirectly
+{
+    return YES; //默认的返回值就是YES（YES表示可以访问成员变量）
+}
+@end
+```
+
+通过你 kvc 修改 age 的值：
+```
+Person *person = [[Person alloc] init];
+[person setValue:@10 forKey:@"age"];
+```
+
+依次注释掉 setAge:、_setAge: 方法，可以发现 setValue: forKey: 会优先调用 setAge:，setAge: 不存在时会调用 _setAge: 方法。如果    setAge: 和 _setAge: 都不存在时，会调用 + (BOOL)accessInstanceVariablesDirectly 方法判断是否可以访问成员变量。
+
+打断点后，可以在控制台看到 _age、_isAge、age、isAge 被依次赋值：
+![isa和superclass](KVO/KVO07.png)
+
+## 思考：通过 KVC 修改属性会触发 KVO 么？
+
+```
+@interface Person : NSObject
+{
+    @public
+    int age;
+}
+@end
+
+@implementation Person
+- (void)willChangeValueForKey:(NSString *)key
+{
+    [super willChangeValueForKey:key];
+    NSLog(@"willChangeValueForKey - %@", key);
+}
+
+- (void)didChangeValueForKey:(NSString *)key
+{
+    NSLog(@"didChangeValueForKey - begin - %@", key);
+    [super didChangeValueForKey:key];
+    NSLog(@"didChangeValueForKey - end - %@", key);
+}
+
++ (BOOL)accessInstanceVariablesDirectly
+{
+    return YES; //默认的返回值就是YES（YES表示可以访问成员变量）
+}
+@end
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        MJObserver *observer = [[MJObserver alloc] init];
+        MJPerson *person = [[MJPerson alloc] init];
+        
+        [person addObserver:observer forKeyPath:@"age" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
+
+        [person setValue:@10 forKey:@"age"];
+
+        [person removeObserver:observer forKeyPath:@"age"];
+    }
+    return 0;
+}
+```
+
+打印结果：
+```
+willChangeValueForKey - age
+didChangeValueForKey - begin - age
+observeValueForKeyPath - {
+    kind = 1;
+    new = 10;
+    old = 0;
+}
+didChangeValueForKey - end - age
+```
+
+如果 setKey 和 _setKey 存在，添加 KVO 监听时会调用一次 + (BOOL)accessInstanceVariablesDirectly， 调用 setValue:forKey: 时会调用一次 + (BOOL)accessInstanceVariablesDirectly，再去调用 willChangeValueForKey 和 didChangeValueForKey。 
+
+如果 setKey 和 _setKey 不存在，添加 KVO 监听时会调用两次 + (BOOL)accessInstanceVariablesDirectly， 调用 setValue:forKey: 时会调用两次 + (BOOL)accessInstanceVariablesDirectly，再去调用 willChangeValueForKey 和 didChangeValueForKey。 
+
+第一次调用 
+
+## valueForKey: 的原理
+![isa和superclass](KVO/KVO06.png)
+
+```
+@interface Person : NSObject
+{
+    @public
+    int _age;
+    int _isAge;
+    int age;
+    int isAge;
+}
+@end
+
+@implementation Person
+- (int)getAge
+{
+    return 11;
+}
+
+- (int)age
+{
+    return 12;
+}
+
+- (int)isAge
+{
+    return 13;
+}
+
+- (int)_age
+{
+    return 14;
+}
+@end
+```
+
+依次注释掉 - (void)setAge:(int)age、- (void)_setAge:(int)age、- (int)getAge、- (int)age、- (int)isAge、- (int)_age 方法，从打印结果可以发现，setValue: forKey: 方法会优先调用 - (void)setAge:(int)age，- (void)setAge:(int)age 不存在时会调用 - (void)_setAge:(int)age 方法，以此类推。
