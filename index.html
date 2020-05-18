@@ -239,6 +239,126 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/18/OC底层/原理/Category的实现原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/18/OC底层/原理/Category的实现原理/" itemprop="url">Category的实现原理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-18T15:09:22+08:00">
+                2020-05-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Category的底层结构"><a href="#Category的底层结构" class="headerlink" title="Category的底层结构"></a>Category的底层结构</h1><h2 id="Persion-Test-cpp"><a href="#Persion-Test-cpp" class="headerlink" title="Persion+Test.cpp"></a>Persion+Test.cpp</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//_category_t 结构体</span></div><div class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">category_t</span> &#123;</span></div><div class="line">	<span class="keyword">const</span> <span class="keyword">char</span> *name;</div><div class="line">	<span class="class"><span class="keyword">struct</span> _<span class="title">class_t</span> *<span class="title">cls</span>;</span></div><div class="line">	<span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> _<span class="title">method_list_t</span> *<span class="title">instance_methods</span>;</span> <span class="comment">//对象方法列表</span></div><div class="line">	<span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> _<span class="title">method_list_t</span> *<span class="title">class_methods</span>;</span> <span class="comment">//类方法列表</span></div><div class="line">	<span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> _<span class="title">protocol_list_t</span> *<span class="title">protocols</span>;</span> <span class="comment">//协议列表</span></div><div class="line">	<span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> _<span class="title">prop_list_t</span> *<span class="title">properties</span>;</span> <span class="comment">//属性列表</span></div><div class="line">&#125;;</div><div class="line"><span class="keyword">extern</span> <span class="string">"C"</span> __declspec(dllimport) <span class="class"><span class="keyword">struct</span> <span class="title">objc_cache</span> _<span class="title">objc_empty_cache</span>;</span></div><div class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(disable:4273)</span></div><div class="line"></div><div class="line"><span class="comment">//Category 类对象的对象方法列表</span></div><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> /*_<span class="title">method_list_t</span>*/ &#123;</span></div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> entsize;  <span class="comment">// sizeof(struct _objc_method)</span></div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> method_count;</div><div class="line">	<span class="class"><span class="keyword">struct</span> _<span class="title">objc_method</span> <span class="title">method_list</span>[2];</span></div><div class="line">&#125; _OBJC_$_CATEGORY_INSTANCE_METHODS_Persion_$_Test __attribute__ ((used, section (<span class="string">"__DATA,__objc_const"</span>))) = &#123;</div><div class="line">	<span class="keyword">sizeof</span>(_objc_method),</div><div class="line">	<span class="number">2</span>,</div><div class="line">	&#123;&#123;(struct objc_selector *)<span class="string">"run"</span>, <span class="string">"v16@0:8"</span>, (<span class="keyword">void</span> *)_I_Persion_Test_run&#125;,</div><div class="line">	&#123;(struct objc_selector *)<span class="string">"test"</span>, <span class="string">"v16@0:8"</span>, (<span class="keyword">void</span> *)_I_Persion_Test_test&#125;&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">//Category 类对象的类方法列表</span></div><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> /*_<span class="title">method_list_t</span>*/ &#123;</span></div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> entsize;  <span class="comment">// sizeof(struct _objc_method)</span></div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> method_count;</div><div class="line">	<span class="class"><span class="keyword">struct</span> _<span class="title">objc_method</span> <span class="title">method_list</span>[1];</span></div><div class="line">&#125; _OBJC_$_CATEGORY_CLASS_METHODS_Persion_$_Test __attribute__ ((used, section (<span class="string">"__DATA,__objc_const"</span>))) = &#123;</div><div class="line">	<span class="keyword">sizeof</span>(_objc_method),</div><div class="line">	<span class="number">1</span>,</div><div class="line">	&#123;&#123;(struct objc_selector *)<span class="string">"test2"</span>, <span class="string">"v16@0:8"</span>, (<span class="keyword">void</span> *)_C_Persion_Test_test2&#125;&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">extern</span> <span class="string">"C"</span> __declspec(dllimport) <span class="class"><span class="keyword">struct</span> _<span class="title">class_t</span> <span class="title">OBJC_CLASS_</span>$_<span class="title">Persion</span>;</span></div><div class="line"></div><div class="line"><span class="comment">//Persion+Test 分类的结构体</span></div><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> _<span class="title">category_t</span> _<span class="title">OBJC_</span>$_<span class="title">CATEGORY_Persion_</span>$_<span class="title">Test</span> __<span class="title">attribute__</span> ((<span class="title">used</span>, <span class="title">section</span> ("__<span class="title">DATA</span>,__<span class="title">objc_const</span>"))) = </span></div><div class="line"><span class="class">&#123;</span></div><div class="line">	<span class="string">"Persion"</span>,</div><div class="line">	<span class="number">0</span>, <span class="comment">// &amp;OBJC_CLASS_$_Persion,</span></div><div class="line">	(<span class="keyword">const</span> struct <span class="keyword">_method_list_t</span> *)&amp;_OBJC_$_CATEGORY_INSTANCE_METHODS_Persion_$_Test, <span class="comment">//对象方法列表</span></div><div class="line">	(<span class="keyword">const</span> struct <span class="keyword">_method_list_t</span> *)&amp;_OBJC_$_CATEGORY_CLASS_METHODS_Persion_$_Test, <span class="comment">//类方法列表</span></div><div class="line">	<span class="number">0</span>, <span class="comment">//协议列表</span></div><div class="line">	<span class="number">0</span>, <span class="comment">//属性列表</span></div><div class="line">&#125;;</div><div class="line"><span class="keyword">static</span> <span class="keyword">void</span> OBJC_CATEGORY_SETUP_$_Persion_$_Test(<span class="keyword">void</span> ) &#123;</div><div class="line">	_OBJC_$_CATEGORY_Persion_$_Test.cls = &amp;OBJC_CLASS_$_Persion;</div><div class="line">&#125;</div><div class="line"><span class="meta">#<span class="meta-keyword">pragma</span> section(<span class="meta-string">".objc_inithooks$B"</span>, long, read, write)</span></div><div class="line">__declspec(allocate(<span class="string">".objc_inithooks$B"</span>)) <span class="keyword">static</span> <span class="keyword">void</span> *OBJC_CATEGORY_SETUP[] = &#123;</div><div class="line">	(<span class="keyword">void</span> *)&amp;OBJC_CATEGORY_SETUP_$_Persion_$_Test,</div><div class="line">&#125;;</div><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> _<span class="title">category_t</span> *<span class="title">L_OBJC_LABEL_CATEGORY_</span>$ [1] __<span class="title">attribute__</span>((<span class="title">used</span>, <span class="title">section</span> ("__<span class="title">DATA</span>, __<span class="title">objc_catlist</span>,<span class="title">regular</span>,<span class="title">no_dead_strip</span>")))= &#123;</span></div><div class="line">	&amp;_OBJC_$_CATEGORY_Persion_$_Test,</div><div class="line">&#125;;</div><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">IMAGE_INFO</span> &#123;</span> <span class="keyword">unsigned</span> version; <span class="keyword">unsigned</span> flag; &#125; _OBJC_IMAGE_INFO = &#123; <span class="number">0</span>, <span class="number">2</span> &#125;;</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/13/OC底层/原理/KVO/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1349,140 +1469,13 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/25/OC/时间魔法/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Kevin">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/myAvatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kevin's  blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/05/25/OC/时间魔法/" itemprop="url">时间魔法-NSDate回忆录</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-25T00:00:00+08:00">
-                2016-05-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>总结了下Swift中关于时间的一些简单操作，顺便也把OC的有关NSDate的一些常用方法回顾了一遍，记录成这篇NSDate回忆录。</p>
-<ul>
-<li>日期时间的比较</li>
-<li>NSDate 简单实用</li>
-<li>NSDateFormatter 对日期时间对象做格式化操作的类</li>
-<li>NSDateComponents 的简单使用</li>
-</ul>
-<hr>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/05/25/OC/时间魔法/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -1529,7 +1522,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
