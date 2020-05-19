@@ -4,6 +4,14 @@ date: 2020-05-18 15:09:22
 tags: OC底层原理
 ---
 
+* Category 在编译完成后就变成了一个 _category_t 结构体，里面存储这分类的所有信息。
+* 在程序运行时通过 Runtime 加载所有 _category_t 的数据，把所有 _category_t 的数据（方法、属性、协议）合并到一个大数组中。
+* 合并时先扩充内存，然后将类对象里面的原有数据向后移动，再将分类数据（方法、属性、协议）插入到前排。
+* 靠后被编译到的 _category_t 数据（方法、属性、协议），因为在这个大数组的前排，所以会被优先调用到。  
+
+<!-- more -->
+
+
 # Category 的底层结构
 
 ## 定义 Persion+Test
@@ -93,16 +101,7 @@ static struct _category_t *L_OBJC_LABEL_CATEGORY_$ [1] __attribute__((used, sect
 static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO = { 0, 2 };
 ```
 
-## Category 的编译顺序
-原文件 Persion.m 最先编译，之后添加的分类按照添加顺序，优先编译后来添加的分类。添加顺序：
-![Category的实现原理01](Category的实现原理/Category的实现原理01.png)
-
-如图编译顺序为 Persion.m -> Persion+Test.m -> Persion+Demo.m。如果 Persion.m、Persion+Test.m、Persion+Demo.m 中有相同的方法，后编译的类中的方法会优先于先编译的类中的方法（不是覆盖，只是优先被查询到）。
-
-
 # Category 的加载处理过程
-
-Category 在编译完成后就变成了一个 _category_t 结构体。然后在程序运行时通过 Runtime 加载所有 _category_t 的数据，即把所有 _category_t 的方法、属性、协议数据，合并到一个大数组中。合并时将分类数据（方法、属性、协议），插入到类原来数据的前面。靠后面被编译的 _category_t 数据，会在这个大数组的前面，会被优先调用。  
 
 打开 runtime 源码 [objc4-781](https://opensource.apple.com/tarballs/objc4/)。找到运行时入口 objc-os.mm 文件，打开文件找到运行时的初始化方法 void _objc_init(void) 方法：
 
@@ -381,6 +380,8 @@ attachCategories(Class cls, const locstamped_category_t *cats_list, uint32_t cat
     auto rwe = cls->data()->extAllocIfNeeded();
 
     for (uint32_t i = 0; i < cats_count; i++) {
+		
+		// 取出某个分类 entry 是 category_t 类型
         auto& entry = cats_list[i];
 		
 		// 方法数组
@@ -468,10 +469,75 @@ void attachLists(List* const * addedLists, uint32_t addedCount) {
 
 ## realloc、memmove、memcpy
 attachLists 方法内部
-1. 通过参数 addedCount 确定需要增加的内存空间 newCount，然后通过 realloc 方法重新分配空间。  
-2. 空间增加后，通过 memmove 方法将类对象里的信息往后移动 addedCount 距离，把前排 addedCount 大小的空间空出来留给将要添加进来的分类信息。  
+1.通过参数 addedCount 确定需要增加的内存空间 newCount，然后通过 realloc 方法重新分配空间。  
+2.空间增加后，通过 memmove 方法将类对象里的信息往后移动 addedCount 距离，把前排 addedCount 大小的空间空出来留给将要添加进来的分类信息。  
 ![Category的实现原理01](Category的实现原理/Category的实现原理02.png)
 
-
-3. 类对象的前排空间空出来后，再通过 memcpy 方法将分类信息拷贝到该空间里。
+3.类对象的前排空间空出来后，再通过 memcpy 方法将分类信息拷贝到该空间里。
 ![Category的实现原理01](Category的实现原理/Category的实现原理03.png)
+
+## Category 的编译顺序
+原文件 Persion.m 最先编译，之后添加的分类按照添加顺序，优先编译后来添加的分类。添加顺序：
+![Category的实现原理01](Category的实现原理/Category的实现原理01.png)
+
+如图编译顺序为 Persion.m -> Persion+Test.m -> Persion+Demo.m。如果 Persion.m、Persion+Test.m、Persion+Demo.m 中有相同的方法，后编译的类中的方法会优先于先编译的类中的方法（不是覆盖，只是优先被查询到）。
+
+调用日志：
+![Category的实现原理01](Category的实现原理/Category的实现原理04.png)
+
+可以看到 Persion.m 被优先编译，其次是后来添加的 Persion+Test.m，第三个编译的是 最后添加的 Persion+Demo.m。添加顺序决定编译顺序只对分类有效，Persion.m 一定是最先编译的，这一点通过 methodizeClass 方法也能看出来，先处理类对象，再处理分类。
+
+# Class Extension 的实现原理
+
+## 定义 Persion()
+```
+@interface Persion : NSObject
+@property (nonatomic, copy) NSString *categoryTest1;
+- (void)run;
+- (void)test;
++ (void)test2;
+@end
+
+@interface Persion()
+@property (nonatomic, copy) NSString *categoryTest2;
+@end
+
+@implementation Persion
+- (void)run
+{
+    NSLog(@"Person - run");
+}
+- (void)test
+{
+    NSLog(@"test");
+}
++ (void)test2
+{
+    
+}
+@end
+```
+
+将 OC 代码转换为 C\C++ 代码，并在生成的 C/C++ 代码中找到 Persion 的实现：
+```
+extern "C" unsigned long OBJC_IVAR_$_Persion$_categoryTest1;
+extern "C" unsigned long OBJC_IVAR_$_Persion$_categoryTest2;
+struct Persion_IMPL {
+	struct NSObject_IMPL NSObject_IVARS;
+	NSString * _Nonnull _categoryTest1;
+	NSString *_categoryTest2;
+};
+```
+
+上面👆这块代码可以看到，在 Persion() 中定义的 categoryTest2 已经包含在类 Persion 类对象的结构体里面了。可以证明 Class Extension 在编译的时候，它的数据就已经包含在类信息中了。从实现上来看，Class Extension 不应该叫做匿名分类，叫类扩展更适合。
+
+## 小结
+* 运行时入口 objc-os.mm，初始化方法 void _objc_init(void) 方法。
+
+* objc4 的代码虽然改了，但是实现原理还是没变。
+
+* Category 的实现原理  
+Category 编译之后的底层结构是 struct category_t，里面存储着分类的对象方法、类方法、属性、协议信息，在程序运行的时候，runtime 会将 Category 的数据，合并到类信息中（类对象、元类对象中）。
+
+* Category 和 Class Extension 的区别是什么？  
+Class Extension 在编译的时候，它的数据就已经包含在类信息中。Category 是在运行时，才会将数据合并到类信息中。
