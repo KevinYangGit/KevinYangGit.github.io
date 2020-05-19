@@ -69,21 +69,21 @@
 
 
 
-<meta name="description" content="Category 在编译完成后就变成了一个 _category_t 结构体。 在程序运行时通过 Runtime 加载所有 _category_t 的数据，把所有 _category_t 的数据（方法、属性、协议）合并到一个大数组中。 合并时先扩充内存，然后类对象的信息向后移动，再将分类数据（方法、属性、协议）插入到前排。 靠后被编译到的 _category_t 数据（方法、属性、协议），因为在这">
+<meta name="description" content="Category 在编译完成后就变成了一个 _category_t 结构体。 在程序运行时通过 Runtime 加载所有 _category_t 的数据，把所有 _category_t 的数据（方法、属性、协议）合并到一个大数组中。 合并时先扩充内存，然后将类对象里面的原有数据向后移动，再将分类数据（方法、属性、协议）插入到前排。 靠后被编译到的 _category_t 数据（方法、属性、协议）">
 <meta name="keywords" content="OC底层原理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Category 的实现原理">
 <meta property="og:url" content="http://yoursite.com/2020/05/18/OC底层/原理/Category的实现原理/index.html">
 <meta property="og:site_name" content="Kevin&#39;s  blog">
-<meta property="og:description" content="Category 在编译完成后就变成了一个 _category_t 结构体。 在程序运行时通过 Runtime 加载所有 _category_t 的数据，把所有 _category_t 的数据（方法、属性、协议）合并到一个大数组中。 合并时先扩充内存，然后类对象的信息向后移动，再将分类数据（方法、属性、协议）插入到前排。 靠后被编译到的 _category_t 数据（方法、属性、协议），因为在这">
+<meta property="og:description" content="Category 在编译完成后就变成了一个 _category_t 结构体。 在程序运行时通过 Runtime 加载所有 _category_t 的数据，把所有 _category_t 的数据（方法、属性、协议）合并到一个大数组中。 合并时先扩充内存，然后将类对象里面的原有数据向后移动，再将分类数据（方法、属性、协议）插入到前排。 靠后被编译到的 _category_t 数据（方法、属性、协议）">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/05/18/OC底层/原理/Category的实现原理/Category的实现原理01.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/18/OC底层/原理/Category的实现原理/Category的实现原理02.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/18/OC底层/原理/Category的实现原理/Category的实现原理03.png">
-<meta property="og:updated_time" content="2020-05-19T15:10:51.035Z">
+<meta property="og:updated_time" content="2020-05-19T15:13:59.111Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Category 的实现原理">
-<meta name="twitter:description" content="Category 在编译完成后就变成了一个 _category_t 结构体。 在程序运行时通过 Runtime 加载所有 _category_t 的数据，把所有 _category_t 的数据（方法、属性、协议）合并到一个大数组中。 合并时先扩充内存，然后类对象的信息向后移动，再将分类数据（方法、属性、协议）插入到前排。 靠后被编译到的 _category_t 数据（方法、属性、协议），因为在这">
+<meta name="twitter:description" content="Category 在编译完成后就变成了一个 _category_t 结构体。 在程序运行时通过 Runtime 加载所有 _category_t 的数据，把所有 _category_t 的数据（方法、属性、协议）合并到一个大数组中。 合并时先扩充内存，然后将类对象里面的原有数据向后移动，再将分类数据（方法、属性、协议）插入到前排。 靠后被编译到的 _category_t 数据（方法、属性、协议）">
 <meta name="twitter:image" content="http://yoursite.com/2020/05/18/OC底层/原理/Category的实现原理/Category的实现原理01.png">
 
 
@@ -317,8 +317,8 @@
         <ul>
 <li>Category 在编译完成后就变成了一个 _category_t 结构体。</li>
 <li>在程序运行时通过 Runtime 加载所有 _category_t 的数据，把所有 _category_t 的数据（方法、属性、协议）合并到一个大数组中。</li>
-<li>合并时先扩充内存，然后类对象的信息向后移动，再将分类数据（方法、属性、协议）插入到前排。</li>
-<li>靠后被编译到的 _category_t 数据（方法、属性、协议），因为在这个大数组的前排，所以会被优先调用。  </li>
+<li>合并时先扩充内存，然后将类对象里面的原有数据向后移动，再将分类数据（方法、属性、协议）插入到前排。</li>
+<li>靠后被编译到的 _category_t 数据（方法、属性、协议），因为在这个大数组的前排，所以会被优先调用到。  </li>
 </ul>
 <a id="more"></a>
 <h1 id="Category-的底层结构"><a href="#Category-的底层结构" class="headerlink" title="Category 的底层结构"></a>Category 的底层结构</h1><h2 id="定义-Persion-Test"><a href="#定义-Persion-Test" class="headerlink" title="定义 Persion+Test"></a>定义 Persion+Test</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Persion</span> (<span class="title">Test</span>)</span></div><div class="line">- (<span class="keyword">void</span>)run;</div><div class="line">- (<span class="keyword">void</span>)test;</div><div class="line">+ (<span class="keyword">void</span>)test2;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Persion</span> (<span class="title">Test</span>)</span></div><div class="line">- (<span class="keyword">void</span>)run</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Person (Test) - run"</span>);</div><div class="line">&#125;</div><div class="line">- (<span class="keyword">void</span>)test</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"test"</span>);</div><div class="line">&#125;</div><div class="line">+ (<span class="keyword">void</span>)test2</div><div class="line">&#123;</div><div class="line">    </div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
