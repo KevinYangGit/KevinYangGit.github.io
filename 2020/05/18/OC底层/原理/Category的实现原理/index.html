@@ -78,7 +78,7 @@
 <meta property="og:description" content="Category 的底层结构定义 Persion+Test1234567891011121314151617181920@interface Persion (Test)- (void)run;- (void)test;+ (void)test2;@end@implementation Persion (Test)- (void)run&amp;#123;    NSLog(@&quot;Person (Test)">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/05/18/OC底层/原理/Category的实现原理/Category的实现原理01.png">
-<meta property="og:updated_time" content="2020-05-19T08:40:49.359Z">
+<meta property="og:updated_time" content="2020-05-19T08:42:26.315Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Category 的实现原理">
 <meta name="twitter:description" content="Category 的底层结构定义 Persion+Test1234567891011121314151617181920@interface Persion (Test)- (void)run;- (void)test;+ (void)test2;@end@implementation Persion (Test)- (void)run&amp;#123;    NSLog(@&quot;Person (Test)">
@@ -341,21 +341,7 @@
 <li>通过参数 addedCount 确定需要增加的内存空间 newCount，然后通过 realloc 方法重新分配空间。  </li>
 <li>空间增加后，通过 memmove 方法将类对象里的信息往后移动 addedCount 距离，把前排 addedCount 大小的空间空出来留给将要添加进来的分类信息。  </li>
 </ol>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>oldCount</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-<td>类对象原有信息</td>
-<td></td>
-</tr>
-</tbody>
-</table>
+<p>| oldCount<br>-|-<br>| 类对象原有信息 </p>
 <p>memmove👇</p>
 <table>
 <thead>
@@ -367,8 +353,7 @@
 <tbody>
 <tr>
 <td>NULL</td>
-<td>类对象原有信息</td>
-<td></td>
+<td>类对象原有信息 </td>
 </tr>
 </tbody>
 </table>
@@ -385,8 +370,7 @@
 <tbody>
 <tr>
 <td>分类信息</td>
-<td>类对象原有信息</td>
-<td></td>
+<td>类对象原有信息 </td>
 </tr>
 </tbody>
 </table>
