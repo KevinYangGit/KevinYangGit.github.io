@@ -239,6 +239,145 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/20/OC底层/原理/load和-initialize的实现原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/20/OC底层/原理/load和-initialize的实现原理/" itemprop="url">+load和+initialize的实现原理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-20T10:45:30+08:00">
+                2020-05-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="load-方法"><a href="#load-方法" class="headerlink" title="+load 方法"></a>+load 方法</h1><ul>
+<li>+load 方法会在 runtime 加载类、分类时调用；</li>
+<li>每个类、分类的 +load 方法，在程序运行过程中只调用一次；</li>
+</ul>
+<h2 id="定义-Persion、Persion-Test1-和-Persion-Test2"><a href="#定义-Persion、Persion-Test1-和-Persion-Test2" class="headerlink" title="定义 Persion、Persion+Test1 和 Persion+Test2"></a>定义 Persion、Persion+Test1 和 Persion+Test2</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MJPerson</span> : <span class="title">NSObject</span></span></div><div class="line">+ (<span class="keyword">void</span>)test;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MJPerson</span></span></div><div class="line">+ (<span class="keyword">void</span>)load</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"MJPerson +load"</span>);</div><div class="line">&#125;</div><div class="line">+ (<span class="keyword">void</span>)test</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"MJPerson +test"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MJPerson</span> (<span class="title">Test1</span>)</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MJPerson</span> (<span class="title">Test1</span>)</span></div><div class="line">+ (<span class="keyword">void</span>)load</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"MJPerson (Test1) +load"</span>);</div><div class="line">&#125;</div><div class="line">+ (<span class="keyword">void</span>)test</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"MJPerson (Test1) +test"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MJPerson</span> (<span class="title">Test2</span>)</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MJPerson</span> (<span class="title">Test2</span>)</span></div><div class="line">+ (<span class="keyword">void</span>)load</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"MJPerson (Test2) +load"</span>);</div><div class="line">&#125;</div><div class="line">+ (<span class="keyword">void</span>)test</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"MJPerson (Test2) +test"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"main"</span>);</div><div class="line">        [Persion test];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>编译顺序：<br><img src="/2020/05/20/OC底层/原理/load和-initialize的实现原理/load和-initialize的实现原理01.png" alt="load和-initialize的实现原理01"></p>
+<p>打印结果：<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Persion +load</div><div class="line">Persion (<span class="name">Test2</span>) +load</div><div class="line">Persion (<span class="name">Test1</span>) +load</div><div class="line">main</div><div class="line">Persion (<span class="name">Test1</span>) +test</div></pre></td></tr></table></figure></p>
+<p>从打印结果👆可以看出：  </p>
+<ul>
+<li>类和分类里的 +load 方法都会被调用</li>
+<li>+load 方法的调用顺序和编译顺序是一致的</li>
+<li>Persion (Test1) 最后被编译，所以优先调用 Persion (Test1) 里的 +test 方法  </li>
+</ul>
+<p>打开 runtime 源码 <a href="https://opensource.apple.com/tarballs/objc4/" target="_blank" rel="external">objc4-781</a>。找到运行时入口 objc-os.mm 文件，打开文件找到运行时的初始化方法 void _objc_init(void) 方法：</p>
+<h2 id="objc-init"><a href="#objc-init" class="headerlink" title="_objc_init"></a>_objc_init</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> _objc_init(<span class="keyword">void</span>)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">bool</span> initialized = <span class="literal">false</span>;</div><div class="line">    <span class="keyword">if</span> (initialized) <span class="keyword">return</span>;</div><div class="line">    initialized = <span class="literal">true</span>;</div><div class="line">    </div><div class="line">    <span class="comment">// fixme defer initialization until an objc-using image is found?</span></div><div class="line">    environ_init(); <span class="comment">//设置系统的环境变量</span></div><div class="line">    tls_init(); <span class="comment">//线程相关的处理</span></div><div class="line">    static_init(); <span class="comment">//运行C ++静态构造函数</span></div><div class="line">    runtime_init();</div><div class="line">    exception_init(); <span class="comment">//注册异常的回调</span></div><div class="line">    cache_init();</div><div class="line">    _imp_implementationWithBlock_init();</div><div class="line"></div><div class="line">    _dyld_objc_notify_register(&amp;map_images, load_images, unmap_image); <span class="comment">//调用dyld的函数注册一个回调，并执行回调函数。</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> __OBJC2__</span></div><div class="line">    didCallDyldNotifyRegister = <span class="literal">true</span>;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="load-images"><a href="#load-images" class="headerlink" title="load_images"></a>load_images</h3><p>找到 _objc_init 方法里的 load_images 方法，Jump To Definition -&gt; load_images：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span></div><div class="line">load_images(<span class="keyword">const</span> <span class="keyword">char</span> *path __unused, <span class="keyword">const</span> <span class="keyword">struct</span> mach_header *mh)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span> (!didInitialAttachCategories &amp;&amp; didCallDyldNotifyRegister) &#123;</div><div class="line">        didInitialAttachCategories = <span class="literal">true</span>;</div><div class="line">        loadAllCategories();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// Return without taking locks if there are no +load methods here.</span></div><div class="line">    <span class="keyword">if</span> (!hasLoadMethods((<span class="keyword">const</span> headerType *)mh)) <span class="keyword">return</span>;</div><div class="line"></div><div class="line">    <span class="function">recursive_mutex_locker_t <span class="title">lock</span>(<span class="params">loadMethodLock</span>)</span>;</div><div class="line"></div><div class="line">    <span class="comment">// Discover load methods</span></div><div class="line">    &#123;</div><div class="line">        <span class="function">mutex_locker_t <span class="title">lock2</span>(<span class="params">runtimeLock</span>)</span>;</div><div class="line">        prepare_load_methods((<span class="keyword">const</span> headerType *)mh);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// Call +load methods (without runtimeLock - re-entrant)</span></div><div class="line">    call_load_methods();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="prepare-load-methods"><a href="#prepare-load-methods" class="headerlink" title="prepare_load_methods"></a>prepare_load_methods</h4><p>找到 load_images 方法里的 prepare_load_methods 方法，Jump To Definition -&gt; prepare_load_methods：<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">void prepare_load_methods(<span class="keyword">const</span> headerType *mhdr)</div><div class="line">&#123;</div><div class="line">    size_t <span class="keyword">count</span>, i;</div><div class="line"></div><div class="line">    runtimeLock.assertLocked();</div><div class="line"></div><div class="line">    classref_t <span class="keyword">const</span> *classlist = </div><div class="line">        _getObjc2NonlazyClassList(mhdr, &amp;<span class="keyword">count</span>);</div><div class="line">    <span class="keyword">for</span> (i = 0; i &lt; <span class="keyword">count</span>; i++) &#123;</div><div class="line">        schedule_class_load(remapClass(classlist[i]));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    category_t * <span class="keyword">const</span> *categorylist = _getObjc2NonlazyCategoryList(mhdr, &amp;<span class="keyword">count</span>);</div><div class="line">    <span class="keyword">for</span> (i = 0; i &lt; <span class="keyword">count</span>; i++) &#123;</div><div class="line">        category_t *<span class="keyword">cat</span> = categorylist[i];</div><div class="line">        <span class="keyword">Class</span> cls = remapClass(<span class="keyword">cat</span>-&gt;cls);</div><div class="line">        <span class="keyword">if</span> (!cls) <span class="keyword">continue</span>;  <span class="comment">// category for ignored weak-linked class</span></div><div class="line">        <span class="keyword">if</span> (cls-&gt;isSwiftStable()) &#123;</div><div class="line">            _objc_fatal(<span class="string">"Swift class extensions and categories on Swift "</span></div><div class="line">                        <span class="string">"classes are not allowed to have +load methods"</span>);</div><div class="line">        &#125;</div><div class="line">        realizeClassWithoutSwift(cls, nil);</div><div class="line">        <span class="keyword">ASSERT</span>(cls-&gt;ISA()-&gt;isRealized());</div><div class="line">        add_category_to_loadable_list(<span class="keyword">cat</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="schedule-class-load"><a href="#schedule-class-load" class="headerlink" title="schedule_class_load"></a>schedule_class_load</h4><p>找到 prepare_load_methods 方法里的 schedule_class_load 方法，Jump To Definition -&gt; schedule_class_load：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> void schedule_class_load(<span class="class"><span class="keyword">Class</span> <span class="title">cls</span>)</span></div><div class="line"><span class="class"></span>&#123;</div><div class="line">    <span class="keyword">if</span> (!cls) <span class="keyword">return</span>;</div><div class="line">    ASSERT(cls-&gt;isRealized());  <span class="comment">// _read_images should realize</span></div><div class="line"></div><div class="line">    <span class="keyword">if</span> (cls-&gt;data()-&gt;flags &amp; RW_LOADED) <span class="keyword">return</span>;</div><div class="line"></div><div class="line">    <span class="comment">// Ensure superclass-first ordering</span></div><div class="line">    schedule_class_load(cls-&gt;superclass);</div><div class="line"></div><div class="line">    add_class_to_loadable_list(cls);</div><div class="line">    cls-&gt;setInfo(RW_LOADED); </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h5 id="add-class-to-loadable-list"><a href="#add-class-to-loadable-list" class="headerlink" title="add_class_to_loadable_list"></a>add_class_to_loadable_list</h5><p>找到 schedule_class_load 方法里的 add_class_to_loadable_list 方法，Jump To Definition -&gt; add_class_to_loadable_list：<br><figure class="highlight monkey"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">void add_class_to_loadable_list(<span class="class"><span class="keyword">Class</span> <span class="title">cls</span>)</span></div><div class="line">&#123;</div><div class="line">    IMP <span class="function"><span class="keyword">method</span>;</span></div><div class="line"></div><div class="line">    loadMethodLock.assertLocked();</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">method</span> =</span> cls-&gt;getLoadMethod();</div><div class="line">    <span class="keyword">if</span> (!<span class="function"><span class="keyword">method</span>) <span class="title">return</span>;  // <span class="title">Don</span>'<span class="title">t</span> <span class="title">bother</span> <span class="title">if</span> <span class="title">cls</span> <span class="title">has</span> <span class="title">no</span> +<span class="title">load</span> <span class="title">method</span></span></div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (PrintLoading) &#123;</div><div class="line">        _objc_inform(<span class="string">"LOAD: class '%s' scheduled for +load"</span>, </div><div class="line">                     cls-&gt;nameForLogging());</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (loadable_classes_used == loadable_classes_allocated) &#123;</div><div class="line">        loadable_classes_allocated = loadable_classes_allocated*<span class="number">2</span> + <span class="number">16</span>;</div><div class="line">        loadable_classes = (struct loadable_class *)</div><div class="line">            realloc(loadable_classes,</div><div class="line">                              loadable_classes_allocated *</div><div class="line">                              sizeof(struct loadable_class));</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    loadable_classes[loadable_classes_used].cls = cls;</div><div class="line">    loadable_classes[loadable_classes_used].method = <span class="function"><span class="keyword">method</span>;</span></div><div class="line">    loadable_classes_used++;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="add-category-to-loadable-list"><a href="#add-category-to-loadable-list" class="headerlink" title="add_category_to_loadable_list"></a>add_category_to_loadable_list</h4><p>找到 prepare_load_methods 方法里的 add_category_to_loadable_list 方法，Jump To Definition -&gt; add_category_to_loadable_list：<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">void add_category_to_loadable_list(Category cat)</div><div class="line">&#123;</div><div class="line">    IMP <span class="built_in">method</span>;</div><div class="line"></div><div class="line">    loadMethodLock.assertLocked();</div><div class="line"></div><div class="line">    <span class="built_in">method</span> = _category_getLoadMethod(cat);</div><div class="line"></div><div class="line">    // Don't bother <span class="keyword">if</span> cat has no +<span class="built_in">load</span> <span class="built_in">method</span></div><div class="line">    <span class="keyword">if</span> (!<span class="built_in">method</span>) <span class="built_in">return</span>;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (PrintLoading) &#123;</div><div class="line">        _objc_inform(<span class="string">"LOAD: category '%s(%s)' scheduled for +load"</span>, </div><div class="line">                     _category_getClassName(cat), _category_getName(cat));</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (loadable_categories_used == loadable_categories_allocated) &#123;</div><div class="line">        loadable_categories_allocated = loadable_categories_allocated*<span class="number">2</span> + <span class="number">16</span>;</div><div class="line">        loadable_categories = (struct loadable_category *)</div><div class="line">            realloc(loadable_categories,</div><div class="line">                              loadable_categories_allocated *</div><div class="line">                              sizeof(struct loadable_category));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    loadable_categories[loadable_categories_used].cat = cat;</div><div class="line">    loadable_categories[loadable_categories_used].<span class="built_in">method</span> = <span class="built_in">method</span>;</div><div class="line">    loadable_categories_used++;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/18/OC底层/原理/Category的实现原理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1352,132 +1491,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/27/Swift/时间魔法Swift篇/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Kevin">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/myAvatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kevin's  blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/05/27/Swift/时间魔法Swift篇/" itemprop="url">时间魔法 Swift篇</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-27T00:00:00+08:00">
-                2016-05-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><ul>
-<li>NSDate 。在日期编程中，这个对象描述了日期和时间信息。可以把日期和时间看做是类中的普通属性，它不但用于日期，也用于时间处理。格式化，这个概念在直接处理 NSDate 对象时还用不到，只有在将日期对象转换为字符串对象时，才能用到格式化。</li>
-<li>NSDateComponents 。这个类可以简单的看做是 NSDate 的“姐妹”类，因为它为开发者带来了许多关于日期的便捷操作。其中一项重要内容是：它可以将日期和时间分割成独立的属性，这样就可以直接访问每项属性，这在诸如日期计算之类的任务中非常有用。</li></ul>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/05/27/Swift/时间魔法Swift篇/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1531,7 +1544,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
