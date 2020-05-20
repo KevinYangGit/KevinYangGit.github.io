@@ -103,9 +103,22 @@ static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO =
 
 # Category 的加载处理过程
 
+## objc4 源码解读过程
+* objc-os.mm  
+_objc_init  
+map_images  
+map_images_nolock
+
+* objc-runtime-new.mm  
+_read_images  
+remethodizeClass  
+attachCategories  
+attachLists  
+realloc、memmove、 memcpy
+
 打开 runtime 源码 [objc4-781](https://opensource.apple.com/tarballs/objc4/)。找到运行时入口 objc-os.mm 文件，打开文件找到运行时的初始化方法 void _objc_init(void) 方法：
 
-## _objc_init
+### _objc_init
 ```
 void _objc_init(void)
 {
@@ -130,7 +143,7 @@ void _objc_init(void)
 }
 ```
 
-## map_images
+#### map_images
 Jump To Definition -> map_images:
 ```
 void
@@ -143,7 +156,7 @@ map_images(unsigned count, const char * const paths[],
 ```
 map_images 方法的主要作用是处理由dyld映射的镜像文件.  
 
-## map_images_nolock
+#### map_images_nolock
 Jump To Definition -> map_images_nolock：
 ```
 void 
@@ -171,7 +184,7 @@ map_images_nolock(unsigned mhCount, const char * const mhPaths[],
 
 _read_images：images 是模块/镜像的意思。该方法是读取模块用的，比如读取类信息、分类信息等。  
 
-## _read_images
+### _read_images
 Jump To Definition -> _read_images：
 ```
 void _read_images(header_info **hList, uint32_t hCount, int totalClasses, int unoptimizedTotalClasses)
@@ -218,7 +231,7 @@ void _read_images(header_info **hList, uint32_t hCount, int totalClasses, int un
 
 上面👆代码是 _read_images 处理 Category 的核心代码，首先通过 _getObjc2NonlazyClassList 方法获取 Category 数组，遍历 Category 数组通过 remapClass 获取分类对应的指针，作为参数调用 realizeClassWithoutSwift 方法。
 
-## realizeClassWithoutSwift
+#### realizeClassWithoutSwift
 Jump To Definition -> realizeClassWithoutSwift：
 ```
 static Class realizeClassWithoutSwift(Class cls, Class previously)
@@ -238,7 +251,7 @@ realizeClassWithoutSwift 方法内部进过一顿骚操作，最后调用 method
 
 Attach categories：将分类信息附加到类对象里。  
 
-## methodizeClass
+#### methodizeClass
 Jump To Definition -> methodizeClass：
 ```
 static void methodizeClass(Class cls, Class previously)
@@ -314,7 +327,7 @@ static void methodizeClass(Class cls, Class previously)
 ```
 Install methods and properties that the class implements itself. 可以看出该方法是在加载类对象自己内部的信息。分别针对方法数组、属性数组和协议数组调用 attachLists 方法，将信息添加到类对象里。
 
-## attachToClass
+#### attachToClass
 Jump To Definition -> attachToClass:
 ```
 void attachToClass(Class cls, Class previously, int flags)
@@ -341,7 +354,7 @@ void attachToClass(Class cls, Class previously, int flags)
     }
 ```
 
-## attachCategories
+#### attachCategories
 Jump To Definition -> attachCategories:
 ```
 static void
@@ -432,7 +445,7 @@ attachCategories(Class cls, const locstamped_category_t *cats_list, uint32_t cat
 
 分别针对方法数组、属性数组和协议数组调用 attachLists 方法，将分类信息添加到原类对象里。
 
-## attachLists
+#### attachLists
 Jump To Definition -> attachLists:
 ```
 void attachLists(List* const * addedLists, uint32_t addedCount) {
@@ -467,7 +480,7 @@ void attachLists(List* const * addedLists, uint32_t addedCount) {
     }
 ```
 
-## realloc、memmove、memcpy
+#### realloc、memmove、memcpy
 attachLists 方法内部
 1.通过参数 addedCount 确定需要增加的内存空间 newCount，然后通过 realloc 方法重新分配空间。  
 2.空间增加后，通过 memmove 方法将类对象里的信息往后移动 addedCount 距离，把前排 addedCount 大小的空间空出来留给将要添加进来的分类信息。  
@@ -480,7 +493,7 @@ attachLists 方法内部
 原文件 Persion.m 最先编译，之后添加的分类按照添加顺序，优先编译后来添加的分类。添加顺序：
 ![Category的实现原理01](Category的实现原理/Category的实现原理01.png)
 
-如图编译顺序为 Persion.m -> Persion+Test.m -> Persion+Demo.m。如果 Persion.m、Persion+Test.m、Persion+Demo.m 中有相同的方法，后编译的类中的方法会优先于先编译的类中的方法（不是覆盖，只是优先被查询到）。
+如图编译顺序按照 Compile Sources 里的顺序，为 Persion.m -> Persion+Test.m -> Persion+Demo.m。如果 Persion.m、Persion+Test.m、Persion+Demo.m 中有相同的方法，后编译的类中的方法会优先于先编译的类中的方法（不是覆盖，只是优先被查询到）。
 
 调用日志：
 ![Category的实现原理01](Category的实现原理/Category的实现原理04.png)
