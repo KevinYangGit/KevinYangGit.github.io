@@ -379,6 +379,8 @@ Persion (Test1) +test
 
 ### prepare_load_methods
 
+获取并保存所有的类和分类。
+
 Jump To Definition -> prepare_load_methods：
 ```
 void prepare_load_methods(const headerType *mhdr)
@@ -394,7 +396,7 @@ void prepare_load_methods(const headerType *mhdr)
     }
 
     category_t * const *categorylist = _getObjc2NonlazyCategoryList(mhdr, &count); //获取所有的分类
-    for (i = 0; i < count; i++) {
+    for (i = 0; i < count; i++) { //遍历分类数组，逐个取出所有分类 cat
         category_t *cat = categorylist[i];
         Class cls = remapClass(cat->cls);
         if (!cls) continue;  // category for ignored weak-linked class
@@ -411,13 +413,16 @@ void prepare_load_methods(const headerType *mhdr)
 
 _getObjc2NonlazyClassList 方法是获取到所有的类。  
 
-schedule_class_load 方法是将类 cls 及其父类添加到 loadable_classes 数组中。  
-
 _getObjc2NonlazyCategoryList 方法是获取到所有的分类。  
+
+schedule_class_load 方法内部调用了一个 add_class_to_loadable_list 方法，是将类 cls 及其父类添加到 loadable_classes 数组中。  
 
 add_category_to_loadable_list 方法是将分类 cat 添加到 loadable_categories 数组中。
 
 ### schedule_class_load
+
+通过递归，通过 add_class_to_loadable_list 方法，将类 cls 的父类及其自身添加到 loadable_classes 数组中。  
+
 Jump To Definition -> schedule_class_load：
 ```
 static void schedule_class_load(Class cls)
@@ -440,6 +445,9 @@ schedule_class_load 方法内部通过 schedule_class_load(cls->superclass) 方�
 在 schedule_class_load 方法的最后，通过修改类 cls 的 info 信息来标记已经加入到 loadable_classes 数组中了，避免重复操作。
 
 ### add_class_to_loadable_list
+
+将传入的 cls 类添加到 loadable_classes 数组中。
+
 Jump To Definition -> add_class_to_loadable_list：
 ```
 void add_class_to_loadable_list(Class cls)
@@ -470,12 +478,13 @@ void add_class_to_loadable_list(Class cls)
 }
 ```
 
-add_class_to_loadable_list 方法是实现将类 cls 添加到 loadable_classes 数组的方法。  
-
 loadable_classes 可以理解为 runtime 中存储所有“类”的容器。
 
 ### add_category_to_loadable_list
-Jump To Definition -> add_category_to_loadable_list：
+
+将传入的分类 cat 添加到 loadable_categories 数组中。   
+
+Jump To Definition -> add_category_to_loadable_list：  
 ```
 void add_category_to_loadable_list(Category cat)
 {
@@ -507,11 +516,9 @@ void add_category_to_loadable_list(Category cat)
 }
 ```
 
-add_category_to_loadable_list 方法是实现将分类 cat 添加到 loadable_categories 数组的方法。  
-
 loadable_categories 可以理解为 runtime 中存储所有“分类”的容器。
 
-Jump To Definition -> method：
+Jump To Definition -> method：  
 ```
 struct loadable_class {
     Class cls;  // may be nil
@@ -524,7 +531,25 @@ struct loadable_category {
 };
 ```
 
+
 ## 小结
 * 因为 runtime 中 call_load_methods 方法里是按照 call_class_loads()、call_category_loads() 顺序调用的方法的，所以是先调用类里的 +load 方法，再按照分类的编译顺序调用分类里的 +load 方法。
 
-* 类中的 +load 方法的调用流程：_objc_init -> load_images -> 
+* 类中的 +load 方法的调用流程： 
+```
+_objc_init -> load_images -
+
+-> prepare_load_methods -> schedule_class_load(递归、优先添加父类) -> add_class_to_loadable_list  
+
+-> call_load_methods -> call_class_loads 
+
+``` 
+
+* 分类中的 +load 方法的调用流程：  
+```
+_objc_init -> load_images -  
+
+-> prepare_load_methods -> add_category_to_loadable_list
+
+-> call_load_methods -> call_category_loads
+```
