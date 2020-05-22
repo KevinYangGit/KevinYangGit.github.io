@@ -4,13 +4,12 @@ date: 2020-05-20 10:45:30
 tags: OC底层原理
 ---
 
-# +load 方法
 * +load 方法会在 runtime 加载类、分类时调用；
 * 每个类、分类的 +load 方法，在程序运行过程中只调用一次；
-
+* 思考：Category 中有 +load 方法吗？+load 方法是什么时候调用的？+load 方法能继承吗？
 <!-- more -->
 
-## 定义 Persion、Persion+Test1 和 Persion+Test2
+# 定义 Persion、Persion+Test1 和 Persion+Test2
 ```
 @interface MJPerson : NSObject
 + (void)test;
@@ -81,7 +80,7 @@ Persion (Test1) +test
 * +load 方法的调用顺序和编译顺序是一致的
 * Persion (Test1) 最后被编译，所以优先调用 Persion (Test1) 里的 +test 方法  
 
-## objc4 源码解读过程
+# objc4 源码解读过程
 * objc-os.mm  
 _objc_init  
 load_images
@@ -98,8 +97,8 @@ call_category_loads
 
 打开 runtime 源码 [objc4-781](https://opensource.apple.com/tarballs/objc4/)。找到运行时入口 objc-os.mm 文件，打开文件找到运行时的初始化方法 void _objc_init(void) 方法：
 
-## + load 方法的调用流程
-### _objc_init
+# + load 方法的调用流程
+## _objc_init
 runtime 的初始化方法：
 ```
 void _objc_init(void)
@@ -125,7 +124,7 @@ void _objc_init(void)
 }
 ```
 
-### load_images
+## load_images
 Jump To Definition -> load_images（加载类信息）：
 ```
 void
@@ -154,7 +153,7 @@ load_images(const char *path __unused, const struct mach_header *mh)
 
 Call +load methods. 可以看出 call_load_methods() 方法里调用了 +load 方法。
 
-### call_load_methods
+## call_load_methods
 
 Jump To Definition -> call_load_methods（调用 +load 方法）：
 ```
@@ -191,7 +190,7 @@ void call_load_methods(void)
 
 call_load_methods 方法中先调用了 call_class_loads 方法去调用“类”的 +load 方法，后调用了 call_category_loads 去调用“分类”的 +load 方法。
 
-### call_class_loads
+## call_class_loads
 Jump To Definition -> call_class_loads（调用“类”的 +load 方法）：
 ```
 static void call_class_loads(void)
@@ -222,7 +221,7 @@ static void call_class_loads(void)
 }
 ```
 
-### call_category_loads
+## call_category_loads
 Jump To Definition -> call_category_loads（调用“分类”的 +load 方法）：
 ```
 static bool call_category_loads(void)
@@ -307,7 +306,7 @@ static bool call_category_loads(void)
 }
 ```
 
-### 小结
+## 小结
 * 在上面👆出现的 call_class_loads 和 call_category_loads 方法中，cats / classes 是存放着类 / 分类的数组。cats[i].method / classes[i].method 即取出类 / 分类里的 +load 方法，然后通过 *load_method)(cls, @selector(load)) 方法进行调用。  
 
 * 因为在 call_load_methods 方法中，是按照 call_class_loads()、call_category_loads() 顺序调用的，所以打印日志里先调用“类”里的 +load 方法，再调用“分类”里的 +load 方法。  
@@ -316,9 +315,9 @@ static bool call_category_loads(void)
 
 至于分类 +load 方法的调用顺序，以及子类 +load 方法的调用顺序，还得看一下 prepare_load_methods 方法👇。
 
-## 子类的 +load 方法
+# 子类的 +load 方法
 
-### 定义 Student : Persion
+## 定义 Student : Persion
 ```
 @interface Student : Persion
 + (void)test;
@@ -377,7 +376,7 @@ Persion (Test1) +test
 
 通过"+load 方法的调用过程"知道了 call_load_methods 是调用 +load 方法的入口。而在 load_images 方法中还有一个 prepare_load_methods 方法是在 call_load_methods 方法前调用的。从命名上可以猜到，prepare_load_methods 方法是在调用 call_load_methods 方法之前做一些准备工作的方法。
 
-### prepare_load_methods
+## prepare_load_methods
 
 获取并保存所有的类和分类。
 
@@ -419,7 +418,7 @@ schedule_class_load 方法内部调用了一个 add_class_to_loadable_list 方�
 
 add_category_to_loadable_list 方法是将分类 cat 添加到 loadable_categories 数组中。
 
-### schedule_class_load
+## schedule_class_load
 
 通过递归，通过 add_class_to_loadable_list 方法，将类 cls 的父类及其自身添加到 loadable_classes 数组中。  
 
@@ -444,7 +443,7 @@ schedule_class_load 方法内部通过 schedule_class_load(cls->superclass) 方�
 
 在 schedule_class_load 方法的最后，通过修改类 cls 的 info 信息来标记已经加入到 loadable_classes 数组中了，避免重复操作。
 
-### add_class_to_loadable_list
+## add_class_to_loadable_list
 
 将传入的 cls 类添加到 loadable_classes 数组中。
 
@@ -480,7 +479,7 @@ void add_class_to_loadable_list(Class cls)
 
 loadable_classes 可以理解为 runtime 中存储所有“类”的容器。
 
-### add_category_to_loadable_list
+## add_category_to_loadable_list
 
 将传入的分类 cat 添加到 loadable_categories 数组中。   
 
@@ -531,20 +530,20 @@ struct loadable_category {
 };
 ```
 
-## +load 方法的调用顺序
+# +load 方法的调用顺序
 
-### 类 +load > 分类 +load
+## 类 +load > 分类 +load
 因为 runtime 中 call_load_methods 方法里是按照 call_class_loads()、call_category_loads() 顺序调用的，所以是先调用类的 +load 方法，再调用分类的 +load 方法。
 
-### 父类 +load > 子类 +load
+## 父类 +load > 子类 +load
 在调用 call_class_loads 方法之前调用了 prepare_load_methods 方法用来加载所有的类。因为 prepare_load_methods 方法中的 schedule_class_load 方法在添加类时通过递归的方式优先找到该类的父类进行添加，所以在先调用类的 +load 方法的基础上，优先调用父类的 +load 方法，在调用子类的 +load 方法。
 
-### 分类 +load 的调用顺序 == 编译顺序
+## 分类 +load 的调用顺序 == 编译顺序
 在添加所有分类的时候，因为 prepare_load_methods 方法直接调用 add_category_to_loadable_list 方法进行了添加，所有在 call_category_loads 方法
 中获取分类并调用分类的 +load 方法的顺序就是分类的编译顺序。
 
-## +load 方法与继承
-### 定义 Student : Persion
+# +load 方法与继承
+## 定义 Student : Persion
 ```
 @interface Student : Persion
 + (void)test;
@@ -583,10 +582,10 @@ main
 Persion (Test1) +load
 ```
 
-### [Student load] 的本质
-[Student load] 这句代码本质就是 objc_msgSend(Student, @Selector("load"))，即向类对象 Student 发送一条 "load" 消息。因为 Student 类里没有实现 +load 方法，所以类对象 Student 通过 superclass 指针找到父类 Persion。Persion 在查找 +load 方法时，会优先查找到最后被编译的分类 Persion (Test1) 里的 +load 方法，返回该方法。所以 +load 方法是可以被继承的。
+## [Student load] 的本质
+[Student load] 这句代码本质就是 objc_msgSend(objc_getClass("Student"), sel_registerName("load"))，即向 Student 类对象发送一条 "load" 消息，Student 类对象再通过 isa 指针找到 Student 元类对象去查找 +load 方法。因为 Student 里没有实现 +load 方法，所以 Student 元类对象会通过 superclass 指针找到父类 Persion 的元类对象  。Persion 的元类对象在查找 +load 方法时，会优先查找到最后被编译的分类 Persion (Test1)，找到 +load 方法并调用。所以 +load 方法是可以被继承的。
 
-## 小结
+# 小结
 * runtime 会优先调用类的 +load 方法，调用时按照编译先后顺序调用（先编译，先调用）。对于有继承关系的类，在调用子类的 +load 方法之前会优先调用父类的 +load 方法。
 
 * 在类的 +load 方法调用完成后再调用分类的 +load 方法，调用时按照编译先后顺序调用（先编译，先调用）。
@@ -610,3 +609,6 @@ _objc_init -> load_images -
 ```
 
 * +load 方法是可以被继承的。在启动时由 runtime 调用的 +load 方法是优先调用父类的 +load 方法。而通过 [Student load] 这种方式主动调用 +load 方法，是优先调用子类的 +load 方法。
+
+* Category 中有 +load 方法吗？+load 方法是什么时候调用的？+load 方法能继承吗？  
+有 +load 方法。+load 方法在 runtime 加载类、分类的时候调用。+load 方法可以继承，但是一般情况下不会主动去调用 +load 方法，都是让系统启动时自动调用。

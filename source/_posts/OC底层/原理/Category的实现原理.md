@@ -8,6 +8,7 @@ tags: OC底层原理
 * 在程序运行时通过 Runtime 加载所有 _category_t 的数据，把所有 _category_t 的数据（方法、属性、协议）合并到一个大数组中。
 * 合并时先扩充内存，然后将类对象里面的原有数据向后移动，再将分类数据（方法、属性、协议）插入到前排。
 * 靠后被编译到的 _category_t 数据（方法、属性、协议），因为在这个大数组的前排，所以会被优先调用到。  
+* 思考：Category 和 Class Extension 的区别是什么？
 
 <!-- more -->
 
@@ -296,7 +297,7 @@ static void methodizeClass(Class cls, Class previously)
         addMethod(cls, @selector(initialize), (IMP)&objc_noop_imp, "", NO);
     }
 	
-	// 添加分类方法
+	// 添加分类方法、属性、协议数据
     // Attach categories.
     if (previously) {
         if (isMeta) {
