@@ -79,7 +79,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/05/20/OC底层/原理/load的实现原理/load的实现原理01.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/20/OC底层/原理/load的实现原理/load的实现原理02.png">
-<meta property="og:updated_time" content="2020-05-22T06:02:22.774Z">
+<meta property="og:updated_time" content="2020-05-22T06:30:16.306Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="+load 的实现原理">
 <meta name="twitter:description" content="+load 方法会在 runtime 加载类、分类时调用； 每个类、分类的 +load 方法，在程序运行过程中只调用一次； 思考：Category 中有 +load 方法吗？+load 方法是什么时候调用的？+load 方法能继承吗？">
@@ -379,7 +379,7 @@
 <h2 id="分类-load-的调用顺序-编译顺序"><a href="#分类-load-的调用顺序-编译顺序" class="headerlink" title="分类 +load 的调用顺序 == 编译顺序"></a>分类 +load 的调用顺序 == 编译顺序</h2><p>在添加所有分类的时候，因为 prepare_load_methods 方法直接调用 add_category_to_loadable_list 方法进行了添加，所有在 call_category_loads 方法<br>中获取分类并调用分类的 +load 方法的顺序就是分类的编译顺序。</p>
 <h1 id="load-方法与继承"><a href="#load-方法与继承" class="headerlink" title="+load 方法与继承"></a>+load 方法与继承</h1><h2 id="定义-Student-Persion-1"><a href="#定义-Student-Persion-1" class="headerlink" title="定义 Student : Persion"></a>定义 Student : Persion</h2><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@interface</span> <span class="attribute">Student </span>: Persion</div><div class="line">+ (void)test;</div><div class="line"><span class="variable">@end</span></div><div class="line"></div><div class="line"><span class="variable">@implementation</span> Student</div><div class="line"><span class="variable">@end</span></div><div class="line"></div><div class="line"><span class="variable">@interface</span> Student (Test1)</div><div class="line"><span class="variable">@end</span></div><div class="line"></div><div class="line"><span class="variable">@implementation</span> Student (Test1)</div><div class="line"><span class="variable">@end</span></div><div class="line"></div><div class="line"><span class="variable">@interface</span> Student (Test2)</div><div class="line"><span class="variable">@end</span></div><div class="line"></div><div class="line"><span class="variable">@implementation</span> Student (Test2)</div><div class="line"><span class="variable">@end</span></div><div class="line"></div><div class="line">int main(int argc, const char * argv[]) &#123;</div><div class="line">    <span class="variable">@autoreleasepool</span> &#123;</div><div class="line">        <span class="selector-tag">NSLog</span>(@<span class="string">"main"</span>);</div><div class="line">        <span class="selector-attr">[Student load]</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="selector-tag">return</span> <span class="selector-tag">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>打印结果：<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Persion +load</div><div class="line">Persion (<span class="name">Test2</span>) +load</div><div class="line">Persion (<span class="name">Test1</span>) +load</div><div class="line">main</div><div class="line">Persion (<span class="name">Test1</span>) +load</div></pre></td></tr></table></figure></p>
-<h2 id="Student-load-的本质"><a href="#Student-load-的本质" class="headerlink" title="[Student load] 的本质"></a>[Student load] 的本质</h2><p>[Student load] 这句代码本质就是 objc_msgSend(Student, @Selector(“load”))，即向 Student 类对象发送一条 “load” 消息，Student 类对象再通过 isa 指针找到 Student 元类对象去查找 +load 方法。因为 Student 里没有实现 +load 方法，所以 Student 元类对象会通过 superclass 指针找到父类 Persion 的元类对象  。Persion 的元类对象在查找 +load 方法时，会优先查找到最后被编译的分类 Persion (Test1)，找到 +load 方法并返回。所以 +load 方法是可以被继承的。</p>
+<h2 id="Student-load-的本质"><a href="#Student-load-的本质" class="headerlink" title="[Student load] 的本质"></a>[Student load] 的本质</h2><p>[Student load] 这句代码本质就是 objc_msgSend(objc_getClass(“Student”), sel_registerName(“load”))，即向 Student 类对象发送一条 “load” 消息，Student 类对象再通过 isa 指针找到 Student 元类对象去查找 +load 方法。因为 Student 里没有实现 +load 方法，所以 Student 元类对象会通过 superclass 指针找到父类 Persion 的元类对象  。Persion 的元类对象在查找 +load 方法时，会优先查找到最后被编译的分类 Persion (Test1)，找到 +load 方法并调用。所以 +load 方法是可以被继承的。</p>
 <h1 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h1><ul>
 <li><p>runtime 会优先调用类的 +load 方法，调用时按照编译先后顺序调用（先编译，先调用）。对于有继承关系的类，在调用子类的 +load 方法之前会优先调用父类的 +load 方法。</p>
 </li>
@@ -435,6 +435,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/22/OC底层/原理/initialize方法/" rel="prev" title="+initialize方法">
+                +initialize方法 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -516,7 +520,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

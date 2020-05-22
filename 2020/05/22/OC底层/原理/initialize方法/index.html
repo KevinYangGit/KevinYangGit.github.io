@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="OC底层原理," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="+initialize 方法会在类第一次接收到消息时调用  定义 Persion、Student 及其分类1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768@interface Person :">
+<meta name="keywords" content="OC底层原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="+initialize方法">
+<meta property="og:url" content="http://yoursite.com/2020/05/22/OC底层/原理/initialize方法/index.html">
+<meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="+initialize 方法会在类第一次接收到消息时调用  定义 Persion、Student 及其分类1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768@interface Person :">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2020/05/22/OC底层/原理/initialize方法/load的实现原理/load的实现原理02.png">
+<meta property="og:updated_time" content="2020-05-22T10:34:00.495Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="+initialize方法">
+<meta name="twitter:description" content="+initialize 方法会在类第一次接收到消息时调用  定义 Persion、Student 及其分类1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768@interface Person :">
+<meta name="twitter:image" content="http://yoursite.com/2020/05/22/OC底层/原理/initialize方法/load的实现原理/load的实现原理02.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/05/22/OC底层/原理/initialize方法/"/>
+
+
+
+
+
+  <title>+initialize方法 | Kevin's  blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's  blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/22/OC底层/原理/initialize方法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">+initialize方法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-22T15:20:48+08:00">
+                2020-05-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li>+initialize 方法会在类第一次接收到消息时调用</li>
+</ul>
+<h1 id="定义-Persion、Student-及其分类"><a href="#定义-Persion、Student-及其分类" class="headerlink" title="定义 Persion、Student 及其分类"></a>定义 Persion、Student 及其分类</h1><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></div><div class="line">+ (<span class="keyword">void</span>)initialize</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Person +initialize"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> (<span class="title">Test1</span>)</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span> (<span class="title">Test1</span>)</span></div><div class="line">+ (<span class="keyword">void</span>)initialize</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Person (Test1) +initialize"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> (<span class="title">Test2</span>)</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span> (<span class="title">Test2</span>)</span></div><div class="line">+ (<span class="keyword">void</span>)initialize</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Person (Test2) +initialize"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Student</span> : <span class="title">Persion</span></span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Student</span></span></div><div class="line">+ (<span class="keyword">void</span>)initialize</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Student +initialize"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Student</span> (<span class="title">Test1</span>)</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Student</span> (<span class="title">Test1</span>)</span></div><div class="line">+ (<span class="keyword">void</span>)initialize</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Student (Test1) +initialize"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Student</span> (<span class="title">Test2</span>)</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Student</span> (<span class="title">Test2</span>)</span></div><div class="line">+ (<span class="keyword">void</span>)initialize</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Student (Test2) +initialize"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"main"</span>);</div><div class="line">        [Persion alloc];</div><div class="line">        [Student alloc];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>编译顺序：<br><img src="/2020/05/22/OC底层/原理/initialize方法/load的实现原理/load的实现原理02.png" alt="load的实现原理02"></p>
+<p>打印结果：<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Persion (<span class="name">Test1</span>) +initialize</div><div class="line">Student (<span class="name">Test2</span>) +initialize</div></pre></td></tr></table></figure></p>
+<h1 id="objc4源码解读过程"><a href="#objc4源码解读过程" class="headerlink" title="objc4源码解读过程"></a>objc4源码解读过程</h1><ul>
+<li><p>objc-msg-arm64.s<br>objc_msgSend  </p>
+</li>
+<li><p>objc-runtime-new.mm<br>class_getInstanceMethod<br>lookUpImpOrNil<br>lookUpImpOrForward<br>_class_initialize<br>callInitialize<br>objc_msgSend(cls, SEL_initialize)</p>
+</li>
+</ul>
+<p>[Persion alloc] 的本质是：<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">objc_msgSend(<span class="name">objc_getClass</span>(<span class="string">"Persion"</span>), sel_registerName(<span class="string">"alloc"</span>))</div></pre></td></tr></table></figure></p>
+<p>[Student alloc] 的本质是：<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">objc_msgSend(<span class="name">objc_getClass</span>(<span class="string">"Student"</span>), sel_registerName(<span class="string">"alloc"</span>))</div></pre></td></tr></table></figure></p>
+<h1 id="objc-msgSend"><a href="#objc-msgSend" class="headerlink" title="objc_msgSend()"></a>objc_msgSend()</h1><p>打开 runtime 源码 <a href="https://opensource.apple.com/tarballs/objc4/" target="_blank" rel="external">objc4-781</a>，搜索 objc_msgSend()，会发现 objc_msgSend() 方法的源码是汇编语言。</p>
+<p>objc_msgSend() - 类方法调用流程：<br>isa -&gt; 类对象/元类对象，寻找方法，调用<br>superclass -&gt; 类对象/元类对象，寻找方法，调用<br>superclass -&gt; 类对象/元类对象，寻找方法，调用</p>
+<p>从“寻找方法”入手👇</p>
+<h1 id="class-getClassMethod"><a href="#class-getClassMethod" class="headerlink" title="class_getClassMethod"></a>class_getClassMethod</h1><p>class_getClassMethod 是获取类方法的函数，内部调用的是 class_getInstanceMethod 获取对象方法的函数。<br><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">Method</span> <span class="title">class_getClassMethod</span><span class="params">(<span class="keyword">Class</span> cls, SEL sel)</span></span></div><div class="line"><span class="function"><span class="comment">&#123;</span></span></div><div class="line"><span class="function"><span class="comment">    if (!cls  ||  !sel) return nil;</span></span></div><div class="line"><span class="function"><span class="comment"></span></span></div><div class="line"><span class="function"><span class="comment">    return class_getInstanceMethod(cls-&gt;getMeta(), sel);</span></span></div><div class="line"><span class="function"><span class="comment">&#125;</span></span></div></pre></td></tr></table></figure></p>
+<h2 id="class-getInstanceMethod"><a href="#class-getInstanceMethod" class="headerlink" title="class_getInstanceMethod"></a>class_getInstanceMethod</h2><p>Jump To Definition -&gt; class_getInstanceMethod<br><figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">Method class_getInstanceMethod(Class <span class="keyword">cls</span>, SEL sel)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span> (!<span class="keyword">cls</span>  ||  !sel) <span class="keyword">return</span> nil;</div><div class="line"></div><div class="line">    <span class="comment">// This deliberately avoids +initialize because it historically did so.</span></div><div class="line"></div><div class="line">    <span class="comment">// This implementation is a bit weird because it's the only place that </span></div><div class="line">    <span class="comment">// wants a Method instead of an IMP.</span></div><div class="line"></div><div class="line"><span class="meta">#warning fixme build and search caches</span></div><div class="line">        </div><div class="line">    <span class="comment">// Search method lists, try method resolver, etc.</span></div><div class="line">    lookUpImpOrForward(nil, sel, <span class="keyword">cls</span>, LOOKUP_RESOLVER);</div><div class="line"></div><div class="line"><span class="meta">#warning fixme build and search caches</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> _class_getMethod(<span class="keyword">cls</span>, sel);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="lookUpImpOrForward"><a href="#lookUpImpOrForward" class="headerlink" title="lookUpImpOrForward"></a>lookUpImpOrForward</h2><p>在 class_getInstanceMethod 方法中，调用 lookUpImpOrForward(nil, sel, cls, LOOKUP_RESOLVER) 方法。所以 behavior == LOOKUP_RESOLVER</p>
+<p>Jump To Definition -&gt; lookUpImpOrForward<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">IMP lookUpImpOrForward(id inst, SEL sel, Class cls, int behavior)</div><div class="line">&#123;</div><div class="line">    ...</div><div class="line">    ...</div><div class="line">    ...<span class="comment">//一堆方法</span></div><div class="line"></div><div class="line">    <span class="comment">// Check for +initialize</span></div><div class="line">    <span class="keyword">if</span> ((behavior &amp; LOOKUP_INITIALIZE)  &amp;&amp;  !cls-&gt;isInitialized()) &#123; <span class="comment">//如果类还没有实现 +initialized 方法</span></div><div class="line">        initializeNonMetaClass (_class_getNonMetaClass(cls, inst));</div><div class="line">        <span class="comment">// If sel == initialize, initializeNonMetaClass will send +initialize </span></div><div class="line">        <span class="comment">// and then the messenger will send +initialize again after this </span></div><div class="line">        <span class="comment">// procedure finishes. Of course, if this is not being called </span></div><div class="line">        <span class="comment">// from the messenger then it won't happen. 2778172</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    ...</div><div class="line">    ...</div><div class="line">    ...<span class="comment">//一堆方法</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="initializeNonMetaClass"><a href="#initializeNonMetaClass" class="headerlink" title="initializeNonMetaClass"></a>initializeNonMetaClass</h2><p>initializeNonMetaClass 方法使用递归的方式优先将传入的类 cls 的父类调用 initializeNonMetaClass 方法进行处理。</p>
+<p>Jump To Definition -&gt; initializeNonMetaClass<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">void initializeNonMetaClass(Class cls)</div><div class="line">&#123;</div><div class="line">    ASSERT(!cls-&gt;isMetaClass());</div><div class="line"></div><div class="line">    Class supercls;</div><div class="line">    bool reallyInitialize = NO;</div><div class="line"></div><div class="line">    <span class="comment">// Make sure super is done initializing BEFORE beginning to initialize cls.</span></div><div class="line">    <span class="comment">// See note about deadlock above.</span></div><div class="line">    supercls = cls-&gt;superclass; <span class="comment">//获取传入的类 cls 的父类</span></div><div class="line">    <span class="keyword">if</span> (supercls  &amp;&amp;  !supercls-&gt;isInitialized()) &#123; <span class="comment">//父类存在 &amp;&amp; 父类没有 +initialize</span></div><div class="line">        initializeNonMetaClass(supercls); <span class="comment">//递归，父类优先 +initialize</span></div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    ...</div><div class="line">    ...</div><div class="line">    ...</div><div class="line"></div><div class="line">#<span class="keyword">if</span> __OBJC2__</div><div class="line">        @try</div><div class="line">#endif</div><div class="line">        &#123;</div><div class="line">            callInitialize(cls); <span class="comment">//</span></div><div class="line"></div><div class="line">            <span class="keyword">if</span> (PrintInitializing) &#123;</div><div class="line">                _objc_inform(<span class="string">"INITIALIZE: thread %p: finished +[%s initialize]"</span>,</div><div class="line">                             objc_thread_self(), cls-&gt;nameForLogging());</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        ...</div><div class="line">        ...</div><div class="line">        ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="callInitialize"><a href="#callInitialize" class="headerlink" title="callInitialize"></a>callInitialize</h2><p>向传入的类 cls 发送“initialize”消息。至此实现了 +initialize 方法的调用。</p>
+<p>Jump To Definition -&gt; callInitialize<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">callInitialize</span><span class="params">(Class cls)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    ((<span class="keyword">void</span>(*)(Class, SEL))objc_msgSend)(cls, @selector(initialize));</div><div class="line">    <span class="keyword">asm</span>(<span class="string">""</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OC底层原理/" rel="tag"># OC底层原理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/20/OC底层/原理/load的实现原理/" rel="next" title="+load 的实现原理">
+                <i class="fa fa-chevron-left"></i> +load 的实现原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/myAvatar.gif"
+              alt="Kevin" />
+          
+            <p class="site-author-name" itemprop="name">Kevin</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KevinYangGit" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_YangQI" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#定义-Persion、Student-及其分类"><span class="nav-number">1.</span> <span class="nav-text">定义 Persion、Student 及其分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#objc4源码解读过程"><span class="nav-number">2.</span> <span class="nav-text">objc4源码解读过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#objc-msgSend"><span class="nav-number">3.</span> <span class="nav-text">objc_msgSend()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#class-getClassMethod"><span class="nav-number">4.</span> <span class="nav-text">class_getClassMethod</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#class-getInstanceMethod"><span class="nav-number">4.1.</span> <span class="nav-text">class_getInstanceMethod</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lookUpImpOrForward"><span class="nav-number">4.2.</span> <span class="nav-text">lookUpImpOrForward</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#initializeNonMetaClass"><span class="nav-number">4.3.</span> <span class="nav-text">initializeNonMetaClass</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#callInitialize"><span class="nav-number">4.4.</span> <span class="nav-text">callInitialize</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://rawgit.com/qhh0205/78e9e0b1f3114db6737f3ed8cdd51d3a/raw/3894c5be5aa2378336b1f5ee0f296fa0b22d06e9/md5.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '82b6ced795961ee1fcca',
+          clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
+          repo: 'KevinYangGit.github.io',
+          owner: '',
+          admin: [''],
+          id: md5(location.pathname),
+          distractionFreeMode: ''
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
