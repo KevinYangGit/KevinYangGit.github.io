@@ -1,5 +1,5 @@
 ---
-title: +load和+initialize的实现原理
+title: +load的实现原理
 date: 2020-05-20 10:45:30
 tags: OC底层原理
 ---
