@@ -65,7 +65,7 @@ int main(int argc, const char * argv[]) {
 ```
 
 编译顺序：
-![load和-initialize的实现原理01](load和-initialize的实现原理/load和-initialize的实现原理01.png)
+![load的实现原理01](load的实现原理/load的实现原理01.png)
 
 打印结果：
 ```
@@ -361,7 +361,7 @@ int main(int argc, const char * argv[]) {
 ```
 
 编译顺序：
-![load和-initialize的实现原理01](load和-initialize的实现原理/load和-initialize的实现原理02.png)
+![load的实现原理02](load的实现原理/load的实现原理02.png)
 
 打印结果：
 ```
