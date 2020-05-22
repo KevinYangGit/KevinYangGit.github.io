@@ -79,7 +79,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/05/20/OC底层/原理/load和-initialize的实现原理/load和-initialize的实现原理01.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/20/OC底层/原理/load和-initialize的实现原理/load和-initialize的实现原理02.png">
-<meta property="og:updated_time" content="2020-05-22T02:19:45.186Z">
+<meta property="og:updated_time" content="2020-05-22T02:42:54.421Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="+load和+initialize的实现原理">
 <meta name="twitter:description" content="+load 方法 +load 方法会在 runtime 加载类、分类时调用； 每个类、分类的 +load 方法，在程序运行过程中只调用一次；">
@@ -376,11 +376,13 @@
 <h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><ul>
 <li><p>因为 runtime 中 call_load_methods 方法里是按照 call_class_loads()、call_category_loads() 顺序调用的方法的，所以是先调用类里的 +load 方法，再按照分类的编译顺序调用分类里的 +load 方法。</p>
 </li>
-<li><p>类中的 +load 方法的调用流程：<br>_objc_init -&gt; load_images -&gt; prepare_load_methods -&gt; call_load_methods -&gt; call_class_loads </p>
-</li>
-<li><p>分类中的 +load 方法的调用流程：<br>_objc_init -&gt; load_images -&gt; prepare_load_methods -&gt; call_load_methods -&gt; call_category_loads </p>
+<li><p>类中的 +load 方法的调用流程： </p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">_objc_init -&gt; load_images -</div><div class="line"></div><div class="line">-&gt; prepare_load_methods -&gt; schedule_class_load(递归、优先添加父类) -&gt; add_class_to_loadable_list  </div><div class="line"></div><div class="line">-&gt; call_load_methods -&gt; call_class_loads </div><div class="line"></div><div class="line">``` </div><div class="line"></div><div class="line">* 分类中的 +load 方法的调用流程：</div></pre></td></tr></table></figure>
 </li>
 </ul>
+<p>_objc_init -&gt; load_images -  </p>
+<p>-&gt; prepare_load_methods -&gt; add_category_to_loadable_list</p>
+<p>-&gt; call_load_methods -&gt; call_category_loads<br>```</p>
 
       
     </div>
