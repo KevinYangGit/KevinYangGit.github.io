@@ -368,8 +368,8 @@ int main(int argc, const char * argv[]) {
 Persion +load
 Student +load
 Persion (Test2) +load
-Persion (Test1) +load
 Student (Test1) +load
+Persion (Test1) +load
 Student (Test2) +load
 main
 Persion (Test1) +test
@@ -531,19 +531,74 @@ struct loadable_category {
 };
 ```
 
+## +load 方法的调用顺序
+
+### 类 +load > 分类 +load
+因为 runtime 中 call_load_methods 方法里是按照 call_class_loads()、call_category_loads() 顺序调用的，所以是先调用类的 +load 方法，再调用分类的 +load 方法。
+
+### 父类 +load > 子类 +load
+在调用 call_class_loads 方法之前调用了 prepare_load_methods 方法用来加载所有的类。因为 prepare_load_methods 方法中的 schedule_class_load 方法在添加类时通过递归的方式优先找到该类的父类进行添加，所以在先调用类的 +load 方法的基础上，优先调用父类的 +load 方法，在调用子类的 +load 方法。
+
+### 分类 +load 的调用顺序 == 编译顺序
+在添加所有分类的时候，因为 prepare_load_methods 方法直接调用 add_category_to_loadable_list 方法进行了添加，所有在 call_category_loads 方法
+中获取分类并调用分类的 +load 方法的顺序就是分类的编译顺序。
+
+## +load 方法与继承
+### 定义 Student : Persion
+```
+@interface Student : Persion
++ (void)test;
+@end
+
+@implementation Student
+@end
+
+@interface Student (Test1)
+@end
+
+@implementation Student (Test1)
+@end
+
+@interface Student (Test2)
+@end
+
+@implementation Student (Test2)
+@end
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        NSLog(@"main");
+        [Student load];
+    }
+    return 0;
+}
+```
+
+打印结果：
+```
+Persion +load
+Persion (Test2) +load
+Persion (Test1) +load
+main
+Persion (Test1) +load
+```
+
+### [Student load] 的本质
+[Student load] 这句代码本质就是 objc_msgSend(Student, @Selector("load"))，即向类对象 Student 发送一条 "load" 消息。因为 Student 类里没有实现 +load 方法，所以类对象 Student 通过 superclass 指针找到父类 Persion。Persion 在查找 +load 方法时，会优先查找到最后被编译的分类 Persion (Test1) 里的 +load 方法，返回该方法。所以 +load 方法是可以被继承的。
 
 ## 小结
-* 因为 runtime 中 call_load_methods 方法里是按照 call_class_loads()、call_category_loads() 顺序调用的方法的，所以是先调用类里的 +load 方法，再按照分类的编译顺序调用分类里的 +load 方法。
+* runtime 会优先调用类的 +load 方法，调用时按照编译先后顺序调用（先编译，先调用）。对于有继承关系的类，在调用子类的 +load 方法之前会优先调用父类的 +load 方法。
 
-* 类中的 +load 方法的调用流程： 
+* 在类的 +load 方法调用完成后再调用分类的 +load 方法，调用时按照编译先后顺序调用（先编译，先调用）。
+
+* 类中的 +load 方法的调用流程：  
 ```
 _objc_init -> load_images -
 
--> prepare_load_methods -> schedule_class_load(递归、优先添加父类) -> add_class_to_loadable_list  
+-> prepare_load_methods -> schedule_class_load -> add_class_to_loadable_list  
 
--> call_load_methods -> call_class_loads 
-
-``` 
+-> call_load_methods -> call_class_loads
+```
 
 * 分类中的 +load 方法的调用流程：  
 ```
@@ -553,3 +608,5 @@ _objc_init -> load_images -
 
 -> call_load_methods -> call_category_loads
 ```
+
+* +load 方法是可以被继承的。在启动时由 runtime 调用的 +load 方法是优先调用父类的 +load 方法。而通过 [Student load] 这种方式主动调用 +load 方法，是优先调用子类的 +load 方法。
