@@ -69,20 +69,20 @@
 
 
 
-<meta name="description" content="+load 方法 +load 方法会在 runtime 加载类、分类时调用； 每个类、分类的 +load 方法，在程序运行过程中只调用一次；">
+<meta name="description" content="+load 方法 +load 方法会在 runtime 加载类、分类时调用； 每个类、分类的 +load 方法，在程序运行过程中只调用一次； 思考：Category 中有 +load 方法吗？+load 方法是什么时候调用的？+load 方法能继承吗？">
 <meta name="keywords" content="OC底层原理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="+load 的实现原理">
 <meta property="og:url" content="http://yoursite.com/2020/05/20/OC底层/原理/load的实现原理/index.html">
 <meta property="og:site_name" content="Kevin&#39;s  blog">
-<meta property="og:description" content="+load 方法 +load 方法会在 runtime 加载类、分类时调用； 每个类、分类的 +load 方法，在程序运行过程中只调用一次；">
+<meta property="og:description" content="+load 方法 +load 方法会在 runtime 加载类、分类时调用； 每个类、分类的 +load 方法，在程序运行过程中只调用一次； 思考：Category 中有 +load 方法吗？+load 方法是什么时候调用的？+load 方法能继承吗？">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/05/20/OC底层/原理/load的实现原理/load的实现原理01.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/20/OC底层/原理/load的实现原理/load的实现原理02.png">
-<meta property="og:updated_time" content="2020-05-22T05:45:30.572Z">
+<meta property="og:updated_time" content="2020-05-22T05:53:10.134Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="+load 的实现原理">
-<meta name="twitter:description" content="+load 方法 +load 方法会在 runtime 加载类、分类时调用； 每个类、分类的 +load 方法，在程序运行过程中只调用一次；">
+<meta name="twitter:description" content="+load 方法 +load 方法会在 runtime 加载类、分类时调用； 每个类、分类的 +load 方法，在程序运行过程中只调用一次； 思考：Category 中有 +load 方法吗？+load 方法是什么时候调用的？+load 方法能继承吗？">
 <meta name="twitter:image" content="http://yoursite.com/2020/05/20/OC底层/原理/load的实现原理/load的实现原理01.png">
 
 
@@ -316,8 +316,9 @@
         <h1 id="load-方法"><a href="#load-方法" class="headerlink" title="+load 方法"></a>+load 方法</h1><ul>
 <li>+load 方法会在 runtime 加载类、分类时调用；</li>
 <li>每个类、分类的 +load 方法，在程序运行过程中只调用一次；</li>
+<li>思考：Category 中有 +load 方法吗？+load 方法是什么时候调用的？+load 方法能继承吗？<a id="more"></a>
+</li>
 </ul>
-<a id="more"></a>
 <h2 id="定义-Persion、Persion-Test1-和-Persion-Test2"><a href="#定义-Persion、Persion-Test1-和-Persion-Test2" class="headerlink" title="定义 Persion、Persion+Test1 和 Persion+Test2"></a>定义 Persion、Persion+Test1 和 Persion+Test2</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MJPerson</span> : <span class="title">NSObject</span></span></div><div class="line">+ (<span class="keyword">void</span>)test;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MJPerson</span></span></div><div class="line">+ (<span class="keyword">void</span>)load</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"MJPerson +load"</span>);</div><div class="line">&#125;</div><div class="line">+ (<span class="keyword">void</span>)test</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"MJPerson +test"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MJPerson</span> (<span class="title">Test1</span>)</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MJPerson</span> (<span class="title">Test1</span>)</span></div><div class="line">+ (<span class="keyword">void</span>)load</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"MJPerson (Test1) +load"</span>);</div><div class="line">&#125;</div><div class="line">+ (<span class="keyword">void</span>)test</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"MJPerson (Test1) +test"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MJPerson</span> (<span class="title">Test2</span>)</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MJPerson</span> (<span class="title">Test2</span>)</span></div><div class="line">+ (<span class="keyword">void</span>)load</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"MJPerson (Test2) +load"</span>);</div><div class="line">&#125;</div><div class="line">+ (<span class="keyword">void</span>)test</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"MJPerson (Test2) +test"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"main"</span>);</div><div class="line">        [Persion test];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>编译顺序：<br><img src="/2020/05/20/OC底层/原理/load的实现原理/load的实现原理01.png" alt="load的实现原理01"></p>
 <p>打印结果：<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Persion +load</div><div class="line">Persion (<span class="name">Test2</span>) +load</div><div class="line">Persion (<span class="name">Test1</span>) +load</div><div class="line">main</div><div class="line">Persion (<span class="name">Test1</span>) +test</div></pre></td></tr></table></figure></p>
@@ -391,6 +392,8 @@
 <figure class="highlight xl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">_<span class="function"><span class="title">objc_init</span> -&gt;</span> load_images -  </div><div class="line"></div><div class="line">-&gt; <span class="function"><span class="title">prepare_load_methods</span> -&gt;</span> add_category_to_loadable_list</div><div class="line"></div><div class="line">-&gt; <span class="function"><span class="title">call_load_methods</span> -&gt;</span> call_category_loads</div></pre></td></tr></table></figure>
 </li>
 <li><p>+load 方法是可以被继承的。在启动时由 runtime 调用的 +load 方法是优先调用父类的 +load 方法。而通过 [Student load] 这种方式主动调用 +load 方法，是优先调用子类的 +load 方法。</p>
+</li>
+<li><p>Category 中有 +load 方法吗？+load 方法是什么时候调用的？+load 方法能继承吗？<br>有 +load 方法。+load 方法在 runtime 加载类、分类的时候调用。+load 方法可以继承，但是一般情况下不会主动去调用 +load 方法，都是让系统启动时自动调用。</p>
 </li>
 </ul>
 
