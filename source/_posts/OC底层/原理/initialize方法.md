@@ -419,3 +419,7 @@ Persion (Test1) +initialize
   2、子类没有 +initialize 方法时会调用父类的 +initialize 方法；  
   3、有分类实现 +initialize 方法的，只调用最后被编译的分类里的 +initialize 方法；
 
+* 出现继承时他们之间的调用过程？  
+  +load 方法：  
+  1、+load 是先调用父类的 +load，再调用子类的 +load。调用 +load 方法时是通过找到每个类 +load 方法的函数地址调用的。  
+  2、+initialize 也是先调用父类，再调用子类的。调用 +initialize 方法是通过 objc_msgSend 调用的。类收到 objc_msgSend 消息后，通过 isa 指针找到元类对象，如果没有再通过 superclass 指针找到父类的元类对象查找。
