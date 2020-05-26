@@ -396,12 +396,26 @@ Persion (Test1) +initialize
 如果子类没有实现 +initialize 会调用父类的 +initialize（所以父类的 +initialize 可能会被调用多次）。这一点通过 callInitialize 方法可以看出，向传入的类 cls 发送一条 @selector(initialize) 消息。类 cls 会通过 isa 找到 cls 元类对象查找 +initialize 方法，如果没有再通过 superclass 指针找到父类的元类方法查找 +initialize 方法，找到后并调用。
 
 # 小结
-* 调用顺序  
-先调用父类的 +initialize，再调用子类的 +initialize  
-先初始化父类，再初始化子类，每个类只会初始化1次  
-父类的 +initialize 可能会被调用多次
+* load、initialize 方法的区别什么？  
+  1、调用方式  
+  1> +load 是根据函数地址直接调用（ (*load_method)(cls, @selector(load))）；  
+  2> +initialize 是通过 objc_msgSend 调用；  
 
-* load、initialize 方法的区别什么？它们在 category 中的调用的顺序？以及出现继承时他们之间的调用过程？  
-  load、initialize 方法的区别：+initialize 和 +load 的最大区别是， +initialize 方法是在运行时通过 objc_msgSend 进行调用的。所以子类没有实现 +initialize 方法时，会调用父类的 +initialize 方法，所以父类的 +initialize 可能会被调用多次。+load 方法是通过 APP 启动时加载类/分类时通过指针调用的 (*load_method)(cls, @selector(load))，如果子类没有实现 +load 方法就不调用了，不会找到父类。  
-  在 category 中的调用的顺序：如果分类实现了 +initialize 方法，会覆盖类本身的 +initialize 方法，分类之间的 +initialize 方法根据编译顺序优先调用最后被编译的分类里的 +initialize 方法。如果分类实现了 +load 方法，则先调用类里的 +load 方法（先父类再子类），再调用分类里的 +load 方法（按照编译顺序）。
+  2、调用时刻  
+  1> +load 是 runtime 加载类、分类的时刻调用，每个类只会调用一次；  
+  2> +initialize 是类第一次收到消息的时候调用，每个类只会调用一次，父类的 +initialize 方法可能会被调用多次；  
+
+* +load 和 +initialize 的调用顺序？  
+  +load 方法：  
+  1、先调用类的 +load  
+  1> 先编译的类，优先调用 +load；  
+  2> 先调用父类的 +load，再调用子类的 +load；  
+
+  2、再调用分类的 +load  
+  1> 先编译的分类，优先调用 +load；  
+
+  +initialize 方法：  
+  1、先初始化父类，再初始化子类；  
+  2、子类没有 +initialize 方法时会调用父类的 +initialize 方法；  
+  3、有分类实现 +initialize 方法的，只调用最后被编译的分类里的 +initialize 方法；
 
