@@ -79,7 +79,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/05/22/OC底层/原理/initialize方法/initialize方法01.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/22/OC底层/原理/initialize方法/initialize方法01.png">
-<meta property="og:updated_time" content="2020-05-26T03:06:01.102Z">
+<meta property="og:updated_time" content="2020-05-26T03:45:03.047Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="+initialize方法">
 <meta name="twitter:description" content="+initialize 方法会在类第一次接收到消息时调用 思考：load、initialize方法的区别什么？它们在category中的调用的顺序？以及出现继承时他们之间的调用过程？">
@@ -357,6 +357,8 @@
 <p>2、再调用分类的 +load<br>1&gt; 先编译的分类，优先调用 +load；  </p>
 <p>+initialize 方法：<br>1、先初始化父类，再初始化子类；<br>2、子类没有 +initialize 方法时会调用父类的 +initialize 方法；<br>3、有分类实现 +initialize 方法的，只调用最后被编译的分类里的 +initialize 方法；</p>
 </li>
+<li><p>出现继承时他们之间的调用过程？<br>+load 方法：<br>1、+load 是先调用父类的 +load，再调用子类的 +load。调用 +load 方法时是通过找到每个类 +load 方法的函数地址调用的。<br>2、+initialize 也是先调用父类，再调用子类的。调用 +initialize 方法是通过 objc_msgSend 调用的。类收到 objc_msgSend 消息后，通过 isa 指针找到元类对象，如果没有再通过 superclass 指针找到父类的元类对象查找。</p>
+</li>
 </ul>
 
       
@@ -397,6 +399,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/26/OC底层/原理/关联对象/" rel="prev" title="关联对象">
+                关联对象 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -478,7 +484,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
