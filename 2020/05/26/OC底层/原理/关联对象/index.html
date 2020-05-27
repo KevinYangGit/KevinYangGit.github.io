@@ -53,7 +53,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="OC底层原理," />
 
 
 
@@ -69,14 +69,21 @@
 
 
 
+<meta name="description" content="思考：Category能否添加成员变量？如果可以，如何给Category添加成员变量？">
+<meta name="keywords" content="OC底层原理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关联对象">
 <meta property="og:url" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/index.html">
 <meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="思考：Category能否添加成员变量？如果可以，如何给Category添加成员变量？">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-05-26T03:16:15.918Z">
+<meta property="og:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象01.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象02.png">
+<meta property="og:updated_time" content="2020-05-27T08:23:36.962Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关联对象">
+<meta name="twitter:description" content="思考：Category能否添加成员变量？如果可以，如何给Category添加成员变量？">
+<meta name="twitter:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象01.png">
 
 
 
@@ -306,7 +313,34 @@
       
 
       
-        
+        <ul>
+<li>思考：Category能否添加成员变量？如果可以，如何给Category添加成员变量？</li>
+</ul>
+<a id="more"></a>
+<h1 id="Category的成员变量"><a href="#Category的成员变量" class="headerlink" title="Category的成员变量"></a>Category的成员变量</h1><h2 id="category-t-结构体"><a href="#category-t-结构体" class="headerlink" title="_category_t 结构体"></a>_category_t 结构体</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">category_t</span> &#123;</span></div><div class="line">	<span class="keyword">const</span> <span class="keyword">char</span> *name; <span class="comment">//类名</span></div><div class="line">	<span class="class"><span class="keyword">struct</span> _<span class="title">class_t</span> *<span class="title">cls</span>;</span> <span class="comment">//父类</span></div><div class="line">	<span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> _<span class="title">method_list_t</span> *<span class="title">instance_methods</span>;</span> <span class="comment">//对象方法列表</span></div><div class="line">	<span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> _<span class="title">method_list_t</span> *<span class="title">class_methods</span>;</span> <span class="comment">//类方法列表</span></div><div class="line">	<span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> _<span class="title">protocol_list_t</span> *<span class="title">protocols</span>;</span> <span class="comment">//协议列表</span></div><div class="line">	<span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> _<span class="title">prop_list_t</span> *<span class="title">properties</span>;</span> <span class="comment">//属性列表</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>从 _category_t 的结构体可以看出，Category 中并没有存放成员变量的容器，所以 Category 本身是不支持添加成员变量的。</p>
+<h2 id="在-Persion-h-中定义属性"><a href="#在-Persion-h-中定义属性" class="headerlink" title="在 Persion.h 中定义属性"></a>在 Persion.h 中定义属性</h2><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@interface</span> <span class="attribute">Persion </span>: NSObject</div><div class="line"><span class="variable">@property</span> (nonatomic, assign) int age;</div><div class="line"><span class="variable">@end</span></div></pre></td></tr></table></figure>
+<p>在 Persion.h 中定义了属性后，系统会在 Persion.m 里自动做三件事：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@implementation</span> Persion</div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> _age; <span class="comment">//第一件事：定义成员变量</span></div><div class="line">&#125;</div><div class="line"><span class="comment">//第二件事：实现 age 的 set 方法</span></div><div class="line">- (<span class="keyword">void</span>)<span class="string">setAge:</span>(<span class="keyword">int</span>)age &#123; </div><div class="line">    _age = age;</div><div class="line">&#125;</div><div class="line"><span class="comment">//第三件事：实现 age 的 get 方法</span></div><div class="line">- (<span class="keyword">int</span>)age &#123; </div><div class="line">    <span class="keyword">return</span> _age;</div><div class="line">&#125;</div><div class="line"><span class="meta">@end</span></div></pre></td></tr></table></figure></p>
+<h2 id="在-Persion-Test-h-中定义属性"><a href="#在-Persion-Test-h-中定义属性" class="headerlink" title="在 Persion+Test.h 中定义属性"></a>在 Persion+Test.h 中定义属性</h2><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@interface</span> Persion (Test)</div><div class="line"><span class="variable">@property</span> (nonatomic, assign) int weight;</div><div class="line"><span class="variable">@end</span></div></pre></td></tr></table></figure>
+<p>在 Persion+Test.h 中定义了属性后，系统会在 Persion+Test.h 里自动是实现两件事：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//第一件事：生成 weight 的 set 方法的声明</span></div><div class="line">- (<span class="keyword">void</span>)<span class="string">setWeight:</span>(<span class="keyword">int</span>)weight;</div><div class="line"><span class="comment">//第二件事：生成 weight 的 get 方法的声明</span></div><div class="line">- (<span class="keyword">int</span>)weight;</div></pre></td></tr></table></figure></p>
+<p>在分类里定义的属性，并没有对应的成员变量和 set/get 方法的实现。如果尝试手动添加，系统会报错。<br><img src="/2020/05/26/OC底层/原理/关联对象/关联对象01.png" alt="关联对象01"></p>
+<h2 id="定义全局变量-int-weight"><a href="#定义全局变量-int-weight" class="headerlink" title="定义全局变量 int weight_"></a>定义全局变量 int weight_</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> weight_;</div><div class="line"><span class="meta">@implementation</span> Persion (Test)</div><div class="line">- (<span class="keyword">void</span>)<span class="string">setWeight:</span>(<span class="keyword">int</span>)weight &#123;</div><div class="line">    weight_ = weight;</div><div class="line">&#125;</div><div class="line">- (<span class="keyword">int</span>)weight &#123;</div><div class="line">    <span class="keyword">return</span> weight_;</div><div class="line">&#125;</div><div class="line"><span class="meta">@end</span></div></pre></td></tr></table></figure>
+<p>通过定义全局变量 _weight 的方式可以实现成员变量的效果，但是 _weight 是全局变量，所有的实例对象 persion 会公用同一个 _weight。这样会导致所有的实例对象 persion 都可以修改 _weight，无法保证单个实例对象 persion 与 _weight 一一对应关系。</p>
+<h2 id="定义全局变量-NSMutableDictionary-weights"><a href="#定义全局变量-NSMutableDictionary-weights" class="headerlink" title="定义全局变量 NSMutableDictionary *weights_"></a>定义全局变量 NSMutableDictionary *weights_</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSMutableDictionary</span> *weights_;</div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Persion</span> (<span class="title">Test</span>)</span></div><div class="line">+ (<span class="keyword">void</span>)load &#123;</div><div class="line">    weights_ = [<span class="built_in">NSMutableDictionary</span> dictionary];</div><div class="line">&#125;</div><div class="line">- (<span class="keyword">void</span>)setWeight:(<span class="keyword">int</span>)weight &#123;</div><div class="line">    <span class="built_in">NSString</span> *key = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%p"</span>, <span class="keyword">self</span>];</div><div class="line">    weights_[key] = @(weight);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">int</span>)weight &#123;</div><div class="line">    <span class="built_in">NSString</span> *key = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%p"</span>, <span class="keyword">self</span>];</div><div class="line">    <span class="keyword">return</span> [weights_[key] intValue];</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        Persion *persion1 = [[Persion alloc] init];</div><div class="line">        persion1.age = <span class="number">10</span>;</div><div class="line">        persion1.weight = <span class="number">20</span>;</div><div class="line">        </div><div class="line">        Persion *persion2 = [[Persion alloc] init];</div><div class="line">        persion2.age = <span class="number">30</span>;</div><div class="line">        persion2.weight = <span class="number">40</span>;</div><div class="line">        </div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"persion1.age=%d, persion1.wight=%d, persion2.age=%d, persion2.wight=%d"</span>, persion1.age, persion1.weight, persion2.age, persion2.weight);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">persion1.<span class="attribute">age</span>=10, persion1.<span class="attribute">wight</span>=20, persion2.<span class="attribute">age</span>=30, persion2.<span class="attribute">wight</span>=40</div></pre></td></tr></table></figure></p>
+<ul>
+<li>注意：<br>10和30是存储在 persion 对象的内部，20和40是存放在全局的字典 weights_ 对象里面。</li>
+</ul>
+<p>优点：<br>通过定义全局变量字典，以 persion 对象的地址作 key，属性 weight 作 value，保证了 persion 对象与 weight 的一一对相应关系。<br>缺点：这种方式可能会有线程问题，在 - (void)setWeight:(int)weight 方法里需要加锁。另外每添加一个属性就要定义一个新的全局变量字典。</p>
+<p>因为分类底层结构的限制，不能添加成员变量到分类中，但是可以通过关联对象来间接实现👇。</p>
+<h1 id="关联对象"><a href="#关联对象" class="headerlink" title="关联对象"></a>关联对象</h1><h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><p>参数：<br>id _Nonnull object：需要添加关联对象的对象（通常写法传 self）;<br>const void * _Nonnull key：指针类型，保存关联对象的key；<br>id _Nullable value：关联对象；<br>objc_AssociationPolicy policy：关联策略；</p>
+<p>添加关联对象<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">OBJC_EXPORT <span class="keyword">void</span></div><div class="line">objc_setAssociatedObject(id _Nonnull <span class="keyword">object</span>, <span class="keyword">const</span> <span class="keyword">void</span> * _Nonnull key,</div><div class="line">                         id _Nullable <span class="keyword">value</span>, objc_AssociationPolicy policy)</div><div class="line">    OBJC_AVAILABLE(<span class="number">10.6</span>, <span class="number">3.1</span>, <span class="number">9.0</span>, <span class="number">1.0</span>, <span class="number">2.0</span>);</div></pre></td></tr></table></figure></p>
+<p>获取关联对象<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">OBJC_EXPORT id _Nullable</div><div class="line">objc_getAssociatedObject(id _Nonnull object, const void * _Nonnull <span class="type">key</span>)</div><div class="line">    OBJC_AVAILABLE(<span class="number">10.6</span>, <span class="number">3.1</span>, <span class="number">9.0</span>, <span class="number">1.0</span>, <span class="number">2.0</span>);</div></pre></td></tr></table></figure></p>
+<p>移除所有的关联对象<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">OBJC_EXPORT</span> <span class="selector-tag">void</span></div><div class="line"><span class="selector-tag">objc_removeAssociatedObjects</span>(<span class="selector-tag">id</span> _<span class="selector-tag">Nonnull</span> <span class="selector-tag">object</span>)</div><div class="line">    <span class="selector-tag">OBJC_AVAILABLE</span>(10<span class="selector-class">.6</span>, 3<span class="selector-class">.1</span>, 9<span class="selector-class">.0</span>, 1<span class="selector-class">.0</span>, 2<span class="selector-class">.0</span>);</div></pre></td></tr></table></figure></p>
+<h2 id="关联策略-objc-AssociationPolicy"><a href="#关联策略-objc-AssociationPolicy" class="headerlink" title="关联策略 objc_AssociationPolicy"></a>关联策略 objc_AssociationPolicy</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">typedef OBJC_ENUM(uintptr_t, objc_AssociationPolicy) &#123;</div><div class="line">    OBJC_ASSOCIATION_ASSIGN = <span class="number">0</span>,           <span class="comment">/**&lt; Specifies a weak reference to the associated object. */</span></div><div class="line">    OBJC_ASSOCIATION_RETAIN_NONATOMIC = <span class="number">1</span>, <span class="comment">/**&lt; Specifies a strong reference to the associated object. </span></div><div class="line"><span class="comment">                                            *   The association is not made atomically. */</span></div><div class="line">    OBJC_ASSOCIATION_COPY_NONATOMIC = <span class="number">3</span>,   <span class="comment">/**&lt; Specifies that the associated object is copied. </span></div><div class="line"><span class="comment">                                            *   The association is not made atomically. */</span></div><div class="line">    OBJC_ASSOCIATION_RETAIN = <span class="number">01401</span>,       <span class="comment">/**&lt; Specifies a strong reference to the associated object.</span></div><div class="line"><span class="comment">                                            *   The association is made atomically. */</span></div><div class="line">    OBJC_ASSOCIATION_COPY = <span class="number">01403</span>          <span class="comment">/**&lt; Specifies that the associated object is copied.</span></div><div class="line"><span class="comment">                                            *   The association is made atomically. */</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>关联策略 objc_AssociationPolicy 类似于定义属性时设置的参数，确定要关联的对象的内存内存管理方式。</p>
+<p><img src="/2020/05/26/OC底层/原理/关联对象/关联对象02.png" alt="关联对象01"></p>
+<h1 id="key的常见用法"><a href="#key的常见用法" class="headerlink" title="key的常见用法"></a>key的常见用法</h1>
       
     </div>
     
@@ -320,6 +354,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OC底层原理/" rel="tag"># OC底层原理</a>
+          
+        </div>
       
 
       
@@ -392,8 +432,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           
             <img class="site-author-image" itemprop="image"
@@ -463,6 +512,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Category的成员变量"><span class="nav-number">1.</span> <span class="nav-text">Category的成员变量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#category-t-结构体"><span class="nav-number">1.1.</span> <span class="nav-text">_category_t 结构体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在-Persion-h-中定义属性"><span class="nav-number">1.2.</span> <span class="nav-text">在 Persion.h 中定义属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在-Persion-Test-h-中定义属性"><span class="nav-number">1.3.</span> <span class="nav-text">在 Persion+Test.h 中定义属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义全局变量-int-weight"><span class="nav-number">1.4.</span> <span class="nav-text">定义全局变量 int weight_</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义全局变量-NSMutableDictionary-weights"><span class="nav-number">1.5.</span> <span class="nav-text">定义全局变量 NSMutableDictionary *weights_</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关联对象"><span class="nav-number">2.</span> <span class="nav-text">关联对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本用法"><span class="nav-number">2.1.</span> <span class="nav-text">基本用法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关联策略-objc-AssociationPolicy"><span class="nav-number">2.2.</span> <span class="nav-text">关联策略 objc_AssociationPolicy</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#key的常见用法"><span class="nav-number">3.</span> <span class="nav-text">key的常见用法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
