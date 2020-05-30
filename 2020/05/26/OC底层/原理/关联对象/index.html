@@ -69,23 +69,23 @@
 
 
 
-<meta name="description" content="思考：Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？ 类对象可以关联对象吗？ 关联对象存储在什么位置？">
+<meta name="description" content="思考：Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？ 类对象可以关联对象吗？ 关联对象存储在什么位置？ 对象及其关联对象之间有强引用关系吗？ 对象释放后，关联对象会被释放吗？">
 <meta name="keywords" content="OC底层原理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关联对象">
 <meta property="og:url" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/index.html">
 <meta property="og:site_name" content="Kevin&#39;s  blog">
-<meta property="og:description" content="思考：Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？ 类对象可以关联对象吗？ 关联对象存储在什么位置？">
+<meta property="og:description" content="思考：Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？ 类对象可以关联对象吗？ 关联对象存储在什么位置？ 对象及其关联对象之间有强引用关系吗？ 对象释放后，关联对象会被释放吗？">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象01.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象02.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象05.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象03.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象04.png">
-<meta property="og:updated_time" content="2020-05-30T17:03:16.823Z">
+<meta property="og:updated_time" content="2020-05-30T17:12:55.838Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关联对象">
-<meta name="twitter:description" content="思考：Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？ 类对象可以关联对象吗？ 关联对象存储在什么位置？">
+<meta name="twitter:description" content="思考：Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？ 类对象可以关联对象吗？ 关联对象存储在什么位置？ 对象及其关联对象之间有强引用关系吗？ 对象释放后，关联对象会被释放吗？">
 <meta name="twitter:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象01.png">
 
 
@@ -320,6 +320,8 @@
 <li>思考：Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？</li>
 <li>类对象可以关联对象吗？</li>
 <li>关联对象存储在什么位置？</li>
+<li>对象及其关联对象之间有强引用关系吗？</li>
+<li>对象释放后，关联对象会被释放吗？</li>
 </ul>
 <a id="more"></a>
 <h1 id="Category-的成员变量"><a href="#Category-的成员变量" class="headerlink" title="Category 的成员变量"></a>Category 的成员变量</h1><h2 id="category-t-结构体"><a href="#category-t-结构体" class="headerlink" title="_category_t 结构体"></a>_category_t 结构体</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">category_t</span> &#123;</span></div><div class="line">	<span class="keyword">const</span> <span class="keyword">char</span> *name; <span class="comment">//类名</span></div><div class="line">	<span class="class"><span class="keyword">struct</span> _<span class="title">class_t</span> *<span class="title">cls</span>;</span> <span class="comment">//父类</span></div><div class="line">	<span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> _<span class="title">method_list_t</span> *<span class="title">instance_methods</span>;</span> <span class="comment">//对象方法列表</span></div><div class="line">	<span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> _<span class="title">method_list_t</span> *<span class="title">class_methods</span>;</span> <span class="comment">//类方法列表</span></div><div class="line">	<span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> _<span class="title">protocol_list_t</span> *<span class="title">protocols</span>;</span> <span class="comment">//协议列表</span></div><div class="line">	<span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> _<span class="title">prop_list_t</span> *<span class="title">properties</span>;</span> <span class="comment">//属性列表</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
@@ -410,7 +412,9 @@
 <p>找到 objc-references.mm 文件里的 _object_get_associative_reference，<br>Jump To Definition -&gt; _object_get_associative_reference：<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">id</div><div class="line">_object_get_associative_reference(id object, <span class="keyword">const</span> <span class="keyword">void</span> *key)</div><div class="line">&#123;</div><div class="line">    ObjcAssociation association&#123;&#125;;</div><div class="line"></div><div class="line">    &#123;</div><div class="line">        AssociationsManager manager; <span class="comment">//关联对象管理类</span></div><div class="line">        AssociationsHashMap &amp;associations(manager.<span class="built_in">get</span>()); <span class="comment">//获取关联对象管理类里的 AssociationsHashMap，AssociationsHashMap 保存了所有对象的关联对象信息</span></div><div class="line">        AssociationsHashMap::iterator i = associations.<span class="built_in">find</span>((objc_object *)object); <span class="comment">//根据 object 找到 ObjectAssociationMap 遍历器 </span></div><div class="line">        <span class="built_in">if</span> (i != associations.<span class="built_in">end</span>()) &#123;</div><div class="line">            ObjectAssociationMap &amp;refs = i-&gt;second; <span class="comment">//获取到 ObjectAssociationMap 对象</span></div><div class="line">            ObjectAssociationMap::iterator j = refs.<span class="built_in">find</span>(key); <span class="comment">//根据 key 找到 ObjcAssociation 遍历器</span></div><div class="line">            <span class="built_in">if</span> (j != refs.<span class="built_in">end</span>()) &#123;</div><div class="line">                association = j-&gt;second;</div><div class="line">                association.retainReturnedValue();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="built_in">return</span> association.autoreleaseReturnedValue();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h2 id="小结-3"><a href="#小结-3" class="headerlink" title="小结"></a>小结</h2><ul>
 <li>关联对象存储在什么位置？<br>关联对象并不是存储在被关联对象本身内存中，关联对象存储在全局的统一的一个 AssociationsManager 中。</li>
-<li>设置关联对象为nil，就相当于是移除关联对象</li>
+<li>对象及其关联对象之间有强引用关系吗？<br>不存在。在 set 方法中并没有直接使用传入的 object 对象，而是通过的 disguised 方法将传入的 object 对象生成了 DisguisedPtr 对象，并作为 key。</li>
+<li>设置关联对象为nil，就相当于是移除关联对象。</li>
+<li>对象释放后，关联对象会被释放吗？<br>会释放。参考内存管理。</li>
 </ul>
 
       
