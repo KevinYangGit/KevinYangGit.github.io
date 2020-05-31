@@ -69,23 +69,23 @@
 
 
 
-<meta name="description" content="思考：Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？ 类对象可以关联对象吗？ 关联对象存储在什么位置？ 对象及其关联对象之间有强引用关系吗？ 对象释放后，关联对象会被释放吗？">
+<meta name="description" content="思考：  Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？ 类对象可以关联对象吗？ 关联对象存储在什么位置？ 对象及其关联对象之间有强引用关系吗？ 对象释放后，关联对象会被释放吗？">
 <meta name="keywords" content="OC底层原理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关联对象">
 <meta property="og:url" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/index.html">
 <meta property="og:site_name" content="Kevin&#39;s  blog">
-<meta property="og:description" content="思考：Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？ 类对象可以关联对象吗？ 关联对象存储在什么位置？ 对象及其关联对象之间有强引用关系吗？ 对象释放后，关联对象会被释放吗？">
+<meta property="og:description" content="思考：  Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？ 类对象可以关联对象吗？ 关联对象存储在什么位置？ 对象及其关联对象之间有强引用关系吗？ 对象释放后，关联对象会被释放吗？">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象01.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象02.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象05.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象03.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象04.png">
-<meta property="og:updated_time" content="2020-05-30T17:14:18.472Z">
+<meta property="og:updated_time" content="2020-05-30T17:23:39.726Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关联对象">
-<meta name="twitter:description" content="思考：Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？ 类对象可以关联对象吗？ 关联对象存储在什么位置？ 对象及其关联对象之间有强引用关系吗？ 对象释放后，关联对象会被释放吗？">
+<meta name="twitter:description" content="思考：  Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？ 类对象可以关联对象吗？ 关联对象存储在什么位置？ 对象及其关联对象之间有强引用关系吗？ 对象释放后，关联对象会被释放吗？">
 <meta name="twitter:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象01.png">
 
 
@@ -316,8 +316,9 @@
       
 
       
-        <ul>
-<li>思考：Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？</li>
+        <p>思考：</p>
+<ul>
+<li>Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？</li>
 <li>类对象可以关联对象吗？</li>
 <li>关联对象存储在什么位置？</li>
 <li>对象及其关联对象之间有强引用关系吗？</li>
@@ -351,7 +352,7 @@
 <p><img src="/2020/05/26/OC底层/原理/关联对象/关联对象02.png" alt="关联对象02"></p>
 <p>关联策略中没有 week，因为关联对象的实现并没有弱引用效果。</p>
 <p><img src="/2020/05/26/OC底层/原理/关联对象/关联对象05.png" alt="关联对象05"></p>
-<p>👆通过 OBJC_ASSOCIATION_ASSIGN 策略关联了对象 persion3，此时在 ObjcAssociation 对象里的 value 记住的是关联对象 persion3 的地址值，当关联对象 persion3 离开大括号销毁时，value 依然保存着关联对象的地址值。如果这个时候再通过 value 去访问关联对象就会出现坏内存访问的错误。</p>
+<p>👆通过 OBJC_ASSOCIATION_ASSIGN 策略关联了对象 persion3，此时在 ObjcAssociation 对象里的 value 记住的是关联对象 persion3 的地址值，当关联对象 persion3 离开大括号销毁后，value 依然保存着关联对象的地址值。如果这个时候再通过 value 去访问关联对象就会出现坏内存访问的错误。</p>
 <h2 id="key的常见用法"><a href="#key的常见用法" class="headerlink" title="key的常见用法"></a>key的常见用法</h2><p>先添加打印：<br><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">int main(int argc, const char * argv[]) &#123;</div><div class="line">    @autoreleasepool &#123;</div><div class="line">        Persion *persion1 = [[Persion alloc] init]<span class="comment">;</span></div><div class="line">        persion1.name = @<span class="string">"persion1"</span><span class="comment">;</span></div><div class="line">        persion1.weight = <span class="number">20</span><span class="comment">;</span></div><div class="line">        </div><div class="line">        Persion *persion2 = [[Persion alloc] init]<span class="comment">;</span></div><div class="line">        persion2.name = @<span class="string">"persion2"</span><span class="comment">;</span></div><div class="line">        persion2.weight = <span class="number">40</span><span class="comment">;</span></div><div class="line">        </div><div class="line">        NSLog(@<span class="string">"persion1.name = %@, persion1.wight = %d"</span>, persion1.name, persion1.weight)<span class="comment">;</span></div><div class="line">        NSLog(@<span class="string">"persion2.name = %@, persion2.wight = %d"</span>,persion2.name, persion2.weight)<span class="comment">;</span></div><div class="line">    &#125;</div><div class="line">    return <span class="number">0</span><span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h3 id="用法一：static-const-void-Key-Key"><a href="#用法一：static-const-void-Key-Key" class="headerlink" title="用法一：static const void *Key = &Key;"></a>用法一：static const void *Key = &Key;</h3><h4 id="const-void-Key"><a href="#const-void-Key" class="headerlink" title="const void *Key;"></a>const void *Key;</h4><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@interface</span> Person (Test)</div><div class="line"><span class="variable">@property</span> (copy, nonatomic) NSString *name;</div><div class="line"><span class="variable">@property</span> (assign, nonatomic) int weight;</div><div class="line"><span class="variable">@end</span></div><div class="line"></div><div class="line"><span class="variable">@implementation</span> Person (Test)</div><div class="line">const void *NameKey;</div><div class="line"><span class="selector-tag">const</span> <span class="selector-tag">void</span> *<span class="selector-tag">WeightKey</span>;</div><div class="line"><span class="selector-tag">-</span> (void)<span class="selector-tag">setName</span><span class="selector-pseudo">:(NSString</span> *)<span class="selector-tag">name</span></div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">objc_setAssociatedObject</span>(self, NameKey, name, OBJC_ASSOCIATION_COPY_NONATOMIC);</div><div class="line">&#125;</div><div class="line"><span class="selector-tag">-</span> (NSString *)<span class="selector-tag">name</span></div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">return</span> <span class="selector-tag">objc_getAssociatedObject</span>(self, NameKey);</div><div class="line">&#125;</div><div class="line"><span class="selector-tag">-</span> (void)<span class="selector-tag">setWeight</span><span class="selector-pseudo">:(int)weight</span></div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">objc_setAssociatedObject</span>(self, WeightKey, @(weight), OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">&#125;</div><div class="line"><span class="selector-tag">-</span> (int)<span class="selector-tag">weight</span></div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">return</span> <span class="selector-attr">[objc_getAssociatedObject(self, WeightKey) intValue]</span>;</div><div class="line">&#125;</div><div class="line">@<span class="selector-tag">end</span></div></pre></td></tr></table></figure>
 <p>打印结果：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">persion1<span class="selector-class">.name</span> = <span class="number">20</span>, persion1<span class="selector-class">.wight</span> = <span class="number">20</span></div><div class="line">persion2<span class="selector-class">.name</span> = <span class="number">40</span>, persion2<span class="selector-class">.wight</span> = <span class="number">40</span></div></pre></td></tr></table></figure></p>
@@ -413,8 +414,8 @@
 <h2 id="小结-3"><a href="#小结-3" class="headerlink" title="小结"></a>小结</h2><ul>
 <li>关联对象存储在什么位置？<br>关联对象并不是存储在被关联对象本身内存中，关联对象存储在全局的统一的一个 AssociationsManager 中。</li>
 <li>对象及其关联对象之间有强引用关系吗？<br>不存在。在 set 方法中并没有直接使用传入的 object 对象，而是通过的 disguised 方法将传入的 object 对象生成了 DisguisedPtr 对象，并作为 key。</li>
-<li>设置关联对象为nil，就相当于是移除关联对象。</li>
 <li>对象释放后，关联对象会被释放吗？<br>会释放。参考内存管理-release。</li>
+<li>设置关联对象为nil，就相当于是移除关联对象。</li>
 </ul>
 
       
@@ -455,6 +456,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/31/OC底层/原理/block/" rel="prev" title="block">
+                block <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -536,7 +541,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
