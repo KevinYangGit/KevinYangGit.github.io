@@ -465,7 +465,12 @@ int main(int argc, const char * argv[]) {
 @end
 ```
 
-查看 -(void)test 的 C++ 代码：
+查看 Person.m 的 C++ 实现：
+```
+xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc Person.m
+```
+
+-(void)test 的 C++ 代码：
 ```
 static void _I_Person_test(Person * self, SEL _cmd) {
     //调用构造函数 __Person__test_block_impl_0 传入 self
@@ -476,7 +481,7 @@ static void _I_Person_test(Person * self, SEL _cmd) {
 
 -(void)test 方法的 C++ 实现时有两个默认参数，类对象 self 和 test 方法的指针 _cmd。因为参数都是局部变量，所以作为参数出入的 self 和 _cmd 是局部变量。
 
-查看 block 的 C++ 代码：
+block 的 C++ 代码：
 ```
 struct __Person__test_block_impl_0 {
   struct __block_impl impl;
@@ -719,6 +724,37 @@ int main(int argc, const char * argv[]) {
 
 局部变量 age 和 height 的作用域是 test() 函数的“{}”内，而调用局部变量 age 和 height 是在 __test_block_func_0 函数里，为了实现跨函数调用局部变量，使用 block 捕获变量机制。在 __test_block_func_0 函数内可以通过 block 获取到被捕获的局部变量 age 的值和局部变量 height 的地址值。
 
+# block 与继承
+```
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        void (^block)(void) =  ^{
+            NSLog(@"this is a block");
+        };
+        NSLog(@"%@", [block class]);
+        NSLog(@"%@", [[block class] superclass]);
+        NSLog(@"%@", [[[block class] superclass] superclass]);
+        NSLog(@"%@", [[[[block class] superclass] superclass] superclass]);
+    }
+    return 0;
+}
+```
+
+打印结果：
+```
+__NSGlobalBlock__
+__NSGlobalBlock
+NSBlock
+NSObject
+```
+
+从打印结果可以看出，block 的继承关系是：
+```
+__NSGlobalBlock__ : __NSGlobalBlock : NSBlock : NSObject
+```
+
+block 最总继承自 NSObject，说明了 block 是一个 OC 对象，block 里的 isa 指针来自 NSObject。
+
 
 # block 的类型
 block 有3种类型，可以通过调用 class 方法或者 isa 指针查看具体类型，最终都是继承自 NSBlock 类型。
@@ -727,4 +763,104 @@ block 有3种类型，可以通过调用 class 方法或者 isa 指针查看具�
 * __NSStackBlock__ （ _NSConcreteStackBlock ）
 * __NSMallocBlock__ （ _NSConcreteMallocBlock ）
 
+## block 的内存分配
+
 ![block07](block/block07.png)
+
+编译时创建：
+* 程序区域用于存放编写的代码。  
+* 数据区域用于存放全局变量。  
+
+运行时创建：
+* 堆区域用于存放动态分配的内存，如 [NSObject alloc] 或者 malloc() 等主动申请出的内存。同时也要管理这块内存的释放工作，如 release 或 free() 等。
+* 栈区域用于存放局部变量，系统会负责管理这部分内存的创建和释放工作。
+
+
+如图，GlobalBlock 存放在数据区域，MallocBlock 存放在堆区域，StackBlock 存放在栈区。
+
+## 查看 block 的类型
+定义三种类型的 block：
+```
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        //__NSGlobalBlock__
+        void (^block1)(void) =  ^{
+            NSLog(@"this is a block1");
+        };
+        //__NSMallocBlock__
+        int age = 10;
+        void (^block2)(void) = ^{
+            NSLog(@"this is a block2, age = %d", age);
+        };
+        //__NSStackBlock__
+        NSLog(@"%@ %@ %@", [block1 class], [block2 class], [^{
+            NSLog(@"this is block3, age = %d", age);
+        } class]);
+    }
+    return 0;
+}
+```
+
+打印结果：
+```
+__NSGlobalBlock__ __NSMallocBlock__ __NSStackBlock__
+```
+
+终端通过 clang 生成 C++ 代码，只保留 block 结构体：
+```
+//block1
+struct __main_block_impl_0 {
+  struct __block_impl impl;
+  struct __main_block_desc_0* Desc;
+  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int flags=0) {
+    impl.isa = &_NSConcreteStackBlock;
+    impl.Flags = flags;
+    impl.FuncPtr = fp;
+    Desc = desc;
+  }
+};
+
+//block2
+struct __main_block_impl_1 {
+  struct __block_impl impl;
+  struct __main_block_desc_1* Desc;
+  int age;
+  __main_block_impl_1(void *fp, struct __main_block_desc_1 *desc, int _age, int flags=0) : age(_age) {
+    impl.isa = &_NSConcreteStackBlock;
+    impl.Flags = flags;
+    impl.FuncPtr = fp;
+    Desc = desc;
+  }
+};
+
+//block3
+struct __main_block_impl_2 {
+  struct __block_impl impl;
+  struct __main_block_desc_2* Desc;
+  int age;
+  __main_block_impl_2(void *fp, struct __main_block_desc_2 *desc, int _age, int flags=0) : age(_age) {
+    impl.isa = &_NSConcreteStackBlock;
+    impl.Flags = flags;
+    impl.FuncPtr = fp;
+    Desc = desc;
+  }
+};
+```
+
+从 C++ 代码可以看到，三个 block 的 isa 都是指向 &_NSConcreteStackBlock，即三个 block 都是 __NSStackBlock__ 类型的？！
+
+通过终端命令生成的编译文件，跟运行时打印的结果不一样的原因：  
+* 因为运行时可能会在系统运行过程中修改一些内容，所以这里还是以运行时打印的结果为准。  
+* 通过 clang 生成的 C++ 代码，有时不一定是编译生成的代码，大致一样，细节上有区别。
+
+## 三种 block 类型的划分
+![block08](block/block08.png)
+
+### __NSGlobalBlock__
+
+
+### __NSStackBlock__
+
+
+### __NSMallocBlock__
+
