@@ -6,9 +6,6 @@ tags: OC底层原理
 
 思考：
 * block 的原理是怎样的？本质是什么？
-* __block 的作用是什么？有什么使用注意点？
-* block 的属性修饰词为什么是 copy？使用 block 有哪些使用注意？
-* block 在修改 NSMutableArray 时需不需要添加 __block？
 <!-- more -->
 
 # 基本认识
@@ -88,7 +85,7 @@ int main(int argc, const char * argv[]) {
 ```
 
 ## __main_block_impl_0
-__main_block_impl_0 是 block 在 C++ 中的结构体实现。第一个参数__block_impl 中有一个 isa 指针，具备 OC 对象特征，说明 block 本质上也是一个 OC 对象。  
+__main_block_impl_0 是 block 在 C++ 中的结构体实现。第一个参数 __block_impl 中有一个 isa 指针，具备 OC 对象特征，说明 block 本质上也是一个 OC 对象。  
 
 __main_block_impl_0 省略 __block_impl 和 __main_block_desc_0 后可以看成：
 ```
@@ -257,8 +254,7 @@ int main(int argc, const char * argv[]) {
 
 ![block06](block/block06.png)
 
-ps：
-局部变量还有一个 register 变量（定义 int age = 10，尽量使用寄存器寄存变量 age）。
+ps：局部变量还有一个 register 变量（定义 int age = 10，尽量使用寄存器寄存变量 age）。
 ```
 register int age = 10;
 ```
@@ -268,7 +264,7 @@ register int age = 10;
 * auto 变量的作用域在当前“{}”内，离开作用域就销毁。
 * auto 变量的捕获方式是值传递。  
 
-平时定义的 int age = 10 默认就是 auto 变量，auto 省略不写：
+平时定义的局部变量 int age = 10 默认就是 auto 变量，auto 省略不写：
 ```
 auto int age = 10; // int age = 10;
 ```
@@ -293,18 +289,18 @@ int main(int argc, const char * argv[]) {
 this is a block - 10
 ```
 
-因为 auto 变量的捕获方式是值传递，即 block 捕获的是 age 的值（10），而不是 age 的地址，所以在 block 捕获了 age 的值（10）后，再通过修改指针 age 指向的地址里的值（20），block 捕获到的值（10）不变。所以打印结果是 10。
+因为 auto 变量的捕获方式是值传递，即 block 捕获的是 age 的值（10），而不是 age 的地址，所以在 block 捕获了 age 的值（10）后，再通过修改 age 指向的地址里的值（20），block 捕获到的值（10）不变。所以打印结果是 10。
 
 查看 C++ 代码：
 ```
 struct __main_block_impl_0 {
   struct __block_impl impl;
   struct __main_block_desc_0* Desc;
-  int age; //新增变量 age
+  int age; //新增变量，用于捕获外部变量 age
 
   //构造函数
   //参数 _age：新增参数
-  //age(_age)：将参数 _age 赋值给 age，即 age(_age) 等于 age = _age;
+  //age(_age)方法：将参数 _age 赋值给 age，即 age(_age) 方法等于 age = _age;
   __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int _age, int flags=0) : age(_age) {
     impl.isa = &_NSConcreteStackBlock;
     impl.Flags = flags;
@@ -340,13 +336,13 @@ static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO =
 
 ![block05](block/block05.png)
 
-__main_block_impl_0 内部新增了成员变量 age，就是用来捕获外部 auto 变量 age 用的。
+block 的结构体 __main_block_impl_0 内部新增了成员变量 age，就是用来捕获外部 auto 变量 age 用的。
 
 ### static 变量捕获
 * static 变量会一直保存在内存里。
 * static 变量的捕获方式是指针传递。
 
-ps：static 声明的局部变量只初始化一次，其内存分配在静态存储区，在程序中只有一份内存，并且在整个程序执行期间都终存在不会释放。虽然内存不会释放，但是作用域并没有改变。
+ps：static 声明的局部变量只初始化一次，其内存分配在静态存储区（数据区域），在程序中只有一份内存，并且在整个程序执行期间都存在不会释放。虽然 static 变量的内存不会释放，但是其作用域并没有改变。
 
 定义 block：
 ```
@@ -410,7 +406,7 @@ int main(int argc, const char * argv[]) {
 static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO = { 0, 2 };
 ```
 
-因为 static 变量的捕获方式是指针传递，即 block 捕获的是 height 的地址值，所以在 block 捕获了 height 地址值后，再通过指针 height 修改地址里的值（20），block 捕获到的指针 height 指向的地址值就是 20 了。所以打印结果是 20。
+因为 static 变量的捕获方式是指针传递，即 block 捕获的是 height 的地址值，所以在 block 捕获了 height 地址值后，再通过指针 height 修改地址里的值（20），block 捕获到的指针 height 指向的地址值就是 20 了，所以打印结果是 20。
 
 ### 指针传递 & 值传递
 ```
@@ -436,7 +432,7 @@ int main(int argc, const char * argv[]) {
 }
 ```
 
-因为 age 是 auto 变量，所以在 test() 执行后，age 就被被销毁了。因为 block 在执行时会打印 age，而 age 已经被销毁不能被访问，所以 block 在捕获 age 时只能捕获 age 的值不能捕获 age 的地址值。因此 block 在捕获 auto 变量时采取的策略的是值传递。
+因为 age 是 auto 变量，所以在 test() 执行后 age 就被被销毁了。因为 block 在执行时会访问 age，而 age 已经被销毁不能被访问，所以 block 在捕获 age 时只能捕获 age 的值不能捕获 age 的地址值。因此 block 在捕获 auto 变量时采取的策略的是值传递。
 
 因为 height 是 static 变量，会一直保存在内存里，所以 block 在执行时依然能成功访问 height 的地址。因此 block 在捕获 static 变量时采取的策略的是指针传递。
 
@@ -470,7 +466,7 @@ int main(int argc, const char * argv[]) {
 xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc Person.m
 ```
 
--(void)test 的 C++ 代码：
+-(void)test 方法的 C++ 代码：
 ```
 static void _I_Person_test(Person * self, SEL _cmd) {
     //调用构造函数 __Person__test_block_impl_0 传入 self
@@ -502,7 +498,7 @@ static void __Person__test_block_func_0(struct __Person__test_block_impl_0 *__cs
 }
 ```
 
-因为局部变量都会被 block 捕获，所以 self 以参数的形式传入 在 block 结构体 __Person__test_block_impl_0 里新增了一个变量 Person *self 用来捕获 self 的地址值。
+因为局部变量都会被 block 捕获，所以 self 以参数的形式传入后，block 结构体 __Person__test_block_impl_0 里新增了一个变量 Person *self 用来捕获 self 的地址值。
 
 #### 成员变量 _name 的捕获方式
 ```
@@ -514,7 +510,7 @@ static void __Person__test_block_func_0(struct __Person__test_block_impl_0 *__cs
 }
 ```
 
-block 内部调用 _name 方式等同于 self->_name，即 block 还是先捕获 self 再通过 self 获取 _name。
+block 内部调用 _name 的方式等同于 self->_name，即 block 还是先捕获 self 再通过 self->_name 获取 _name。
 
 查看 C++ 代码：
 ```
@@ -578,8 +574,10 @@ static void __Person__test_block_func_0(struct __Person__test_block_impl_0 *__cs
 
 ## 全局变量
 
-* 全局变量不会被 block 捕获，直接访问
+* 全局变量的内存存放在数据区域，在整个程序执行期间都存在不会释放。
+* 全局变量不会被 block 捕获，而是直接访问。
 
+定义 block：
 ```
 int age = 10;
 static int height = 10;
@@ -646,8 +644,9 @@ int main(int argc, const char * argv[]) {
 static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO = { 0, 2 };
 ```
 
-全局变量不会被 block 捕获，因为全局变量的内存存放在全局（静态）存储区，任何函数都可以访问，所以在 __main_block_func_0 方法执行时，不需要通过 block 获取变量，而是直接调用。
+全局变量不会被 block 捕获，因为全局变量的内存存放在全局（静态）存储区，任何函数都可以访问，所以在 __main_block_func_0 方法执行时，不需要通过 block 获取变量，而是直接访问。
 
+### block 捕获局部变量的原因
 局部变量之所以会被捕获，是因为局部变量的作用域的限制。为了防止在 block 调用时，局部变量因为超出作用域而无法访问了，block 会记住需要用到的局部变量，在调用 block 执行 __main_block_func_0 函数时，再从 block 取出局部变量：
 ```
 void (^block)(void);
@@ -753,7 +752,7 @@ NSObject
 __NSGlobalBlock__ : __NSGlobalBlock : NSBlock : NSObject
 ```
 
-block 最总继承自 NSObject，说明了 block 是一个 OC 对象，block 里的 isa 指针来自 NSObject。
+block 最终继承自 NSObject，block 里的 isa 指针来自 NSObject，也说明了 block 是一个 OC 对象。
 
 
 # block 的类型
@@ -764,35 +763,36 @@ block 有3种类型，可以通过调用 class 方法或者 isa 指针查看具�
 * __NSMallocBlock__ （ _NSConcreteMallocBlock ）
 
 ## block 的内存分配
-编译时创建：
-* 程序区域用于存放编写的代码。  
-* 数据区域用于存放全局变量。  
 
-运行时创建：
-* 堆区域用于存放动态分配的内存，如 [NSObject alloc] 或者 malloc() 等主动申请出的内存。同时也要管理这块内存的释放工作，如 release 或 free() 等。
-* 栈区域用于存放局部变量，系统会负责管理这部分内存的创建和释放工作。
+应用程序的内存分配：
+* 编译时创建：  
+程序区域：用于存放编写的代码。  
+数据区域：用于存放全局变量。  
+
+* 运行时创建：  
+堆区域：用于存放动态分配的内存，如通过 [NSObject alloc] 或者 malloc() 等方式主动申请出的内存。同时也要管理这块内存的释放工作，如 release 或 free() 等。  
+栈区域：用于存放局部变量，系统会负责管理这部分内存的创建和释放工作。
 
 ![block07](block/block07.png)
 
 如图，GlobalBlock 存放在数据区域，MallocBlock 存放在堆区域，StackBlock 存放在栈区。
 
 ## 查看 block 的类型
-定义三种类型的 block：
+（ARC 环境下）定义三种类型的 block：
 ```
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        //__NSGlobalBlock__
         void (^block1)(void) =  ^{
-            NSLog(@"this is a block1");
+            NSLog(@"this is a block1"); //__NSGlobalBlock__
         };
-        //__NSMallocBlock__
+        
         int age = 10;
         void (^block2)(void) = ^{
-            NSLog(@"this is a block2, age = %d", age);
-        };
-        //__NSStackBlock__
+            NSLog(@"this is a block2, age = %d", age); //__NSMallocBlock__
+        }; //ARC 环境下默认调用 copy
+       
         NSLog(@"%@ %@ %@", [block1 class], [block2 class], [^{
-            NSLog(@"this is block3, age = %d", age);
+            NSLog(@"this is block3, age = %d", age); //__NSStackBlock__
         } class]);
     }
     return 0;
@@ -804,7 +804,7 @@ int main(int argc, const char * argv[]) {
 __NSGlobalBlock__ __NSMallocBlock__ __NSStackBlock__
 ```
 
-终端通过 clang 生成 C++ 代码，只保留 block 结构体：
+终端通过 clang 生成 C++ 代码（只贴 block 结构体）：
 ```
 //block1
 struct __main_block_impl_0 {
@@ -845,19 +845,19 @@ struct __main_block_impl_2 {
 };
 ```
 
-从 C++ 代码可以看到，三个 block 的 isa 都是指向 &_NSConcreteStackBlock，即三个 block 都是 __NSStackBlock__ 类型的？！
+从上面👆 C++ 代码可以看到，三个 block 的 isa 都是指向 &_NSConcreteStackBlock，即三个 block 都是 __NSStackBlock__ 类型的？！通过终端命令生成的编译文件，跟运行时打印的结果不一样？！
 
-通过终端命令生成的编译文件，跟运行时打印的结果不一样的原因：  
-* 因为运行时可能会在系统运行过程中修改一些内容，所以这里还是以运行时打印的结果为准。  
-* 通过 clang 生成的 C++ 代码，有时不一定是编译生成的代码，大致一样，细节上有区别。
+原因：
+1. 因为运行时可能会在系统运行过程中修改一些内容，所以这里还是以运行时打印的结果为准。  
+2. 通过 clang 生成的 C++ 代码，有时不一定是编译生成的代码，大致一样，细节上有区别。
 
 ## 三种 block 类型的划分
 ![block08](block/block08.png)
 
-为了保证打印结果的准确性，需要关闭 XCode 的 ARC。build setting -> Automatic Reference Counting（NO）。
+为了保证打印结果的准确性，需要关闭 Xcode 的 ARC。build setting -> Automatic Reference Counting（NO）。
 
 ### __NSGlobalBlock__
-不访问变量：
+#### 不访问变量：
 ```
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
@@ -875,7 +875,7 @@ int main(int argc, const char * argv[]) {
 __NSGlobalBlock__
 ```
 
-访问 static 变量：
+#### 访问 static 变量：
 ```
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
@@ -894,7 +894,7 @@ int main(int argc, const char * argv[]) {
 __NSGlobalBlock__
 ```
 
-访问全局变量：
+#### 访问全局变量：
 ```
 int age_ = 10;
 
@@ -914,7 +914,12 @@ int main(int argc, const char * argv[]) {
 __NSGlobalBlock__
 ```
 
-访问 auto 变量：
+#### 小结
+block 在“没有访问变量”、“访问 static 变量”和“访问全局变量”的时候，都是 __NSGlobalBlock__ 类型，放在数据区域。
+
+### __NSStackBlock__
+
+#### 访问 auto 变量：
 ```
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
@@ -933,10 +938,6 @@ int main(int argc, const char * argv[]) {
 __NSStackBlock__
 ```
 
-#### 小结
-block 在没有访问变量、访问 static 变量和访问全局变量的时候，都是 __NSGlobalBlock__ 类型，在访问 auto 变量的时候是 __NSStackBlock__ 类型。即没有访问 auto 变量的 block 都是 __NSGlobalBlock__ 类型，放在数据区域。
-
-### __NSStackBlock__
 上面👆的打印结果中可以看到，block 在访问 auto 变量的时候类型是 __NSStackBlock__，放在栈区。
 
 放在栈区的 block 会有内存销毁的问题：
@@ -966,19 +967,20 @@ int main(int argc, const char * argv[]) {
 this is a block, age = -272632600
 ```
 
-可以看到打印出来的 age 出现异常。因为 block 是 __NSStackBlock__ 类型的，放在栈区，它的作用域是 void test 方法的“{}”内部。调用 test() 方法时，在栈区指定位置开辟一块空间（调用栈）给 test() 函数使用，调用完成后该空间（调用栈）会被回收，block 内部的数据就变成垃圾数据了。
+可以看到打印出来的 age 出现异常。因为 block 是 __NSStackBlock__ 类型的，放在栈区，它的作用域是 void test 方法的“{}”内部。在调用 test() 方法时，会在栈区开辟一块空间（调用栈）给 test() 函数使用，调用完成后该空间（调用栈）会被回收，这时 block 内部的数据就变成垃圾数据了。
 
-虽然 block 捕获了 age 的值，但是 block 结构体的内存是在栈区的，在 test 函数调用完被销毁后，block 结构体在栈上的内存里的数据可能就变成了垃圾数据。
-
-可以通过 copy 方法将 __NSStackBlock__ 类型的 block 变成 __NSMallocBlock__ 类型。
+#### 小结
+虽然 block 捕获了 auto 变量的值，但是 block 结构体的内存是在栈区的，在 test 函数调用完被销毁后，block 结构体在栈上的内存里的数据可能就变成了垃圾数据。
 
 ### __NSMallocBlock__
 
-上面👆的推论里已经提到，__NSStackBlock__ 类型的 block 在调用 copy 后，block 的类型就变成了 __NSMallocBlock__ 类型。__NSMallocBlock__ 类型的 block 的内存存放在堆区，由开发者手动管理内存的释放，保证了 block 内存的完整性。
+可以通过 copy 方法将 __NSStackBlock__ 类型的 block 变成 __NSMallocBlock__ 类型。
 
-## block 与 copy
+__NSStackBlock__ 类型的 block 在调用 copy 后，block 的类型就变成了 __NSMallocBlock__ 类型。__NSMallocBlock__ 类型的 block 的内存存放在堆区，由开发者手动管理内存的释放，保证了 block 内存的完整性。
 
-### __NSGlobalBlock__ 与 copy
+## 不同 block 类型的 copy
+
+### __NSGlobalBlock__ 的 copy
 ```
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
@@ -998,7 +1000,7 @@ __NSGlobalBlock__
 
 __NSGlobalBlock__ 类型的 block 调用 copy 后还是 __NSGlobalBlock__ 类型。
 
-### __NSStackBlock__ 与 copy
+### __NSStackBlock__ 的 copy
 ```
 void (^block)(void);
 void test()
@@ -1025,9 +1027,9 @@ int main(int argc, const char * argv[]) {
 this is a block, age = 10
 ```
 
-调用 copy 方法后，block 的类型变成了 __NSMallocBlock__ 类型，block 的内存就从栈区变成了堆区，由开发者手动管理内存的释放。将 block 的内存 copy 到堆区保证了 block 内存的完整性。
+调用 copy 方法后，block 的类型从 __NSStackBlock__ 类型变成了 __NSMallocBlock__ 类型，block 的内存位置就从栈区变成了堆区，由开发者手动管理内存的释放。将 block 的内存 copy 到堆区保证了 block 内存的完整性。
 
-### __NSMallocBlock__ 与 copy
+### __NSMallocBlock__ 的 copy
 ```
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
@@ -1046,11 +1048,15 @@ int main(int argc, const char * argv[]) {
 __NSMallocBlock__
 ```
 
-__NSMallocBlock__ 类型的 block 调用 copy 后还是 __NSMallocBlock__ 类型。
+__NSMallocBlock__ 类型的 block 调用 copy 后还是 __NSMallocBlock__ 类型，引用计数+1。
 
 ### 小结
 ![block09](block/block09.png)
 
+不同类型的 block 调用 copy 的现象都不同，这主要跟 block 的内存管理策略有关：  
+1. 数据区域的 __NSGlobalBlock__，因为数据区域的内存在程序运行期间始终存在不会销毁，所以 __NSGlobalBlock__ 的内存也没必要移动到堆区通过引用计数的方式管理内存。
+2. 堆区的 __NSMallocBlock__ 是通过引用计数策略被开发者管理内存的，所以在调用 copy 时要遵循引用计数管理逻辑+1。
+3. 栈区的 __NSStackBlock__ 是系统管理内存的，离开作用域就会销毁。通过 copy 将 __NSStackBlock__ 类型的 block 的内存放到堆区，通过引用计数的方式管理内存，实现让开发者管理内存。
 
 ps：  
 类对象内存的存放位置：
