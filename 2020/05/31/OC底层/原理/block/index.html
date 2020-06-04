@@ -86,7 +86,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/05/31/OC底层/原理/block/block07.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/31/OC底层/原理/block/block08.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/31/OC底层/原理/block/block09.png">
-<meta property="og:updated_time" content="2020-06-04T03:39:38.959Z">
+<meta property="og:updated_time" content="2020-06-04T03:47:03.980Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="block">
 <meta name="twitter:description" content="思考：  block 的原理是怎样的？本质是什么？">
@@ -449,9 +449,9 @@
 <h3 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h3><p><img src="/2020/05/31/OC底层/原理/block/block09.png" alt="block09"></p>
 <p>不同类型的 block 调用 copy 的现象都不同，这主要跟 block 的内存管理策略有关：  </p>
 <ol>
-<li>数据区域的 <strong>NSGlobalBlock</strong>，因为没有引用对象也就没有引用计数的问题。又因为数据区域的内存在程序运行期间始终存在不会销毁，所以 <strong>NSGlobalBlock</strong> 的内存也没必要移动到堆区。  </li>
+<li>数据区域的 <strong>NSGlobalBlock</strong>，因为数据区域的内存在程序运行期间始终存在不会销毁，所以 <strong>NSGlobalBlock</strong> 的内存也没必要移动到堆区通过引用计数的方式管理内存。</li>
 <li>堆区的 <strong>NSMallocBlock</strong> 是通过引用计数策略被开发者管理内存的，所以在调用 copy 时要遵循引用计数管理逻辑+1。</li>
-<li>栈区的 <strong>NSStackBlock</strong> 是系统管理内存的，离开作用域就会销毁。通过 copy 对 <strong>NSStackBlock</strong> 类型的 block 增加引用计数，放到堆区，实现让开发者管理内存。</li>
+<li>栈区的 <strong>NSStackBlock</strong> 是系统管理内存的，离开作用域就会销毁。通过 copy 将 <strong>NSStackBlock</strong> 类型的 block 的内存放到堆区，通过引用计数的方式管理内存，实现让开发者管理内存。</li>
 </ol>
 <p>ps：<br>类对象内存的存放位置：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> age = <span class="number">10</span>;</div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        <span class="keyword">int</span> a = <span class="number">10</span>;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"数据段：age %p"</span>, &amp;age);</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"栈：a %p"</span>, &amp;a);</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"堆：obj %p"</span>, [[<span class="built_in">NSObject</span> alloc] init]);</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"class %p"</span>, [Person <span class="keyword">class</span>]);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>打印结果：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">数据段：age <span class="number">0x100001310</span></div><div class="line">栈：a <span class="number">0x7ffeefbff52c</span></div><div class="line">堆：obj <span class="number">0x100606140</span></div><div class="line">class <span class="number">0x1000012c0</span></div></pre></td></tr></table></figure></p>
