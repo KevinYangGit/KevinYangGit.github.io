@@ -9,6 +9,7 @@ tags: OC底层原理
 <!-- more -->
 
 # 基本认识
+
 ## block
 ```
 ^{
@@ -118,6 +119,8 @@ Printing description of blockStruct->impl.FuncPtr:
 ![block02](block/block02.png)
 
 可以看到，block 里的开始地址值 100000f00 等于 FuncPtr 的地址值。说明 block 里的代码块的地址值被保存在了 __block_impl 里的 FuncPtr 中（函数调用），另外 __main_block_impl_0 里保存了外部变量 int a（调用环境），说明 block 是封装了函数调用以及函数调用环境的 OC 对象。
+
+
 
 # block 的本质
 
@@ -260,6 +263,7 @@ register int age = 10;
 ```
 
 ## 局部变量
+
 ### auto 变量捕获
 * auto 变量的作用域在当前“{}”内，离开作用域就销毁。
 * auto 变量的捕获方式是值传递。  
@@ -758,24 +762,9 @@ block 最终继承自 NSObject，block 里的 isa 指针来自 NSObject，也说
 # block 的类型
 block 有3种类型，可以通过调用 class 方法或者 isa 指针查看具体类型，最终都是继承自 NSBlock 类型。
 
-* __NSGlobalBlock__ （ _NSConcreteGlobalBlock ）
-* __NSStackBlock__ （ _NSConcreteStackBlock ）
-* __NSMallocBlock__ （ _NSConcreteMallocBlock ）
-
-## block 的内存分配
-
-应用程序的内存分配：
-* 编译时创建：  
-程序区域：用于存放编写的代码。  
-数据区域：用于存放全局变量。  
-
-* 运行时创建：  
-堆区域：用于存放动态分配的内存，如通过 [NSObject alloc] 或者 malloc() 等方式主动申请出的内存。同时也要管理这块内存的释放工作，如 release 或 free() 等。  
-栈区域：用于存放局部变量，系统会负责管理这部分内存的创建和释放工作。
-
-![block07](block/block07.png)
-
-如图，GlobalBlock 存放在数据区域，MallocBlock 存放在堆区域，StackBlock 存放在栈区。
+* \_\_NSGlobalBlock\_\_ （ _NSConcreteGlobalBlock ）
+* \_\_NSStackBlock\_\_ （ _NSConcreteStackBlock ）
+* \_\_NSMallocBlock\_\_ （ _NSConcreteMallocBlock ）
 
 ## 查看 block 的类型
 （ARC 环境下）定义三种类型的 block：
@@ -845,18 +834,33 @@ struct __main_block_impl_2 {
 };
 ```
 
-从上面👆 C++ 代码可以看到，三个 block 的 isa 都是指向 &_NSConcreteStackBlock，即三个 block 都是 __NSStackBlock__ 类型的？！通过终端命令生成的编译文件，跟运行时打印的结果不一样？！
+从上面👆 C++ 代码可以看到，三个 block 的 isa 都是指向 &_NSConcreteStackBlock，即三个 block 都是 `__NSStackBlock__` 类型的？！通过终端命令生成的编译文件，跟运行时打印的结果不一样？！
 
 原因：
 1. 因为运行时可能会在系统运行过程中修改一些内容，所以这里还是以运行时打印的结果为准。  
 2. 通过 clang 生成的 C++ 代码，有时不一定是编译生成的代码，大致一样，细节上有区别。
+
+## 三种 block 类型的内存分配
+
+应用程序的内存分配：
+* 编译时创建：  
+程序区域：用于存放编写的代码。  
+数据区域：用于存放全局变量。  
+
+* 运行时创建：  
+堆区域：用于存放动态分配的内存，如通过 [NSObject alloc] 或者 malloc() 等方式主动申请出的内存。同时也要管理这块内存的释放工作，如 release 或 free() 等。  
+栈区域：用于存放局部变量，系统会负责管理这部分内存的创建和释放工作。
+
+![block07](block/block07.png)
+
+如图，GlobalBlock 存放在数据区域，MallocBlock 存放在堆区域，StackBlock 存放在栈区。
 
 ## 三种 block 类型的划分
 ![block08](block/block08.png)
 
 为了保证打印结果的准确性，需要关闭 Xcode 的 ARC。build setting -> Automatic Reference Counting（NO）。
 
-### __NSGlobalBlock__
+### \_\_NSGlobalBlock\_\_
 #### 不访问变量：
 ```
 int main(int argc, const char * argv[]) {
@@ -915,9 +919,9 @@ __NSGlobalBlock__
 ```
 
 #### 小结
-block 在“没有访问变量”、“访问 static 变量”和“访问全局变量”的时候，都是 __NSGlobalBlock__ 类型，放在数据区域。
+block 在“没有访问变量”、“访问 static 变量”和“访问全局变量”的时候，都是 `__NSGlobalBlock__` 类型，放在数据区域。
 
-### __NSStackBlock__
+### \_\_NSStackBlock\_\_
 
 #### 访问 auto 变量：
 ```
@@ -938,7 +942,7 @@ int main(int argc, const char * argv[]) {
 __NSStackBlock__
 ```
 
-上面👆的打印结果中可以看到，block 在访问 auto 变量的时候类型是 __NSStackBlock__，放在栈区。
+上面👆的打印结果中可以看到，block 在访问 auto 变量的时候类型是 `__NSStackBlock__`，放在栈区。
 
 放在栈区的 block 会有内存销毁的问题：
 ```
@@ -967,20 +971,23 @@ int main(int argc, const char * argv[]) {
 this is a block, age = -272632600
 ```
 
-可以看到打印出来的 age 出现异常。因为 block 是 __NSStackBlock__ 类型的，放在栈区，它的作用域是 void test 方法的“{}”内部。在调用 test() 方法时，会在栈区开辟一块空间（调用栈）给 test() 函数使用，调用完成后该空间（调用栈）会被回收，这时 block 内部的数据就变成垃圾数据了。
+可以看到打印出来的 age 出现异常。因为 block 是 `__NSStackBlock__` 类型的，放在栈区，它的作用域是 void test 方法的“{}”内部。在调用 test() 方法时，会在栈区开辟一块空间（调用栈）给 test() 函数使用，调用完成后该空间（调用栈）会被回收，这时 block 内部的数据就变成垃圾数据了。
 
 #### 小结
 虽然 block 捕获了 auto 变量的值，但是 block 结构体的内存是在栈区的，在 test 函数调用完被销毁后，block 结构体在栈上的内存里的数据可能就变成了垃圾数据。
 
-### __NSMallocBlock__
+### \_\_NSMallocBlock\_\_
 
-可以通过 copy 方法将 __NSStackBlock__ 类型的 block 变成 __NSMallocBlock__ 类型。
+可以通过 copy 方法将 `__NSStackBlock__` 类型的 block 变成 `__NSMallocBlock__` 类型。
 
-__NSStackBlock__ 类型的 block 在调用 copy 后，block 的类型就变成了 __NSMallocBlock__ 类型。__NSMallocBlock__ 类型的 block 的内存存放在堆区，由开发者手动管理内存的释放，保证了 block 内存的完整性。
+`__NSStackBlock__` 类型的 block 在调用 copy 后，block 的类型就变成了 `__NSMallocBlock__` 类型。`__NSMallocBlock__` 类型的 block 的内存存放在堆区，由开发者手动管理内存的释放，保证了 block 内存的完整性。
 
-## 不同 block 类型的 copy
 
-### __NSGlobalBlock__ 的 copy
+# block 的 copy
+
+## 三种 block 类型的 copy
+
+### \_\_NSGlobalBlock\_\_ 的 copy
 ```
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
@@ -998,9 +1005,9 @@ int main(int argc, const char * argv[]) {
 __NSGlobalBlock__
 ```
 
-__NSGlobalBlock__ 类型的 block 调用 copy 后还是 __NSGlobalBlock__ 类型。
+`__NSGlobalBlock__` 类型的 block 调用 copy 后还是 `__NSGlobalBlock__` 类型。
 
-### __NSStackBlock__ 的 copy
+### \_\_NSStackBlock\_\_ 的 copy
 ```
 void (^block)(void);
 void test()
@@ -1027,7 +1034,7 @@ int main(int argc, const char * argv[]) {
 this is a block, age = 10
 ```
 
-调用 copy 方法后，block 的类型从 __NSStackBlock__ 类型变成了 __NSMallocBlock__ 类型，block 的内存位置就从栈区变成了堆区，由开发者手动管理内存的释放。将 block 的内存 copy 到堆区保证了 block 内存的完整性。
+调用 copy 方法后，block 的类型从 `__NSStackBlock__` 类型变成了 `__NSMallocBlock__` 类型，block 的内存位置就从栈区拷贝到堆区，由开发者手动管理内存的释放。将 block 的内存 copy 到堆区保证了 block 内存的完整性。
 
 ### __NSMallocBlock__ 的 copy
 ```
@@ -1048,15 +1055,15 @@ int main(int argc, const char * argv[]) {
 __NSMallocBlock__
 ```
 
-__NSMallocBlock__ 类型的 block 调用 copy 后还是 __NSMallocBlock__ 类型，引用计数+1。
+`__NSMallocBlock__` 类型的 block 调用 copy 后还是 `__NSMallocBlock__` 类型，引用计数+1。
 
 ### 小结
 ![block09](block/block09.png)
 
 不同类型的 block 调用 copy 的现象都不同，这主要跟 block 的内存管理策略有关：  
-1. 数据区域的 __NSGlobalBlock__，因为数据区域的内存在程序运行期间始终存在不会销毁，所以 __NSGlobalBlock__ 的内存也没必要移动到堆区通过引用计数的方式管理内存。
-2. 堆区的 __NSMallocBlock__ 是通过引用计数策略被开发者管理内存的，所以在调用 copy 时要遵循引用计数管理逻辑+1。
-3. 栈区的 __NSStackBlock__ 是系统管理内存的，离开作用域就会销毁。通过 copy 将 __NSStackBlock__ 类型的 block 的内存放到堆区，通过引用计数的方式管理内存，实现让开发者管理内存。
+1. 数据区域的 `__NSGlobalBlock__`，因为数据区域的内存在程序运行期间始终存在不会销毁，所以 `__NSGlobalBlock__` 的内存也没必要拷贝到堆区通过引用计数的方式管理内存。
+2. 堆区的 `__NSMallocBlock__` 是通过引用计数策略被开发者管理内存的，所以在调用 copy 时要遵循引用计数管理逻辑+1。
+3. 栈区的 `__NSStackBlock__` 是系统管理内存的，离开作用域就会销毁。通过 copy 将 `__NSStackBlock__` 类型的 block 的内存放到堆区，通过引用计数的方式管理内存，实现让开发者管理内存。
 
 ps：  
 类对象内存的存放位置：
@@ -1083,3 +1090,108 @@ class 0x1000012c0
 ```
 
 class 的内存地址跟 age 很接近，推测类对象的内存地址存放在数据段。
+
+## ARC 环境下 block 的 copy
+
+在 ARC 环境下，编译器会根据情况自动将栈上的 block 复制到堆上，比如以下情况：
+
+### block 作为函数返回值
+
+MRC 环境下 block 作为返回值的报错：Returning block that lives on the local stack
+![block10](block/block10.png)
+
+因为 myBlock() 方法里定义的 block 访问了 auto 变量，所以该 block 是 `__NSStackBlock__` 类型的，内存在栈区，作用域是在 myBlock() 方法的“{}”内。在 MRC 环境下，当 myBlock() 方法调用完成后，该 block 的内存就会被销毁。
+
+ARC 环境下 block 作为返回值会调用 copy：
+```
+typedef void(^Block)(void);
+
+Block myBlock()
+{
+    int age = 10;
+    return ^{
+        NSLog(@"this is a block, age = %d", age);
+    }; //[^{} copy]，__NSStackBlock__（栈区）-> __NSMallocBlock__（堆区）
+}
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        Block block = myBlock();
+        block();
+        NSLog(@"%@", [block class]);
+    }
+    return 0;
+}
+```
+
+ARC 环境下打印结果：
+```
+this is a block, age = 10
+__NSMallocBlock__
+```
+
+在 ARC 环境下，^{} 在返回时返回的是 [^{} copy]，将 block 的内存从栈区拷贝到了堆区，所以打印 block 类型的结果是 `__NSMallocBlock__`。
+
+### 将 block 赋值给 __strong 指针
+```
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        int age = 10;
+        Block block = ^{
+            NSLog(@"this is a block, age = %d", age);
+        }; //[^{} copy]，__NSStackBlock__（栈区）-> __NSMallocBlock__（堆区）
+        block();
+        NSLog(@"%@", [block class]);
+    }
+    return 0;
+}
+```
+
+ARC 环境下打印结果：
+```
+this is a block, age = 10
+__NSMallocBlock__
+```
+
+MRC 环境下打印结果：
+```
+this is a block, age = 10
+__NSStackBlock__
+```
+
+因为 block 访问了 auto 变量，所以该 block 是 `__NSStackBlock__` 类型的，内存在栈区，作用域是在当前“{}”内。在 ARC 环境下，^{} 在赋值给 `__strong` 指针时，调用了 copy（[^{} copy]），将 block 的内存从栈区拷贝到了堆区，所以打印 block 类型的结果是 `__NSMallocBlock__`。
+
+反证：
+```
+NSLog(@"%@", [^{
+    NSLog(@"this is a block, age = %d", age);
+} class]);
+```
+
+ARC 环境下打印结果：
+```
+__NSStackBlock__
+```
+
+从打印结果可以看到，block 在没有被 `__strong` 指针指向时，其类型还是 `__NSStackBlock__` 类型，内存依然在栈区，说明并没有调用 copy。
+
+### block 作为 Cocoa API 中方法名含有 usingBlock 的方法参数
+```
+NSArray *array = @[];
+[array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    
+}]; //[^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop){} copy]，__NSStackBlock__（栈区）-> __NSMallocBlock__（堆区）
+```
+
+### block 作为 GCD API 的方法参数
+GCD API 里的 block 都是在堆上的：
+```
+static dispatch_once_t onceToken;
+dispatch_once(&onceToken, ^{
+    
+}); //[^{} copy]，__NSStackBlock__（栈区）-> __NSMallocBlock__（堆区）
+
+dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    
+}); //[^{} copy]，__NSStackBlock__（栈区）-> __NSMallocBlock__（堆区）
+```
