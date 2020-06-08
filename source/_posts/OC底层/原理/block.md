@@ -210,7 +210,7 @@ int main(int argc, const char * argv[]) {
 }
 ```
 
-查看 C++ 代码，可以看到 __main_block_func_0 和 main 两个函数发生了变化：
+查看 C++ 代码，可以看到 __main_block_func_0 函数发生了变化：
 ```
 struct __block_impl {
     void *isa; 
@@ -253,7 +253,7 @@ int main(int argc, const char * argv[]) {
 # 变量捕获（capture）
 
 为了保证 block 内部能够正常访问外部的变量，block 有个变量捕获机制。  
-变量捕获机制：block 内部会生成对应的成员变量或指针，存储被捕获变量的值或地址。
+变量捕获机制：block 内部会生成对应的成员变量或指针，存储被捕获变量的值或地址值。
 
 ![block06](block/block06.png)
 
@@ -293,7 +293,7 @@ int main(int argc, const char * argv[]) {
 this is a block - 10
 ```
 
-因为 auto 变量的捕获方式是值传递，即 block 捕获的是 age 的值（10），而不是 age 的地址，所以在 block 捕获了 age 的值（10）后，再通过修改 age 指向的地址里的值（20），block 捕获到的值（10）不变。所以打印结果是 10。
+因为 auto 变量的捕获方式是值传递，即 block 捕获的是 age 的值（10），而不是 age 的地址值，所以在 block 捕获了 age 的值（10）后，再通过指针 age 修改指向的地址里的值（20），block 捕获到的值（10）不变。所以打印结果是 10。
 
 查看 C++ 代码：
 ```
@@ -410,7 +410,7 @@ int main(int argc, const char * argv[]) {
 static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO = { 0, 2 };
 ```
 
-因为 static 变量的捕获方式是指针传递，即 block 捕获的是 height 的地址值，所以在 block 捕获了 height 地址值后，再通过指针 height 修改地址里的值（20），block 捕获到的指针 height 指向的地址值就是 20 了，所以打印结果是 20。
+因为 static 变量的捕获方式是指针传递，即 block 捕获的是 height 的地址值，所以在 block 捕获了 height 地址值后，再通过指针 height 修改地址里的值（20），block 捕获到的地址里的值就是 20 了，所以打印结果是 20。
 
 ### 指针传递 & 值传递
 ```
@@ -436,7 +436,7 @@ int main(int argc, const char * argv[]) {
 }
 ```
 
-因为 age 是 auto 变量，所以在 test() 执行后 age 就被被销毁了。因为 block 在执行时会访问 age，而 age 已经被销毁不能被访问，所以 block 在捕获 age 时只能捕获 age 的值不能捕获 age 的地址值。因此 block 在捕获 auto 变量时采取的策略的是值传递。
+因为 age 是 auto 变量，所以在 test() 执行后 age 就被被销毁了。因为 block 在执行时会访问 age，而 age 地址对应的内存已经被销毁不能被访问，所以 block 在捕获 age 时只能捕获 age 的值不能捕获 age 的地址值。因此 block 在捕获 auto 变量时采取的策略的是值传递。
 
 因为 height 是 static 变量，会一直保存在内存里，所以 block 在执行时依然能成功访问 height 的地址。因此 block 在捕获 static 变量时采取的策略的是指针传递。
 
@@ -547,7 +547,7 @@ static void __Person__test_block_func_0(struct __Person__test_block_impl_0 *__cs
 
 #### self.name 的捕获方式
 
-self.name 等同于 [self name]，在调用时通过捕获的 self 发送消息调用，objc_msgSend(self, sel_registerName("name"))。
+self.name 等同于 [self name]，在调用时通过向捕获的 self 发送“name”消息调用，objc_msgSend(self, sel_registerName("name"))。
 ```
 //-(void)test
 static void _I_Person_test(Person * self, SEL _cmd) {
@@ -583,16 +583,16 @@ static void __Person__test_block_func_0(struct __Person__test_block_impl_0 *__cs
 
 定义 block：
 ```
-int age = 10;
-static int height = 10;
+int age_ = 10;
+static int height_ = 10;
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         void (^block)(void) =  ^{
-            NSLog(@"this is a block - age = %d，height = %d", age, height);
+            NSLog(@"this is a block - age = %d，height = %d", age_, height_);
         };
-        age = 20;
-        height = 20;
+        age_ = 20;
+        height_ = 20;
         block();
     }
     return 0;
@@ -1377,8 +1377,8 @@ int main(int argc, const char * argv[]) {
 
 ## “对象类型的 auto 变量”的引用类型
 
-在使用 clang 转换 OC 为 C++ 代码时，如果使用了 __weak 可能会遇到以下问题：  
-cannot create __weak reference in file using manual reference
+在使用 clang 转换 OC 为 C++ 代码时，如果使用了 '__weak' 可能会遇到以下问题：  
+cannot create \_\_weak reference in file using manual reference
 
 解决方案：支持 ARC、指定运行时系统版本：  
 ```
@@ -1469,7 +1469,7 @@ struct __main_block_impl_0 {
 };
 ```
 
-结合“MRC 下对“对象类型的 auto 变量”的引用”可以看出，对于栈上的 block 来说，不管 block 的 c++ 结构体里引用外部变量的是 __weak（弱引用） 还是 __strong（强引用），block 对外部变量的引用都不是强引用。
+结合“MRC 下对“对象类型的 auto 变量”的引用”可以看出，对于栈上的 block 来说，不管 block 的 c++ 结构体里引用外部变量的是 '__weak'（弱引用） 还是 '__strong'（强引用），block 对外部变量的引用都不是强引用。
 
 ### copy 函数和 dispose 函数
 
@@ -1518,11 +1518,8 @@ int main(int argc, const char * argv[]) {
         Block block;
         {
             Person *person = ((Person *(*)(id, SEL))(void *)objc_msgSend)((id)((Person *(*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass("Person"), sel_registerName("alloc")), sel_registerName("init"));
-
             ((void (*)(id, SEL, int))(void *)objc_msgSend)((id)person, sel_registerName("setAge:"), 10);
-
             __attribute__((objc_ownership(weak))) Person *weakPerson = person;
-
             block = ((void (*)())&__main_block_impl_0((void *)__main_block_func_0, &__main_block_desc_0_DATA, weakPerson, 570425344));
         }
         NSLog((NSString *)&__NSConstantStringImpl__var_folders_rw_lcynwz_524g1qwsw4sclwtrw0000gn_T_main_52dcf5_mi_1);
@@ -1532,14 +1529,14 @@ int main(int argc, const char * argv[]) {
 static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO = { 0, 2 };
 ```
 
-__main_block_desc_0 结构体多了两个函数指针 copy 和 dispose，分别对应着 __main_block_copy_0 方法和 __main_block_dispose_0 方法。
+'__main_block_desc_0' 结构体多了两个函数指针 copy 和 dispose，分别对应着 '__main_block_copy_0' 方法和 '__main_block_dispose_0' 方法。
 
 ## 小结
 
 * 如果 block 是在栈上，将不会对 auto 变量产生强引用  
-不管是 ARC 下还是 MRC 下，栈空间的 block 是不会持有“对象类型的 auto 变量”的。堆空间的 block 在 ARC 下通过 __strong（强引用）持有“对象类型的 auto 变量”。在 MRC 下，当 block 手动调用 copy 从栈区拷贝到堆区，并通过 retain 持有“对象类型的 auto 变量”，通过 release 释放“对象类型的 auto 变量”。 
+不管是 ARC 下还是 MRC 下，栈空间的 block 是不会持有“对象类型的 auto 变量”的。堆空间的 block 在 ARC 下通过 '__strong'（强引用）持有“对象类型的 auto 变量”。在 MRC 下，当 block 手动调用 copy 从栈区拷贝到堆区，并通过 retain 持有“对象类型的 auto 变量”，通过 release 释放“对象类型的 auto 变量”。 
 
-* 如果 block 被拷贝到堆上，会调用 block 内部的 copy 函数，copy 函数内部会调用 _Block_object_assign 函数，_Block_object_assign 函数会根据 auto 变量的修饰符（__strong、__weak、__unsafe_unretained）做出相应的操作，形成强引用（retain）或者弱引用。
+* 如果 block 被拷贝到堆上，会调用 block 内部的 copy 函数，copy 函数内部会调用 _Block_object_assign 函数，_Block_object_assign 函数会根据 auto 变量的修饰符（'__strong'、'__weak'、'__unsafe_unretained'）做出相应的操作，形成强引用（retain）或者弱引用。
 
 * 如果 block 从堆上移除，会调用 block 内部的 dispose 函数，dispose 函数内部会调用 _Block_object_dispose 函数，_Block_object_dispose 函数会自动释放引用的 auto 变量（release）。
 
