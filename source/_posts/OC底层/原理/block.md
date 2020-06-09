@@ -6,6 +6,11 @@ tags: OC底层原理
 
 思考：
 * block 的原理是怎样的？本质是什么？
+* `__block`的作用是什么？有什么使用注意点？
+* block 的属性修饰词为什么是 copy？使用 block 有哪些使用注意？
+* block 在修改 NSMutableArray，需不需要添加 `__block`？
+
+
 <!-- more -->
 
 # 基本认识
@@ -249,6 +254,10 @@ int main(int argc, const char * argv[]) {
     return 0;
 }
 ```
+
+## 小结
+* block的原理是怎样的？本质是什么？  
+block 本质上是封装了函数调用以及函数调用环境的 OC 对象，它内部也有个 isa 指针。
 
 # 变量捕获（capture）
 
@@ -650,7 +659,7 @@ static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO =
 
 全局变量不会被 block 捕获，因为全局变量的内存存放在全局（静态）存储区，任何函数都可以访问，所以在 __main_block_func_0 方法执行时，不需要通过 block 获取变量，而是直接访问。
 
-### block 捕获局部变量的原因
+## block 捕获局部变量的原因
 局部变量之所以会被捕获，是因为局部变量的作用域的限制。为了防止在 block 调用时，局部变量因为超出作用域而无法访问了，block 会记住需要用到的局部变量，在调用 block 执行 __main_block_func_0 函数时，再从 block 取出局部变量：
 ```
 void (^block)(void);
@@ -725,9 +734,9 @@ int main(int argc, const char * argv[]) {
 }
 ```
 
-局部变量 age 和 height 的作用域是 test() 函数的“{}”内，而调用局部变量 age 和 height 是在 __test_block_func_0 函数里，为了实现跨函数调用局部变量，使用 block 捕获变量机制。在 __test_block_func_0 函数内可以通过 block 获取到被捕获的局部变量 age 的值和局部变量 height 的地址值。
+局部变量 age 和 height 的作用域是 test() 函数的“{}”内，而调用局部变量 age 和 height 是在 `__test_block_func_0` 函数里，为了实现跨函数调用局部变量，使用 block 捕获变量机制。在 `__test_block_func_0` 函数内可以通过 block 获取到被捕获的局部变量 age 的值和局部变量 height 的地址值。
 
-# block 与继承
+# block 的继承
 ```
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
@@ -843,11 +852,11 @@ struct __main_block_impl_2 {
 ## 三种 block 类型的内存分配
 
 应用程序的内存分配：
-* 编译时创建：  
+* 编译时：  
 程序区域：用于存放编写的代码。  
 数据区域：用于存放全局变量。  
 
-* 运行时创建：  
+* 运行时：  
 堆区域：用于存放动态分配的内存，如通过 [NSObject alloc] 或者 malloc() 等方式主动申请出的内存。同时也要管理这块内存的释放工作，如 release 或 free() 等。  
 栈区域：用于存放局部变量，系统会负责管理这部分内存的创建和释放工作。
 
@@ -1060,7 +1069,7 @@ __NSMallocBlock__
 ### 小结
 ![block09](block/block09.png)
 
-不同类型的 block 调用 copy 的现象都不同，这主要跟 block 的内存管理策略有关：  
+从内存管理的角度分析不同类型的 block 调用 copy 的不同现象：
 1. 数据区域的 `__NSGlobalBlock__`，因为数据区域的内存在程序运行期间始终存在不会销毁，所以 `__NSGlobalBlock__` 的内存也没必要拷贝到堆区通过引用计数的方式管理内存。
 2. 堆区的 `__NSMallocBlock__` 是通过引用计数策略被开发者管理内存的，所以在调用 copy 时要遵循引用计数管理逻辑+1。
 3. 栈区的 `__NSStackBlock__` 是系统管理内存的，离开作用域就会销毁。通过 copy 将 `__NSStackBlock__` 类型的 block 的内存放到堆区，通过引用计数的方式管理内存，实现让开发者管理内存。
@@ -1173,7 +1182,7 @@ ARC 环境下打印结果：
 __NSStackBlock__
 ```
 
-从打印结果可以看到，block 在没有被 `__strong` 指针指向时，其类型还是 `__NSStackBlock__` 类型，内存依然在栈区，说明并没有调用 copy。
+从打印结果可以看到，block 在没有被 `__strong` 指针指向时，其类型还是 `__NSStackBlock__` 类型，内存依然在栈区，说明 block 在没有 __strong 指针指向的时候不会调用 copy。
 
 ### block 作为 Cocoa API 中方法名含有 usingBlock 的方法参数
 ```
@@ -1208,7 +1217,12 @@ ARC 下 block 属性的建议写法
 @property (copy, nonatomic) void (^block)(void);
 ```
 
+* block 的属性修饰词为什么是 copy？使用 block 有哪些使用注意？  
+block 创建时内存是在栈上的，进行 copy 操作后，block 的内存就从栈上拷贝到了堆上。  
+堆上的 block 对捕获到的变量有强引用，需要注意 block 与被捕获的变量之间是否存在循环引用的问题。
+
 # 对象类型的 auto 变量
+
 ## ARC 下的“对象类型的 auto 变量”
 ```
 @interface Person : NSObject
@@ -1240,7 +1254,9 @@ int main(int argc, const char * argv[]) {
 Person - dealloc
 ```
 
-block 捕获 person 对象
+auto 变量 person 的作用域在当前“{}”内，在没有其它引用的情况下，离开作用域就会被销毁。
+
+block 捕获 person 对象：
 ```
 typedef void(^Block)(void);
 
@@ -1298,7 +1314,7 @@ struct __main_block_impl_0 {
 };
 ```
 
-可以看到 block 捕获了 Person 对象。因为 person 对象是 auto 变量，所以 block 在捕获 person 对象时生成的也是 Person 类型的变量，即：  
+可以看到 block 捕获了 person 对象。因为 person 对象是 auto 变量，所以 block 在捕获 person 对象时生成的也是 Person 类型的变量，即：  
 ```
 auto int person; -> int person;  
 auto Person *person; -> Person *person;  
@@ -1307,7 +1323,7 @@ static int person; -> int *person;
 static Person *person; -> Person **person;
 ```
 
-因为在 ARC 下 block 有 copy 操作，所以 block 在堆空间。堆空间的 block 在捕获 person 对象时生成的变量 Person *person 在 ARC 下是强指针，即 block 持有了 person 对象，所以在 block 销毁前，person 指向的内存不会释放。
+因为在 ARC 下 block 有 copy 操作，所以 block 在堆空间。堆空间的 block 在捕获 person 对象时生成的变量 Person *person 在 ARC 下是强指针，即 block 持有了 person 对象，所以在 block 销毁前，block 不会释放 person。
 
 ## MRC 下的“对象类型的 auto 变量”
 ```
@@ -1329,7 +1345,7 @@ int main(int argc, const char * argv[]) {
     @autoreleasepool {
         Block block;
         {
-            Person *person = [[Person alloc] init];
+            Person *person = [[Person alloc] init]; //等同于 __strong Person *person = [[Person alloc] init];
             person.age = 10;
             block = ^{
                 NSLog(@"this is a block, person.age = %d", person.age);
@@ -1347,7 +1363,7 @@ int main(int argc, const char * argv[]) {
 Person - dealloc
 ```
 
-因为在 MRC 下 block 没有 copy 操作，所以 block 在栈空间。在断点处 person 对象被销毁了，说明栈空间的 block 捕获 person 时并没有持有它（弱引用）。
+因为在 MRC 下 block 没有 copy 操作，所以 block 在栈空间。在断点处 person 对象被销毁了，说明栈空间的 block 对外部变量 person 对象时弱引用。
 
 对 block 进行 copy 操作
 ```
@@ -1355,7 +1371,7 @@ int main(int argc, const char * argv[]) {
     @autoreleasepool {
         Block block;
         {
-            Person *person = [[Person alloc] init];
+            Person *person = [[Person alloc] init]; //等同于 __strong Person *person = [[Person alloc] init];
             person.age = 10;
             block = [^{
                 //堆空间的 block 会对 person 对象进行 retain 操作 [person retain]
@@ -1371,13 +1387,14 @@ int main(int argc, const char * argv[]) {
 
 运行到断点处没有打印结果。
 
-因为在 MRC 下对 block 进行 copy 操作后，block 的内存就从栈空间拷贝到了堆空间，堆空间的 block 会对 person 对象进行 retain 操作 [person retain]，即 block 持有了 person 对象，所以在 block 释放前，person 指向的内存不会释放。
+因为在 MRC 下对 block 进行 copy 操作后，block 的内存就从栈空间拷贝到了堆空间，堆空间的 block 会对 person 对象进行 retain 操作 [person retain]，即 block 持有了 person 对象，所以在 block 销毁前，block 不会释放 person。
 
 堆空间的 block 在销毁时会对 person 对象进行一次 release 操作 [person release]。
 
-## “对象类型的 auto 变量”的引用类型
 
-在使用 clang 转换 OC 为 C++ 代码时，如果使用了 '__weak' 可能会遇到以下问题：  
+# __weak
+
+在使用 clang 转换 OC 为 C++ 代码时，如果使用了 `__weak` 可能会遇到以下问题：  
 cannot create \_\_weak reference in file using manual reference
 
 解决方案：支持 ARC、指定运行时系统版本：  
@@ -1389,7 +1406,7 @@ cannot create \_\_weak reference in file using manual reference
 xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc -fobjc-arc -fobjc-runtime=ios-8.0.0 main.m
 ```
 
-### __strong 修饰的“对象类型的 auto 变量”
+## __strong 修饰的“对象类型的 auto 变量”
 ```
 typedef void(^Block)(void);
 
@@ -1397,7 +1414,7 @@ int main(int argc, const char * argv[]) {
     @autoreleasepool {
         Block block;
         {
-            Person *person = [[Person alloc] init]; //或者 __strong Person *person = [[Person alloc] init];
+            Person *person = [[Person alloc] init]; //等同于 __strong Person *person = [[Person alloc] init];
             person.age = 10;
             block = ^{
                 NSLog(@"this is a block, person.age = %d", person.age);
@@ -1409,7 +1426,9 @@ int main(int argc, const char * argv[]) {
 }
 ```
 
-断点处没有打印结果。
+断点处没有打印结果。  
+
+在 ARC 下，block 在赋值给 __strong 指针时会调用 copy，block 的内存从栈区被拷贝到堆区，同时会对不会的变量进行强引用（__strong），所以断点处 person 没有销毁。
 
 查看 c++ 代码：
 ```
@@ -1426,7 +1445,7 @@ struct __main_block_impl_0 {
 };
 ```
 
-### __weak 修饰的“对象类型的 auto 变量”
+## __weak 修饰的“对象类型的 auto 变量”
 ```
 typedef void(^Block)(void);
 
@@ -1452,7 +1471,7 @@ int main(int argc, const char * argv[]) {
 Person - dealloc
 ```
 
-__weak 修饰的 person 对象，不会被 block 强引用。
+`__weak` 修饰的 person 对象，不会被 block 强引用。
 
 查看 c++ 代码：
 ```
@@ -1469,9 +1488,9 @@ struct __main_block_impl_0 {
 };
 ```
 
-结合“MRC 下对“对象类型的 auto 变量”的引用”可以看出，对于栈上的 block 来说，不管 block 的 c++ 结构体里引用外部变量的是 '__weak'（弱引用） 还是 '__strong'（强引用），block 对外部变量的引用都不是强引用。
+结合“MRC 下对'对象类型的 auto 变量'的引用”可以看出，不管 block 的 c++ 结构体里引用外部变量的是 `__weak`（弱引用） 还是 `__strong`（强引用），栈上的 block 对外部变量的引用都不是强引用。
 
-### copy 函数和 dispose 函数
+## copy 函数和 dispose 函数
 
 ![block11](block/block11.png)
 
@@ -1529,20 +1548,304 @@ int main(int argc, const char * argv[]) {
 static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO = { 0, 2 };
 ```
 
-'__main_block_desc_0' 结构体多了两个函数指针 copy 和 dispose，分别对应着 '__main_block_copy_0' 方法和 '__main_block_dispose_0' 方法。
+`__main_block_desc_0` 结构体多了两个函数指针 copy 和 dispose，分别对应着 `__main_block_copy_0` 方法和 `__main_block_dispose_0` 方法。
+
+## GCD 与“对象类型的 auto 变量”
+
+### GCD 与 __strong 修饰的“对象类型的 auto 变量”
+创建一个 iOS 项目测试：
+```
+@interface ViewController ()
+@end
+
+@implementation ViewController
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event 
+{
+    Person *person = [[Person alloc] init]; //等同于 __strong Person *person = [[Person alloc] init];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"Person: %@", person);
+    });
+    NSLog(@"touchesBegan:withEvent:");
+}
+@end
+
+@interface Person : NSObject
+@end
+
+@implementation Person
+- (void)dealloc
+{
+    NSLog(@"Person - dealloc");
+}
+@end
+```
+
+打印结果：
+```
+2020-06-09 10:19:58.941605+0800 block-test[4017:52615] touchesBegan:withEvent:
+2020-06-09 10:20:01.941715+0800 block-test[4017:52615] Person: <Person: 0x600001040370>
+2020-06-09 10:20:01.941879+0800 block-test[4017:52615] Person - dealloc
+```
+
+从打印结果可以看到，在触摸事件触发后3秒，GCD 的 block 代码块打印了 person 对象，几乎是同时，person 对象被销毁了，说明 GCD 的 block 与 person 对象之间是强引用关系（`__strong`）。这是因为 GCD 的 block 在 ARC 下回自动调用 copy，将内存从栈区拷贝到堆区，堆区的 block 又会调用 block 内部的 copy 函数对 person 对象根据引用类型（`__strong`）进行强引用（retain）。
+
+### GCD 与 __weak 修饰的“对象类型的 auto 变量”
+```
+@interface ViewController ()
+@end
+
+@implementation ViewController
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event 
+{
+    Person *person = [[Person alloc] init];
+    __weak Person *weakPerson = person;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"Person: %@", weakPerson);
+    });
+    NSLog(@"touchesBegan:withEvent:");
+}
+@end
+
+@interface Person : NSObject
+@end
+
+@implementation Person
+- (void)dealloc
+{
+    NSLog(@"Person - dealloc");
+}
+@end
+```
+
+打印结果：
+```
+2020-06-09 10:31:06.313268+0800 block-test[4386:61611] touchesBegan:withEvent:
+2020-06-09 10:31:06.313352+0800 block-test[4386:61611] Person - dealloc
+2020-06-09 10:31:09.313416+0800 block-test[4386:61611] Person: (null)
+```
+
+从打印结果可以看到，在触摸事件触发时，person 对象就被销毁了，3秒后 block 内部打印的 person 对象等于（null），说明 GCD 的 block 与 person 对象之间是弱引用关系（`__weak`）。这是因为 GCD 的 block 在 ARC 下会自动调用 copy，将内存从栈区拷贝到堆区，堆区的 block 又会调用 block 内部的 copy 函数对 person 对象根据引用类型（`__weak`）进行弱引用。
+
+拓展：
+```
+@interface ViewController ()
+@end
+
+@implementation ViewController
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event 
+{
+    Person *person = [[Person alloc] init];
+    __weak Person *weakPerson = person;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"time：1，Person: %@", weakPerson); //__weak
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            NSLog(@"time：2，Person: %@", person); //__strong
+        });
+    });
+    NSLog(@"touchesBegan:withEvent:");
+}
+@end
+
+@interface Person : NSObject
+@end
+
+@implementation Person
+- (void)dealloc
+{
+    NSLog(@"Person - dealloc");
+}
+@end
+```
+
+打印结果：
+```
+2020-06-09 13:41:54.571551+0800 block-test[9174:148566] touchesBegan:withEvent:
+2020-06-09 13:41:55.670345+0800 block-test[9174:148566] time：1，Person: <Person: 0x600002a90130>
+2020-06-09 13:41:57.842076+0800 block-test[9174:148566] time：2，Person: <Person: 0x600002a90130>
+2020-06-09 13:41:57.842202+0800 block-test[9174:148566] Person - dealloc
+```
+
+1秒的定时器对 person 对象时弱引用（`__weak`），2秒的定时器对 person 对象是强引用（`__strong`），所以 person 对象会在2秒的 GCD 定时器执行完成后，在 block 销毁前被释放。
 
 ## 小结
 
 * 如果 block 是在栈上，将不会对 auto 变量产生强引用  
-不管是 ARC 下还是 MRC 下，栈空间的 block 是不会持有“对象类型的 auto 变量”的。堆空间的 block 在 ARC 下通过 '__strong'（强引用）持有“对象类型的 auto 变量”。在 MRC 下，当 block 手动调用 copy 从栈区拷贝到堆区，并通过 retain 持有“对象类型的 auto 变量”，通过 release 释放“对象类型的 auto 变量”。 
+不管是 ARC 下还是 MRC 下，栈空间的 block 是不会持有“对象类型的 auto 变量”的。堆空间的 block 在 ARC 下通过 `__strong`（强引用）持有“对象类型的 auto 变量”。在 MRC 下，当 block 手动调用 copy 从栈区拷贝到堆区，并通过 retain 持有“对象类型的 auto 变量”，通过 release 释放“对象类型的 auto 变量”。 
 
-* 如果 block 被拷贝到堆上，会调用 block 内部的 copy 函数，copy 函数内部会调用 _Block_object_assign 函数，_Block_object_assign 函数会根据 auto 变量的修饰符（'__strong'、'__weak'、'__unsafe_unretained'）做出相应的操作，形成强引用（retain）或者弱引用。
+* 如果 block 被拷贝到堆上，会调用 block 内部的 copy 函数，copy 函数内部会调用 _Block_object_assign 函数，_Block_object_assign 函数会根据 auto 变量的修饰符（`__strong`、`__weak`、`__unsafe_unretained`）做出相应的操作，形成强引用（retain）或者弱引用。
 
 * 如果 block 从堆上移除，会调用 block 内部的 dispose 函数，dispose 函数内部会调用 _Block_object_dispose 函数，_Block_object_dispose 函数会自动释放引用的 auto 变量（release）。
 
+# __block
+block 内部无法修改 auto 变量的值：
+![block12](block/block12.png)
 
+block 内部可以修改全局变量、静态变量（static）。  
+全局变量：
+```
+typedef void(^Block)(void);
 
+int age = 10;
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        Block block =  ^{
+            age = 20;
+            NSLog(@"this is a block, age = %d", age);
+        };
+        block();
+    }
+    return 0;
+}
+```
 
+打印结果：
+```
+this is a block, age = 20
+```
 
+静态变量（static）：
+```
+typedef void(^Block)(void);
 
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        static int age = 10;
+        Block block =  ^{
+            age = 20;
+            NSLog(@"this is a block, age = %d", age);
+        };
+        block();
+    }
+    return 0;
+}
+```
 
+打印结果：
+```
+this is a block, age = 20
+```
+ 
+`__block` 可以用于解决 block 内部无法修改 auto 变量值的问题：
+```
+typedef void(^Block)(void);
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        __block int age = 10;
+        Block block =  ^{
+            age = 20;
+            NSLog(@"this is a block, age = %d", age);
+        };
+        block();
+    }
+    return 0;
+}
+```
+
+打印结果：
+```
+this is a block, age = 20
+```
+
+编译器会将 `__block` 变量包装成一个对象，查看 c++ 代码：
+```
+typedef void(*Block)(void);
+
+//__block 变量被包装成一个对象
+struct __Block_byref_age_0 {
+  void *__isa; //具有 isa 指针，说明 __Block_byref_age_0 结构体是一个对象
+__Block_byref_age_0 *__forwarding; //指向 __Block_byref_age_0 结构体自身
+ int __flags;
+ int __size; //__Block_byref_age_0 结构体的大小
+ int age; //auto 变量（10）
+};
+
+struct __main_block_impl_0 {
+  struct __block_impl impl;
+  struct __main_block_desc_0* Desc;
+  __Block_byref_age_0 *age; //指向 __block 变量包装成的对象 
+  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, __Block_byref_age_0 *_age, int flags=0) : age(_age->__forwarding) {
+    impl.isa = &_NSConcreteStackBlock;
+    impl.Flags = flags;
+    impl.FuncPtr = fp;
+    Desc = desc;
+  }
+};
+
+static void __main_block_func_0(struct __main_block_impl_0 *__cself) {
+    __Block_byref_age_0 *age = __cself->age; //获取到 __Block_byref_age_0 对象
+    (age->__forwarding->age) = 20; //通过 age（__Block_byref_age_0）对象的 __forwarding 指针找到 age（__Block_byref_age_0）对象里的参数 int age
+    NSLog((NSString *)&__NSConstantStringImpl__var_folders_rw_lcynwz_524g1qwsw4sclwtrw0000gn_T_main_f95ea5_mi_0, (age->__forwarding->age));
+}
+
+static void __main_block_copy_0(struct __main_block_impl_0*dst, struct __main_block_impl_0*src) {_Block_object_assign((void*)&dst->age, (void*)src->age, 8/*BLOCK_FIELD_IS_BYREF*/);}
+
+static void __main_block_dispose_0(struct __main_block_impl_0*src) {_Block_object_dispose((void*)src->age, 8/*BLOCK_FIELD_IS_BYREF*/);}
+
+static struct __main_block_desc_0 {
+  size_t reserved;
+  size_t Block_size;
+  void (*copy)(struct __main_block_impl_0*, struct __main_block_impl_0*);
+  void (*dispose)(struct __main_block_impl_0*);
+} __main_block_desc_0_DATA = { 0, sizeof(struct __main_block_impl_0), __main_block_copy_0, __main_block_dispose_0};
+int main(int argc, const char * argv[]) {
+    /* @autoreleasepool */ { __AtAutoreleasePool __autoreleasepool; 
+        //对应的 OC 代码：__block int age = 10;
+        //简化后：__Block_byref_age_0 age = {0,&age, 0, sizeof(__Block_byref_age_0), 10};
+        __attribute__((__blocks__(byref))) __Block_byref_age_0 age = {(void*)0, //isa 指针
+                                                                      (__Block_byref_age_0 *)&age, //age（__Block_byref_age_0）对象的地址值
+                                                                      0, 
+                                                                      sizeof(__Block_byref_age_0), //__Block_byref_age_0 结构体的大小
+                                                                      10}; //auto 变量 age 的值
+        Block block = ((void (*)())&__main_block_impl_0((void *)__main_block_func_0, 
+                                                        &__main_block_desc_0_DATA, 
+                                                        (__Block_byref_age_0 *)&age, 
+                                                        570425344));
+        ((void (*)(__block_impl *))((__block_impl *)block)->FuncPtr)((__block_impl *)block);
+    }
+    return 0;
+}
+static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO = { 0, 2 };
+```
+
+被 `__block` 修饰过的 auto 变量被包装成一个 `__Block_byref_age_0` 结构体。因为 `__Block_byref_age_0` 结构体内有 isa 指针，所以 `__Block_byref_age_0` 结构体是一个对象。`__Block_byref_age_0` 结构体的 `__forwarding` 指针指向自身，在 block 的执行代码里调用 `__Block_byref_age_0` 结构体内部参数 age 时，就是通过 `__forwarding` 指针调用的（age->__forwarding->age）。
+
+![block14](block/block14.png)
+
+`__block` 修改“对象类型的 auto 变量”  
+```
+struct __Block_byref_obj_0 {
+    void *__isa;
+    __Block_byref_obj_0 *__forwarding;
+    int __flags;
+    int __size;
+    void (*__Block_byref_id_object_copy)(void*, void*); //copy 函数（内存管理相关）
+    void (*__Block_byref_id_object_dispose)(void*); //dispose 函数（内存管理相关）
+    NSObject *obj; //auto 变量
+};
+```
+
+使用 `__bloclk` 修改“对象类型的 auto 变量” 同样会生成对应的 __Block_byref_obj_0 对象。相对于普通的 auto 变量，增加了 copy 函数和 dispose 函数用于内存管理。
+
+`__block` 不能修饰全局变量、静态变量（static）
+![block13](block/block13.png)
+
+block 内部可以使用 array 指针，但是不可以修改 array 指针：  
+使用 array 指针：
+```
+typedef void(^Block)(void);
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        NSMutableArray *array = [NSMutableArray array];
+        Block block =  ^{
+            [array addObject:@"123"];
+        };
+        block();
+    }
+    return 0;
+}
+```
+
+修改 array 指针：
+![block15](block/block15.png)
