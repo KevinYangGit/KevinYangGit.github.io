@@ -1677,6 +1677,9 @@ static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO =
 * 如果 block 从堆上移除，会调用 block 内部的 dispose 函数，dispose 函数内部会调用 _Block_object_dispose 函数，_Block_object_dispose 函数会自动释放引用的 auto 变量（release）。
 
 # __block
+
+## __block 的本质
+
 block 内部无法修改 auto 变量的值：
 ![block12](block/block12.png)
 
@@ -1737,6 +1740,7 @@ int main(int argc, const char * argv[]) {
             NSLog(@"this is a block, age = %d", age);
         };
         block();
+        NSLog(@"%p", &age);
     }
     return 0;
 }
@@ -1745,6 +1749,7 @@ int main(int argc, const char * argv[]) {
 打印结果：
 ```
 this is a block, age = 20
+0x7ffeefbff578
 ```
 
 编译器会将 `__block` 变量包装成一个对象，查看 c++ 代码：
@@ -1802,6 +1807,8 @@ int main(int argc, const char * argv[]) {
                                                         (__Block_byref_age_0 *)&age, 
                                                         570425344));
         ((void (*)(__block_impl *))((__block_impl *)block)->FuncPtr)((__block_impl *)block);
+        //NSLog(@"%p", &age); 访问的是 __block 结构体里面的 age 变量
+        NSLog((NSString *)&__NSConstantStringImpl__var_folders_rw_lcynwz_524g1qwsw4sclwtrw0000gn_T_main_85d8e5_mi_1, &(age.__forwarding->age));
     }
     return 0;
 }
@@ -1809,6 +1816,11 @@ static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO =
 ```
 
 被 `__block` 修饰过的 auto 变量被包装成一个 `__Block_byref_age_0` 结构体。因为 `__Block_byref_age_0` 结构体内有 isa 指针，所以 `__Block_byref_age_0` 结构体是一个对象。`__Block_byref_age_0` 结构体的 `__forwarding` 指针指向自身，在 block 的执行代码里调用 `__Block_byref_age_0` 结构体内部参数 age 时，就是通过 `__forwarding` 指针调用的（age->__forwarding->age）。
+
+外部再想访问 age 时，也会通过 `__block` 结构体访问 &(age.__forwarding->age)，如：NSLog(@"%p", &age)：
+```
+NSLog((NSString *)&__NSConstantStringImpl__var_folders_rw_lcynwz_524g1qwsw4sclwtrw0000gn_T_main_85d8e5_mi_1, &(age.__forwarding->age));
+```
 
 ![block14](block/block14.png)
 
@@ -1826,6 +1838,8 @@ struct __Block_byref_obj_0 {
 ```
 
 使用 `__bloclk` 修改“对象类型的 auto 变量” 同样会生成对应的 __Block_byref_obj_0 对象。相对于普通的 auto 变量，增加了 copy 函数和 dispose 函数用于内存管理。
+
+`__bloclk` 结构体内部用于保存 auto 变量 obj 的变量 NSObject *obj，同  auto 变量的类型保持一致。
 
 `__block` 不能修饰全局变量、静态变量（static）
 ![block13](block/block13.png)
@@ -1849,3 +1863,153 @@ int main(int argc, const char * argv[]) {
 
 修改 array 指针：
 ![block15](block/block15.png)
+
+### 小结
+
+* block 在修改 NSMutableArray，需不需要添加 `__block`？  
+block 内部可以使用 NSMutableArray 指针（如：[array addObject:@"123"]），不需要添加 `__block`。  
+block 内部不可以修改 NSMutableArray 的指针（如：array = nil），如果需要修改 NSMutableArray 指针的话，需要添加 `__block`。 
+
+## \_\_block 的内存管理
+
+当 block 在栈上时，并不会对 `__block` 变量产生强引用。  
+
+当 block 被 copy 到堆时，会调用 block 内部的 copy 函数，copy 函数内部会调用 _Block_object_assign 函数，_Block_object_assign 函数会对 `__block` 变量形成强引用（retain）。
+
+![block16](block/block16.png)
+
+
+当 block 从堆中移除时，会调用 block 内部的 dispose 函数，dispose 函数内部会调用 _Block_object_dispose 函数，_Block_object_dispose 函数会自动释放引用的 `__block` 变量（release）。
+
+![block17](block/block17.png)
+
+
+### 对象类型的 auto 变量、\_\_block 变量
+当 block 在栈上时，对对象类型的 auto 变量、`__block` 变量都不会产生强引用.  
+
+当 block 拷贝到堆上时，都会通过 copy 函数来处理对象类型的 auto 变量、`__block` 变量：  
+`__block` 变量
+```
+_Block_object_assign((void*)&dst->a, (void*)src->a, 8/*BLOCK_FIELD_IS_BYREF*/);
+```
+
+对象类型的 auto 变量
+```
+_Block_object_assign((void*)&dst->p, (void*)src->p, 3/*BLOCK_FIELD_IS_OBJECT*/);
+```
+
+当 block 从堆上移除时，都会通过 dispose 函数来释放对象类型的 auto 变量、`__block` 变量：  
+__block变量
+```
+_Block_object_dispose((void*)src->a, 8/*BLOCK_FIELD_IS_BYREF*/);
+```
+
+对象类型的 auto 变量
+```
+_Block_object_dispose((void*)src->p, 3/*BLOCK_FIELD_IS_OBJECT*/);
+```
+
+![block19](block/block19.png)
+
+## \_\_block 的 \_\_forwarding 指针
+
+![block18](block/block18.png)
+
+age.__forwarding->age：__Block_byref_obj_0 结构体对应的 age 对象通过 `__forwarding` 指针找到被拷贝到堆里的 `__block` 结构体，再找到结构体里的 age 变量。
+
+## 被 \_\_block 修饰的对象类型
+
+### ARC 下：
+__block Person *person 的内存结构：
+![block21](block/block21.png)
+
+__block __weak Person *weakPerson 的内存结构：
+![block20](block/block20.png)
+
+### MRC 下：
+
+查看支持 MRC、指定运行时系统版本的 c++ 代码：
+```
+xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc -fno-objc-arc -fobjc-runtime=ios-8.0.0 main.m
+```
+
+栈区的 block：
+```
+typedef void(^Block)(void);
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        __block Person *person = [[Person alloc] init];
+        Block block = ^{
+            NSLog(@"%@", person);
+        };
+        [person release];
+        block();
+        [block release];
+    }
+    return 0;
+}
+```
+
+打印结果：
+```
+Person - dealloc
+```
+
+堆区的 block：
+```
+typedef void(^Block)(void);
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        __block Person *person = [[Person alloc] init];
+        Block block = [^{
+            NSLog(@"%@", person);
+        } copy];
+        [person release];
+        block();
+        [block release];
+    }
+    return 0;
+}
+```
+
+打印结果：
+```
+Person - dealloc
+```
+
+栈区和堆区的 block 在执行代码时出现同样的错误：
+
+![block22](block/block22.png)
+
+MRC 下栈区和堆区的 block 都不会对指向的对象产生强引用，内存结构：
+![block23](block/block23.png)
+
+截图👆里 __Block_byref_person_0 结构体里的 Person *person 可能是省略了 __weak，即 Person *__weak person;
+
+对比没有 __block 的对象类型的 auto 变量的内存结构：
+
+![block24](block/block24.png)
+
+
+## 小结
+
+当 \_\_block 变量在栈上时，不会对指向的对象产生强引用。  
+
+当 \_\_block 变量被 copy 到堆时，会调用 `__block` 变量内部的 copy 函数，copy 函数内部会调用 _Block_object_assign 函数，_Block_object_assign 函数会根据所指向对象的修饰符（`__strong`、`__weak`、`__unsafe_unretained`）做出相应的操作，形成强引用（retain）或者弱引用（注意：这里仅限于 ARC 时会 retain，MRC 时不会 retain）。
+
+当 `__block` 变量从堆上移除时，会调用 `__block` 变量内部的 dispose 函数，dispose 函数内部会调用 _Block_object_dispose 函数，_Block_object_dispose 函数会自动释放指向的对象（release）。
+
+
+
+
+
+
+
+
+
+
+
+
+
