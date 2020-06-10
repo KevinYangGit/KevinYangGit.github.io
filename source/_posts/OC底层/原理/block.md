@@ -61,8 +61,8 @@ xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main-arm64.cpp
 block 的 C++ 代码（精简版）：
 ```
 struct __main_block_desc_0 {
-  size_t reserved;
-  size_t Block_size; //占用内存大小
+    size_t reserved;
+    size_t Block_size; //占用内存大小
 }
 
 struct __block_impl {
@@ -73,9 +73,9 @@ struct __block_impl {
 };
 
 struct __main_block_impl_0 { //block 结构体
-  struct __block_impl impl;
-  struct __main_block_desc_0* Desc;
-  int a; //调用环境
+    struct __block_impl impl;
+    struct __main_block_desc_0* Desc;
+    int a; //调用环境
 };
 
 int main(int argc, const char * argv[]) {
@@ -96,13 +96,13 @@ __main_block_impl_0 是 block 在 C++ 中的结构体实现。第一个参数 __
 __main_block_impl_0 省略 __block_impl 和 __main_block_desc_0 后可以看成：
 ```
 struct __main_block_impl_0 {
-  void *isa; 
-  int Flags;
-  int Reserved;
-  void *FuncPtr; 
-  size_t reserved;
-  size_t Block_size;
-  int a; 
+    void *isa; 
+    int Flags;
+    int Reserved;
+    void *FuncPtr; 
+    size_t reserved;
+    size_t Block_size;
+    int a; 
 };
 ```
 
@@ -154,18 +154,18 @@ struct __block_impl {
 };
 
 struct __main_block_impl_0 {
-  struct __block_impl impl; //作为第一个变量，__block_impl 的内存地址就是 __main_block_impl_0 内存地址
-  struct __main_block_desc_0* Desc; //描述，是一个结构体变量 __main_block_desc_0_DATA
-  // 构造函数（类似于OC的init方法），返回结构体对象
-  // 参数 fp：block 执行逻辑的函数的地址，即 __main_block_func_0
-  // 参数 desc：描述，__main_block_desc_0 的结构体变量，即 __main_block_desc_0_DATA
-  // 参数 flags：默认可以不传，flags=0
-  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int flags=0) {
-    impl.isa = &_NSConcreteStackBlock; //指向父类。_NSConcreteStackBlock：block 的类型
-    impl.Flags = flags;
-    impl.FuncPtr = fp; //__main_block_func_0
-    Desc = desc; //__main_block_desc_0_DATA
-  }
+    struct __block_impl impl; //作为第一个变量，__block_impl 的内存地址就是 __main_block_impl_0 内存地址
+    struct __main_block_desc_0* Desc; //描述，是一个结构体变量 __main_block_desc_0_DATA
+    // 构造函数（类似于OC的init方法），返回结构体对象
+    // 参数 fp：block 执行逻辑的函数的地址，即 __main_block_func_0
+    // 参数 desc：描述，__main_block_desc_0 的结构体变量，即 __main_block_desc_0_DATA
+    // 参数 flags：默认可以不传，flags=0
+    __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int flags=0) {
+        impl.isa = &_NSConcreteStackBlock; //指向父类。_NSConcreteStackBlock：block 的类型
+        impl.Flags = flags;
+        impl.FuncPtr = fp; //__main_block_func_0
+        Desc = desc; //__main_block_desc_0_DATA
+    }
 };
 
 // 封装了 block 执行逻辑的函数
@@ -225,14 +225,14 @@ struct __block_impl {
 };
 
 struct __main_block_impl_0 {
-  struct __block_impl impl;
-  struct __main_block_desc_0* Desc;
-  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int flags=0) {
-    impl.isa = &_NSConcreteStackBlock;
-    impl.Flags = flags;
-    impl.FuncPtr = fp;
-    Desc = desc;
-  }
+    struct __block_impl impl;
+    struct __main_block_desc_0* Desc;
+    __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int flags=0) {
+        impl.isa = &_NSConcreteStackBlock;
+        impl.Flags = flags;
+        impl.FuncPtr = fp;
+        Desc = desc;
+    }
 };
 
 // 封装了 block 执行逻辑的函数，增加了参数 a 和 b
@@ -241,8 +241,8 @@ static void __main_block_func_0(struct __main_block_impl_0 *__cself, int a, int 
 }
 
 static struct __main_block_desc_0 {
-  size_t reserved;
-  size_t Block_size;
+    size_t reserved;
+    size_t Block_size;
 } __main_block_desc_0_DATA = { 0, sizeof(struct __main_block_impl_0)};
 
 int main(int argc, const char * argv[]) {
@@ -307,31 +307,31 @@ this is a block - 10
 查看 C++ 代码：
 ```
 struct __main_block_impl_0 {
-  struct __block_impl impl;
-  struct __main_block_desc_0* Desc;
-  int age; //新增变量，用于捕获外部变量 age
+    struct __block_impl impl;
+    struct __main_block_desc_0* Desc;
+    int age; //新增变量，用于捕获外部变量 age
 
-  //构造函数
-  //参数 _age：新增参数
-  //age(_age)方法：将参数 _age 赋值给 age，即 age(_age) 方法等于 age = _age;
-  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int _age, int flags=0) : age(_age) {
-    impl.isa = &_NSConcreteStackBlock;
-    impl.Flags = flags;
-    impl.FuncPtr = fp;
-    Desc = desc;
-  }
+    //构造函数
+    //参数 _age：新增参数
+    //age(_age)方法：将参数 _age 赋值给 age，即 age(_age) 方法等于 age = _age;
+    __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int _age, int flags=0) : age(_age) {
+        impl.isa = &_NSConcreteStackBlock;
+        impl.Flags = flags;
+        impl.FuncPtr = fp;
+        Desc = desc;
+    }
 };
 
 // 封装了 block 执行逻辑的函数
 static void __main_block_func_0(struct __main_block_impl_0 *__cself) {
-  int age = __cself->age; //取出 block 里的 age
+    int age = __cself->age; //取出 block 里的 age
 
-  NSLog((NSString *)&__NSConstantStringImpl__var_folders_rw_lcynwz_524g1qwsw4sclwtrw0000gn_T_main_de0112_mi_0, age); //NSLog(@"this is a block - %d", age);
+    NSLog((NSString *)&__NSConstantStringImpl__var_folders_rw_lcynwz_524g1qwsw4sclwtrw0000gn_T_main_de0112_mi_0, age); //NSLog(@"this is a block - %d", age);
 }
 
 static struct __main_block_desc_0 {
-  size_t reserved;
-  size_t Block_size;
+    size_t reserved;
+    size_t Block_size;
 } __main_block_desc_0_DATA = { 0, sizeof(struct __main_block_impl_0)};
 
 int main(int argc, const char * argv[]) {
@@ -377,31 +377,31 @@ int main(int argc, const char * argv[]) {
 查看 C++ 代码：
 ```
 struct __main_block_impl_0 {
-  struct __block_impl impl;
-  struct __main_block_desc_0* Desc;
-  int age; //新增变量 age，用于捕获外部 auto 变量 age 的值
-  int *height; //新增指针 height，用于捕获外部的 static 变量 height 的地址值
+    struct __block_impl impl;
+    struct __main_block_desc_0* Desc;
+    int age; //新增变量 age，用于捕获外部 auto 变量 age 的值
+    int *height; //新增指针 height，用于捕获外部的 static 变量 height 的地址值
 
-  //构造函数
-  //参数 *_height：static 变量的地址值
-  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int _age, int *_height, int flags=0) : age(_age), height(_height) {
-    impl.isa = &_NSConcreteStackBlock;
-    impl.Flags = flags;
-    impl.FuncPtr = fp;
-    Desc = desc;
-  }
+    //构造函数
+    //参数 *_height：static 变量的地址值
+    __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int _age, int *_height, int flags=0) : age(_age), height(_height) {
+        impl.isa = &_NSConcreteStackBlock;
+        impl.Flags = flags;
+        impl.FuncPtr = fp;
+        Desc = desc;
+    }
 };
 
 static void __main_block_func_0(struct __main_block_impl_0 *__cself) {
-  int age = __cself->age; //获取 block 的 age
-  int *height = __cself->height; // 获取 block 的 height
+    int age = __cself->age; //获取 block 的 age
+    int *height = __cself->height; // 获取 block 的 height
 
-  NSLog((NSString *)&__NSConstantStringImpl__var_folders_rw_lcynwz_524g1qwsw4sclwtrw0000gn_T_main_ac9850_mi_0, age, (*height)); //NSLog(@"this is a block - age = %d，height = %d", age, height);
+    NSLog((NSString *)&__NSConstantStringImpl__var_folders_rw_lcynwz_524g1qwsw4sclwtrw0000gn_T_main_ac9850_mi_0, age, (*height)); //NSLog(@"this is a block - age = %d，height = %d", age, height);
 }
 
 static struct __main_block_desc_0 {
-  size_t reserved;
-  size_t Block_size;
+    size_t reserved;
+    size_t Block_size;
 } __main_block_desc_0_DATA = { 0, sizeof(struct __main_block_impl_0)};
 
 int main(int argc, const char * argv[]) {
@@ -493,19 +493,19 @@ static void _I_Person_test(Person * self, SEL _cmd) {
 block 的 C++ 代码：
 ```
 struct __Person__test_block_impl_0 {
-  struct __block_impl impl;
-  struct __Person__test_block_desc_0* Desc;
-  Person *self; //捕获 self 变量的地址值
-  __Person__test_block_impl_0(void *fp, struct __Person__test_block_desc_0 *desc, Person *_self, int flags=0) : self(_self) {
-    impl.isa = &_NSConcreteStackBlock;
-    impl.Flags = flags;
-    impl.FuncPtr = fp;
-    Desc = desc;
-  }
+    struct __block_impl impl;
+    struct __Person__test_block_desc_0* Desc;
+    Person *self; //捕获 self 变量的地址值
+    __Person__test_block_impl_0(void *fp, struct __Person__test_block_desc_0 *desc, Person *_self, int flags=0) : self(_self) {
+        impl.isa = &_NSConcreteStackBlock;
+        impl.Flags = flags;
+        impl.FuncPtr = fp;
+        Desc = desc;
+    }
 };
 
 static void __Person__test_block_func_0(struct __Person__test_block_impl_0 *__cself) {
-  Person *self = __cself->self; //通过 block 获取 self
+    Person *self = __cself->self; //通过 block 获取 self
 
     NSLog((NSString *)&__NSConstantStringImpl__var_folders_rw_lcynwz_524g1qwsw4sclwtrw0000gn_T_Person_e5b707_mi_0, self);
 }
@@ -536,15 +536,15 @@ static void _I_Person_test(Person * self, SEL _cmd) {
 
 //block 结构体
 struct __Person__test_block_impl_0 {
-  struct __block_impl impl;
-  struct __Person__test_block_desc_0* Desc;
-  Person *self; //捕获 self
-  __Person__test_block_impl_0(void *fp, struct __Person__test_block_desc_0 *desc, Person *_self, int flags=0) : self(_self) {
-    impl.isa = &_NSConcreteStackBlock;
-    impl.Flags = flags;
-    impl.FuncPtr = fp;
-    Desc = desc;
-  }
+    struct __block_impl impl;
+    struct __Person__test_block_desc_0* Desc;
+    Person *self; //捕获 self
+    __Person__test_block_impl_0(void *fp, struct __Person__test_block_desc_0 *desc, Person *_self, int flags=0) : self(_self) {
+        impl.isa = &_NSConcreteStackBlock;
+        impl.Flags = flags;
+        impl.FuncPtr = fp;
+        Desc = desc;
+    }
 };
 
 static void __Person__test_block_func_0(struct __Person__test_block_impl_0 *__cself) {
@@ -567,15 +567,15 @@ static void _I_Person_test(Person * self, SEL _cmd) {
 
 //block 结构体
 struct __Person__test_block_impl_0 {
-  struct __block_impl impl;
-  struct __Person__test_block_desc_0* Desc;
-  Person *self; //捕获 self
-  __Person__test_block_impl_0(void *fp, struct __Person__test_block_desc_0 *desc, Person *_self, int flags=0) : self(_self) {
-    impl.isa = &_NSConcreteStackBlock;
-    impl.Flags = flags;
-    impl.FuncPtr = fp;
-    Desc = desc;
-  }
+    struct __block_impl impl;
+    struct __Person__test_block_desc_0* Desc;
+    Person *self; //捕获 self
+    __Person__test_block_impl_0(void *fp, struct __Person__test_block_desc_0 *desc, Person *_self, int flags=0) : self(_self) {
+        impl.isa = &_NSConcreteStackBlock;
+        impl.Flags = flags;
+        impl.FuncPtr = fp;
+        Desc = desc;
+    }
 };
 
 static void __Person__test_block_func_0(struct __Person__test_block_impl_0 *__cself) {
@@ -620,15 +620,15 @@ static int height_ = 10; //全局变量 height_
 
 //block 结构体，并没有捕获全局变量 age 和 height
 struct __main_block_impl_0 {
-  struct __block_impl impl;
-  struct __main_block_desc_0* Desc;
-  //构造函数
-  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int flags=0) {
-    impl.isa = &_NSConcreteStackBlock;
-    impl.Flags = flags;
-    impl.FuncPtr = fp;
-    Desc = desc;
-  }
+    struct __block_impl impl;
+    struct __main_block_desc_0* Desc;
+    //构造函数
+    __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int flags=0) {
+        impl.isa = &_NSConcreteStackBlock;
+        impl.Flags = flags;
+        impl.FuncPtr = fp;
+        Desc = desc;
+    }
 };
 
 // 封装了 block 执行逻辑的函数
@@ -689,29 +689,29 @@ int main(int argc, const char * argv[]) {
 void (*block)(void);
 
 struct __test_block_impl_0 {
-  struct __block_impl impl;
-  struct __test_block_desc_0* Desc;
-  int age;
-  int *height;
-  __test_block_impl_0(void *fp, struct __test_block_desc_0 *desc, int _age, int *_height, int flags=0) : age(_age), height(_height) {
-    impl.isa = &_NSConcreteStackBlock;
-    impl.Flags = flags;
-    impl.FuncPtr = fp;
-    Desc = desc;
-  }
+    struct __block_impl impl;
+    struct __test_block_desc_0* Desc;
+    int age;
+    int *height;
+    __test_block_impl_0(void *fp, struct __test_block_desc_0 *desc, int _age, int *_height, int flags=0) : age(_age), height(_height) {
+        impl.isa = &_NSConcreteStackBlock;
+        impl.Flags = flags;
+        impl.FuncPtr = fp;
+        Desc = desc;
+    }
 };
 
 //跨函数调用 age_ 和 height_
 static void __test_block_func_0(struct __test_block_impl_0 *__cself) {
-  int age = __cself->age; //获取 block 里捕获的 age
-  int *height = __cself->height; //获取 block 里捕获的 height
+    int age = __cself->age; //获取 block 里捕获的 age
+    int *height = __cself->height; //获取 block 里捕获的 height
 
-  NSLog((NSString *)&__NSConstantStringImpl__var_folders_rw_lcynwz_524g1qwsw4sclwtrw0000gn_T_main_d42dac_mi_0, age, (*height));
+    NSLog((NSString *)&__NSConstantStringImpl__var_folders_rw_lcynwz_524g1qwsw4sclwtrw0000gn_T_main_d42dac_mi_0, age, (*height));
 }
 
 static struct __test_block_desc_0 {
-  size_t reserved;
-  size_t Block_size;
+    size_t reserved;
+    size_t Block_size;
 } __test_block_desc_0_DATA = { 0, sizeof(struct __test_block_impl_0)};
 
 //定义 age 和 height
@@ -806,40 +806,40 @@ __NSGlobalBlock__ __NSMallocBlock__ __NSStackBlock__
 ```
 //block1
 struct __main_block_impl_0 {
-  struct __block_impl impl;
-  struct __main_block_desc_0* Desc;
-  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int flags=0) {
-    impl.isa = &_NSConcreteStackBlock;
-    impl.Flags = flags;
-    impl.FuncPtr = fp;
-    Desc = desc;
-  }
+    struct __block_impl impl;
+    struct __main_block_desc_0* Desc;
+    __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int flags=0) {
+        impl.isa = &_NSConcreteStackBlock;
+        impl.Flags = flags;
+        impl.FuncPtr = fp;
+        Desc = desc;
+    }
 };
 
 //block2
 struct __main_block_impl_1 {
-  struct __block_impl impl;
-  struct __main_block_desc_1* Desc;
-  int age;
-  __main_block_impl_1(void *fp, struct __main_block_desc_1 *desc, int _age, int flags=0) : age(_age) {
-    impl.isa = &_NSConcreteStackBlock;
-    impl.Flags = flags;
-    impl.FuncPtr = fp;
-    Desc = desc;
-  }
+    struct __block_impl impl;
+    struct __main_block_desc_1* Desc;
+    int age;
+    __main_block_impl_1(void *fp, struct __main_block_desc_1 *desc, int _age, int flags=0) : age(_age) {
+        impl.isa = &_NSConcreteStackBlock;
+        impl.Flags = flags;
+        impl.FuncPtr = fp;
+        Desc = desc;
+    }
 };
 
 //block3
 struct __main_block_impl_2 {
-  struct __block_impl impl;
-  struct __main_block_desc_2* Desc;
-  int age;
-  __main_block_impl_2(void *fp, struct __main_block_desc_2 *desc, int _age, int flags=0) : age(_age) {
-    impl.isa = &_NSConcreteStackBlock;
-    impl.Flags = flags;
-    impl.FuncPtr = fp;
-    Desc = desc;
-  }
+    struct __block_impl impl;
+    struct __main_block_desc_2* Desc;
+    int age;
+    __main_block_impl_2(void *fp, struct __main_block_desc_2 *desc, int _age, int flags=0) : age(_age) {
+        impl.isa = &_NSConcreteStackBlock;
+        impl.Flags = flags;
+        impl.FuncPtr = fp;
+        Desc = desc;
+    }
 };
 ```
 
@@ -1302,15 +1302,15 @@ int main(int argc, const char * argv[]) {
 查看 block 的 C++ 代码：
 ```
 struct __main_block_impl_0 {
-  struct __block_impl impl;
-  struct __main_block_desc_0* Desc;
-  Person *person; //ARC下是强指针
-  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, Person *_person, int flags=0) : person(_person) {
-    impl.isa = &_NSConcreteStackBlock;
-    impl.Flags = flags;
-    impl.FuncPtr = fp;
-    Desc = desc;
-  }
+    struct __block_impl impl;
+    struct __main_block_desc_0* Desc;
+    Person *person; //ARC下是强指针
+    __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, Person *_person, int flags=0) : person(_person) {
+        impl.isa = &_NSConcreteStackBlock;
+        impl.Flags = flags;
+        impl.FuncPtr = fp;
+        Desc = desc;
+    }
 };
 ```
 
@@ -1433,15 +1433,15 @@ int main(int argc, const char * argv[]) {
 查看 c++ 代码：
 ```
 struct __main_block_impl_0 {
-  struct __block_impl impl;
-  struct __main_block_desc_0* Desc;
-  Person *__strong person; //__strong 强引用
-  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, Person *__strong _person, int flags=0) : person(_person) {
-    impl.isa = &_NSConcreteStackBlock;
-    impl.Flags = flags;
-    impl.FuncPtr = fp;
-    Desc = desc;
-  }
+    struct __block_impl impl;
+    struct __main_block_desc_0* Desc;
+    Person *__strong person; //__strong 强引用
+    __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, Person *__strong _person, int flags=0) : person(_person) {
+        impl.isa = &_NSConcreteStackBlock;
+        impl.Flags = flags;
+        impl.FuncPtr = fp;
+        Desc = desc;
+    }
 };
 ```
 
@@ -1815,9 +1815,9 @@ int main(int argc, const char * argv[]) {
 static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO = { 0, 2 };
 ```
 
-被 `__block` 修饰过的 auto 变量被包装成一个 `__Block_byref_age_0` 结构体。因为 `__Block_byref_age_0` 结构体内有 isa 指针，所以 `__Block_byref_age_0` 结构体是一个对象。`__Block_byref_age_0` 结构体的 `__forwarding` 指针指向自身，在 block 的执行代码里调用 `__Block_byref_age_0` 结构体内部参数 age 时，就是通过 `__forwarding` 指针调用的（age->__forwarding->age）。
+被 `__block` 修饰过的 auto 变量被包装成一个 `__Block_byref_age_0` 结构体。因为 `__Block_byref_age_0` 结构体内有 isa 指针，所以 `__Block_byref_age_0` 结构体是一个对象。`__Block_byref_age_0` 结构体的 `__forwarding` 指针指向自身，在 block 的执行代码里调用 `__Block_byref_age_0` 结构体内部参数 age 时，就是通过 `__forwarding` 指针调用的（age->\_\_forwarding->age）。
 
-外部再想访问 age 时，也会通过 `__block` 结构体访问 &(age.__forwarding->age)，如：NSLog(@"%p", &age)：
+外部再想访问 age 时，也会通过 `__block` 结构体访问 &(age.\_\_forwarding->age)，如：NSLog(@"%p", &age)：
 ```
 NSLog((NSString *)&__NSConstantStringImpl__var_folders_rw_lcynwz_524g1qwsw4sclwtrw0000gn_T_main_85d8e5_mi_1, &(age.__forwarding->age));
 ```
@@ -1837,11 +1837,12 @@ struct __Block_byref_obj_0 {
 };
 ```
 
-使用 `__bloclk` 修改“对象类型的 auto 变量” 同样会生成对应的 __Block_byref_obj_0 对象。相对于普通的 auto 变量，增加了 copy 函数和 dispose 函数用于内存管理。
+使用 `__bloclk` 修改“对象类型的 auto 变量” 同样会生成对应的 `__Block_byref_obj_0` 对象。相对于普通的 auto 变量，增加了 copy 函数和 dispose 函数用于内存管理。
 
 `__bloclk` 结构体内部用于保存 auto 变量 obj 的变量 NSObject *obj，同  auto 变量的类型保持一致。
 
 `__block` 不能修饰全局变量、静态变量（static）
+
 ![block13](block/block13.png)
 
 block 内部可以使用 array 指针，但是不可以修改 array 指针：  
@@ -1887,24 +1888,24 @@ block 内部不可以修改 NSMutableArray 的指针（如：array = nil），�
 ### 对象类型的 auto 变量、\_\_block 变量
 当 block 在栈上时，对对象类型的 auto 变量、`__block` 变量都不会产生强引用.  
 
-当 block 拷贝到堆上时，都会通过 copy 函数来处理对象类型的 auto 变量、`__block` 变量：  
-`__block` 变量
+当 block 拷贝到堆上时，都会通过 copy 函数来处理对象类型的 auto 变量、`__block` 变量。  
+`__block` 变量：
 ```
 _Block_object_assign((void*)&dst->a, (void*)src->a, 8/*BLOCK_FIELD_IS_BYREF*/);
 ```
 
-对象类型的 auto 变量
+对象类型的 auto 变量：
 ```
 _Block_object_assign((void*)&dst->p, (void*)src->p, 3/*BLOCK_FIELD_IS_OBJECT*/);
 ```
 
-当 block 从堆上移除时，都会通过 dispose 函数来释放对象类型的 auto 变量、`__block` 变量：  
-__block变量
+当 block 从堆上移除时，都会通过 dispose 函数来释放对象类型的 auto 变量、`__block` 变量。  
+`__block` 变量：
 ```
 _Block_object_dispose((void*)src->a, 8/*BLOCK_FIELD_IS_BYREF*/);
 ```
 
-对象类型的 auto 变量
+对象类型的 auto 变量：
 ```
 _Block_object_dispose((void*)src->p, 3/*BLOCK_FIELD_IS_OBJECT*/);
 ```
@@ -1915,15 +1916,15 @@ _Block_object_dispose((void*)src->p, 3/*BLOCK_FIELD_IS_OBJECT*/);
 
 ![block18](block/block18.png)
 
-age.__forwarding->age：__Block_byref_obj_0 结构体对应的 age 对象通过 `__forwarding` 指针找到被拷贝到堆里的 `__block` 结构体，再找到结构体里的 age 变量。
+age.\_\_forwarding->age：`__Block_byref_obj_0` 结构体对应的 age 对象通过 `__forwarding` 指针找到被拷贝到堆里的 `__block` 结构体，再找到结构体里的 age 变量。
 
 ## 被 \_\_block 修饰的对象类型
 
 ### ARC 下：
-__block Person *person 的内存结构：
+\_\_block Person *person 的内存结构：
 ![block21](block/block21.png)
 
-__block __weak Person *weakPerson 的内存结构：
+\_\_block \_\_weak Person *weakPerson 的内存结构：
 ![block20](block/block20.png)
 
 ### MRC 下：
@@ -1986,10 +1987,9 @@ Person - dealloc
 MRC 下栈区和堆区的 block 都不会对指向的对象产生强引用，内存结构：
 ![block23](block/block23.png)
 
-截图👆里 __Block_byref_person_0 结构体里的 Person *person 可能是省略了 __weak，即 Person *__weak person;
+截图👆里 `__Block_byref_person_0` 结构体里的 Person *person 可能是省略了 `__weak`，即 Person *__weak person;
 
-对比没有 __block 的对象类型的 auto 变量的内存结构：
-
+对比没有 `__block` 的对象类型的 auto 变量的内存结构：
 ![block24](block/block24.png)
 
 
