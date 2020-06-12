@@ -4,10 +4,13 @@ date: 2020-05-11 14:35:58
 tags: OC底层原理
 ---
 
-![isa和superclass](isa和superclass/isa和superclass01.png)
+思考：
+* 对象的 isa 指针指向哪里？
+* OC 的类信息存放在哪里？
 
 <!-- more -->
 
+![isa和superclass](isa和superclass/isa和superclass01.png)
 * instance 的 isa 指向 class
 * class 的 isa 指向 meta-class
 * meta-class 的 isa 指向基类的 meta-class
@@ -17,8 +20,6 @@ tags: OC底层原理
 * class 调用类方法的轨迹：isa 找 meta-class，方法不存在，就通过 superclass 找父类
 
 # isa
-
-* 思考：对象的 isa 指针指向哪里？
 
 ## instance 对象、class 对象 和 meta-class 对象之间的 isa 关系
 ![isa和superclass](isa和superclass/isa和superclass02.png)
@@ -248,17 +249,6 @@ struct test_objc_class *personClass2 = (__bridge struct test_objc_class *)(perso
 ```
 
 上面👆的打印结果可以看出，Person 类对象的 isa 指针 & ISA_MASK 就是 Person 元类对象的地址。
-
-
-## 小结
-
-* 对象的 isa 指针指向哪里？  
-instance 对象的 isa 指向 class 对象  
-class 对象的 isa 指向 meta-class 对象  
-meta-class 对象的 isa 指向基类的 meta-class 对象
-
-
-
 
 # superclass
 
@@ -901,7 +891,12 @@ studentMetaClassData:
 
 ## 小结
 
+* 对象的 isa 指针指向哪里？  
+instance 对象的 isa 指向 class 对象  
+class 对象的 isa 指向 meta-class 对象  
+meta-class 对象的 isa 指向基类的 meta-class 对象
+
 * OC 的类信息存放在哪里？  
-对象方法、属性、成员变量、协议信息，存放在 class 对象中；  
-类方法，存放在 meta-class 对象中；  
-成员变量的具体值，存放在 instance 对象；
+对象方法、属性、成员变量、协议信息，存放在 class 对象中  
+类方法，存放在 meta-class 对象中  
+成员变量的具体值，存放在 instance 对象

@@ -4,12 +4,16 @@ date: 2020-05-06 14:36:30
 tags: OC底层原理
 ---
 
+思考：
+* 一个 NSObject 对象占用多少内存？ 
+* 创建一个实例对象，至少需要多少内存？实际上分配了多少内存？
+
+<!-- more -->
+
 * Objective-C 代码的底层实现其实是 C\C++ 代码
 * Objective-C 的面向对象是基于 C\C++ 的数据结构(结构体)实现的
 
 ![ObjectiveC_C_C++_汇编语言_机器语言](OC对象的本质/ObjectiveC_C_C++_汇编语言_机器语言.png)
-
-<!-- more -->
 
 # Objective-C的本质
 
@@ -220,10 +224,6 @@ size_t instanceSize(size_t extraBytes) const {
 NSObject *obj = [[NSObject alloc] init];
 ```
 * 上面👆这句代码实际上是在内存中生成了一个 c 语言定义的结构体，结构体内有一个类型为 Class 的 isa 指针，结构体的大小 8 个字节。Class 是一个指向结构体的指针。
-
-* 一个NSObject对象占用多少内存？  
-alloc 方法让系统分配了16个字节给 NSObject 对象（可以通过 malloc_size 函数获取）。  
-NSObject 对象内部只有一个成员变量，即指针 isa，所以只使用了8个字节的空间（64bit环境下，可以通过 class_getInstanceSize 函数获得）。
 
 * 创建的实例对象的大小至少16个字节.
 
@@ -466,7 +466,7 @@ struct Person_IMPL {
 ```
 
 ## 小结
-* 内存对齐原则：结构体的大小必须是最大成员大小的倍数。
+* 内存对齐原则：结构体的大小必须是最大成员大小的倍数，系统分配内存的大小必须是固定的大小（16的倍数）。
 
 * 子类在分配内存时，如果父类的内存空间有剩余，优先使用父类的内存空间。
 
@@ -519,6 +519,8 @@ NSLog(@"person - %zd", sizeof(struct Person_IMPL)); //24
 NSLog(@"person - %zd", class_getInstanceSize([Person class])); //24
 NSLog(@"person - %zd", malloc_size((__bridge const void *)person)); //32
 ```
+
+sizeof() 是运算符，计算类型的大小，是在编译的时候就确定的。
 
 Person 内的成员变量的从内存图中可以确认，Person 分配的内存是32：
 ![OC对象的本质进阶01](OC对象的本质/OC对象的本质进阶06.png) 
@@ -647,19 +649,21 @@ Buckets sized：iOS 堆空间里内存分为一块一块的内存空间，大小
 
 malloc_zone_calloc 这里也存在内存对齐原则。前面在生成结构体的时候提到过，根据内存对齐原则，结构体的大小必须是最大成员大小的倍数。而在这里，系统在分配内存时，分配的内存必须是16的倍数。因为 ios 系统为了提升内存分配的速度，固定了需要分配的内存空间块（Buckets sized）。在需要分配内存的时候，会找到最合适的内存空间块们来分配给实例对象。
 
-## 小结
-* 创建一个实例对象，至少需要多少内存?
+# 小结
+
+* 一个 NSObject 对象占用多少内存？  
+alloc 方法让系统分配了16个字节给 NSObject 对象（可以通过 malloc_size 函数获取）。  
+NSObject 对象内部只有一个成员变量，即指针 isa，所以只使用了8个字节的空间（64bit环境下，可以通过 class_getInstanceSize 函数获得）。
+
+* 创建一个实例对象，至少需要多少内存？实际上分配了多少内存？
+至少需要：
 ```
 #import <objc/runtime.h>
 class_getInstanceSize([NSObject class]);
 ```
 
-* 创建一个实例对象，实际上分配了多少内存？
+实际分配：
 ```
 #import <malloc/malloc.h>
 malloc_size((__bridge const void *)obj);
 ```
-
-* sizeof() 是运算符，计算类型的大小，是在编译的时候就确定的。
-
-* 内存对齐原则，结构体的大小必须是最大成员大小的倍数，系统分配内存的大小必须是固定的大小（16的倍数）。

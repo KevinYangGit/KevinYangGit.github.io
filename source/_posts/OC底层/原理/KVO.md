@@ -4,10 +4,17 @@ date: 2020-05-13 14:59:58
 tags: OC底层原理
 ---
 
-KVO的全称是Key-Value Observing，俗称“键值监听”，可以用于监听某个对象属性值的改变。
-![isa和superclass](KVO/KVO01.png)
+思考：
+* iOS 用什么方式实现对一个对象的 KVO？(KVO的本质是什么？)  
+* 如何手动触发 KVO ？  
+* 直接修改成员变量会触发 KVO 么？  
+* 通过 KVC 修改属性会触发 KVO 么？ 
+* KVC 的赋值和取值过程是怎样的？原理是什么？  
 
 <!-- more -->
+
+KVO的全称是Key-Value Observing，俗称“键值监听”，可以用于监听某个对象属性值的改变。
+![isa和superclass](KVO/KVO01.png)
 
 # KVO 监听
 定义 Person、Observer
@@ -210,31 +217,6 @@ int main(int argc, const char * argv[]) {
 
 运行后并没有出现打印。虽然 person 添加了 KVO 监听，但是修改 age 时并没有调用 -(void)setAge 方法。
 
-## 小结
-
-* iOS用什么方式实现对一个对象的KVO？(KVO的本质是什么？)  
-利用 RuntimeAPI 动态生成一个子类，并且让 instance 对象的 isa 指向这个全新的子类。  
-当修改 instance 对象的属性时，会调用 Foundation 的 _NSSetXXXValueAndNotify 函数：  
-```
-willChangeValueForKey:
-父类原来的setter
-didChangeValueForKey:
-```
-
-didChangeValueForKey: 内部会触发监听器（Oberser）的监听方法( observeValueForKeyPath:ofObject:change:context:）
-
-* 如何手动触发KVO？  
-手动调用 willChangeValueForKey: 和 didChangeValueForKey:  
-```
-willChangeValueForKey:
-person->age = 10;
-didChangeValueForKey:
-```
-
-* 直接修改成员变量会触发KVO么？  
-不会触发，修改 age 时并没有调用 -(void)setAge 方法。
-
-
 # KVC
 KVC 的全称是 Key-Value Coding，俗称“键值编码”，可以通过一个 key 来访问某个属性。常见的API有：
 ```
@@ -416,14 +398,34 @@ setValue:forKey: 第二次调用 accessInstanceVariablesDirectly 方法：
 valueForKey: 第一次调用 accessInstanceVariablesDirectly 方法：
 ![isa和superclass](KVO/accessInstanceVariablesDirectly_09.png)
 
-## 小结
 
-* 通过KVC修改属性会触发KVO么？  
+# 总结
+* iOS 用什么方式实现对一个对象的 KVO？(KVO的本质是什么？)  
+利用 RuntimeAPI 动态生成一个子类，并且让 instance 对象的 isa 指向这个全新的子类。  
+当修改 instance 对象的属性时，会调用 Foundation 的 _NSSetXXXValueAndNotify 函数：  
+```
+willChangeValueForKey:
+父类原来的setter
+didChangeValueForKey:
+```
+
+didChangeValueForKey: 内部会触发监听器（Oberser）的监听方法( observeValueForKeyPath:ofObject:change:context:）
+
+* 如何手动触发 KVO ？  
+手动调用 willChangeValueForKey: 和 didChangeValueForKey:  
+```
+willChangeValueForKey:
+person->age = 10;
+didChangeValueForKey:
+```
+
+* 直接修改成员变量会触发 KVO 么？  
+不会触发，修改 age 时并没有调用 -(void)setAge 方法。
+
+* 通过 KVC 修改属性会触发 KVO 么？  
 会触发KVO。通过KVC修改属性会调用 willChangeValueForKey: 和 didChangeValueForKey: 方法，而 didChangeValueForKey: 方法内部会触发 KVO 监听。  
 
 * KVC 的赋值和取值过程是怎样的？原理是什么？  
 赋值：setValue:forKey: 会按照 setKey:/_setKey: 顺序查找方法，如果方法存在，直接调用方法赋值。如果方法不存在，会调用 accessInstanceVariablesDirectly 方法，判断是否可以访问成员变量。如果可以，会按照 _key/_isKey/key/isKsy 顺序查找成员变量，找到后赋值。如果不可以访问成员变量，或者成员变量不存在，就会调用 setValue:forUndefinedKey: 并抛出异常 NSUnknownKeyException。  
   
   取值：valueForKey: 会按照 getKey/key/isKey/_key 顺序查找方法，如果方法存在，直接调用方法取值。如果方法不存在，会调用 accessInstanceVariablesDirectly 方法，判断是否可以访问成员变量。会按照 _key/_isKey/key/isKsy 顺序查找成员变量，找到成员变量后取值。如果不可以访问成员变量，或者成员变量不存在，就会调用 valueForUndefinedKey: 并抛出异常 NSUnknownKeyException。  
-
-

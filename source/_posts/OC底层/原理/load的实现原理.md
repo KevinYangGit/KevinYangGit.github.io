@@ -4,10 +4,12 @@ date: 2020-05-20 10:45:30
 tags: OC底层原理
 ---
 
-* +load 方法会在 runtime 加载类、分类时调用；
-* 每个类、分类的 +load 方法，在程序运行过程中只调用一次；
-* 思考：Category 中有 +load 方法吗？+load 方法是什么时候调用的？+load 方法能继承吗？
+思考：
+* Category 中有 +load 方法吗？+load 方法是什么时候调用的？+load 方法能继承吗？
+
 <!-- more -->
+
++load 方法会在 runtime 加载类、分类时调用。每个类、分类的 +load 方法，在程序运行过程中只调用一次。
 
 # 定义 Persion、Persion+Test1 和 Persion+Test2
 ```
@@ -542,6 +544,29 @@ struct loadable_category {
 在添加所有分类的时候，因为 prepare_load_methods 方法直接调用 add_category_to_loadable_list 方法进行了添加，所有在 call_category_loads 方法
 中获取分类并调用分类的 +load 方法的顺序就是分类的编译顺序。
 
+## 小结
+* runtime 会优先调用类的 +load 方法，调用时按照编译先后顺序调用（先编译，先调用）。对于有继承关系的类，在调用子类的 +load 方法之前会优先调用父类的 +load 方法。
+
+* 在类的 +load 方法调用完成后再调用分类的 +load 方法，调用时按照编译先后顺序调用（先编译，先调用）。
+
+* 类中的 +load 方法的调用流程：  
+```
+_objc_init -> load_images -
+
+-> prepare_load_methods -> schedule_class_load -> add_class_to_loadable_list  
+
+-> call_load_methods -> call_class_loads
+```
+
+* 分类中的 +load 方法的调用流程：  
+```
+_objc_init -> load_images -  
+
+-> prepare_load_methods -> add_category_to_loadable_list
+
+-> call_load_methods -> call_category_loads
+```
+
 # +load 方法与继承
 ## 定义 Student : Persion
 ```
@@ -585,30 +610,9 @@ Persion (Test1) +load
 ## [Student load] 的本质
 [Student load] 这句代码本质就是 objc_msgSend(objc_getClass("Student"), sel_registerName("load"))，即向 Student 类对象发送一条 "load" 消息，Student 类对象再通过 isa 指针找到 Student 元类对象去查找 +load 方法。因为 Student 里没有实现 +load 方法，所以 Student 元类对象会通过 superclass 指针找到父类 Persion 的元类对象  。Persion 的元类对象在查找 +load 方法时，会优先查找到最后被编译的分类 Persion (Test1)，找到 +load 方法并调用。所以 +load 方法是可以被继承的。
 
-# 小结
-* runtime 会优先调用类的 +load 方法，调用时按照编译先后顺序调用（先编译，先调用）。对于有继承关系的类，在调用子类的 +load 方法之前会优先调用父类的 +load 方法。
-
-* 在类的 +load 方法调用完成后再调用分类的 +load 方法，调用时按照编译先后顺序调用（先编译，先调用）。
-
-* 类中的 +load 方法的调用流程：  
-```
-_objc_init -> load_images -
-
--> prepare_load_methods -> schedule_class_load -> add_class_to_loadable_list  
-
--> call_load_methods -> call_class_loads
-```
-
-* 分类中的 +load 方法的调用流程：  
-```
-_objc_init -> load_images -  
-
--> prepare_load_methods -> add_category_to_loadable_list
-
--> call_load_methods -> call_category_loads
-```
-
+## 小结
 * +load 方法是可以被继承的。在启动时由 runtime 调用的 +load 方法是优先调用父类的 +load 方法。而通过 [Student load] 这种方式主动调用 +load 方法，是优先调用子类的 +load 方法。
 
+# 总结
 * Category 中有 +load 方法吗？+load 方法是什么时候调用的？+load 方法能继承吗？  
 有 +load 方法。+load 方法在 runtime 加载类、分类的时候调用。+load 方法可以继承，但是一般情况下不会主动去调用 +load 方法，都是让系统启动时自动调用。

@@ -91,9 +91,9 @@ int main(int argc, const char * argv[]) {
 ```
 
 ## __main_block_impl_0
-__main_block_impl_0 是 block 在 C++ 中的结构体实现。第一个参数 __block_impl 中有一个 isa 指针，具备 OC 对象特征，说明 block 本质上也是一个 OC 对象。  
+`__main_block_impl_0` 是 block 在 C++ 中的结构体实现。第一个参数 __block_impl 中有一个 isa 指针，具备 OC 对象特征，说明 block 本质上也是一个 OC 对象。  
 
-__main_block_impl_0 省略 __block_impl 和 __main_block_desc_0 后可以看成：
+`__main_block_impl_0` 省略 `__block_impl` 和 `__main_block_desc_0` 后可以看成：
 ```
 struct __main_block_impl_0 {
     void *isa; 
@@ -123,7 +123,7 @@ Printing description of blockStruct->impl.FuncPtr:
 在断点2处，选择 Debug -> Debug Workflow -> Always Show Disassembly:
 ![block02](block/block02.png)
 
-可以看到，block 里的开始地址值 100000f00 等于 FuncPtr 的地址值。说明 block 里的代码块的地址值被保存在了 __block_impl 里的 FuncPtr 中（函数调用），另外 __main_block_impl_0 里保存了外部变量 int a（调用环境），说明 block 是封装了函数调用以及函数调用环境的 OC 对象。
+可以看到，block 里的开始地址值 100000f00 等于 FuncPtr 的地址值。说明 block 里的代码块的地址值被保存在了 `__block_impl` 里的 FuncPtr 中（函数调用），另外 `__main_block_impl_0` 里保存了外部变量 int a（调用环境），说明 block 是封装了函数调用以及函数调用环境的 OC 对象。
 
 
 
@@ -199,7 +199,7 @@ int main(int argc, const char * argv[]) {
 static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO = { 0, 2 };
 ```
 
-__main_block_impl_0、__block_impl 和 __main_block_desc_0 三者之间的关系：
+`__main_block_impl_0`、`__block_impl` 和 `__main_block_desc_0` 三者之间的关系：
 ![block04](block/block04.png)
 
 ## 有参数的 block
@@ -215,7 +215,7 @@ int main(int argc, const char * argv[]) {
 }
 ```
 
-查看 C++ 代码，可以看到 __main_block_func_0 函数发生了变化：
+查看 C++ 代码，可以看到 `__main_block_func_0` 函数发生了变化：
 ```
 struct __block_impl {
     void *isa; 
@@ -355,7 +355,7 @@ block 的结构体 __main_block_impl_0 内部新增了成员变量 age，就是�
 * static 变量会一直保存在内存里。
 * static 变量的捕获方式是指针传递。
 
-ps：static 声明的局部变量只初始化一次，其内存分配在静态存储区（数据区域），在程序中只有一份内存，并且在整个程序执行期间都存在不会释放。虽然 static 变量的内存不会释放，但是其作用域并没有改变。
+static 声明的局部变量只初始化一次，其内存分配在静态存储区（数据区域），在程序中只有一份内存，并且在整个程序执行期间都存在不会释放。虽然 static 变量的内存不会释放，但是其作用域并没有改变。
 
 定义 block：
 ```
@@ -1074,8 +1074,7 @@ __NSMallocBlock__
 2. 堆区的 `__NSMallocBlock__` 是通过引用计数策略被开发者管理内存的，所以在调用 copy 时要遵循引用计数管理逻辑+1。
 3. 栈区的 `__NSStackBlock__` 是系统管理内存的，离开作用域就会销毁。通过 copy 将 `__NSStackBlock__` 类型的 block 的内存放到堆区，通过引用计数的方式管理内存，实现让开发者管理内存。
 
-ps：  
-类对象内存的存放位置：
+ps：类对象内存的存放位置
 ```
 int age = 10;
 int main(int argc, const char * argv[]) {
@@ -1216,10 +1215,6 @@ ARC 下 block 属性的建议写法
 @property (strong, nonatomic) void (^block)(void);
 @property (copy, nonatomic) void (^block)(void);
 ```
-
-* block 的属性修饰词为什么是 copy？使用 block 有哪些使用注意？  
-block 创建时内存是在栈上的，进行 copy 操作后，block 的内存就从栈上拷贝到了堆上。  
-堆上的 block 对捕获到的变量有强引用，需要注意 block 与被捕获的变量之间是否存在循环引用的问题。
 
 # 对象类型的 auto 变量
 
@@ -1394,10 +1389,9 @@ int main(int argc, const char * argv[]) {
 
 # __weak
 
-在使用 clang 转换 OC 为 C++ 代码时，如果使用了 `__weak` 可能会遇到以下问题：  
-cannot create \_\_weak reference in file using manual reference
+在使用 clang 转换 OC 为 C++ 代码时，如果使用了 `__weak` 可能会遇到以下问题：cannot create \_\_weak reference in file using manual reference
 
-解决方案：支持 ARC、指定运行时系统版本：  
+解决方案：支持 ARC、指定运行时系统版本  
 ```
 -fobjc-arc -fobjc-runtime=ios-8.0.0
 ```
@@ -1862,13 +1856,11 @@ int main(int argc, const char * argv[]) {
 }
 ```
 
+block 内部可以使用 NSMutableArray 指针（如：[array addObject:@"123"]），不需要添加 `__block`。  
+
 修改 array 指针：
 ![block15](block/block15.png)
 
-### 小结
-
-* block 在修改 NSMutableArray，需不需要添加 `__block`？  
-block 内部可以使用 NSMutableArray 指针（如：[array addObject:@"123"]），不需要添加 `__block`。  
 block 内部不可以修改 NSMutableArray 的指针（如：array = nil），如果需要修改 NSMutableArray 指针的话，需要添加 `__block`。 
 
 ## \_\_block 的内存管理
@@ -1886,49 +1878,53 @@ block 内部不可以修改 NSMutableArray 的指针（如：array = nil），�
 
 
 ### 对象类型的 auto 变量、\_\_block 变量
-当 block 在栈上时，对对象类型的 auto 变量、`__block` 变量都不会产生强引用.  
-
-当 block 拷贝到堆上时，都会通过 copy 函数来处理对象类型的 auto 变量、`__block` 变量。  
-`__block` 变量：
-```
-_Block_object_assign((void*)&dst->a, (void*)src->a, 8/*BLOCK_FIELD_IS_BYREF*/);
-```
-
-对象类型的 auto 变量：
-```
-_Block_object_assign((void*)&dst->p, (void*)src->p, 3/*BLOCK_FIELD_IS_OBJECT*/);
-```
-
-当 block 从堆上移除时，都会通过 dispose 函数来释放对象类型的 auto 变量、`__block` 变量。  
-`__block` 变量：
-```
-_Block_object_dispose((void*)src->a, 8/*BLOCK_FIELD_IS_BYREF*/);
-```
-
-对象类型的 auto 变量：
-```
-_Block_object_dispose((void*)src->p, 3/*BLOCK_FIELD_IS_OBJECT*/);
-```
 
 ![block19](block/block19.png)
 
-## \_\_block 的 \_\_forwarding 指针
+当 block 在栈上时，对对象类型的 auto 变量、`__block` 变量都不会产生强引用.  
 
-![block18](block/block18.png)
+当 block 拷贝到堆上时，都会通过 copy 函数来处理对象类型的 auto 变量、`__block` 变量。  
+当 block 从堆上移除时，都会通过 dispose 函数来释放对象类型的 auto 变量、`__block` 变量。  
 
-age.\_\_forwarding->age：`__Block_byref_obj_0` 结构体对应的 age 对象通过 `__forwarding` 指针找到被拷贝到堆里的 `__block` 结构体，再找到结构体里的 age 变量。
+```
+typedef void(^Block)(void);
 
-## 被 \_\_block 修饰的对象类型
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        __block Person *personBlock = [[Person alloc] init];
+        Person *person = [[Person alloc] init];
+        Block block = ^{
+            NSLog(@"%@, %@", personBlock, person);
+        };
+        block();
+    }
+    return 0;
+}
+```
 
-### ARC 下：
+查看 c++ 代码：
+```
+static void __main_block_copy_0(struct __main_block_impl_0*dst, struct __main_block_impl_0*src) {
+    _Block_object_assign((void*)&dst->personBlock, (void*)src->personBlock, 8/*BLOCK_FIELD_IS_BYREF*/); //__block 变量
+    _Block_object_assign((void*)&dst->person, (void*)src->person, 3/*BLOCK_FIELD_IS_OBJECT*/); //对象类型的 auto 变量
+}
+
+static void __main_block_dispose_0(struct __main_block_impl_0*src) {
+    _Block_object_dispose((void*)src->personBlock, 8/*BLOCK_FIELD_IS_BYREF*/); //__block 变量
+    _Block_object_dispose((void*)src->person, 3/*BLOCK_FIELD_IS_OBJECT*/); //对象类型的 auto 变量
+}
+```
+
+### 被 \_\_block 修饰的对象类型
+
+#### ARC 下：
 \_\_block Person *person 的内存结构：
 ![block21](block/block21.png)
 
 \_\_block \_\_weak Person *weakPerson 的内存结构：
 ![block20](block/block20.png)
 
-### MRC 下：
-
+#### MRC 下：
 查看支持 MRC、指定运行时系统版本的 c++ 代码：
 ```
 xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc -fno-objc-arc -fobjc-runtime=ios-8.0.0 main.m
@@ -1984,32 +1980,170 @@ Person - dealloc
 
 ![block22](block/block22.png)
 
-MRC 下栈区和堆区的 block 都不会对指向的对象产生强引用，内存结构：
+MRC 下栈区和堆区的 block 都不会对指向的对象产生强引用（_Block_object_assign 没有 retain 操作），内存结构：
 ![block23](block/block23.png)
 
-截图👆里 `__Block_byref_person_0` 结构体里的 Person *person 可能是省略了 `__weak`，即 Person *__weak person;
+截图👆里 `__Block_byref_person_0` 结构体里的 Person \*person 可能是省略了 `__weak`，即 Person \*\_\_weak person;
 
 对比没有 `__block` 的对象类型的 auto 变量的内存结构：
 ![block24](block/block24.png)
 
 
-## 小结
+#### 小结
 
-当 \_\_block 变量在栈上时，不会对指向的对象产生强引用。  
+当 `__block` 变量在栈上时，不会对指向的对象产生强引用。  
 
-当 \_\_block 变量被 copy 到堆时，会调用 `__block` 变量内部的 copy 函数，copy 函数内部会调用 _Block_object_assign 函数，_Block_object_assign 函数会根据所指向对象的修饰符（`__strong`、`__weak`、`__unsafe_unretained`）做出相应的操作，形成强引用（retain）或者弱引用（注意：这里仅限于 ARC 时会 retain，MRC 时不会 retain）。
+当 `__block` 变量被 copy 到堆时，会调用 `__block` 变量内部的 copy 函数，copy 函数内部会调用 _Block_object_assign 函数，_Block_object_assign 函数会根据所指向对象的修饰符（`__strong`、`__weak`、`__unsafe_unretained`）做出相应的操作，形成强引用（retain）或者弱引用（注意：这里仅限于 ARC 时会 retain，MRC 时不会 retain）。
 
 当 `__block` 变量从堆上移除时，会调用 `__block` 变量内部的 dispose 函数，dispose 函数内部会调用 _Block_object_dispose 函数，_Block_object_dispose 函数会自动释放指向的对象（release）。
 
+## \_\_block 的 \_\_forwarding 指针
+
+![block18](block/block18.png)
+
+age.\_\_forwarding->age：`__Block_byref_obj_0` 结构体对应的 age 对象通过 `__forwarding` 指针找到被拷贝到堆里的 `__block` 结构体，再找到结构体里的 age 变量。
 
 
+## 循环引用
+
+常见循环引用问题：
+```
+@implementation Person
+- (void)test {
+    self.block = ^{
+        NSLog(@"self.age = %d", self.age);
+    };
+}
+@end
+```
+
+引用关系：self -> block -> self
+
+引用关系图解：
+![block25](block/block25.png)
+
+`__block` 变量的循环引用问题：
+```
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        __block Person *person = [[Person alloc] init];
+        person.block = ^{
+            NSLog(@"%d", person.age);
+        };
+    }
+    return 0;
+}
+```
+
+引用关系：person -> block -> __block person -> person
+
+引用关系图解：
+![block27](block/block27.png)
+
+### 解决循环引用问题 - ARC
+
+解决方案一：用 `__weak`、`__unsafe_unretained` 解决，去掉 block 对 对象的强引用关系：
+```
+//__weak 
+- (void)test {
+    __weak typeof(self) weakSelf = self;
+    self.block = ^{
+        NSLog(@"self.age = %d", weakSelf.age);
+    };
+}
+
+//__unsafe_unretained
+- (void)test {
+    __unsafe_unretained typeof(self) weakSelf = self;
+    self.block = ^{
+        NSLog(@"self.age = %d", weakSelf.age);
+    };
+}
+```
+
+`__weak`：不会产生强引用，指向的对象销毁时，会自动让指针置为 nil。  
+`__unsafe_unretained`：不会产生强引用，不安全，指向的对象销毁时，指针存储的地址值不变。
 
 
+图解：
+![block26](block/block26.png)
 
 
+解决方案二：用 `__block` 解决（必须要调用 block），通过将捕获的变量置为 nil，去掉 `__block` 变量和对象之间的强引用关系：
+```
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        __block Person *person = [[Person alloc] init];
+        person.block = ^{
+            NSLog(@"%d", person.age);
+            person = nil;
+        };
+        person.block();
+    }
+    return 0;
+}
+```
+
+图解：
+![block28](block/block28.png)
 
 
+#### \_\_weak 安全问题
+```
+- (void)test {
+    __weak typeof(self) weakSelf = self;
+    self.block = ^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        NSLog(@"self.age = %d", strongSelf.age);
+    };
+}
+```
+
+被 `__weak` 修饰的变量随时可能被释放，block 内部有可能访问的 weakSelf 已经不存在了。通过 `__strong` 修饰后，可以保证在 block 执行完成前 strongSelf 一直在。
+
+### 解决循环引用问题 - MRC
+
+解决方案一：用 `__unsafe_unretained` 解决，声明后的 person 对象在 block 里不会被 retain：
+```
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        __unsafe_unretained Person *person = [[Person alloc] init];
+        person.block = [^{
+            NSLog(@"%d", person.age);
+        } copy];
+        [person release];
+    }
+    return 0;
+}
+```
+
+解决方案二：用 `__block` 解决，MRC 下的 block 不会对 `__block` 变量进行 retain 操作：
+```
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        __block Person *person = [[Person alloc] init];
+        person.block = [^{
+            NSLog(@"%d", person.age);
+        } copy];
+        [person release];
+    }
+    return 0;
+}
+```
 
 
+# 小结
+* block 的原理是怎样的？本质是什么？  
+block 本质上是封装了函数调用以及函数调用环境的 OC 对象。
 
+* `__block`的作用是什么？有什么使用注意点？  
+作用：`__block` 可以用于解决 block 内部无法修改 auto 变量值的问题。  
+注意：在 MRC 下 `__block` 变量不会对指向的对象产生强引用。
 
+* block 的属性修饰词为什么是 copy？使用 block 有哪些使用注意？  
+block 创建时内存是在栈上的，进行 copy 操作后，block 的内存就从栈上拷贝到了堆上。  
+堆上的 block 对捕获到的变量有强引用，需要注意 block 与被捕获的变量之间是否存在循环引用的问题。
+
+* block 在修改 NSMutableArray，需不需要添加 `__block`？  
+block 内部可以使用 NSMutableArray 指针（如：[array addObject:@"123"]），不需要添加 `__block`。  
+block 内部不可以修改 NSMutableArray 的指针（如：array = nil），如果需要修改 NSMutableArray 指针的话，需要添加 `__block`。 
