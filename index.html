@@ -697,10 +697,10 @@
 
       
         
-          <ul>
-<li>+load 方法会在 runtime 加载类、分类时调用；</li>
-<li>每个类、分类的 +load 方法，在程序运行过程中只调用一次；</li>
-<li>思考：Category 中有 +load 方法吗？+load 方法是什么时候调用的？+load 方法能继承吗？</li></ul>
+          <p>思考：</p>
+<ul>
+<li>Category 中有 +load 方法吗？+load 方法是什么时候调用的？+load 方法能继承吗？</li>
+</ul>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/05/20/OC底层/原理/load的实现原理/#more" rel="contents">
@@ -954,7 +954,14 @@
 
       
         
-          <p>KVO的全称是Key-Value Observing，俗称“键值监听”，可以用于监听某个对象属性值的改变。<br><img src="/2020/05/13/OC底层/原理/KVO/KVO01.png" alt="isa和superclass"></p>
+          <p>思考：</p>
+<ul>
+<li>iOS 用什么方式实现对一个对象的 KVO？(KVO的本质是什么？)  </li>
+<li>如何手动触发 KVO ？  </li>
+<li>直接修改成员变量会触发 KVO 么？  </li>
+<li>通过 KVC 修改属性会触发 KVO 么？ </li>
+<li>KVC 的赋值和取值过程是怎样的？原理是什么？  </li>
+</ul>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/05/13/OC底层/原理/KVO/#more" rel="contents">
@@ -1078,7 +1085,11 @@
 
       
         
-          <p><img src="/2020/05/11/OC底层/原理/isa和superclass/isa和superclass01.png" alt="isa和superclass"></p>
+          <p>思考：</p>
+<ul>
+<li>对象的 isa 指针指向哪里？</li>
+<li>OC 的类信息存放在哪里？</li>
+</ul>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/05/11/OC底层/原理/isa和superclass/#more" rel="contents">
@@ -1331,11 +1342,11 @@
 
       
         
-          <ul>
-<li>Objective-C 代码的底层实现其实是 C\C++ 代码</li>
-<li>Objective-C 的面向对象是基于 C\C++ 的数据结构(结构体)实现的</li>
+          <p>思考：</p>
+<ul>
+<li>一个 NSObject 对象占用多少内存？ </li>
+<li>创建一个实例对象，至少需要多少内存？实际上分配了多少内存？</li>
 </ul>
-<p><img src="/2020/05/06/OC底层/原理/OC对象的本质/ObjectiveC_C_C++_汇编语言_机器语言.png" alt="ObjectiveC_C_C++_汇编语言_机器语言"></p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/05/06/OC底层/原理/OC对象的本质/#more" rel="contents">
