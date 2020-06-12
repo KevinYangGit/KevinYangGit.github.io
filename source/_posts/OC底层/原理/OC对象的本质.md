@@ -10,19 +10,18 @@ tags: OC底层原理
 
 <!-- more -->
 
-* Objective-C 代码的底层实现其实是 C\C++ 代码
-* Objective-C 的面向对象是基于 C\C++ 的数据结构(结构体)实现的
+# Objective-C的本质
+
+Objective-C 代码的底层实现其实是 C\C++ 代码，Objective-C 的面向对象是基于 C\C++ 的数据结构(结构体)实现的。
 
 ![ObjectiveC_C_C++_汇编语言_机器语言](OC对象的本质/ObjectiveC_C_C++_汇编语言_机器语言.png)
-
-# Objective-C的本质
 
 ## 将 Objective-C 代码转换为 C\C++ 代码
 
 ### 创建一个命令行项目
 ![OC对象的本质](OC对象的本质/OC对象的本质.png)
 
-在终端打开 main.m 的位置，输入下面的命令生成 main.cpp 文件。因为要生成的代码包括c/c++，所以使用 main.cpp 文件，main.cpp 文件是 c++ 文件，支持 c/c++。
+在终端打开 main.m 的位置，输入下面👇的命令生成 main.cpp 文件。因为要生成的代码包括 c/c++，所以使用 main.cpp 文件，main.cpp 文件是 c++ 文件，支持 c/c++。
 
 ### 生成 main.cpp
 ```
@@ -31,16 +30,14 @@ $ clang -rewrite-objc main.m -o main.cpp
 没有指定平台，默认生成的是多个平台的代码，代码量太大。
 
 ### 指定生成 iphoneos 平台、arm64 架构的 main.cpp  
-指定平台，不同平台支持的代码不一样，如 Windows、mac、iOS。  
-指定框架，不同框架支持的代码也不一样，模拟器(i386)、32bit(armv7)、64bit（arm64）。
+指定平台：不同平台支持的代码不一样，如 Windows、mac、iOS。xcrun -sdk iphoneos：指定 iphoneos。    
+指定框架：不同框架支持的代码也不一样，模拟器(i386)、32bit(armv7)、64bit（arm64）。-arch arm64：指定 arm64 架构。
 ```
 $ xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main-arm64.cpp
 ```
-xcrun -sdk iphoneos：指定 iphoneos。
--arch arm64：指定 arm64 架构。
 
 报错：xcrun: error: SDK "iphoneos" cannot be located  
-解决1：给Xcode命令行工具指定路径↓
+解决1：给Xcode命令行工具指定路径👇
 ```
 $ sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer/
 ```
@@ -84,7 +81,8 @@ struct NSObject_IMPL {
     Class isa; // 8个字节
 };
 ```
-Class 是指向结构体的指针：typedef struct objc_class *Class。IMPL 是 implementation 的简写。结构体中只有一个成员变量，所以这个结构体在内存中占用的大小就是指针 isa 的大小。
+Class 是指向结构体的指针：typedef struct objc_class *Class。  
+IMPL 是 implementation 的简写。结构体中只有一个成员变量，所以这个结构体在内存中占用的大小就是指针 isa 的大小。
 
 ![OC对象的本质02](OC对象的本质/OC对象的本质02.png)
 
@@ -125,7 +123,9 @@ uint32_t alignedInstanceSize() const {
     return word_align(unalignedInstanceSize());
 }
 ```
-翻译过来就是，class_getInstanceSize 内部根据成员变量的大小，根据内存对齐原则得到 NSObject 实例对象里成员变量所占用的内存大小。
+翻译过来就是，class_getInstanceSize 内部根据成员变量的大小和内存对齐原则得到 NSObject 实例对象里成员变量所占用的内存大小。
+
+内存对齐原则：结构体的大小必须是最大成员大小的倍数。
 
 ## 窥视 alloc
 alloc 的内部实现是 allocWithZone，在源码中搜索 allocWithZone：
@@ -136,7 +136,7 @@ _objc_rootAllocWithZone(Class cls, malloc_zone_t *zone)
     id obj;
 
     if (fastpath(!zone)) {
-        obj = class_createInstance(cls, 0); //额外空间0
+        obj = class_createInstance(cls, 0); //参数：类，额外空间0
     } else {
         obj = class_createInstanceFromZone(cls, 0, zone);
     }
@@ -171,7 +171,7 @@ _class_createInstanceFromZone(Class cls, size_t extraBytes, void *zone,
     bool fast = cls->canAllocNonpointer();
     size_t size;
 
-    size = cls->instanceSize(extraBytes); //分配空间
+    size = cls->instanceSize(extraBytes); //分配内存空间方法👇
     if (outAllocatedSize) *outAllocatedSize = size;
 
     id obj;
@@ -213,11 +213,11 @@ size_t instanceSize(size_t extraBytes) const {
 
     size_t size = alignedInstanceSize() + extraBytes;
     // CF requires all objects be at least 16 bytes.
-    if (size < 16) size = 16;
+    if (size < 16) size = 16; //至少16个字节
     return size;
 }
 ```
-可以看到，创建的实例对象的大小至少16个字节。CoreFoundation 框架内部就是这么硬性规定的。
+可以看到，创建的实例对象的大小最总由 instanceSize 方法实现。内存大小至少16个字节，CoreFoundation 框架内部就是这么硬性规定的。
 
 ## 小结：  
 ```
@@ -230,12 +230,12 @@ NSObject *obj = [[NSObject alloc] init];
 
 # 查看实例变量的内存的方法
 
-## 通过 Xcode 工具查看对象内存。  
+## 通过 Xcode 工具查看对象内存  
 打开 Debug -> Debug Workflow -> View Memory，在 Address 输入对象的地址。  
 ![OC对象的本质03](OC对象的本质/OC对象的本质03.png)
 
 
-## 常用LLDB指令
+## 常用 LLDB 指令
 ### print、p：打印
 ```
 (lldb) print obj
@@ -357,17 +357,21 @@ isa（8字节）+ _no（4字节）+ _age（4字节）= Student_IMPL（16字节�
 打开内存图：
 Debug -> Debug Workflow -> View Memory
 ![OC对象的本质进阶01](OC对象的本质/OC对象的本质进阶02.png)  
-因为 iOS 平台是小端模式，所以从内存中读取数据的方式是从高地址开始读取。_no 是 0x00000004，_age 是 0x00000005：
+因为 iOS 平台是小端模式，所以从内存中读取数据的方式是从高地址开始读取（右→左）。_no 是 0x00000004，_age 是 0x00000005：
 ```
 (lldb) x/4xw 0x103a085d0
 0x103a085d0: 0x000011c9 0x001d8001 0x00000004 0x00000005
 ```
 
-通过修改内存中的值的方式来修改 _no：
+通过修改内存中的值的方式来修改 _no，查看内存：
 ```
 (lldb) x 0x103a085d0
 0x103a085d0: c9 11 00 00 01 80 1d 00 04 00 00 00 05 00 00 00  ................
 0x103a085e0: b0 86 a0 03 01 00 00 00 f0 88 a0 03 01 00 00 00  ................
+```
+
+_no 的地址（0x103a085d0）向右数8个找到04的地址（0x103a085d8），通过 memory write 将实例对象的第8个字节 04 给为 09，打印 _no = 9。
+```
 (lldb) memory write 0x103a085d8 9
 (lldb) x 0x103a085d0
 0x103a085d0: c9 11 00 00 01 80 1d 00 09 00 00 00 05 00 00 00  ................
@@ -376,11 +380,8 @@ Debug -> Debug Workflow -> View Memory
 (int) $3 = 9
 ```
 
-上面👆通过 memory write 将实例对象的第8个字节 04 给为 09，打印 _no = 9。
-
 ## 小结
 * iOS 平台是小端模式，所以从内存中读取数据的方式是从高地址开始读取。
-
 * 使用 memory write，可以通过修改内存中的值的方式来修改成员变量的值。
 
 # 更复杂的继承关系
@@ -466,11 +467,8 @@ struct Person_IMPL {
 ```
 
 ## 小结
-* 内存对齐原则：结构体的大小必须是最大成员大小的倍数，系统分配内存的大小必须是固定的大小（16的倍数）。
-
 * 子类在分配内存时，如果父类的内存空间有剩余，优先使用父类的内存空间。
-
-* 创建出来的实列对象的内存中只存有成员变量，不包含方法。以 Person 为例，不同的 Person 实例对象的方法是相同的，所以方法放到类对象的方法列表里，供不同的 Person 实例对象调用。
+* 创建出来的实列对象的内存中只存有成员变量，不包含方法。以 Person 为例，因为不同的 Person 实例对象的方法是相同的公用的，所以方法放到类对象的方法列表里，供不同的 Person 实例对象调用。
 
 
 # 窥视 alignedInstanceSize
@@ -487,7 +485,7 @@ align：对齐。word_align(unalignedInstanceSize())：传入一个未对齐（u
 
 # Person 对象的内存分配
 
-## 定义 Person
+定义 Person
 ```
 @interface Person : NSObject
 {
@@ -512,7 +510,7 @@ struct Person_IMPL {
 }; // 24
 ```
 
-## 创建 Person 实例变量，打印内存大小：
+创建 Person 实例变量，打印内存大小：
 ```
 Person *person = [[Person alloc] init];
 NSLog(@"person - %zd", sizeof(struct Person_IMPL)); //24
@@ -578,7 +576,7 @@ _class_createInstanceFromZone(Class cls, size_t extraBytes, void *zone,
 }
 ```
 
-可以看出，代码最终是调用 obj = (id)calloc(1, size); 创建的实列对象。而 size = cls->instanceSize(extraBytes); 是根据成员变量大小计算出来的需要开辟的内存大小。instanceSize(extraBytes) 的参数 extraBytes 来自 _objc_rootAllocWithZone，_objc_rootAllocWithZone 传入的 extraBytes = 0：
+可以看出，代码最终是调用 obj = (id)calloc(1, size); 创建的实列对象。而 size = cls->instanceSize(extraBytes); 是根据成员变量大小计算出来的需要开辟的内存大小。instanceSize(extraBytes) 的参数 extraBytes 是额外空间，来自 _objc_rootAllocWithZone，_objc_rootAllocWithZone 传入的 extraBytes = 0：
 ```
 id
 _objc_rootAllocWithZone(Class cls, malloc_zone_t *zone)
@@ -649,21 +647,21 @@ Buckets sized：iOS 堆空间里内存分为一块一块的内存空间，大小
 
 malloc_zone_calloc 这里也存在内存对齐原则。前面在生成结构体的时候提到过，根据内存对齐原则，结构体的大小必须是最大成员大小的倍数。而在这里，系统在分配内存时，分配的内存必须是16的倍数。因为 ios 系统为了提升内存分配的速度，固定了需要分配的内存空间块（Buckets sized）。在需要分配内存的时候，会找到最合适的内存空间块们来分配给实例对象。
 
-# 小结
+# 总结
 
 * 一个 NSObject 对象占用多少内存？  
 alloc 方法让系统分配了16个字节给 NSObject 对象（可以通过 malloc_size 函数获取）。  
 NSObject 对象内部只有一个成员变量，即指针 isa，所以只使用了8个字节的空间（64bit环境下，可以通过 class_getInstanceSize 函数获得）。
 
 * 创建一个实例对象，至少需要多少内存？实际上分配了多少内存？
-至少需要：
 ```
+//至少需要内存大小：
 #import <objc/runtime.h>
 class_getInstanceSize([NSObject class]);
-```
 
-实际分配：
-```
+//实际分配内存大小：
 #import <malloc/malloc.h>
 malloc_size((__bridge const void *)obj);
 ```
+
+* 内存对齐原则：结构体的大小必须是最大成员大小的倍数，系统分配内存的大小必须是固定的大小（16的倍数）。

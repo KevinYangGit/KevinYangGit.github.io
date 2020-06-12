@@ -10,6 +10,7 @@ tags: OC底层原理
 
 <!-- more -->
 
+# 图解
 ![isa和superclass](isa和superclass/isa和superclass01.png)
 * instance 的 isa 指向 class
 * class 的 isa 指向 meta-class
@@ -94,11 +95,11 @@ objc_msgSend(person, sel_registerName("personInstanceMethod"));
 objc_msgSend(objc_getClass("Person"), sel_registerName("personClassMethod"));
 ```
 
-[person personInstanceMethod] 的具体实现是 objc_msgSend(person, sel_registerName("personInstanceMethod"))。  
-即在实例对象 person 调用 -(void)personInstanceMethod 对象方法的时候，向实例对象 person 发送一条 "personInstanceMethod" 消息。  
+`[person personInstanceMethod]` 的具体实现是 `objc_msgSend(person, sel_registerName("personInstanceMethod"))`。  
+即在实例对象 person 调用 `-(void)personInstanceMethod` 对象方法的时候，向实例对象 person 发送一条 "personInstanceMethod" 消息。  
 
-[Person personClassMethod] 的具体实现是 objc_msgSend(objc_getClass("Person"), sel_registerName("personClassMethod"))。  
-即在类对象 Person 调用 +(void)personClassMethod 类方法的时候，向类对象 Person 发送一条 "personClassMethod" 消息。  
+`[Person personClassMethod]` 的具体实现是 `objc_msgSend(objc_getClass("Person"), sel_registerName("personClassMethod"))`。  
+即在类对象 Person 调用 `+(void)personClassMethod` 类方法的时候，向类对象 Person 发送一条 "personClassMethod" 消息。  
 
 ### 方法调用与对象的关系
 ```
@@ -110,7 +111,6 @@ objc_msgSend(objc_getClass("Person"), sel_registerName("personClassMethod"));
 
 ### 小结
 * instance 对象的 isa 指针指向 class 对象。当调用对象方法时，通过 instance 对象的 isa 指针找到 class 对象，最后找到对象方法的实现进行调用。
-
 * class 对象的 isa 指针指向 meta-class 对象。当调用类方法时，通过 class 对象的 isa 指针找到 meta-class对象，最后找到类方法的实现进行调用。
 
 ## ISA_MASK
@@ -143,7 +143,7 @@ int main(int argc, const char * argv[]) {
 
 上面👆的打印结果可以看到，Person 的类对象地址是 0x00000001000014f0，而 Person 的实例对象的 isa 指针的地址是 0x001d8001000014f1。
 
-在 64bit 之前 isa 指针的地址等于被指向对象的地址。从 64bit 开始，isa 需要进行一次位运算，才能计算出真实地址：
+不相等原因是在 64bit 之前 isa 指针的地址等于被指向对象的地址，从 64bit 开始 isa 需要进行一次位运算，才能计算出真实地址：
 ![isa和superclass](isa和superclass/isa和superclass09.png)
 
 ISA_MASK 在源码 [objc4-781](https://opensource.apple.com/tarballs/objc4/) 中的定义：
@@ -221,22 +221,25 @@ struct objc_class {
 } OBJC2_UNAVAILABLE;
 ```
 
-👆objc_class 的 isa 是不支持外部访问的，所以 personClass->isa 获取不到 isa 指针地址，所以要自定义一个结构体：
+👆 objc_class 的 isa 是不支持外部访问的，所以 personClass->isa 获取不到 isa 指针地址，所以要自定义一个 test_objc_class 结构体，再将 personClass 的类型强转为 test_objc_class 类型：
 ```
 struct test_objc_class {
     Class isa;
     Class superclass;
 };
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        Class personClass = [Person class];
+
+        struct test_objc_class *personClass2 = (__bridge struct test_objc_class *)(personClass); 
+    }
+    return 0;
+}
+
 ```
 
-将 personClass 的类型强转为 test_objc_class 类型：
-```
-Class personClass = [Person class];
-
-struct test_objc_class *personClass2 = (__bridge struct test_objc_class *)(personClass);
-```
-
-因为 personClass 是 OC 对象，所以需要桥接 (__bridge struct test_objc_class *)。  
+因为 personClass 是 OC 对象，将 OC 代码专为 c++ 代码需要用到桥接 (__bridge struct test_objc_class *)。  
 
 打印 personClass2->isa、personMetaClass 和 personClass2->isa & ISA_MASK：
 ```
@@ -252,7 +255,7 @@ struct test_objc_class *personClass2 = (__bridge struct test_objc_class *)(perso
 
 # superclass
 
-## 定义 Studen 继承自 Person
+定义 Student 继承自 Person：
 ```
 @interface Student : Person <NSCoding>
 {
@@ -307,14 +310,14 @@ int main(int argc, const char * argv[]) {
 
 ## class 对象的 superclass 指针
 
-### Student 类对象、Person 类对象 和 NSObject 类对象之间的 superclass 关系
+Student 类对象、Person 类对象 和 NSObject 类对象之间的 superclass 关系：
 ![isa和superclass](isa和superclass/isa和superclass03.png)
 
 获取 test_objc_class 类型的 Person 类对象和 Student 类对象：
 ```
-struct mj_objc_class *personClass = (__bridge struct test_objc_class *)([Person class]);
+struct test_objc_class *personClass = (__bridge struct test_objc_class *)([Person class]);
 
-struct mj_objc_class *studentClass = (__bridge struct test_objc_class *)([Student class]);
+struct test_objc_class *studentClass = (__bridge struct test_objc_class *)([Student class]);
 ```
 
 打印 personClass、studentClass 和 studentClass->superclass：
@@ -334,24 +337,23 @@ struct mj_objc_class *studentClass = (__bridge struct test_objc_class *)([Studen
 [student personInstanceMethod];
 ```
 
-对象方法 -(void)personInstanceMethod 方法保存在 Person 的类对象里，[student personInstanceMethod] 首先通过 student 的 isa 指针找到 Student 的类对象，再通过 Student 类对象里的 superclass 找到 Person 的类对象，最后在 Person 类对象里找到了对象方法 -(void)personInstanceMethod。
+对象方法 `-(void)personInstanceMethod` 保存在 Person 的类对象里，`[student personInstanceMethod]` 首先通过 student 的 isa 指针找到 Student 的类对象，再通过 Student 类对象里的 superclass 找到 Person 的类对象，最后在 Person 类对象里找到了对象方法 `-(void)personInstanceMethod`。
 
 ### Student 的实例对象调用父类 NSObject 里的对象方法：
 ```
 [student init];
 ```
 
-对象方法 -(void)init 方法保存在 NSObject 的类对象里，[student init] 首先通过 student 的 isa 指针找到 Student 的类对象，再通过 Student 类对象里的 superclass 找到 Person 的类对象，再通过 Person 类对象里的 superclass 找到 NSObject 的类对象，最后在 NSObject 类对象里找到了对象方法 -(void)init。
+对象方法 `-(void)init` 方法保存在 NSObject 的类对象里，`[student init]` 首先通过 student 的 isa 指针找到 Student 的类对象，再通过 Student 类对象里的 superclass 找到 Person 的类对象，再通过 Person 类对象里的 superclass 找到 NSObject 的类对象，最后在 NSObject 类对象里找到了对象方法 `-(void)init`。
 
 ### 小结
-* 具有继承关系的不同的类之间，是通过 superlass 指针连接的。有了 superlass 指针的连接，子类就实现了调用父类方法的逻辑。
-
-* 当 Student 的 instance 对象要调用 Person 的对象方法时，会先通过 isa 找到 Student 的 class，然后通过 superclass 找到 Person 的 class，最后找到对象方法的实现进行调用。
+* 具有继承关系的不同的类之间，是通过 superlass 指针连接的。有了 superlass 指针的连接，就实现了子类调用父类方法的逻辑。
+* 当 Student 的 instance 对象在调用 Person 的对象方法时，会先通过 isa 找到 Student 的 class，然后通过 superclass 找到 Person 的 class，最后找到对象方法的实现进行调用。
 
 
 ## meta-class 对象的 superclass 指针
 
-### Student 元类对象、Person 元类对象 和 NSObject 元类对象之间的 superclass 关系：
+Student 元类对象、Person 元类对象 和 NSObject 元类对象之间的 superclass 关系：
 ![isa和superclass](isa和superclass/isa和superclass04.png)
 
 ### Student 类对象调用 Student 元类对象里的类方法：
@@ -359,35 +361,34 @@ struct mj_objc_class *studentClass = (__bridge struct test_objc_class *)([Studen
 [Student studentClassMethod];
 ```
 
-首先通过 Student 类对象里的 isa 指针找到 Student 元类对象，最终在 Student 元类对象里找到类方法 +(void)studentClassMethod。
+首先通过 Student 类对象里的 isa 指针找到 Student 元类对象，最终在 Student 元类对象里找到类方法 `+(void)studentClassMethod`。
 
 ### Student 类对象调用父类 Person 元类对象里的类方法：
 ```
 [Student personClassMethod];
 ```
 
-首先通过 Student 类对象里的 isa 指针找到 Student 元类对象，再通过 Student 元类对象里的 superclass 找到 Person 元类对象，最终在 Person 元类对象里找到类方法 +(void)personClassMethod。
+首先通过 Student 类对象里的 isa 指针找到 Student 元类对象，再通过 Student 元类对象里的 superclass 找到 Person 元类对象，最终在 Person 元类对象里找到类方法 `+(void)personClassMethod`。
 
 ### Student 类对象调用父类 NSObject 元类对象里的类方法：
 ```
 [Student load];
 ```
 
-首先通过 Student 类对象里的 isa 指针找到 Student 元类对象，再通过 Student 元类对象里的 superclass 找到 Person 元类对象，再通过 Person 元类对象里的 superclass 找到 NSObject 元类对象，最终在 NSObject 元类对象里找到类方法 +(void)load。
+首先通过 Student 类对象里的 isa 指针找到 Student 元类对象，再通过 Student 元类对象里的 superclass 找到 Person 元类对象，再通过 Person 元类对象里的 superclass 找到 NSObject 元类对象，最终在 NSObject 元类对象里找到类方法 `+(void)load`。
 
 
 # instance 对象调用对象方法流程
-
-## 流程图
-![isa和superclass](isa和superclass/isa和superclass05.png)
-
-## unrecoginzed selector sent to instance
 
 ```
 [student unrecoginzedSelector];
 ```
 
-向实例对象 student 发送一条 "unrecoginzedSelector" 消息。student 通过 isa 指针找到 Student 类对象，在类对象里查找对象方法 -(void)unrecoginzedSelector 。如果没有，Student 类对象会通过 superclass 指针找到 Student 父类的类对象，并在父类的类对象里查找对象方法 -(void)unrecoginzedSelector。如果还是没有找到，再通过 superclass 查找父类的类对象。以此往复，直找到基类 NSObject 的类对象。如果在 NSObject 的类对象里也没有查找到对象方法 -(void)unrecoginzedSelector，就会返回出现‘unrecoginzed selector sent to instance’错误。
+向实例对象 student 发送一条 "unrecoginzedSelector" 消息。student 通过 isa 指针找到 Student 类对象，在类对象里查找对象方法 `-(void)unrecoginzedSelector`。如果没有，Student 类对象会通过 superclass 指针找到 Student 父类的类对象，并在父类的类对象里查找对象方法 `-(void)unrecoginzedSelector`。如果还是没有找到，再通过 superclass 查找父类的类对象。以此往复，直找到基类 NSObject 的类对象。流程图：
+![isa和superclass](isa和superclass/isa和superclass05.png)
+
+## unrecoginzed selector sent to instance
+如果在 NSObject 的类对象里也没有查找到对象方法 `-(void)unrecoginzedSelector`，就会返回出现‘unrecoginzed selector sent to instance’错误。
 
 ## 子类重写父类的对象方法
 
@@ -428,15 +429,15 @@ int main(int argc, const char * argv[]) {
 
 # class 对象调用类方法流程
 
-## 流程图
-![isa和superclass](isa和superclass/isa和superclass06.png)
-
-## unrecoginzed selector sent to class
 ```
 [Student unrecoginzedSelector];
 ```
 
-向类对象 Student 发送一条 "unrecoginzedSelector" 消息。Student 通过 isa 指针找到 Student 元类对象，在元类对象里查找类方法 -(void)unrecoginzedSelector 。如果没有，Student 元类对象会通过 superclass 指针找到 Student 父类的元类对象，并在父类的元类对象里查找类方法 -(void)unrecoginzedSelector。如果还是没有找到，再通过 superclass 查找父类的元类对象。以此往复，直找到基类 NSObject 的元类对象。如果在 NSObject 的元类对象里也没有查找到类方法 -(void)unrecoginzedSelector，就会通过 superclass 指针找到 NSObject 的类对象，如果在 NSObject 的类对象里也没找到类方法 -(void)unrecoginzedSelector，就会返回出现‘unrecoginzed selector sent to class’错误。
+向类对象 Student 发送一条 "unrecoginzedSelector" 消息。Student 通过 isa 指针找到 Student 元类对象，在元类对象里查找类方法 `-(void)unrecoginzedSelector` 。如果没有，Student 元类对象会通过 superclass 指针找到 Student 父类的元类对象，并在父类的元类对象里查找类方法 `-(void)unrecoginzedSelector`。如果还是没有找到，再通过 superclass 查找父类的元类对象。以此往复，直找到基类 NSObject 的元类对象。如果在 NSObject 的元类对象里也没有查找到类方法 `-(void)unrecoginzedSelector`，就会通过 superclass 指针找到 NSObject 的类对象查找类方法 `-(void)unrecoginzedSelector`。流程图：
+![isa和superclass](isa和superclass/isa和superclass06.png)
+
+## unrecoginzed selector sent to class
+如果在 NSObject 的类对象里也没找到类方法 `-(void)unrecoginzedSelector`，就会返回出现‘unrecoginzed selector sent to class’错误。
 
 ## 子类重写父类的类方法
 
@@ -510,23 +511,15 @@ int main(int argc, const char * argv[]) {
 ```
 [Person class] - 0x1000011e0
 [NSObject class] - 0x7fffaa791140
-[NSObject test] - 0x1000011e0
-[NSObject test] - 0x7fffaa791140
+[NSObject test] - 0x1000011e0 //[Person test] 打印结果
+[NSObject test] - 0x7fffaa791140 //[NSObject test] 打印结果
 ```
-
 ## [Person test]
 
-### 流程图
+向类对象 Person 发送一条 "test" 消息。Person 通过 isa 指针找到 Person 元类对象，在元类对象里查找类方法 `+(void)test`。如果没有，Person 元类对象会通过 superclass 指针找到 NSObject 的元类对象，并在 NSObject 的元类对象里查找类方法 `+(void)test`。如果还是没有找到，再通过 superclass 指针找到 NSObject 的类对象，在类对象中找到对象方法 `-(void)test` 并返回。  
+
+NSObject+test 里打印的 self，是 objc_msgSend() 里的对象，即接收‘test’消息的对象。[Person test] 中，因为是向 Person 发送了一条”test“消息，所以打印的 self 是 Person 的类对象。流程图：
 ![isa和superclass](isa和superclass/isa和superclass07.png)
-
-```
-//打印结果：[NSObject test] - 0x1000011e0
-[Person test];
-```
-
-向类对象 Person 发送一条 "test" 消息。Person 通过 isa 指针找到 Person 元类对象，在元类对象里查找类方法 +(void)test 。如果没有，Person 元类对象会通过 superclass 指针找到 NSObject 的元类对象，并在 NSObject 的元类对象里查找类方法 +(void)test。如果还是没有找到，再通过 superclass 指针找到 NSObject 的类对象，在类对象中找到对象方法 -(void)test 并返回。  
-
-NSObject+test 里打印的 self，是 objc_msgSend() 里的对象，即接收‘test’消息的对象。[Person test] 中，因为是想 Person 发送了一条‘test’消息，所以打印的 self 是 Person 的类对象。
 
 ### + (void)test 与 - (void)test 同时存在
 
@@ -547,19 +540,12 @@ NSObject+test 里打印的 self，是 objc_msgSend() 里的对象，即接收‘
 @end
 ```
 
-此时 [Person test] 调用的就是类方法 + (void)test 了。因为 + (void)test 存储在 NSObject 元类对象里，而 - (void)test 存储在 NSObject 类对象里。查找类方法 + (void)test 时，会优先找到 NSObject 源对象，在元类对象里找到类方法 + (void)test 后返回，不再到类对象里找了。
+此时 [Person test] 调用的就是类方法 `+(void)test` 了。因为 `+(void)test` 存储在 NSObject 元类对象里，而 `-(void)test` 存储在 NSObject 类对象里。查找类方法 `+(void)test` 时，会优先找到 NSObject 元类对象，在元类对象里找到类方法 `+(void)test` 后返回，不再到类对象里找了。
 
 ## [NSObject test]
 
-### 流程图
-![isa和superclass](isa和superclass/isa和superclass08.png)
-
-```
-//打印结果：[NSObject test] - 0x7fffaa791140
-[NSObject test];
-```
-
-向类对象 NSObject 发送一条 "test" 消息。NSObject 通过 isa 指针找到 NSObject 元类对象，在元类对象里查找类方法 +(void)test 。如果没有，NSObject 元类对象再通过 superclass 指针找到 NSObject 的类对象，在类对象中找到对象方法 -(void)test 并返回。  
+向类对象 NSObject 发送一条 "test" 消息。NSObject 通过 isa 指针找到 NSObject 元类对象，在元类对象里查找类方法 +(void)test 。如果没有，NSObject 元类对象再通过 superclass 指针找到 NSObject 的类对象，在类对象中找到对象方法 -(void)test 并返回。流程图:
+![isa和superclass](isa和superclass/isa和superclass08.png)  
 
 ## class 对象调用对象方法的可能性
 
@@ -716,7 +702,7 @@ class_ro_t：
 struct class_ro_t {
     uint32_t flags;
     uint32_t instanceStart;
-    uint32_t instanceSize; // instance 对象占用的内存空间
+    uint32_t instanceSize; //instance 对象占用的内存空间
 #ifdef __LP64__
     uint32_t reserved;
 #endif
@@ -782,14 +768,14 @@ objc_class、class_rw_t 和 class_ro_t 之间的关系可以简化为：
 
 ## 查看 objc_class 对象的真实结构
 
-导入 MJClassInfo.h，定义 MJPerson、MJStudent：
+导入 ClassInfo.h，定义 MJPerson、MJStudent：
 ```
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
-#import "MJClassInfo.h"
+#import "ClassInfo.h"
 
-// MJPerson
-@interface MJPerson : NSObject <NSCopying>
+//Person
+@interface Person : NSObject <NSCopying>
 {
 @public
     int _age;
@@ -799,7 +785,7 @@ objc_class、class_rw_t 和 class_ro_t 之间的关系可以简化为：
 + (void)personClassMethod;
 @end
 
-@implementation MJPerson
+@implementation Person
 
 - (void)test
 {
@@ -820,8 +806,8 @@ objc_class、class_rw_t 和 class_ro_t 之间的关系可以简化为：
 }
 @end
 
-// MJStudent
-@interface MJStudent : MJPerson <NSCoding>
+//Student
+@interface Student : MJPerson <NSCoding>
 {
 @public
     int _weight;
@@ -831,7 +817,7 @@ objc_class、class_rw_t 和 class_ro_t 之间的关系可以简化为：
 + (void)studentClassMethod;
 @end
 
-@implementation MJStudent
+@implementation Student
 - (void)test
 {
     
@@ -857,11 +843,11 @@ objc_class、class_rw_t 和 class_ro_t 之间的关系可以简化为：
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        MJStudent *stu = [[MJStudent alloc] init];
+        Student *stu = [[Student alloc] init];
         stu->_weight = 10;
         
-        mj_objc_class *studentClass = (__bridge mj_objc_class *)([MJStudent class]);
-        mj_objc_class *personClass = (__bridge mj_objc_class *)([MJPerson class]);
+        test_objc_class *studentClass = (__bridge test_objc_class *)([Student class]);
+        test_objc_class *personClass = (__bridge test_objc_class *)([Person class]);
         
         class_rw_t *studentClassData = studentClass->data();
         class_rw_t *personClassData = personClass->data();
@@ -889,7 +875,7 @@ studentMetaClassData:
 
 元类对象中存储的协议信息与类对象中存储的协议信息地址相同，所以是同一份。如何确定协议信息是存储在类对象中还是元类对象中呢？还是两个都存储了？ 
 
-## 小结
+# 总结
 
 * 对象的 isa 指针指向哪里？  
 instance 对象的 isa 指向 class 对象  
@@ -900,3 +886,144 @@ meta-class 对象的 isa 指向基类的 meta-class 对象
 对象方法、属性、成员变量、协议信息，存放在 class 对象中  
 类方法，存放在 meta-class 对象中  
 成员变量的具体值，存放在 instance 对象
+
+
+ps:
+ClassInfo.h
+```
+#import <Foundation/Foundation.h>
+
+#ifndef ClassInfo_h
+#define ClassInfo_h
+
+# if __arm64__
+#   define ISA_MASK        0x0000000ffffffff8ULL
+# elif __x86_64__
+#   define ISA_MASK        0x00007ffffffffff8ULL
+# endif
+
+#if __LP64__
+typedef uint32_t mask_t;
+#else
+typedef uint16_t mask_t;
+#endif
+typedef uintptr_t cache_key_t;
+
+struct bucket_t {
+    cache_key_t _key;
+    IMP _imp;
+};
+
+struct cache_t {
+    bucket_t *_buckets;
+    mask_t _mask;
+    mask_t _occupied;
+};
+
+struct entsize_list_tt {
+    uint32_t entsizeAndFlags;
+    uint32_t count;
+};
+
+struct method_t {
+    SEL name;
+    const char *types;
+    IMP imp;
+};
+
+struct method_list_t : entsize_list_tt {
+    method_t first;
+};
+
+struct ivar_t {
+    int32_t *offset;
+    const char *name;
+    const char *type;
+    uint32_t alignment_raw;
+    uint32_t size;
+};
+
+struct ivar_list_t : entsize_list_tt {
+    ivar_t first;
+};
+
+struct property_t {
+    const char *name;
+    const char *attributes;
+};
+
+struct property_list_t : entsize_list_tt {
+    property_t first;
+};
+
+struct chained_property_list {
+    chained_property_list *next;
+    uint32_t count;
+    property_t list[0];
+};
+
+typedef uintptr_t protocol_ref_t;
+struct protocol_list_t {
+    uintptr_t count;
+    protocol_ref_t list[0];
+};
+
+struct class_ro_t {
+    uint32_t flags;
+    uint32_t instanceStart;
+    uint32_t instanceSize;  // instance对象占用的内存空间
+#ifdef __LP64__
+    uint32_t reserved;
+#endif
+    const uint8_t * ivarLayout;
+    const char * name;  // 类名
+    method_list_t * baseMethodList;
+    protocol_list_t * baseProtocols;
+    const ivar_list_t * ivars;  // 成员变量列表
+    const uint8_t * weakIvarLayout;
+    property_list_t *baseProperties;
+};
+
+struct class_rw_t {
+    uint32_t flags;
+    uint32_t version;
+    const class_ro_t *ro;
+    method_list_t * methods;    // 方法列表
+    property_list_t *properties;    // 属性列表
+    const protocol_list_t * protocols;  // 协议列表
+    Class firstSubclass;
+    Class nextSiblingClass;
+    char *demangledName;
+};
+
+#define FAST_DATA_MASK          0x00007ffffffffff8UL
+struct class_data_bits_t {
+    uintptr_t bits;
+public:
+    class_rw_t* data() {
+        return (class_rw_t *)(bits & FAST_DATA_MASK);
+    }
+};
+
+/* OC对象 */
+struct test_objc_object {
+    void *isa;
+};
+
+/* 类对象 */
+struct test_objc_class : test_objc_object {
+    Class superclass;
+    cache_t cache;
+    class_data_bits_t bits;
+public:
+    class_rw_t* data() {
+        return bits.data();
+    }
+    
+    test_objc_class* metaClass() {
+        return (test_objc_class *)((long long)isa & ISA_MASK);
+    }
+};
+
+#endif /* ClassInfo_h */
+```

@@ -4,11 +4,12 @@ date: 2020-05-22 15:20:48
 tags: OC底层原理
 ---
 
-* +initialize 方法会在类第一次接收到消息时调用
-* 思考：load、initialize方法的区别什么？它们在category中的调用的顺序？以及出现继承时他们之间的调用过程？
-
+思考：
+* load、initialize方法的区别什么？它们在category中的调用的顺序？以及出现继承时他们之间的调用过程？
 
 <!-- more -->
+
++initialize 方法会在类第一次接收到消息时调用
 
 # 定义 Persion、Student 及其分类
 ```
@@ -395,7 +396,7 @@ Persion (Test1) +initialize
 ## 父类的 +initialize 可能会被调用多次
 如果子类没有实现 +initialize 会调用父类的 +initialize（所以父类的 +initialize 可能会被调用多次）。这一点通过 callInitialize 方法可以看出，向传入的类 cls 发送一条 @selector(initialize) 消息。类 cls 会通过 isa 找到 cls 元类对象查找 +initialize 方法，如果没有再通过 superclass 指针找到父类的元类方法查找 +initialize 方法，找到后并调用。
 
-# 小结
+## 总结
 * load、initialize 方法的区别什么？  
   1、调用方式  
   1> +load 是根据函数地址直接调用（ (*load_method)(cls, @selector(load))）；  

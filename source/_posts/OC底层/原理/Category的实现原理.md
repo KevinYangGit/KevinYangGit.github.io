@@ -4,16 +4,18 @@ date: 2020-05-18 15:09:22
 tags: OC底层原理
 ---
 
+思考：
+* Category 和 Class Extension 的区别是什么？
+* Category 的实现原理  
+
+<!-- more -->
+
+# Category 的底层结构
+
 * Category 在编译完成后就变成了一个 _category_t 结构体，里面存储这分类的所有信息。
 * 在程序运行时通过 Runtime 加载所有 _category_t 的数据，把所有 _category_t 的数据（方法、属性、协议）合并到一个大数组中。
 * 合并时先扩充内存，然后将类对象里面的原有数据向后移动，再将分类数据（方法、属性、协议）插入到前排。
 * 靠后被编译到的 _category_t 数据（方法、属性、协议），因为在这个大数组的前排，所以会被优先调用到。  
-* 思考：Category 和 Class Extension 的区别是什么？
-
-<!-- more -->
-
-
-# Category 的底层结构
 
 ## 定义 Persion+Test
 ```
@@ -117,7 +119,7 @@ attachCategories
 attachLists  
 realloc、memmove、 memcpy
 
-打开 runtime 源码 [objc4-781](https://opensource.apple.com/tarballs/objc4/)。找到运行时入口 objc-os.mm 文件，打开文件找到运行时的初始化方法 void _objc_init(void) 方法：
+打开 runtime 源码 [objc4-781](https://opensource.apple.com/tarballs/objc4/)。找到运行时入口 objc-os.mm 文件，打开文件找到运行时的初始化方法 `void _objc_init(void)` 方法：
 
 ### _objc_init
 ```
@@ -550,6 +552,7 @@ struct Persion_IMPL {
 
 * objc4 的代码虽然改了，但是实现原理还是没变。
 
+# 总结
 * Category 的实现原理  
 Category 编译之后的底层结构是 struct category_t，里面存储着分类的对象方法、类方法、属性、协议信息，在程序运行的时候，runtime 会将 Category 的数据，合并到类信息中（类对象、元类对象中）。
 

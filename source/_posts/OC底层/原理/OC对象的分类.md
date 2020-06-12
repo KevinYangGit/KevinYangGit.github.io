@@ -62,6 +62,12 @@ Class objectClass5 = [NSObject class];
 
 objectClass1 ~ objectClass5 都是 NSObject 的 class 对象，它们是同一个对象。
 
+👉 注意：
+下面这行代码获取的 objectClass 是 class 对象，并不是 meta-class 对象，-(void)Class 和 +(void)Class 返回的是类对象。
+```
+Class objectClass = [[NSObject class] class];
+```
+
 ## class 对象在内存中存储的信息主要包括
 * isa指针
 * superclass指针
@@ -73,30 +79,22 @@ objectClass1 ~ objectClass5 都是 NSObject 的 class 对象，它们是同一�
 
 不同的 instance 对象却拥有相同的属性、对象方法、协议和成员变量等等，这些信息都存放在 class 对象的内存中，保证了同样的信息只存储一份。
 
-## 👉 注意
-以下代码获取的 objectClass 是 class 对象，并不是 meta-class 对象
-```
-Class objectClass = [[NSObject class] class];
-```
-
 # meta-class 对象
 
-每个类在内存中有且只有一个meta-class对象。  
-
-将类对象当做参数传入，获得元类对象：
+每个类在内存中有且只有一个 meta-class 对象。通过 object_getClass 方法，将类对象当做参数传入，获得元类对象：
 ```
 Class objectMetaClass = object_getClass(objectClass5);
 ```
 
 ## meta-class 对象在内存中存储的信息主要包括
-* isa指针
-* superclass指针
+* isa 指针
+* superclass 指针
 * 类的类方法信息（class method）  
 ......
 
 ![OC对象的分类](OC对象的分类/OC对象的分类03.png)
 
-## 查看 objecClass 是否为 meta-class
+通过 class_isMetaClass 方法查看 objecClass 是否为 meta-class：
 ```
 #import <objc/runtime.h>
 
@@ -110,10 +108,15 @@ BOOL result = class_isMetaClass(objecClass)
 ```
 Class object_getClass(id obj)
 {
-    if (obj) return obj->getIsa();
+    if (obj) return obj->getIsa(); //obj 的 isa 指针
     else return Nil;
 }
 ```
+
+object_getClass 的参数是 instance 对象/ class 对象/ meta-class 对象。object_getClass 返回的是 obj 的 isa 指针。  
+如果 obj 是 instance 对象则返回 class 对象。  
+如果 obj 是 class 对象则返回 meta-class 对象。  
+如果 obj 是 meta-class 对象则返回 NSObject（基类） 的 meta-class 对象。
 
 ## objc_getClass
 打开 Runtime 源码，找到 runtime.mm，搜索 objc_getClass：
@@ -248,11 +251,5 @@ void *NXMapGet(NXMapTable *table, const void *key) {
 }
 ```
 
-NXMapGet 根据传进来的类名返回了一个类对象。
-
-# 总结
-* object_getClass 的参数是 instance 对象/ class 对象/ meta-class 对象。  
-* object_getClass 返回的是 obj 的 isa 指针。
-* 如果 obj 是 instance 对象则返回 class 对象。如果 obj 是 class 对象则返回 meta-class 对象。如果 obj 是 meta-class 对象则返回 NSObject（基类） 的 meta-class 对象。
-* Class objc_getClass(const char *aClassName) ：字符串类名 -> 对应的类对象
-* -(void)Class 和 +(void)Class 返回的是类对象。
+NXMapGet 根据传进来的类名返回了一个类对象。  
+Class objc_getClass(const char *aClassName) ：字符串类名 -> 对应的类对象
