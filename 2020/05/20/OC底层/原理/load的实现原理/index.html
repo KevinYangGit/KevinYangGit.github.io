@@ -79,7 +79,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/05/20/OC底层/原理/load的实现原理/load的实现原理01.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/20/OC底层/原理/load的实现原理/load的实现原理02.png">
-<meta property="og:updated_time" content="2020-06-12T09:50:13.495Z">
+<meta property="og:updated_time" content="2020-06-12T09:54:47.730Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="+load 的实现原理">
 <meta name="twitter:description" content="思考：  Category 中有 +load 方法吗？+load 方法是什么时候调用的？+load 方法能继承吗？">
@@ -392,7 +392,7 @@
 <h2 id="Student-load-的本质"><a href="#Student-load-的本质" class="headerlink" title="[Student load] 的本质"></a>[Student load] 的本质</h2><p><code>[Student load]</code> 这句代码本质就是 <code>objc_msgSend(objc_getClass(&quot;Student&quot;)</code>, <code>sel_registerName(&quot;load&quot;))</code>，即向 Student 类对象发送一条 “load” 消息，Student 类对象再通过 isa 指针找到 Student 元类对象去查找 +load 方法。因为 Student 里没有实现 +load 方法，所以 Student 元类对象会通过 superclass 指针找到父类 Persion 的元类对象  。Persion 的元类对象在查找 +load 方法时，会优先查找到最后被编译的分类 Persion (Test1)，找到 +load 方法并调用。所以 +load 方法是可以被继承的。</p>
 <p>+load 方法是可以被继承的。在启动时由 runtime 调用的 +load 方法是优先调用父类的 +load 方法。而通过 <code>[Student load]</code> 这种方式主动调用 +load 方法，是优先调用子类的 +load 方法。</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
-<li>Category 中有 +load 方法吗？+load 方法是什么时候调用的？+load 方法能继承吗？<br>有 +load 方法。+load 方法在 runtime 加载类、分类的时候调用。+load 方法可以继承，但是一般情况下不会主动去调用 +load 方法，都是让系统启动时自动调用。</li>
+<li>Category 中有 +load 方法吗？+load 方法是什么时候调用的？+load 方法能继承吗？<br>Category 有 +load 方法。<br>+load 方法在 runtime 加载类、分类的时候调用。<br>+load 方法可以继承，但是一般情况下不会主动去调用 +load 方法，都是让系统启动时自动调用。</li>
 </ul>
 
       
