@@ -824,12 +824,10 @@
 
       
         
-          <ul>
-<li>Category 在编译完成后就变成了一个 _category_t 结构体，里面存储这分类的所有信息。</li>
-<li>在程序运行时通过 Runtime 加载所有 _category_t 的数据，把所有 _category_t 的数据（方法、属性、协议）合并到一个大数组中。</li>
-<li>合并时先扩充内存，然后将类对象里面的原有数据向后移动，再将分类数据（方法、属性、协议）插入到前排。</li>
-<li>靠后被编译到的 _category_t 数据（方法、属性、协议），因为在这个大数组的前排，所以会被优先调用到。  </li>
-<li>思考：Category 和 Class Extension 的区别是什么？</li>
+          <p>思考：</p>
+<ul>
+<li>Category 和 Class Extension 的区别是什么？</li>
+<li>Category 的实现原理  </li>
 </ul>
           <!--noindex-->
           <div class="post-button text-center">
