@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="OC底层原理," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="思考：  讲一下 OC 的消息机制 消息转发机制流程 什么是 Runtime？平时项目中有用过么？ Runtime 的具体应用 打印结果分别是什么？12345678910111213141516171819202122@interface Person : NSObject@end@implementation Person@end@interface Student : Person@end@i">
+<meta name="keywords" content="OC底层原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Runtime">
+<meta property="og:url" content="http://yoursite.com/2020/06/12/OC底层/原理/Runtime/index.html">
+<meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="思考：  讲一下 OC 的消息机制 消息转发机制流程 什么是 Runtime？平时项目中有用过么？ Runtime 的具体应用 打印结果分别是什么？12345678910111213141516171819202122@interface Person : NSObject@end@implementation Person@end@interface Student : Person@end@i">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-06-16T10:30:53.572Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Runtime">
+<meta name="twitter:description" content="思考：  讲一下 OC 的消息机制 消息转发机制流程 什么是 Runtime？平时项目中有用过么？ Runtime 的具体应用 打印结果分别是什么？12345678910111213141516171819202122@interface Person : NSObject@end@implementation Person@end@interface Student : Person@end@i">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/06/12/OC底层/原理/Runtime/"/>
+
+
+
+
+
+  <title>Runtime | Kevin's  blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's  blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/OC底层/原理/Runtime/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Runtime</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-12T18:27:54+08:00">
+                2020-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>思考：</p>
+<ul>
+<li>讲一下 OC 的消息机制</li>
+<li>消息转发机制流程</li>
+<li>什么是 Runtime？平时项目中有用过么？</li>
+<li>Runtime 的具体应用</li>
+<li>打印结果分别是什么？<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Student</span> : <span class="title">Person</span></span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Student</span></span></div><div class="line">- (<span class="keyword">instancetype</span>)init</div><div class="line">&#123;</div><div class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"[self class] = %@"</span>, [<span class="keyword">self</span> <span class="keyword">class</span>]);</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"[super class] = %@"</span>, [<span class="keyword">super</span> <span class="keyword">class</span>]);</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"[self superclass] = %@"</span>, [<span class="keyword">self</span> superclass]);</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"[super superclass] = %@"</span>, [<span class="keyword">super</span> superclass]);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        <span class="built_in">BOOL</span> res1 = [[<span class="built_in">NSObject</span> <span class="keyword">class</span>] isKindOfClass:[<span class="built_in">NSObject</span> <span class="keyword">class</span>]];</div><div class="line">        <span class="built_in">BOOL</span> res2 = [[<span class="built_in">NSObject</span> <span class="keyword">class</span>] isMemberOfClass:[<span class="built_in">NSObject</span> <span class="keyword">class</span>]];</div><div class="line">        <span class="built_in">BOOL</span> res3 = [[Person <span class="keyword">class</span>] isKindOfClass:[Person <span class="keyword">class</span>]];</div><div class="line">        <span class="built_in">BOOL</span> res4 = [[Person <span class="keyword">class</span>] isMemberOfClass:[Person <span class="keyword">class</span>]];</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"%d %d %d %d"</span>, res1, res2, res3, res4);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>以下代码能不能执行成功？如果可以，打印结果是什么？<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *name;</div><div class="line">- (<span class="keyword">void</span>)print;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></div><div class="line">- (<span class="keyword">void</span>)print &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"my name's %@"</span>, <span class="keyword">self</span>.name);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></div><div class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</div><div class="line">    [<span class="keyword">super</span> viewDidLoad];</div><div class="line">    <span class="keyword">id</span> cls = [Person <span class="keyword">class</span>];</div><div class="line">    <span class="keyword">void</span> *obj = &amp;cls;</div><div class="line">    [(__bridge <span class="keyword">id</span>)obj print];</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<a id="more"></a>
+<p>Objective-C 是一门动态性比较强的编程语言，跟 C、C++ 等语言有着很大的不同，Objective-C 的动态性是由 Runtime API 来支撑的，Runtime API 提供的接口基本都是 C 语言的，源码由 C\C++\ 汇编语言编写。</p>
+<h1 id="isa-详解"><a href="#isa-详解" class="headerlink" title="isa 详解"></a>isa 详解</h1><p>学习 Runtime，首先要了解它底层的一些常用数据结构，比如 isa 指针。在 arm64 架构之前，isa 就是一个普通的指针，存储着 Class、Meta-Class 对象的内存地址。从 arm64 架构开始，对 isa 进行了优化，变成了一个共用体（union）结构，还使用位域来存储更多的信息。</p>
+<h2 id="位运算"><a href="#位运算" class="headerlink" title="位运算"></a>位运算</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">assign</span>, <span class="keyword">getter</span>=isTall) <span class="built_in">BOOL</span> tall;</div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">assign</span>, <span class="keyword">getter</span>=isRich) <span class="built_in">BOOL</span> rich;</div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">assign</span>, <span class="keyword">getter</span>=isHandsome) <span class="built_in">BOOL</span> handsome;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        Person *person = [[Person alloc] init];</div><div class="line">        person.tall = <span class="literal">YES</span>;</div><div class="line">        person.rich = <span class="literal">YES</span>;</div><div class="line">        person.handsome = <span class="literal">YES</span>;</div><div class="line">        </div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"tall：%d, rich：%d, handsome：%d"</span>, person.isTall, person.isRich, person.isHandsome);</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"person的大小：%zd"</span>, class_getInstanceSize([person <span class="keyword">class</span>]));</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">tall：<span class="number">1</span>, rich：<span class="number">1</span>, handsome：<span class="number">1</span></div><div class="line">person的大小：<span class="number">16</span></div></pre></td></tr></table></figure></p>
+<p>tall（1个字节）+ rich（1个字节）+ handsome（1个字节）+ isa（8个字节）= 11个字节。根据内存对齐原则，person 的内存大小是16个字节。</p>
+<p>因为 tall、rich 和 handsome 都是 BOOL 类型，它们的值只有0和1，所以可以用3个二进制位来存储他们的值。</p>
+<h3 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h3><p>定义一个 char 类型的变量 _tallRichHandsome 用来存储3个 BOOL 类型变量的值：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span>()</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">char</span> _tallRichHandsome; <span class="comment">//ob 0000 0000</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<p>_tallRichHandsome 占1个字节（8位：0b 0000 0000），让它最右边的3位（0b00000111）分别存储 tall、rich 和 handsome：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="number">0</span>b <span class="number">0000</span> <span class="number">0111</span> <span class="comment">//_tallRichHandsome（tall：YES, rich：YES, handsome：YES）</span></div><div class="line"></div><div class="line">ob <span class="number">0000</span> <span class="number">0001</span> <span class="comment">//tall</span></div><div class="line">ob <span class="number">0000</span> <span class="number">0010</span> <span class="comment">//rich</span></div><div class="line">ob <span class="number">0000</span> <span class="number">0100</span> <span class="comment">//handsome</span></div></pre></td></tr></table></figure></p>
+<h3 id="取值"><a href="#取值" class="headerlink" title="取值"></a>取值</h3><ul>
+<li>与运算（&amp;）<br>运算规则：0&amp;0=0，0&amp;1=0，1&amp;0=0，1&amp;1=1。即：两位同时为1时，结果为1，否则为0。  </li>
+</ul>
+<p>因为与运算（&amp;）可以获取到特定位的值，所以可以通过与运算（&amp;）分别获取三个变量的值：<br>初始化 _tallRichHandsome<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">_tallRichHandsome = <span class="number">0b00000101</span>; //（tall：YES, rich：NO, handsome：YES）</div></pre></td></tr></table></figure></p>
+<p>获取 tall<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">  <span class="number">0b00000101</span></div><div class="line">&amp; <span class="number">0b00000001</span></div><div class="line">-------------</div><div class="line">  <span class="number">0b00000001</span></div></pre></td></tr></table></figure></p>
+<p>获取 rich<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">  <span class="number">0b00000101</span></div><div class="line">&amp; <span class="number">0b00000010</span></div><div class="line">-------------</div><div class="line">  <span class="number">0b00000000</span></div></pre></td></tr></table></figure></p>
+<p>获取 handsome<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">  <span class="number">0b00000101</span></div><div class="line">&amp; <span class="number">0b00000100</span></div><div class="line">-------------</div><div class="line">  <span class="number">0b00000100</span></div></pre></td></tr></table></figure></p>
+<p>代码实现：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></div><div class="line">- (<span class="built_in">BOOL</span>)isTall;</div><div class="line">- (<span class="built_in">BOOL</span>)isRich;</div><div class="line">- (<span class="built_in">BOOL</span>)isHandsome;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span>()</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">char</span> _tallRichHandsome;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">instancetype</span>)init</div><div class="line">&#123;</div><div class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</div><div class="line">        _tallRichHandsome = <span class="number">0</span>b00000111;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">BOOL</span>)isTall &#123;</div><div class="line">    <span class="keyword">return</span> !!(_tallRichHandsome &amp; <span class="number">1</span>); <span class="comment">//ob 0000 0001（二进制） == 1（十进制）</span></div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">BOOL</span>)isRich &#123;</div><div class="line">    <span class="keyword">return</span> !!(_tallRichHandsome &amp; <span class="number">2</span>); <span class="comment">//ob 0000 0010（二进制） == 2（十进制）</span></div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">BOOL</span>)isHandsome &#123;</div><div class="line">    <span class="keyword">return</span> !!(_tallRichHandsome &amp; <span class="number">4</span>); <span class="comment">//ob 0000 0100（二进制） == 4（十进制）</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        Person *person = [[Person alloc] init];</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"tall：%d, rich：%d, handsome：%d"</span>, person.isTall, person.isRich, person.isHandsome);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tall：<span class="number">1</span>, rich：<span class="number">1</span>, handsome：<span class="number">1</span></div></pre></td></tr></table></figure></p>
+<p>因为返回的是 BOOL 类型，与运算取出的是有值（ob00000001、ob00000010、ob00000100）和0（ob00000000），所以可以在与运算的结果前加“!!”取反两次：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">!(ob <span class="number">0000</span> <span class="number">0000</span>)  YES</div><div class="line">!!(ob <span class="number">0000</span> <span class="number">0000</span>)  NO</div><div class="line"></div><div class="line">!(ob <span class="number">0000</span> <span class="number">0001</span>)  NO</div><div class="line">!!(ob <span class="number">0000</span> <span class="number">0001</span>)  YES</div></pre></td></tr></table></figure></p>
+<h3 id="掩码"><a href="#掩码" class="headerlink" title="掩码"></a>掩码</h3><p>上面的实现，在取 tall 时 &amp;1，取 rich 时 &amp;2，取 handsome 时 &amp;4，这样太抽象，可以使用掩码增加可读性：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> TallMask 1</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> RichMask 2</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> HandsomeMask 4</span></div></pre></td></tr></table></figure></p>
+<p>直接使用二进制定义掩码会更直观：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> TallMask ob00000001</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> RichMask ob00000010</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> HandsomeMask ob00000100</span></div></pre></td></tr></table></figure></p>
+<p>使用位移运算符，简化代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> TallMask (1&lt;&lt;0)     <span class="comment">//左移0位：ob00000001（二进制），1（十进制）</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> RichMask (1&lt;&lt;1)     <span class="comment">//左移1位：ob00000010（二进制），2（十进制）</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> HandsomeMask (1&lt;&lt;2) <span class="comment">//左移2位：ob00000100（二进制），4（十进制）</span></span></div></pre></td></tr></table></figure></p>
+<p>最终实现：<br><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="selector-id">#define</span> <span class="selector-tag">TallMask</span> (<span class="number">1</span>&lt;&lt;<span class="number">0</span>)</div><div class="line"><span class="selector-id">#define</span> <span class="selector-tag">RichMask</span> (<span class="number">1</span>&lt;&lt;<span class="number">1</span>)</div><div class="line"><span class="selector-id">#define</span> <span class="selector-tag">HandsomeMask</span> (<span class="number">1</span>&lt;&lt;<span class="number">2</span>)</div><div class="line"></div><div class="line">@<span class="selector-tag">implementation</span> <span class="selector-tag">Person</span></div><div class="line"><span class="selector-tag">-</span> (BOOL)<span class="selector-tag">isTall</span> &#123;</div><div class="line">    <span class="selector-tag">return</span> !!(_tallRichHandsome &amp; TallMask);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="selector-tag">-</span> (BOOL)<span class="selector-tag">isRich</span> &#123;</div><div class="line">    <span class="selector-tag">return</span> !!(_tallRichHandsome &amp; RichMask);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="selector-tag">-</span> (BOOL)<span class="selector-tag">isHandsome</span> &#123;</div><div class="line">    <span class="selector-tag">return</span> !!(_tallRichHandsome &amp; HandsomeMask);</div><div class="line">&#125;</div><div class="line">@<span class="selector-tag">end</span></div></pre></td></tr></table></figure></p>
+<h3 id="设置"><a href="#设置" class="headerlink" title="设置"></a>设置</h3><ul>
+<li>或运算（|）<br>运算规则：0|0=0，0|1=1，1|0=1，1|1=1。即：参加运算的两个对象只要有一个为1，其结果就为1。</li>
+</ul>
+<p>因为或运算（|）可以设置特定位的值，所以可以通过或运算（|）分别设置三个变量的值：<br>初始化 _tallRichHandsome<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">_tallRichHandsome = <span class="number">0b00000010</span>; //（tall：NO, rich：YES, handsome：NO）</div></pre></td></tr></table></figure></p>
+<p>设置 tall 为 YES<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">  <span class="number">0b00000010</span></div><div class="line">| <span class="number">0b00000001</span></div><div class="line">-------------</div><div class="line">  <span class="number">0b00000011</span></div></pre></td></tr></table></figure></p>
+<p>设置 rich 为 NO<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">  <span class="number">0b00000010</span></div><div class="line">&amp; <span class="number">0b11111101</span>  //~<span class="number">0b00000010</span></div><div class="line">-------------</div><div class="line">  <span class="number">0b00000000</span></div></pre></td></tr></table></figure></p>
+<p>设置 handsome 为 YES<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">  <span class="number">0b00000010</span></div><div class="line">| <span class="number">0b00000100</span></div><div class="line">-------------</div><div class="line">  <span class="number">0b00000110</span></div></pre></td></tr></table></figure></p>
+<p>设置 YES 时，和 _tallRichHandsome 进行按位或运算，修改特定位置的值。<br>设置 NO 操时，先对 rich 的二进制数按位取反，再和 _tallRichHandsome 进行按位与运算。</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line">@interface Person : NSObject</div><div class="line">- <span class="params">(void)</span>setTall:<span class="params">(BOOL)</span>tall;</div><div class="line">- <span class="params">(void)</span>setRich:<span class="params">(BOOL)</span>rich;</div><div class="line">- <span class="params">(void)</span>setHandsome:<span class="params">(BOOL)</span>handsome;</div><div class="line">- <span class="params">(BOOL)</span>isTall;</div><div class="line">- <span class="params">(BOOL)</span>isRich;</div><div class="line">- <span class="params">(BOOL)</span>isHandsome;</div><div class="line">@end</div><div class="line"></div><div class="line">#define TallMask <span class="params">(<span class="number">1</span>&lt;&lt;<span class="number">0</span>)</span></div><div class="line">#define RichMask <span class="params">(<span class="number">1</span>&lt;&lt;<span class="number">1</span>)</span></div><div class="line">#define HandsomeMask <span class="params">(<span class="number">1</span>&lt;&lt;<span class="number">2</span>)</span></div><div class="line"></div><div class="line">@interface Person<span class="params">()</span></div><div class="line">&#123;</div><div class="line">    char _tallRichHandsome;</div><div class="line">&#125;</div><div class="line">@end</div><div class="line"></div><div class="line">@implementation Person</div><div class="line"></div><div class="line">- <span class="params">(void)</span>setTall:<span class="params">(BOOL)</span>tall &#123;</div><div class="line">    if <span class="params">(tall)</span> &#123;</div><div class="line">        _tallRichHandsome |= TallMask;</div><div class="line">    &#125; else &#123;</div><div class="line">        _tallRichHandsome &amp;= ~TallMask;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- <span class="params">(void)</span>setRich:<span class="params">(BOOL)</span>rich &#123;</div><div class="line">    if <span class="params">(rich)</span> &#123;</div><div class="line">        _tallRichHandsome |= RichMask;</div><div class="line">    &#125; else &#123;</div><div class="line">        _tallRichHandsome &amp;= ~RichMask;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- <span class="params">(void)</span>setHandsome:<span class="params">(BOOL)</span>handsome &#123;</div><div class="line">    if <span class="params">(handsome)</span> &#123;</div><div class="line">        _tallRichHandsome |= HandsomeMask;</div><div class="line">    &#125; else &#123;</div><div class="line">        _tallRichHandsome &amp;= ~HandsomeMask;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- <span class="params">(BOOL)</span>isTall &#123;</div><div class="line">    return !!<span class="params">(_tallRichHandsome &amp; TallMask)</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- <span class="params">(BOOL)</span>isRich &#123;</div><div class="line">    return !!<span class="params">(_tallRichHandsome &amp; RichMask)</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- <span class="params">(BOOL)</span>isHandsome &#123;</div><div class="line">    return !!<span class="params">(_tallRichHandsome &amp; HandsomeMask)</span>;</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<h2 id="位域"><a href="#位域" class="headerlink" title="位域"></a>位域</h2><h2 id="共用体（union）"><a href="#共用体（union）" class="headerlink" title="共用体（union）"></a>共用体（union）</h2><p>在源码 <a href="https://opensource.apple.com/tarballs/objc4/" target="_blank" rel="external">objc4-781</a> 中查找 isa 的定义。  </p>
+<p>找到 OC 对象的结构体 objc_object：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">objc_object</span> &#123;</span></div><div class="line"><span class="keyword">private</span>:</div><div class="line">    <span class="keyword">isa_t</span> isa;</div><div class="line">    </div><div class="line">    ··· <span class="comment">//省略一堆方法</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以看到 isa 是一个 isa_t 类型的变量，Jump To Definition -&gt; isa_t：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">union</span> <span class="keyword">isa_t</span> &#123;</div><div class="line">    <span class="keyword">isa_t</span>() &#123; &#125;</div><div class="line">    <span class="keyword">isa_t</span>(<span class="keyword">uintptr_t</span> value) : bits(value) &#123; &#125;</div><div class="line"></div><div class="line">    Class cls;</div><div class="line">    <span class="keyword">uintptr_t</span> bits;</div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(ISA_BITFIELD)</span></div><div class="line">    <span class="comment">//位域</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> &#123;</span> </div><div class="line">        ISA_BITFIELD;  <span class="comment">// defined in isa.h</span></div><div class="line">    &#125;;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>位域中是一个宏 ISA_BITFIELD：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="meta"># <span class="meta-keyword">if</span> __arm64__ <span class="comment">//真机上市 arm64</span></span></div><div class="line"><span class="meta">#   <span class="meta-keyword">define</span> ISA_MASK        0x0000000ffffffff8ULL</span></div><div class="line"><span class="meta">#   <span class="meta-keyword">define</span> ISA_MAGIC_MASK  0x000003f000000001ULL</span></div><div class="line"><span class="meta">#   <span class="meta-keyword">define</span> ISA_MAGIC_VALUE 0x000001a000000001ULL</span></div><div class="line"><span class="meta">#   <span class="meta-keyword">define</span> ISA_BITFIELD                                                      \</span></div><div class="line">      <span class="keyword">uintptr_t</span> nonpointer        : <span class="number">1</span>;                                       \</div><div class="line">      <span class="keyword">uintptr_t</span> has_assoc         : <span class="number">1</span>;                                       \</div><div class="line">      <span class="keyword">uintptr_t</span> has_cxx_dtor      : <span class="number">1</span>;                                       \</div><div class="line">      <span class="keyword">uintptr_t</span> shiftcls          : <span class="number">33</span>; <span class="comment">/*MACH_VM_MAX_ADDRESS 0x1000000000*/</span> \</div><div class="line">      <span class="keyword">uintptr_t</span> magic             : <span class="number">6</span>;                                       \</div><div class="line">      <span class="keyword">uintptr_t</span> weakly_referenced : <span class="number">1</span>;                                       \</div><div class="line">      <span class="keyword">uintptr_t</span> deallocating      : <span class="number">1</span>;                                       \</div><div class="line">      <span class="keyword">uintptr_t</span> has_sidetable_rc  : <span class="number">1</span>;                                       \</div><div class="line">      <span class="keyword">uintptr_t</span> extra_rc          : <span class="number">19</span></div><div class="line"><span class="meta">#   <span class="meta-keyword">define</span> RC_ONE   (1ULL&lt;&lt;45)</span></div><div class="line"><span class="meta">#   <span class="meta-keyword">define</span> RC_HALF  (1ULL&lt;&lt;18)</span></div><div class="line"></div><div class="line"><span class="meta"># <span class="meta-keyword">elif</span> __x86_64__ <span class="comment">//模拟器是 x86 架构</span></span></div><div class="line"><span class="meta">#   <span class="meta-keyword">define</span> ISA_MASK        0x00007ffffffffff8ULL</span></div><div class="line"><span class="meta">#   <span class="meta-keyword">define</span> ISA_MAGIC_MASK  0x001f800000000001ULL</span></div><div class="line"><span class="meta">#   <span class="meta-keyword">define</span> ISA_MAGIC_VALUE 0x001d800000000001ULL</span></div><div class="line"><span class="meta">#   <span class="meta-keyword">define</span> ISA_BITFIELD                                                        \</span></div><div class="line">      <span class="keyword">uintptr_t</span> nonpointer        : <span class="number">1</span>;                                         \</div><div class="line">      <span class="keyword">uintptr_t</span> has_assoc         : <span class="number">1</span>;                                         \</div><div class="line">      <span class="keyword">uintptr_t</span> has_cxx_dtor      : <span class="number">1</span>;                                         \</div><div class="line">      <span class="keyword">uintptr_t</span> shiftcls          : <span class="number">44</span>; <span class="comment">/*MACH_VM_MAX_ADDRESS 0x7fffffe00000*/</span> \</div><div class="line">      <span class="keyword">uintptr_t</span> magic             : <span class="number">6</span>;                                         \</div><div class="line">      <span class="keyword">uintptr_t</span> weakly_referenced : <span class="number">1</span>;                                         \</div><div class="line">      <span class="keyword">uintptr_t</span> deallocating      : <span class="number">1</span>;                                         \</div><div class="line">      <span class="keyword">uintptr_t</span> has_sidetable_rc  : <span class="number">1</span>;                                         \</div><div class="line">      <span class="keyword">uintptr_t</span> extra_rc          : <span class="number">8</span></div><div class="line"><span class="meta">#   <span class="meta-keyword">define</span> RC_ONE   (1ULL&lt;&lt;56)</span></div><div class="line"><span class="meta">#   <span class="meta-keyword">define</span> RC_HALF  (1ULL&lt;&lt;7)</span></div><div class="line"></div><div class="line"><span class="meta"># <span class="meta-keyword">else</span></span></div><div class="line"><span class="meta">#   <span class="meta-keyword">error</span> unknown architecture for packed isa</span></div><div class="line"><span class="meta"># <span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure></p>
+<p>可以看到 ISA_BITFIELD 在 <code>__arm64__</code>（真机） 和 <code>__x86_64__</code>（mac电脑/模拟器） 架构有不同的定义。</p>
+<p>将宏 ISA_BITFIELD 替换掉，保留真机（arm64）代码，可以看到一个比较完整的 isa_t：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">union</span> <span class="keyword">isa_t</span> &#123;</div><div class="line">    <span class="keyword">isa_t</span>() &#123; &#125;</div><div class="line">    <span class="keyword">isa_t</span>(<span class="keyword">uintptr_t</span> value) : bits(value) &#123; &#125;</div><div class="line">    Class cls;</div><div class="line">    <span class="keyword">uintptr_t</span> bits;</div><div class="line">    <span class="class"><span class="keyword">struct</span> &#123;</span> </div><div class="line">        <span class="keyword">uintptr_t</span> nonpointer        : <span class="number">1</span>;                                       \</div><div class="line">        <span class="keyword">uintptr_t</span> has_assoc         : <span class="number">1</span>;                                       \</div><div class="line">        <span class="keyword">uintptr_t</span> has_cxx_dtor      : <span class="number">1</span>;                                       \</div><div class="line">        <span class="keyword">uintptr_t</span> shiftcls          : <span class="number">33</span>; <span class="comment">/*MACH_VM_MAX_ADDRESS 0x1000000000*/</span> \</div><div class="line">        <span class="keyword">uintptr_t</span> magic             : <span class="number">6</span>;                                       \</div><div class="line">        <span class="keyword">uintptr_t</span> weakly_referenced : <span class="number">1</span>;                                       \</div><div class="line">        <span class="keyword">uintptr_t</span> deallocating      : <span class="number">1</span>;                                       \</div><div class="line">        <span class="keyword">uintptr_t</span> has_sidetable_rc  : <span class="number">1</span>;                                       \</div><div class="line">        <span class="keyword">uintptr_t</span> extra_rc          : <span class="number">19</span></div><div class="line">    &#125;;</div></pre></td></tr></table></figure></p>
+<ul>
+<li><p>nonpointer<br>0，代表普通的指针，存储着Class、Meta-Class对象的内存地址<br>1，代表优化过，使用位域存储更多的信息</p>
+</li>
+<li><p>has_assoc<br>是否有设置过关联对象，如果没有，释放时会更快</p>
+</li>
+<li><p>has_cxx_dtor<br>是否有C++的析构函数（.cxx_destruct），如果没有，释放时会更快</p>
+</li>
+<li><p>shiftcls<br>存储着Class、Meta-Class对象的内存地址信息</p>
+</li>
+<li><p>magic<br>用于在调试时分辨对象是否未完成初始化</p>
+</li>
+<li><p>weakly_referenced<br>是否有被弱引用指向过，如果没有，释放时会更快</p>
+</li>
+<li><p>deallocating<br>对象是否正在释放</p>
+</li>
+<li><p>extra_rc<br>里面存储的值是引用计数器减1</p>
+</li>
+<li><p>has_sidetable_rc<br>引用计数器是否过大无法存储在 isa 中，如果为1，那么引用计数会存储在一个叫 SideTable 的类的属性中</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OC底层原理/" rel="tag"># OC底层原理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/31/OC底层/原理/block/" rel="next" title="block">
+                <i class="fa fa-chevron-left"></i> block
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/myAvatar.gif"
+              alt="Kevin" />
+          
+            <p class="site-author-name" itemprop="name">Kevin</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KevinYangGit" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_YangQI" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#isa-详解"><span class="nav-number">1.</span> <span class="nav-text">isa 详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#位运算"><span class="nav-number">1.1.</span> <span class="nav-text">位运算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#设计"><span class="nav-number">1.1.1.</span> <span class="nav-text">设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#取值"><span class="nav-number">1.1.2.</span> <span class="nav-text">取值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#掩码"><span class="nav-number">1.1.3.</span> <span class="nav-text">掩码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置"><span class="nav-number">1.1.4.</span> <span class="nav-text">设置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#位域"><span class="nav-number">1.2.</span> <span class="nav-text">位域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#共用体（union）"><span class="nav-number">1.3.</span> <span class="nav-text">共用体（union）</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://rawgit.com/qhh0205/78e9e0b1f3114db6737f3ed8cdd51d3a/raw/3894c5be5aa2378336b1f5ee0f296fa0b22d06e9/md5.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '82b6ced795961ee1fcca',
+          clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
+          repo: 'KevinYangGit.github.io',
+          owner: '',
+          admin: [''],
+          id: md5(location.pathname),
+          distractionFreeMode: ''
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
