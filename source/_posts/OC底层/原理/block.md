@@ -1980,7 +1980,7 @@ Person - dealloc
 
 ![block22](block/block22.png)
 
-MRC 下栈区和堆区的 block 都不会对指向的对象产生强引用（_Block_object_assign 没有 retain 操作），内存结构：
+MRC 下栈区和堆区的 block 都不会对指向的对象产生强引���（_Block_object_assign 没有 retain 操作），内存结构：
 ![block23](block/block23.png)
 
 截图👆里 `__Block_byref_person_0` 结构体里的 Person \*person 可能是省略了 `__weak`，即 Person \*\_\_weak person;
@@ -2132,7 +2132,7 @@ int main(int argc, const char * argv[]) {
 ```
 
 
-# 小结
+# 总结
 * block 的原理是怎样的？本质是什么？  
 block 本质上是封装了函数调用以及函数调用环境的 OC 对象。
 

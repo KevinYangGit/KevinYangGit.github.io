@@ -224,7 +224,6 @@ size_t instanceSize(size_t extraBytes) const {
 NSObject *obj = [[NSObject alloc] init];
 ```
 * 上面👆这句代码实际上是在内存中生成了一个 c 语言定义的结构体，结构体内有一个类型为 Class 的 isa 指针，结构体的大小 8 个字节。Class 是一个指向结构体的指针。
-
 * 创建的实例对象的大小至少16个字节.
 
 
