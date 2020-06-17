@@ -88,7 +88,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质进阶04.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质进阶05.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质进阶06.png">
-<meta property="og:updated_time" content="2020-06-12T06:01:47.924Z">
+<meta property="og:updated_time" content="2020-06-16T10:31:21.109Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OC对象的本质">
 <meta name="twitter:description" content="思考：  一个 NSObject 对象占用多少内存？  创建一个实例对象，至少需要多少内存？实际上分配了多少内存？">
@@ -360,10 +360,8 @@
 <p>可以看到，创建的实例对象的大小最总由 instanceSize 方法实现。内存大小至少16个字节，CoreFoundation 框架内部就是这么硬性规定的。</p>
 <h2 id="小结："><a href="#小结：" class="headerlink" title="小结："></a>小结：</h2><figure class="highlight inform7"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">NSObject *obj = <span class="comment">[<span class="comment">[NSObject alloc]</span> init]</span>;</div></pre></td></tr></table></figure>
 <ul>
-<li><p>上面👆这句代码实际上是在内存中生成了一个 c 语言定义的结构体，结构体内有一个类型为 Class 的 isa 指针，结构体的大小 8 个字节。Class 是一个指向结构体的指针。</p>
-</li>
-<li><p>创建的实例对象的大小至少16个字节.</p>
-</li>
+<li>上面👆这句代码实际上是在内存中生成了一个 c 语言定义的结构体，结构体内有一个类型为 Class 的 isa 指针，结构体的大小 8 个字节。Class 是一个指向结构体的指针。</li>
+<li>创建的实例对象的大小至少16个字节.</li>
 </ul>
 <h1 id="查看实例变量的内存的方法"><a href="#查看实例变量的内存的方法" class="headerlink" title="查看实例变量的内存的方法"></a>查看实例变量的内存的方法</h1><h2 id="通过-Xcode-工具查看对象内存"><a href="#通过-Xcode-工具查看对象内存" class="headerlink" title="通过 Xcode 工具查看对象内存"></a>通过 Xcode 工具查看对象内存</h2><p>打开 Debug -&gt; Debug Workflow -&gt; View Memory，在 Address 输入对象的地址。<br><img src="/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质03.png" alt="OC对象的本质03"></p>
 <h2 id="常用-LLDB-指令"><a href="#常用-LLDB-指令" class="headerlink" title="常用 LLDB 指令"></a>常用 LLDB 指令</h2><h3 id="print、p：打印"><a href="#print、p：打印" class="headerlink" title="print、p：打印"></a>print、p：打印</h3><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">(lldb) print obj</div><div class="line">(NSObject *) $<span class="number">0</span> = <span class="number">0x000000010380ef00</span></div><div class="line">(lldb) p obj</div><div class="line">(NSObject *) $<span class="number">1</span> = <span class="number">0x000000010380ef00</span></div></pre></td></tr></table></figure>
