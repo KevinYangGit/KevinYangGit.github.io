@@ -79,7 +79,8 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/06/12/OC底层/原理/Runtime/Runtime01.png">
 <meta property="og:image" content="http://yoursite.com/2020/06/12/OC底层/原理/Runtime/Runtime02.png">
-<meta property="og:updated_time" content="2020-06-17T12:38:24.723Z">
+<meta property="og:image" content="http://yoursite.com/2020/06/12/OC底层/原理/Runtime/Runtime03.png">
+<meta property="og:updated_time" content="2020-06-17T13:18:47.250Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Runtime">
 <meta name="twitter:description" content="思考：  讲一下 OC 的消息机制 消息转发机制流程 什么是 Runtime？平时项目中有用过么？ Runtime 的具体应用">
@@ -406,16 +407,21 @@
 <p>可以看到 ISA_BITFIELD 在 <code>__arm64__</code>（真机） 和 <code>__x86_64__</code>（mac电脑/模拟器） 架构有不同的定义。</p>
 <p>将宏 ISA_BITFIELD 替换掉，保留真机（arm64）代码，可以看到一个比较完整的 isa_t：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">union</span> <span class="keyword">isa_t</span> &#123;</div><div class="line">    <span class="keyword">isa_t</span>() &#123; &#125;</div><div class="line">    <span class="keyword">isa_t</span>(<span class="keyword">uintptr_t</span> value) : bits(value) &#123; &#125;</div><div class="line">    Class cls;</div><div class="line">    <span class="keyword">uintptr_t</span> bits;</div><div class="line">    <span class="class"><span class="keyword">struct</span> &#123;</span> </div><div class="line">        <span class="keyword">uintptr_t</span> nonpointer        : <span class="number">1</span>;                                       \</div><div class="line">        <span class="keyword">uintptr_t</span> has_assoc         : <span class="number">1</span>;                                       \</div><div class="line">        <span class="keyword">uintptr_t</span> has_cxx_dtor      : <span class="number">1</span>;                                       \</div><div class="line">        <span class="keyword">uintptr_t</span> shiftcls          : <span class="number">33</span>; <span class="comment">/*MACH_VM_MAX_ADDRESS 0x1000000000*/</span> \</div><div class="line">        <span class="keyword">uintptr_t</span> magic             : <span class="number">6</span>;                                       \</div><div class="line">        <span class="keyword">uintptr_t</span> weakly_referenced : <span class="number">1</span>;                                       \</div><div class="line">        <span class="keyword">uintptr_t</span> deallocating      : <span class="number">1</span>;                                       \</div><div class="line">        <span class="keyword">uintptr_t</span> has_sidetable_rc  : <span class="number">1</span>;                                       \</div><div class="line">        <span class="keyword">uintptr_t</span> extra_rc          : <span class="number">19</span></div><div class="line">    &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <ul>
-<li>nonpointer<br>0，代表普通的指针，存储着Class、Meta-Class对象的内存地址<br>1，代表优化过，使用位域存储更多的信息</li>
+<li>nonpointer<br>0，代表普通的指针，存储着 Class、Meta-Class 对象的内存地址<br>1，代表优化过，使用位域存储更多的信息</li>
 <li>has_assoc<br>是否有设置过关联对象，如果没有，释放时会更快</li>
-<li>has_cxx_dtor<br>是否有C++的析构函数（.cxx_destruct），如果没有，释放时会更快</li>
-<li>shiftcls<br>存储着Class、Meta-Class对象的内存地址信息</li>
+<li>has_cxx_dtor<br>是否有 C++ 的析构函数（.cxx_destruct），如果没有，释放时会更快</li>
+<li>shiftcls<br>存储着 Class、Meta-Class 对象的内存地址信息</li>
 <li>magic<br>用于在调试时分辨对象是否未完成初始化</li>
 <li>weakly_referenced<br>是否有被弱引用指向过，如果没有，释放时会更快</li>
 <li>deallocating<br>对象是否正在释放</li>
 <li>extra_rc<br>里面存储的值是引用计数器减1</li>
 <li>has_sidetable_rc<br>引用计数器是否过大无法存储在 isa 中，如果为1，那么引用计数会存储在一个叫 SideTable 的类的属性中</li>
 </ul>
+<p>因为 shiftcls 占33个二进制位，ISA_MASK 也有33个1，所以 <code>isa &amp; ISA_MASK</code> 能够取出 shiftcls 的值。</p>
+<p>ISA_MASK<br><img src="/2020/06/12/OC底层/原理/Runtime/Runtime03.png" alt="Runtime03"></p>
+<p>因为 ISA_MASK 最后面三位都是0，所以获取到的 Class、Meta-Class 对象的内存地址的最后三为肯定也为0。证明：<br><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@interface</span> ViewController()</div><div class="line"><span class="variable">@end</span></div><div class="line"></div><div class="line"><span class="variable">@implementation</span> ViewController</div><div class="line">- (void)viewDidLoad &#123;</div><div class="line">    <span class="selector-attr">[super viewDidLoad]</span>;</div><div class="line">    <span class="selector-tag">NSLog</span>(@<span class="string">"%p"</span>, [ViewController class]);</div><div class="line">    <span class="selector-tag">NSLog</span>(@<span class="string">"%p"</span>, object_getClass([ViewController class]));</div><div class="line">    <span class="selector-tag">NSLog</span>(@<span class="string">"%p"</span>, [Person class]);</div><div class="line">    <span class="selector-tag">NSLog</span>(@<span class="string">"%p"</span>, object_getClass([Person class]));</div><div class="line">&#125;</div><div class="line">@<span class="selector-tag">end</span></div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
+<p>可以看到打印结果的最后一位都是”8“或”0“，即”<code>1000</code>“或”<code>0000</code>“。所以 Class、Meta-Class 对象的内存地址的最后三为为0。</p>
 
       
     </div>
