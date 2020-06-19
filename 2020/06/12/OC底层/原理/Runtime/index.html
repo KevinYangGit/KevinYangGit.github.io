@@ -83,7 +83,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/06/12/OC底层/原理/Runtime/Runtime04.png">
 <meta property="og:image" content="http://yoursite.com/2020/06/12/OC底层/原理/Runtime/Runtime06.png">
 <meta property="og:image" content="http://yoursite.com/2020/06/12/OC底层/原理/Runtime/Runtime03.png">
-<meta property="og:updated_time" content="2020-06-19T03:25:48.173Z">
+<meta property="og:updated_time" content="2020-06-19T03:34:23.121Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Runtime">
 <meta name="twitter:description" content="思考：  讲一下 OC 的消息机制 消息转发机制流程 什么是 Runtime？平时项目中有用过么？ Runtime 的具体应用">
@@ -415,7 +415,8 @@
 <p> 因为 isa 指针的定义区分 <code>__arm64__</code>（真机）和 <code>__x86_64__</code>（mac/模拟器），所以需要用真机运行项目：<br> <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> <span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="built_in">NSString</span> * appDelegateClassName;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        appDelegateClassName = <span class="built_in">NSStringFromClass</span>([AppDelegate <span class="keyword">class</span>]);</div><div class="line">    &#125;</div><div class="line">    Person *person = [[Person alloc] init];</div><div class="line">    <span class="keyword">return</span> <span class="built_in">UIApplicationMain</span>(argc, argv, <span class="literal">nil</span>, appDelegateClassName);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>查看 person 对象的 isa 指针的内存：<br><figure class="highlight coq"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">(lldb) p/x person-&gt;isa</div><div class="line">(<span class="keyword">Class</span>) $<span class="number">0</span> = <span class="number">0x1A100455641</span> Person</div></pre></td></tr></table></figure></p>
 <p>转成二进制：<br><img src="/2020/06/12/OC底层/原理/Runtime/Runtime04.png" alt="Runtime04"></p>
-<p>解析：<br><img src="/2020/06/12/OC底层/原理/Runtime/Runtime06.png" alt="Runtime06"><br>nonpointer 占1个二进制位，在最低位为1（第0位）。<br>has_assoc（has_associate）占1个二进制位，为0（第1位）。<br>has_cxx_dtor 占1个二进制位，为0（第2位）。<br>shiftcls 占33个二进制位（从第3位到第35位）。<br>magic 占6个二进制位（从第36位到第41位）。magic 的值可以从宏 <code>ISA_MAGIC_VALUE</code> 看到（1a）。magic == 1a 表示初始化成功。<br>weakly_referenced 占1个二进制位（第42位）。<br>deallocating 占1个二进制位（第43位）。<br>has_sidetable_rc 占1个二进制位（第44位）。<br>extra_rc（extra_retain_count）占19个二进制位（从第45位到63位）。</p>
+<p>解析：<br>nonpointer 占1个二进制位，在最低位为1（第0位）。<br>has_assoc（has_associate）占1个二进制位，为0（第1位）。<br>has_cxx_dtor 占1个二进制位，为0（第2位）。<br>shiftcls 占33个二进制位（从第3位到第35位）。<br>magic 占6个二进制位（从第36位到第41位）。magic 的值可以从宏 <code>ISA_MAGIC_VALUE</code> 看到（1a）。magic == 1a 表示初始化成功。<br>weakly_referenced 占1个二进制位（第42位）。<br>deallocating 占1个二进制位（第43位）。<br>has_sidetable_rc 占1个二进制位（第44位）。<br>extra_rc（extra_retain_count）占19个二进制位（从第45位到63位）。</p>
+<p><img src="/2020/06/12/OC底层/原理/Runtime/Runtime06.png" alt="Runtime06"></p>
 <ul>
 <li>nonpointer<br>0，代表普通的指针，isa 只存储着 Class、Meta-Class 对象的内存地址<br>1，代表优化过，isa 使用位域存储更多的信息</li>
 <li>has_assoc<br>是否有设置过关联对象，如果没有，释放时会更快</li>
