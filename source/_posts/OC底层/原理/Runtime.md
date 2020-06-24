@@ -1433,7 +1433,7 @@ Printing description of data->methods->first.types:
 ```
 @implementation Person
 // i 24 @ 0 : 8 i 16 f 20
-//- (int)test:(id)self _cmd:(SEL)_cmd age:(int)age height:(float)height
+// int test:(id self, SEL _cmd, int age, float height)
 - (void)test {
     NSLog(@"%s", __func__);
 }
@@ -2749,7 +2749,7 @@ void c_other(id self, SEL _cmd)
 + (BOOL)resolveInstanceMethod:(SEL)sel
 {
     if (sel == @selector(test)) {
-        //动态添加方法，C语言的函数地址==函数名，函数编码"v16@0:8"
+        //动态添加方法，C语言的函数地址==函数名，函数编码"v16@0:8"（也可以写成 v@:）
         class_addMethod(self, sel, (IMP)c_other, "v16@0:8");
         //返回YES代表有动态添加方法
         return YES;
@@ -2888,17 +2888,11 @@ int main(int argc, const char * argv[]) {
 //方法签名：返回值类型、参数类型
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
     if (aSelector == @selector(test)) {
-        return [NSMethodSignature signatureWithObjCTypes:"v16@0:8"];
+        return [NSMethodSignature signatureWithObjCTypes:"v16@0:8"]; //也可以写成 v@:
     }
     return [super methodSignatureForSelector:aSelector];
 }
 
-/**
- NSInvocation 封装了一个方法调用，包括：方法调用者、方法名、方法参数
- anInvocation.target 方法调用者
- anInvocation.selector 方法名
- [anInvocation getArgument:NULL atIndex:0] 方法参数
- */
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
     /*
      anInvocation.target = [[Student alloc] init];
@@ -2927,10 +2921,23 @@ int main(int argc, const char * argv[]) {
 从调用栈可以看到停留在了 `doesNotRecognizeSelector:` 方法：
 ![Runtime28](Runtime/Runtime28.png)
 
+方法签名的另一种返回方式：
+```
+- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
+    if (aSelector == @selector(test:)) {
+        return [[[Student alloc] init] methodSignatureForSelector:aSelector];
+    }
+    return [super methodSignatureForSelector:aSelector];
+}
+```
+
+因为 Student 实现了 `-(void)test:(int)age` 方法，所以调用 Student 的 `methodSignatureForSelector:` 方法可以返回 `-(void)test:(int)age` 方法的方法签名。
+
 ### 类方法的消息转发
 
 #### +forwardingTargetForSelector: 方法
 
+在 `+forwardingTargetForSelector:` 方法里返回类对象：
 ```
 @interface Student : NSObject
 + (void)test;
@@ -2950,8 +2957,8 @@ int main(int argc, const char * argv[]) {
 @implementation Person
 + (id)forwardingTargetForSelector:(SEL)aSelector
 {
-    if (aSelector == @selector(test)) {
-        return [Student class];
+    if (aSelector == @selector(test)) { //类方法和对象方法的方法名都是 "test"
+        return [Student class];         //objc_msgSend([Student class], @selector("test"))
     }
     return [super forwardingTargetForSelector:aSelector];;
 }
@@ -2968,6 +2975,46 @@ int main(int argc, const char * argv[]) {
 打印结果：
 ```
 +[Student test]
+```
+
+在 `+forwardingTargetForSelector:` 方法里返回实列对象：
+```
+@interface Student : NSObject
+- (void)test;
+@end
+
+@implementation Student
+- (void)test
+{
+    NSLog(@"%s", __func__);
+}
+@end
+
+@interface Person : NSObject
++ (void)test;
+@end
+
+@implementation Person
++ (id)forwardingTargetForSelector:(SEL)aSelector
+{
+    if (aSelector == @selector(test)) { //类方法和对象方法的方法名都是 "test"
+        return [[Student alloc] init];  //objc_msgSend([[Student alloc] init], @selector("test"))
+    }
+    return [super forwardingTargetForSelector:aSelector];;
+}
+@end
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        [Person test];
+    }
+    return 0;
+}
+```
+
+打印结果：
+```
+-[Student test]
 ```
 
 #### +methodSignatureForSelector: 方法
@@ -3000,7 +3047,7 @@ int main(int argc, const char * argv[]) {
 
 + (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
     if (aSelector == @selector(test)) {
-        return [NSMethodSignature signatureWithObjCTypes:"v16@0:8"];
+        return [NSMethodSignature signatureWithObjCTypes:"v16@0:8"]; //也可以写成 v@:
     }
     return [super methodSignatureForSelector:aSelector];
 }
@@ -3023,5 +3070,217 @@ int main(int argc, const char * argv[]) {
 +[Student test]
 ```
 
+[Person test] 的本质是 objc_msgSend([Person test], @selector(test))，会先走一遍“消息发送”流程。因为 Person 没有实现 `-(void)test` 方法，所以
+
+#### NSInvocation
+NSInvocation 封装了一个方法调用，包括：方法调用者、方法名、方法参数和返回值（方法签名决定 NSInvocation 的方法参数和返回值）。  
+anInvocation.target 方法调用者  
+anInvocation.selector 方法名  
+[anInvocation getArgument:NULL atIndex:0] 方法参数
+
+示例代码：
+```
+@interface Student : NSObject
+- (int)test:(int)age;
+@end
+
+@implementation Student
+- (int)test:(int)age
+{
+    NSLog(@"%s，age == %d", __func__, age);
+    return age * 2;
+}
+@end
+
+@interface Person : NSObject
+- (int)test:(int)age;
+@end
+
+@implementation Person
+
+- (id)forwardingTargetForSelector:(SEL)aSelector
+{
+    if (aSelector == @selector(test:)) {
+        return nil;
+    }
+    return [super forwardingTargetForSelector:aSelector];;
+}
+
+- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
+    if (aSelector == @selector(test:)) {
+        return [NSMethodSignature signatureWithObjCTypes:"i24@0:8i16"];;
+    }
+    return [super methodSignatureForSelector:aSelector];
+}
+
+- (void)forwardInvocation:(NSInvocation *)anInvocation {
+    // to do 👇
+}
+@end
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        Person *person = [[Person alloc] init];
+        [person test:15];
+    }
+    return 0;
+}
+```
+
+👉 通过 `getArgument:atIndex:` 方法获取参数：
+```
+- (void)forwardInvocation:(NSInvocation *)anInvocation {
+    int age;
+    [anInvocation getArgument:&age atIndex:2]; //传入 age 的地址和下标
+    NSLog(@"age == %d", age);
+}
+```
+
+打印结果：
+```
+age == 15
+```
+
+因为 `-(void)test:(int)age` 的 C 语言实现是 `void test(id self, SEL _cmd, int age)`，一共有三个参数，参数顺序：receiver、selector 和 other argument，所以参数 age 的下标是 2。
+
+👉 调用 `invokeWithTarget:` 方法，将消息转发给 Student 的实例对象：
+```
+- (void)forwardInvocation:(NSInvocation *)anInvocation {
+    /**
+     anInvocation.target == person对象
+     anInvocation.selector == test:
+     anInvocation 的参数：15
+     */
+    [anInvocation invokeWithTarget:[[Student alloc] init]];
+}
+```
+
+打印结果：
+```
+-[Student test:]，age == 15
+```
+
+在调用 `invokeWithTarget:` 方法前，anInvocation 的 target 是 person 对象，selector 是 `-(void)test:(int)age` 方法，参数是 15。在调用 `invokeWithTarget:` 方法后， anInvocation 的 target 就变成了 student 对象了。相当于向 student 对象发送了一条“test:”消息 `objc_msgSend([[Student alloc] init], @selector(test:))`。
+
+👉 调用 `getReturnValue:` 方法获取返回值：
+```
+- (void)forwardInvocation:(NSInvocation *)anInvocation {
+    [anInvocation invokeWithTarget:[[Student alloc] init]];
+    int returnAge;
+    [anInvocation getReturnValue:&returnAge];
+    NSLog(@"returnAge == %d", returnAge);
+}
+```
+
+打印结果：
+```
+-[Student test:]，age == 15
+returnAge == 30
+```
+
+### @synthesize、@dynamic
+
+@synthesize 会自动生成属性 age 的成员变量 _age，同时生成属性 age 的 setter 和 getter 方法的实现。现在的 xcode 都是默认生成了，不用手写了。
+```
+@interface Student : NSObject
+@property (nonatomic, assign) int age;
+@end
+
+@implementation Student
+@synthesize age = _age;
+@end
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        Student *student = [[Student alloc] init];
+        student.age = 20;
+        NSLog(@"student.age == %d", student.age);
+    }
+    return 0;
+}
+```
+
+打印结果：
+```
+student.age == 20
+```
+
+@dynamic 是告诉编译器不需要自动生成属性 age 的成员变量 _age，也不需要生成属性 age 的 setter 和 getter 方法的实现。 
+```
+@interface Student : NSObject
+@property (nonatomic, assign) int age; //声明 age 的 setter 和 getter 方法
+@end
+
+@implementation Student
+@dynamic age;
+@end
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        Student *student = [[Student alloc] init];
+        student.age = 20; //[student setAge:20]，有 setter 和 getter 方法的声明，没有 setter 和 getter 方法的实现
+        NSLog(@"student.age == %d", student.age);
+    }
+    return 0;
+}
+```
+
+报错：unrecognized selector sent to instance
+![Runtime29](Runtime/Runtime29.png)
+
+使用动态方法解析解决这个问题：
+```
+@interface Student : NSObject
+@property (nonatomic, assign) int age;
+@end
+
+@implementation Student
+
+@dynamic age;
+
+void setAge(id self, SEL _cmd, int age)
+{
+    NSLog(@"age is %d", age);
+}
+
+int age(id self, SEL _cmd)
+{
+    return 15;
+}
+
++ (BOOL)resolveInstanceMethod:(SEL)sel {
+    if (sel == @selector(setAge:)) {
+        class_addMethod(self, sel, (IMP)setAge, "v@:i");
+        return YES;
+    } else if (sel == @selector(age)) {
+        class_addMethod(self, sel, (IMP)age, "i@:");
+    }
+    return [super resolveInstanceMethod:sel];
+}
+@end
+```
+
+打印结果：
+```
+age is 20
+student.age == 15
+```
+
 ### 小结
-* `forwardingTargetForSelector:` 方法、`methodSignatureForSelector:` 方法 和 `forwardInvocation:` 方法本身并没有区分对象方法和类方法，但是在 _objc_forward_handler 的实现中，receiver （实列对象/类对象）会调用对应的方法（对象方法/类方法），所以实现的方法类型需要跟返回的类型统一（实例对象 - 对象方法，类对象 - 类方法）。
+* `forwardingTargetForSelector:` 方法、`methodSignatureForSelector:` 方法 和 `forwardInvocation:` 方法本身并没有区分对象方法和类方法，但是在 _objc_forward_handler 的实现中，receiver （实列对象/类对象）会调用对应的方法（对象方法/类方法），所以实现的方法类型需要跟返回的类型统一（实例对象 - 对象方法，类对象 - 类方法）。消息转发中，不要在意方法是对象方法还是类方法，本质还是 objc_msgSend 的消息接收者和方法名。
+
+
+# super 的本质
+
+
+# 总结
+* 讲一下 OC 的消息机制  
+OC 中的方法调用其实都是转成了 objc_msgSend 函数的调用，给 receiver（方法调用者）发送了一条消息（selector(方法名)）。  
+objc_msgSend 底层有三大阶段：  
+    * 消息发送：先调在当前类的 cache 里找，再到当前类的 methods 里找。如果在当前类没有找到，再遍历父类查找，先在父类的 cache 里找，再到父类的 methods 里找。
+    * 动态方法解析：在当前类及其父类里没有找到方法时，会调用 `resolveInstanceMethod:` 或者 `resolveClassMethod:` 方法动态添加方法。  
+    * 消息转发：如果没有动态添加方法，会调用 `forwardingTargetForSelector:` 方法获取可以处理消息的对象。如果没有实现  `forwardingTargetForSelector:` 方法或者该方法返回的是 nil，会调用 `methodSignatureForSelector:` 方法获取方法签名，在获取方法签名成功后再调用 `forwardInvocation:` 方法进行自定义操作。如果没有实现 `methodSignatureForSelector:` 方法或者该方法返回的是 nil，会调用 `doesNotRecognizeSelector:` 方法终止流程。 
+
+* 消息转发机制流程  
+如果没有动态添加方法，会调用 `forwardingTargetForSelector:` 方法获取可以处理消息的对象。如果没有实现  `forwardingTargetForSelector:` 方法或者该方法返回的是 nil，会调用 `methodSignatureForSelector:` 方法获取方法签名，在获取方法签名成功后再调用 `forwardInvocation:` 方法进行自定义操作。如果没有实现 `methodSignatureForSelector:` 方法或者该方法返回的是 nil，会调用 `doesNotRecognizeSelector:` 方法终止流程。 
+
