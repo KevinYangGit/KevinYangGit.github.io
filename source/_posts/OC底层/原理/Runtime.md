@@ -1441,7 +1441,7 @@ Printing description of data->methods->first.types:
 ```
 
 ### Type Encoding
-[Type Encodings](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html) 是 iOS 中提供的一个叫做 @encode 的指令，可以将具体的类型表示成字符串编码。
+[Type Encodings](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html) 是 iOS 中提供的一个叫做 @encode 的指令，可以将具体的类型表示成字符串编码。  
 ![Runtime15](Runtime/Runtime15.png)
 
 ```
@@ -3271,6 +3271,317 @@ student.age == 15
 
 
 # super 的本质
+
+```
+@interface Person : NSObject
+@end
+
+@implementation Person
+@end
+
+@interface Student : Person
+@end
+
+@implementation Student
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        NSLog(@"[self class] = %@", [self class]);
+        NSLog(@"[self superclass] = %@", [self superclass]);
+        NSLog(@"----------------------------");
+        NSLog(@"[super class] = %@", [super class]);
+        NSLog(@"[super superclass] = %@", [super superclass]);
+    }
+    return self;
+}
+@end
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        Student *stu = [[Student alloc] init];
+    }
+    return 0;
+}
+```
+
+打印结果：
+```
+ [self class] = Student
+ [self superclass] = Person
+ ----------------------------
+ [super class] = Student
+ [super superclass] = Person
+```
+
+这里的 self 就是 person 实例对象，`[self class]` 返回的是 person 实例对象的类对象，`[self superclass]` 返回的是父类 Person 的类对象。  
+
+思考：  
+super 代表的是 student 的父类 person，那么 `[super class]` 应该就等于 `[person class]`，打印结果应该是 Person，而 `[super class]`  的打印结果却是 Student❓同样的 `[super superclass]` 应该就等于 `[person superclass]`，打印结果应该是 NSObject，而 `[super superclass]` 打印结果却是 Person❓
+
+## objc_super 结构体
+
+定义一个 `-(void)run` 方法：
+```
+@interface Person : NSObject
+- (void)run;
+@end
+
+@implementation Person
+- (void)run
+{
+    NSLog(@"%@", __func__);
+}
+@end
+
+@interface Student : Person
+- (void)run;
+@end
+
+@implementation Student
+- (void)run
+{
+    [super run];
+}
+@end
+```
+
+通过终端命令 `xcrun -sdk iphoneos clang -arch arm64  -rewrite-objc Student.m` 生成 c++ 代码 Student.cpp，查看 `-(void)run` 方法的 c++ 实现：
+```
+static void _I_Student_run(Student * self, SEL _cmd) {
+    //[super run];
+    ((void (*)(__rw_objc_super *, SEL))(void *)objc_msgSendSuper)((__rw_objc_super){(id)self, (id)class_getSuperclass(objc_getClass("Student"))}, sel_registerName("run"));
+}
+```
+
+简化后的 `[super run]`：
+```
+objc_msgSendSuper( (__rw_objc_super){
+                        self, //student 实例对象
+                        class_getSuperclass(objc_getClass("Student")) //[Person class]
+                    }, //__rw_objc_super 结构体
+                    sel_registerName("run") //@selector(run)) );
+```
+
+可以看到 `[super run]` 的底层实现调用的是 `objc_msgSendSuper()` 方法，第一个参数是 `__rw_objc_super` 结构体，第二参数是 `@selector(run)`。所以 super 的本质就是 `__rw_objc_super` 结构体：
+```
+struct __rw_objc_super { 
+	struct objc_object *object; 
+	struct objc_object *superClass; 
+	__rw_objc_super(struct objc_object *o, struct objc_object *s) : object(o), superClass(s) {} 
+};
+```
+
+`__rw_objc_super` 结构体是在编译时生成的，所谓参数传入 objc_msgSendSuper() 方法。但是 objc_msgSendSuper() 在定义时该位置的参数是一个 objc_super 结构体：
+```
+struct objc_super {
+    /// Specifies an instance of a class.
+    __unsafe_unretained _Nonnull id receiver;
+
+    /// Specifies the particular superclass of the instance to message. 
+#if !defined(__cplusplus)  &&  !__OBJC2__
+    /* For compatibility with old objc-runtime.h header */
+    __unsafe_unretained _Nonnull Class class;
+#else
+    __unsafe_unretained _Nonnull Class super_class;
+#endif
+    /* super_class is the first class to search */
+};
+```
+
+因为 `__rw_objc_super` 和 objc_super 的结构基本一致，所以 `__rw_objc_super` 结构体算是一个自定的 objc_super，作为参数传给 objc_msgSendSuper()。
+
+因为现在使用的是 `__OBJC2__`，所以 objc_super 可以简化为：
+```
+struct objc_super {
+    __unsafe_unretained _Nonnull id receiver; //消息接收者
+    __unsafe_unretained _Nonnull Class super_class; //消息接收者的父类
+};
+```
+
+可以看到 objc_super 结构体的第一个参数是消息接收者，第二个参数是消息接收者的父类。所以 `[super run]` 的底层实现就是：
+```
+struct __rw_objc_super arg = { 
+    self, //消息接收者
+    [Person class] //消息接收者的父类 
+};
+objc_msgSendSuper(arg, @selector(run));
+```
+
+## objc_msgSendSuper() 方法
+
+关于 `[super run]` 调用的方法 objc_msgSendSuper()：
+```
+/** 
+ * Sends a message with a simple return value to the superclass of an instance of a class.
+ * 
+ * @param super A pointer to an \c objc_super data structure. Pass values identifying the
+ *  context the message was sent to, including the instance of the class that is to receive the
+ *  message and the superclass at which to start searching for the method implementation.
+ * @param op A pointer of type SEL. Pass the selector of the method that will handle the message.
+ * @param ...
+ *   A variable argument list containing the arguments to the method.
+ * 
+ * @return The return value of the method identified by \e op.
+ * 
+ * @see objc_msgSend
+ */
+OBJC_EXPORT id _Nullable
+objc_msgSendSuper(struct objc_super * _Nonnull super, SEL _Nonnull op, ...)
+    OBJC_AVAILABLE(10.0, 2.0, 9.0, 1.0, 2.0);
+```
+
+objc_msgSendSuper：向实例对象的 super 发送带有简单返回值的消息。第一个参数：super，第二个参数：op（方法的选择器 SEL）。  
+* super：是一个指向 `objc_super` 结构体的指针，在结构体的内部有接收消息的实例对象和开始搜索方法实现的类对象（从该类对象开始搜索方法的实现）。  
+* op：SEL 类型的指针。传递方法的选择器（@selector(run)），该方法就是要处理的消息。
+
+通过注释，可以知道 objc_msgSendSuper() 有两个参数 super 和 SEL，其中 super 里有一个消息接收者和一个类对象。objc_msgSendSuper() 会从 super 里的类对象开始查找 SEL，找到后交给 super 里的消息接收者处理。
+
+综上所述：  
+`[super run]`：设置消息接收者是 self（student 实例对象），并从 Person 类对象开始查找 `-(void)run` 方法：
+```
+objc_msgSendSuper({ self, [Person class] }, @selector(run));
+```
+
+`[super method]` 流程图：
+![Runtime30](Runtime/Runtime30.png)
+
+## self、class 和 superclass 的底层实现
+
+self、class 和 superclass 的底层实现在源码 [objc4-781](https://opensource.apple.com/tarballs/objc4/) 的 NSObject.mm 文件。
+```
++ (id)self {
+    return (id)self;
+}
+
+- (id)self {
+    return self;
+}
+
++ (Class)class {
+    return self;
+}
+
+- (Class)class {
+    return object_getClass(self);
+}
+
++ (Class)superclass {
+    return self->superclass;
+}
+
+- (Class)superclass {
+    return [self class]->superclass;
+}
+```
+
+`[super class]` 设置的消息接收者是 self（student 实例对象），并从 Person 类对象开始查找对象方法 `-(Class)class`。在 Person 类对象里没有找到，通过 superclass 指针找到父类的类对象 NSObject，在 NSObject 类对象里找到了对象方法 `-(Class)class` 后交给消息接收者处理。因为是由消息接收者处理对象方法 `-(Class)class`，所以对象方法 `- (Class)class` 的参数 self 自然就是消息接收者本身了。所以 `[super class]` 最终的返回值就是 Student（`[student class]`）。
+```
+objc_msgSendSuper({ self, [Person class] }, @selector(class));
+```
+
+`[super superclass]` 设置的消息接收者是 self（student 实例对象），并从 Person 类对象开始查找对象方法 `-(Class)superclass`。在 Person 类对象里没有找到，通过 superclass 指针找到父类的类对象 NSObject，在 NSObject 类对象里找到了对象方法 `-(Class)superclass` 后交给消息接收者处理。因为是由消息接收者处理对象方法 `-(Class)superclass`，所以对象方法 `- (Class)superclass` 的参数 self 自然就是消息接收者本身了。所以 `[super superclass]` 的返回值就是 Person（`[student superclass]`）。
+```
+objc_msgSendSuper({ self, [Person class] }, @selector(superclass));
+```
+
+现在再看这四个方法，就很清晰了：
+```
+@implementation Student
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [self class];       //消息接收者：student，调用方法：-(void)class
+        [self superclass];  //消息接收者：student，调用方法：-(void)superclass
+
+        [super class];      //消息接收者：student，调用方法：-(void)class
+        [super superclass]; //消息接收者：student，调用方法：-(void)superclass
+    }
+    return self;
+}
+@end
+```
+
+在 `[super superclass];` 处添加断点，选择 Debug -> Debug Workflow -> Always Show Disassembly
+![Runtime31](Runtime/Runtime31.png)
+
+可以看到 `[super class]` 和 `[super superclass]` 底层实现调用的不是 `objc_msgSendSuper()` 方法而是 `objc_msgSendSuper2()` 方法，其实现在汇编文件 objc-msg-arm64.s 里：
+```
+	ENTRY _objc_msgSendSuper2
+	UNWIND _objc_msgSendSuper2, NoFrame
+
+	ldp	p0, p16, [x0]		// p0 = real receiver, p16 = class
+	ldr	p16, [x16, #SUPERCLASS]	// p16 = class->superclass
+	CacheLookup NORMAL, _objc_msgSendSuper2
+
+	END_ENTRY _objc_msgSendSuper2
+```
+
+还是老问题，通过终端命令生成的编译文件很运行时生成的编译文件相比，在某些细节的地方还是有区别的。不过并不影响理解具体的实现逻辑。
+
+
+# isKindOfClass: 和 isMemberOfClass:
+
+```
+@implementation Student
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        BOOL res1 = [[NSObject class] isKindOfClass:[NSObject class]];
+        BOOL res2 = [[NSObject class] isMemberOfClass:[NSObject class]];
+        BOOL res3 = [[Person class] isKindOfClass:[Person class]];
+        BOOL res4 = [[Person class] isMemberOfClass:[Person class]];
+        NSLog(@"%d, %d, %d, %d", res1, res2, res3, res4);
+    }
+    return self;
+}
+@end
+```
+
+打印结果：
+```
+1, 0, 0, 0
+```
+
+`isKindOfClass:` 和 `isMemberOfClass:` 的底层实现在源码 [objc4-781](https://opensource.apple.com/tarballs/objc4/) 的 NSObject.mm 文件。
+```
++ (BOOL)isMemberOfClass:(Class)cls {
+    return self->ISA() == cls;
+}
+
+- (BOOL)isMemberOfClass:(Class)cls {
+    return [self class] == cls;
+}
+
++ (BOOL)isKindOfClass:(Class)cls {
+    for (Class tcls = self->ISA(); tcls; tcls = tcls->superclass) {
+        if (tcls == cls) return YES;
+    }
+    return NO;
+}
+
+- (BOOL)isKindOfClass:(Class)cls {
+    for (Class tcls = [self class]; tcls; tcls = tcls->superclass) {
+        if (tcls == cls) return YES;
+    }
+    return NO;
+}
+```
+
+`+isMemberOfClass:` 方法里是取出 self 的 ISA() 与出入的 cls 进行比较。
+
+
+
+
+
+
+
+
+
+
+
 
 
 # 总结
