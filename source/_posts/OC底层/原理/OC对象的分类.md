@@ -49,7 +49,7 @@ p1、p2 对象在内存中存储的信息
 
 
 # class 对象
-每个类在内存中有且只有一个class对象，同一个类 alloc 出来的实例对象共同拥有唯一的 class 对象。
+每个类在内存中有且只有一个 class 对象，同一个类 alloc 出来的实例对象共同拥有唯一的 class 对象。
 
 获取 class 对象：
 ```
@@ -69,8 +69,8 @@ Class objectClass = [[NSObject class] class];
 ```
 
 ## class 对象在内存中存储的信息主要包括
-* isa指针
-* superclass指针
+* isa 指针
+* superclass 指针
 * 类的属性信息（@property）、类的对象方法信息（instance method）
 * 类的协议信息（protocol）、类的成员变量信息（ivar）  
 ......  

@@ -3372,7 +3372,7 @@ struct __rw_objc_super {
 };
 ```
 
-`__rw_objc_super` 结构体是在编译时生成的，所谓参数传入 objc_msgSendSuper() 方法。但是 objc_msgSendSuper() 在定义时该位置的参数是一个 objc_super 结构体：
+`__rw_objc_super` 结构体是在编译时生成的，并将参数传入 objc_msgSendSuper() 方法。但是 objc_msgSendSuper() 在定义时该位置的参数是一个 objc_super 结构体：
 ```
 struct objc_super {
     /// Specifies an instance of a class.
@@ -3410,6 +3410,8 @@ objc_msgSendSuper(arg, @selector(run));
 
 ## objc_msgSendSuper() 方法
 
+通过终端命令 `xcrun -sdk iphoneos clang -arch arm64  -rewrite-objc Student.m` 生成的 c++ 代码 Student.cpp，查看 `[super run]` 的 c++ 实现是调用的 objc_msgSendSuper() 方法。  
+
 关于 `[super run]` 调用的方法 objc_msgSendSuper()：
 ```
 /** 
@@ -3445,6 +3447,142 @@ objc_msgSendSuper({ self, [Person class] }, @selector(run));
 
 `[super method]` 流程图：
 ![Runtime30](Runtime/Runtime30.png)
+
+## objc_msgSendSuper2()
+
+### 查看汇编代码
+在 `[super superclass];` 处添加断点，选择 Debug -> Debug Workflow -> Always Show Disassembly：
+![Runtime31](Runtime/Runtime31.png)
+可以看到 `[super class]` 和 `[super superclass]` 底层实现调用的并不是 `objc_msgSendSuper()` 方法而是 `objc_msgSendSuper2()` 方法。
+
+
+`objc_msgSendSuper2()` 方法的具体实现在汇编文件 objc-msg-arm64.s 里：
+```
+	ENTRY _objc_msgSendSuper2
+	UNWIND _objc_msgSendSuper2, NoFrame
+
+	ldp	p0, p16, [x0]		// p0 = real receiver, p16 = class
+	ldr	p16, [x16, #SUPERCLASS]	// p16 = class->superclass
+	CacheLookup NORMAL, _objc_msgSendSuper2
+
+	END_ENTRY _objc_msgSendSuper2
+```
+
+也可以通过选择 Product -> Perform Action -> Assemble "Student.m" 将 OC 代码转成汇编代码，搜索 “:21”（第21行）找到具体的代码实现：
+```
+......//省略
+
+Ltmp0:
+	.loc	3 21 5 prologue_end     ## Runtime-test2/Student.m:21:5
+	movq	-8(%rbp), %rax
+	movq	%rax, -32(%rbp)
+	movq	_OBJC_CLASSLIST_SUP_REFS_$_(%rip), %rax
+	movq	%rax, -24(%rbp)
+	movq	_OBJC_SELECTOR_REFERENCES_(%rip), %rsi
+	leaq	-32(%rbp), %rdi
+	callq	_objc_msgSendSuper2
+	.loc	3 22 1                  ## Runtime-test2/Student.m:22:1
+	addq	$32, %rsp
+	popq	%rbp
+	retq
+
+......//省略
+```
+
+右边的注释代表的是 Student.m 第21行（:21）。在这里也可以看到 `[super run]` 调用的是 `_objc_msgSendSuper2` 方法。
+
+### 查看 LLVM 的中间代码（IR）
+Objective-C 在变为机器代码之前，会被 LLVM 编译器转换为[中间代码（Intermediate Representation）](https://llvm.org/docs/LangRef.html)。
+
+|  语法   | 简介  |
+| - | ----- |
+| @ | 全局变量 |
+| % | 局部变量 |
+| alloca | 在当前执行的函数的堆栈帧中分配内存，当该函数返回到其调用者时，将自动释放内存 |
+| i32 | 32位4字节的整数 |
+| align | 对齐 |
+| load | 读出 |
+| store | 写入 |
+| icmp | 两个整数值比较，返回布尔值 |
+| br | 选择分支，根据条件来转向 label，不根据条件跳转的话类似 goto |
+| label | 代码标签 |
+| call | 调用函数 |
+
+```
+@interface Person : NSObject
+@end
+
+@implementation Person
+void test(int param)
+{
+    
+}
+
+- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector
+{
+    return [NSMethodSignature signatureWithObjCTypes:@"v@:"];
+}
+
+- (void)forwardInvocation:(NSInvocation *)anInvocation
+{
+    [super forwardInvocation:anInvocation];
+    
+    int a = 10;
+    int b = 20;
+    int c = a + b;
+    test(c);
+}
+@end
+```
+
+使用以下命令行指令生成中间代码 Person.ll：
+```
+clang -emit-llvm -S Person.m
+```
+
+找到对应的方法实现：
+```
+......//省略
+//%1*：self，i8*：_cmd，%2*：anInvocation
+define internal void @"\01-[Person forwardInvocation:]"(%1*, i8*, %2*) #2 {
+  %4 = alloca %1*, align 8
+  %5 = alloca i8*, align 8
+  %6 = alloca %2*, align 8
+  %7 = alloca %struct._objc_super, align 8
+  %8 = alloca i32, align 4
+  %9 = alloca i32, align 4
+  %10 = alloca i32, align 4
+  store %1* %0, %1** %4, align 8
+  store i8* %1, i8** %5, align 8
+  store %2* %2, %2** %6, align 8
+  %11 = load %1*, %1** %4, align 8
+  %12 = load %2*, %2** %6, align 8
+  %13 = bitcast %1* %11 to i8*
+  %14 = getelementptr inbounds %struct._objc_super, %struct._objc_super* %7, i32 0, i32 0
+  store i8* %13, i8** %14, align 8
+  %15 = load %struct._class_t*, %struct._class_t** @"OBJC_CLASSLIST_SUP_REFS_$_", align 8
+  %16 = bitcast %struct._class_t* %15 to i8*
+  %17 = getelementptr inbounds %struct._objc_super, %struct._objc_super* %7, i32 0, i32 1
+  store i8* %16, i8** %17, align 8
+  %18 = load i8*, i8** @OBJC_SELECTOR_REFERENCES_.2, align 8, !invariant.load !9
+  //调用 objc_msgSendSuper2，参数一：_objc_super，参数二：i8* _cmd
+  call void bitcast (i8* (%struct._objc_super*, i8*, ...)* @objc_msgSendSuper2 to void (%struct._objc_super*, i8*, %2*)*)(%struct._objc_super* %7, i8* %18, %2* %12)
+  store i32 10, i32* %8, align 4    //将10写入到%8
+  store i32 20, i32* %9, align 4    //将20写入到%9
+  %19 = load i32, i32* %8, align 4  //将%8读出到%19
+  %20 = load i32, i32* %9, align 4  //将%9读出到%20
+  %21 = add nsw i32 %19, %20        //将%19加上%20赋值给%21
+  store i32 %21, i32* %10, align 4  //将%21写入到%10
+  %22 = load i32, i32* %10, align 4 //将%10读出到%22
+  call void @test(i32 %22)          //调用 test(%22)
+  ret void
+}
+
+......//省略
+```
+
+### 小结
+通过终端命令行生成的 c++ 代码中 `[super run]` 的底层实现是 `objc_msgSendSuper()` 方法，通过查看汇编代码和 LLVM 的中间代码可以看到 `[super run]` 的底层实现是 `objc_msgSendSuper2()` 方法。这个问题还是之前提到过的，通过终端命令生成的编译文件很运行时生成的编译文件相比，在某些细节的地方还是有区别的。不过并不影响理解具体的实现逻辑。
 
 ## self、class 和 superclass 的底层实现
 
@@ -3503,47 +3641,7 @@ objc_msgSendSuper({ self, [Person class] }, @selector(superclass));
 @end
 ```
 
-在 `[super superclass];` 处添加断点，选择 Debug -> Debug Workflow -> Always Show Disassembly
-![Runtime31](Runtime/Runtime31.png)
-
-可以看到 `[super class]` 和 `[super superclass]` 底层实现调用的不是 `objc_msgSendSuper()` 方法而是 `objc_msgSendSuper2()` 方法，其实现在汇编文件 objc-msg-arm64.s 里：
-```
-	ENTRY _objc_msgSendSuper2
-	UNWIND _objc_msgSendSuper2, NoFrame
-
-	ldp	p0, p16, [x0]		// p0 = real receiver, p16 = class
-	ldr	p16, [x16, #SUPERCLASS]	// p16 = class->superclass
-	CacheLookup NORMAL, _objc_msgSendSuper2
-
-	END_ENTRY _objc_msgSendSuper2
-```
-
-还是老问题，通过终端命令生成的编译文件很运行时生成的编译文件相比，在某些细节的地方还是有区别的。不过并不影响理解具体的实现逻辑。
-
-
-# isKindOfClass: 和 isMemberOfClass:
-
-```
-@implementation Student
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        BOOL res1 = [[NSObject class] isKindOfClass:[NSObject class]];
-        BOOL res2 = [[NSObject class] isMemberOfClass:[NSObject class]];
-        BOOL res3 = [[Person class] isKindOfClass:[Person class]];
-        BOOL res4 = [[Person class] isMemberOfClass:[Person class]];
-        NSLog(@"%d, %d, %d, %d", res1, res2, res3, res4);
-    }
-    return self;
-}
-@end
-```
-
-打印结果：
-```
-1, 0, 0, 0
-```
+## isKindOfClass: 和 isMemberOfClass:
 
 `isKindOfClass:` 和 `isMemberOfClass:` 的底层实现在源码 [objc4-781](https://opensource.apple.com/tarballs/objc4/) 的 NSObject.mm 文件。
 ```
@@ -3570,7 +3668,510 @@ objc_msgSendSuper({ self, [Person class] }, @selector(superclass));
 }
 ```
 
-`+isMemberOfClass:` 方法里是取出 self 的 ISA() 与出入的 cls 进行比较。
+* `-isMemberOfClass:`：获取 self 的类对象与传入的 cls 进行比较。
+
+* `+isMemberOfClass:`：因为自身是类方法，所以这里是拿 self->ISA()（元类）作为 tcls 与传入的 cls 进行比较。如果不相等再遍历 tcls 的 superclass 与传入的 cls 进行比较。在遍历过程中有一个相等就结束遍历返回 YES，遍历结束后没有找到相等的类就返回 NO。
+
+* `+isKindOfClass:`：方法内部是一个 for 循环，因为自身是类方法，所以这里是拿 self->ISA()（元类）与传入的 cls 进行比较。如果不相等再遍历 tcls 的 superclass 与传入的 cls 进行比较。遍历过程中有一个相等就结束遍历返回 YES，遍历结束后没有找到相等的类就返回 NO。
+
+* `-isKindOfClass:`：方法内部是一个 for 循环，先获取到 self 的类对象 tcls 与传入的 cls 进行比较。如果不相等再遍历 tcls 的 superclass 与传入的 cls 进行比较。遍历过程中有一个相等就结束遍历返回 YES，遍历结束后没有找到相等的类就返回 NO。
+
+### +isMemberOfClass: 和 +isKindOfClass:
+```
+@implementation Student
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        BOOL res1 = [[NSObject class] isKindOfClass:[NSObject class]];   //1
+        BOOL res2 = [[NSObject class] isMemberOfClass:[NSObject class]]; //2
+        BOOL res3 = [[Person class] isKindOfClass:[Person class]];       //3
+        BOOL res4 = [[Person class] isMemberOfClass:[Person class]];     //4
+        NSLog(@"%d, %d, %d, %d", res1, res2, res3, res4);
+    }
+    return self;
+}
+@end
+```
+
+打印结果：
+```
+1, 0, 0, 0
+```
+
+打印结果解析：  
+`+isKindOfClass:` 方法，先通过 self->ISA() 找到 NSObject 元类对象，不等于 NSObject 类对象。再通过 NSObject 元类对象的 superclass 指针找到 NSObject 类对象，等于 NSObject 类对象。所以结果等于 YES：
+```
+NSLog(@"%d", [[NSObject class] isKindOfClass:[NSObject class]]); //1
+
+//等于
+NSLog(@"%d", [NSObject isKindOfClass:[NSObject class]]); //1
+```
+
+`+isMemberOfClass:` 方法，通过 self->ISA() 找到 NSObject 元类对象，不等于 NSObject 类对象。所以结果等于 NO：
+```
+NSLog(@"%d", [[NSObject class] isMemberOfClass:[NSObject class]]); //0
+//等于
+NSLog(@"%d", [NSObject isMemberOfClass:[NSObject class]]); //0
+```
+
+`+isKindOfClass:` 方法，先通过 self->ISA() 找到 Person 元类对象，不等于 Person 类对象。再通过 Person 元类对象的 superclass 指针找到 NSObject 元类对象，不等于 Person 类对象。再通过 NSObject 元类对象的 superclass 指针找到 NSObject 类对象，不等于 Person 类对象。所以结果等于 NO：
+```
+NSLog(@"%d", [[Person class] isKindOfClass:[Person class]]); //0
+//等于
+NSLog(@"%d", [Person isKindOfClass:[Person class]]); //0
+```
+
+`+isMemberOfClass:` 方法，通过 self->ISA() 找到 Person 元类对象，不等于 Person 类对象。所以结果等于 NO：
+```
+NSLog(@"%d", [[Person class] isMemberOfClass:[Person class]]); //0
+//等于
+NSLog(@"%d", [Person isMemberOfClass:[Person class]]); //0
+```
+
+#### 小结
+因为当类对象调用类方法 `+isMemberOfClass:` 和 `+isKindOfClass:` 时，是拿类对象的元类对象跟传入的对象做对比，所以除 NSObject 外，其它类对象调用这两个类方法时，右边传入的至少应该是元类对象才有意义。
+
+### -isMemberOfClass: 和 -isKindOfClass:
+```
+@implementation Student
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        Person *person = [[Person alloc] init];
+        NSObject *object = [[NSObject alloc] init];
+        BOOL res5 = [object isKindOfClass:[NSObject class]];
+        BOOL res6 = [object isMemberOfClass:[NSObject class]];
+        BOOL res7 = [person isKindOfClass:[Person class]];
+        BOOL res8 = [person isMemberOfClass:[Person class]];
+        NSLog(@"%d, %d, %d, %d", res5, res6, res7, res8);
+    }
+    return self;
+}
+@end
+```
+
+打印结果：
+```
+1, 1, 1, 1
+```
+
+`-isKindOfClass:` 方法，通过 [self class] 找到 NSObject 类对象，所以结果等于 YES：
+```
+NSLog(@"%d", [object isKindOfClass:[NSObject class]]); //1
+```
+
+`-isMemberOfClass:` 方法，通过 [self class] 找到 NSObject 类对象，所以结果等于 YES：
+```
+NSLog(@"%d", [object isMemberOfClass:[NSObject class]]); //1
+```
+
+`-isKindOfClass:` 方法，通过 [self class] 找到 Person 类对象，所以结果等于 YES：
+```
+NSLog(@"%d", [person isKindOfClass:[Person class]]); //1
+```
+
+`-isMemberOfClass:` 方法，通过 [self class] 找到 Person 类对象，所以结果等于 YES：
+```
+NSLog(@"%d", [person isMemberOfClass:[Person class]]); //1
+```
+
+#### 小结
+因为当实例对象调用对象方法 `-isMemberOfClass:` 和 `-isKindOfClass:` 时，是拿实例对象的类对象跟传入的对象做对比，所以在实例对象调用这两个对象方法时，右边传入的至少应该是类对象才有意义。
+
+
+## 对象方法的调用原理
+
+### 正常调用
+![Runtime32](Runtime/Runtime32.png)
+```
+@interface Person : NSObject
+@property (nonatomic, copy) NSString *name;
+- (void)run;
+@end
+
+@implementation Person
+- (void)run
+{
+    NSLog(@"Person -run %@", self->_name);
+}
+@end
+
+@interface ViewController ()
+@end
+
+@implementation ViewController
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    Person *person = [[Person alloc] init];
+    [person run];
+}
+@end
+```
+
+打印结果：
+```
+Person -run (null)
+```
+
+指针 person 存储着 person 实例对象的地址（person 实例对象的 isa 地址），而 person 实例对象的 isa 指针里存储着 Person 类对象的地址（Person 类对象的 isa 地址）。`[person run]` 是通过 person 实例对象的 isa 指针找到 Person 类对象查找 `-(void)run` 方法，`-(void)run` 方法内部的 self 就是消息接收者 person 实例对象。person 实例对象内部存储着 isa 指针和成员变量，`self->_name` 是从 isa 的地址开始在 person 实例对象的内存里向下查找成员变量 _name。
+
+### 自定义调用
+![Runtime33](Runtime/Runtime33.png) 
+```
+@interface Person : NSObject
+@property (nonatomic, copy) NSString *name;
+- (void)run;
+@end
+
+@implementation Person
+- (void)run
+{
+    NSLog(@"Person -run %@", self.name);
+}
+@end
+
+@interface ViewController ()
+@end
+
+@implementation ViewController
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    id cls = [Person class];
+    void *obj = &cls;
+    [(__bridge id)obj run];
+}
+@end
+```
+
+打印结果：
+```
+ Person -run <ViewController: 0x7fd88fb0a400>
+```
+
+思考：  
+1. `[(__bridge id)obj run]` 为什么能够调用成功？  
+2. 为什么 self.name 变成了 ViewController?  
+
+局部变量的内存分配在栈空间，从高地址到低地址：
+```
+void test()
+{
+    long long a = 1; //0x7ffeefbff518（高地址）
+    long long b = 2; //0x7ffeefbff510   ↓
+    long long c = 3; //0x7ffeefbff508   ↓
+    long long d = 4; //0x7ffeefbff500（低地址）
+    NSLog(@"%p, %p, %p, %p", &a, &b, &c, &d);
+}
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        test();
+    }
+    return 0;
+}
+```
+
+打印结果：
+```
+0x7ffeefbff518, 0x7ffeefbff510, 0x7ffeefbff508, 0x7ffeefbff500
+```
+
+从打印结果可以看到 a、b、c、d 的内存分配顺序是从高地址到低地址。
+
+`[(__bridge id)obj run]` 图解：
+![Runtime35](Runtime/Runtime35.png) 
+
+图中可以看到 obj、cls 和 self 的内存都分配在栈空间，`[UIViewController class]` 在全局区，self 的地址值最大，obj 的地址值最小。self 和 `[UIViewController class]` 来自 `[super viewDidLoad]` 的结构体 `__rw_objc_super`，`__rw_objc_super` 也是一个临时变量：
+```
+struct __rw_objc_super arg = { 
+    self, 
+    [ViewController class] 
+};
+objc_msgSendSuper(arg, @selector(viewDidLoad));
+```
+
+这一点可以通过终端打印内存进行验证（`x/4g`：打印4个数据，每个数据8个字节）：
+```
+(lldb) p/x obj
+(Person *) $0 = 0x00007ffeea236178
+(lldb) x/4g 0x00007ffeea236178
+0x7ffeea236178: 0x00000001059cb5c0 0x00007fc0cb00a9b0
+0x7ffeea236188: 0x00000001059cb4f8 0x00007fff51ec8b0c
+(lldb) p (Class)0x00000001059cb5c0
+(Class) $1 = Person
+(lldb) po 0x00007fc0cb00a9b0
+<ViewController: 0x7fc0cb00a9b0>
+
+(lldb) p (Class)0x00000001059cb4f8
+(Class) $3 = ViewController
+```
+
+注释掉 `[super viewDidLoad]` 就会报坏内存访问的错误：
+![Runtime36](Runtime/Runtime36.png)
+
+* `[(__bridge id)obj run]` 为什么能够调用成功？  
+因为指针 obj 存储着 cls 的地址，而 cls 存储着 Person 类对象的地址（Person 类对象的 isa 地址），所以 `[(__bridge id)obj run]` 是通过 cls 找到 Person 类对象查找 `-(void)run` 方法(这里的 cls 相当于 person 实例对象的 isa)。
+* 为什么 self.name 变成了 ViewController？  
+因为 `-(void)run` 方法内部的 self 就是消息接收者 obj，`obj->_name` 是在 obj 所在的内存中从 obj 的地址开始向下查找成员变量 _name，而 obj 所在的内存（栈区）向下找到的是 cls 下面的指针 self（ViewController 实例对象），所以最终的打印结果是 `<ViewController: 0x7fd88fb0a400>`。
+
+修改 ViewController.m 实现，添加成员变量 test：
+```
+@implementation ViewController
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    NSString *test = @"123";
+    id cls = [Person class];
+    void *obj = &cls;
+    [(__bridge id)obj run];
+}
+@end
+```
+
+打印结果：
+```
+Person -run 123
+```
+
+指针 obj 存储着 cls 的地址，而 cls 存储着 Person 类对象的地址（Person 类对象的 isa 地址）。`[(__bridge id)obj run]` 是通过 cls 找到 Person 类对象查找 `-(void)run` 方法，`-(void)run` 方法内部的 self 就是消息接收者 obj。从 obj 的内存开始在 obj 所在的内存中向下查找成员变量 _name，最后找到的却是 cls 下面的局部变量 test：
+![Runtime34](Runtime/Runtime34.png) 
+
+从图中可以看到 obj、cls 和 test 三个变量的内存都分配在栈空间，test 的地址值最大，obj 的地址值最小。
+
+
+# Runtime API
+
+实战：
+```
+@interface Person : NSObject
+- (void)run;
+@end
+
+@implementation Person
+- (void)run
+{
+    NSLog(@"%s", __func__);
+}
+@end
+
+@interface Student : NSObject
+- (void)run;
+@end
+
+@implementation Student
+- (void)run
+{
+    NSLog(@"%s", __func__);
+}
+@end
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        test1();
+        test2();
+    }
+    return 0;
+}
+```
+
+## 类
+
+|  方法   | 注释  |
+|  -----  | ---  |
+| `Class objc_allocateClassPair(Class superclass, const char *name, size_t extraBytes)` | 动态创建一个类（参数：父类，类名，额外的内存空间）|
+| `void objc_registerClassPair(Class cls)` | 注册一个类（要在类注册之前添加成员变量）|
+| `void objc_disposeClassPair(Class cls)` | 销毁一个类|
+| `Class object_getClass(id obj)` | 获取 isa 指向的 Class |
+| `Class object_setClass(id obj, Class cls)` | 设置 isa 指向的 Class |
+| `BOOL object_isClass(id obj)` | 判断一个 OC 对象是否为 Class |
+| `BOOL class_isMetaClass(Class cls)` | 判断一个 Class 是否为元类 |
+| `Class class_getSuperclass(Class cls)` | 获取父类 |
+
+`test1()` 实现：
+```
+void test1()
+{
+    NSLog(@"---------------------------------------//动态创建一个类，注册一个类");
+    Class Teacher = objc_allocateClassPair([NSObject class], "Teacher", 0); //创建类对象和元类对象
+    objc_registerClassPair(Teacher); //注册类
+    NSLog(@"Teacher 的内存大小%zd个字节", class_getInstanceSize(Teacher)); //8个字节
+    
+    Person *person = [[Person alloc] init];
+    
+    NSLog(@"---------------------------------------//获取 isa 指向的 Class");
+    NSLog(@"类对象：%p，类对象：%p", [Person class], object_getClass(person));
+    NSLog(@"类对象：%p，元类对象：%p", [Person class], object_getClass([Person class]));
+    
+    NSLog(@"---------------------------------------//设置 isa 指向的 Class");
+    object_setClass(person, [Student class]);
+    [person run]; //这里的 Person 是 (Student *) 类型，isa 指向 Student 类对象
+    
+    NSLog(@"---------------------------------------//判断一个 OC 对象是否为 Class");
+    NSLog(@"%d %d %d", object_isClass(person), object_isClass([Person class]), object_isClass(object_getClass([Person class]))); //元类对象是一种特殊的类对象
+    
+    NSLog(@"---------------------------------------//判断一个 Class 是否为元类");
+    NSLog(@"%d %d", class_isMetaClass([Person class]), class_isMetaClass(object_getClass([Person class]))); //元类对象是一种特殊的类对象
+    
+    NSLog(@"---------------------------------------//获取父类");
+    NSLog(@"%@类对象：%p, %@元类对象：%p", class_getSuperclass([Person class]), class_getSuperclass([Person class]),
+          class_getSuperclass(object_getClass([Person class])), class_getSuperclass(object_getClass([Person class])));
+
+    NSLog(@"---------------------------------------//销毁一个类");
+    id teacher2 = [[Teacher alloc] init];
+//    person = nil; 
+//    teacher = nil; 
+    teacher2 = nil; //实例中只要有一个置为 nil，就可以调用了！❓
+    objc_disposeClassPair(Teacher); //当类或者它的子类的实例还存在，则不能调用 objc_disposeClassPair 方法
+    objc_disposeClassPair(Teacher); //报错“Attempt to use unknown class 0x1030b92a0.”
+}
+```
+
+打印结果：
+```
+---------------------------------------//动态创建一个类，注册一个类
+Teacher 的内存大小8个字节
+---------------------------------------//获取 isa 指向的 Class
+类对象：0x100003228，类对象：0x100003228
+类对象：0x100003228，元类对象：0x100003200
+---------------------------------------//设置 isa 指向的 Class
+-[Student run]
+---------------------------------------//判断一个 OC 对象是否为 Class
+0 1 1
+---------------------------------------//判断一个 Class 是否为元类
+0 1
+---------------------------------------//获取父类
+NSObject类对象：0x7fff94b06118, NSObject元类对象：0x7fff94b060f0
+---------------------------------------//销毁一个类
+objc[15858]: Attempt to use unknown class 0x102905440.
+```
+
+## 成员变量
+
+|  方法   | 注释  |
+|  -----  | ---  |
+| `Ivar class_getInstanceVariable(Class cls, const char *name)` | 获取一个实例变量信息 |
+| `Ivar *class_copyIvarList(Class cls, unsigned int *outCount)` | 拷贝实例变量列表（最后需要调用free释放）|
+| `void object_setIvar(id obj, Ivar ivar, id value)` | 设置成员变量的值 |
+| `id object_getIvar(id obj, Ivar ivar)` | 获取成员变量的值 |
+| `BOOL class_addIvar(Class cls, const char * name, size_t size, uint8_t alignment, const char * types)` | 动态添加成员变量（已经注册的类是不能动态添加成员变量的）|
+| `const char *ivar_getName(Ivar v)` | 获取成员变量的名字 |
+| `const char *ivar_getTypeEncoding(Ivar v)` | 获取成员变量的方法签名 |
+
+`test2()` 实现：
+```
+void test2()
+{
+    NSLog(@"---------------------------------------//动态添加成员变量（已经注册的类是不能动态添加成员变量的）");
+    Class Teacher = objc_allocateClassPair([NSObject class], "Teacher", 0); //动态创建一个类（包括类对象和元类对象，参数：父类，类名，额外的内存空间）
+    
+    class_addIvar(Teacher, "_age", 4, 1, @encode(int)); //在类注册之前添加成员变量（因为类的成员变量列表是只读的，所有类一旦注册后就不能修改成员变量列表了）
+    class_addIvar(Teacher, "_weight", 4, 1, @encode(int));
+
+    //添加方法是随时可以操作的，最好是写在注册类前，逻辑比较清晰
+    class_addMethod(Teacher, @selector(run), (IMP)run, "v@:");
+    
+    objc_registerClassPair(Teacher); //注册类
+    NSLog(@"%zd", class_getInstanceSize(Teacher)); //isa(8个字节) + _age(4个字节) + _weight(4个字节) = 16个字节
+    
+    NSLog(@"---------------------------------------//修改/获取成员变量的值");
+    id teacher = [[Teacher alloc] init];
+    [teacher setValue:@10 forKey:@"_age"];
+    [teacher setValue:@20 forKey:@"_weight"];
+    NSLog(@"_age：%@, _weight：%@", [teacher valueForKey:@"_age"], [teacher valueForKey:@"_weight"]);
+
+    NSLog(@"---------------------------------------//调用添加的方法");
+    [teacher run];
+
+    NSLog(@"---------------------------------------//设置 isa 指向的 Class");
+    Person *person = [[Person alloc] init];
+    object_setClass(person, Teacher);
+    [person run];
+    
+    NSLog(@"---------------------------------------//获取成员变量的相关信息");
+    Ivar ageIvar = class_getInstanceVariable([Person class], "_age");
+    NSLog(@"%s %s", ivar_getName(ageIvar), ivar_getTypeEncoding(ageIvar));
+    
+    NSLog(@"---------------------------------------//设置和获取成员变量的值");
+    Ivar nameIvar = class_getInstanceVariable([Person class], "_name");
+    Person *person2 = [[Person alloc] init];
+    object_setIvar(person2, nameIvar, @"name"); //设置 _name
+    object_setIvar(person2, ageIvar, (__bridge id)(void *)10); //设置 _age（使用 runtime 方法，底层没有转换直接赋值，先转成指针变量，再转成 id 类型的对象）
+    //[person2 setValue:@10 forKey:@"age"]; //NSNumber 类型的 10 在赋值给 age 时会转成 int 类型
+    NSLog(@"%@", object_getIvar(person2, nameIvar)); //获取
+    
+    NSLog(@"---------------------------------------//拷贝实例变量列表（最后需要调用free释放）+ 获取成员变量的相关信息");
+    unsigned int count;
+    Ivar *ivars = class_copyIvarList([Person class], &count);
+    for (int i=0; i<count; i++) {
+        Ivar ivar = ivars[i];
+        NSLog(@"%s %s", ivar_getName(ivar), ivar_getTypeEncoding(ivar));
+    }
+    free(ivars);
+}
+```
+
+在使用 `object_setIvar()` 方法设置 int 类型的成员变量时，因为数值不能直接转为对象，所以先将数值转成指针（指针是用来存值的），再将指针转成 id 类型的对象。
+
+打印结果：
+```
+---------------------------------------//动态添加成员变量（已经注册的类是不能动态添加成员变量的）
+16
+---------------------------------------//修改/获取成员变量的值
+_age：10, _weight：20
+---------------------------------------//调用添加的方法
+<Teacher: 0x100525bc0> - run
+---------------------------------------//设置 isa 指向的 Class
+<Teacher: 0x10041dda0> - run
+---------------------------------------//获取成员变量的相关信息
+_age i
+---------------------------------------//设置和获取成员变量的值
+name 10
+---------------------------------------//拷贝实例变量列表（最后需要调用free释放）+ 获取成员变量的相关信息
+_age i
+_name @"NSString"
+```
+
+
+
+
+## 属性
+
+|  方法   | 注释  |
+|  -----  | ---  |
+| `objc_property_t class_getProperty(Class cls, const char *name)` | 获取一个属性 |
+| `objc_property_t *class_copyPropertyList(Class cls, unsigned int *outCount)` | 拷贝属性列表 |
+| `BOOL class_addProperty(Class cls, const char *name, const objc_property_attribute_t *attributes, unsigned int attributeCount)` | 动态添加属性 |
+| `void class_replaceProperty(Class cls, const char *name, const objc_property_attribute_t *attributes, unsigned int attributeCount)` | 动态替换属性 |
+| `const char *property_getName(objc_property_t property)` | 获取属性名 |
+| `const char *property_getAttributes(objc_property_t property)` | 获取属性的真实类型 |
+
+## 方法
+
+|  方法   | 注释  |
+|  -----  | ---  |
+| `Method class_getInstanceMethod(Class cls, SEL name)` | 获得一个实例方法 |
+| `Method class_getClassMethod(Class cls, SEL name)` | 获得一个类方法 |
+| `IMP class_getMethodImplementation(Class cls, SEL name)` | 方法实现相关操作 |
+| `IMP method_setImplementation(Method m, IMP imp)` | 方法实现相关操作 |
+| `void method_exchangeImplementations(Method m1, Method m2)` | 方法实现相关操作|
+| `Method *class_copyMethodList(Class cls, unsigned int *outCount)` | 拷贝方法列表（最后需要调用free释放） |
+| `BOOL class_addMethod(Class cls, SEL name, IMP imp, const char *types)` | 动态添加方法 |
+| `IMP class_replaceMethod(Class cls, SEL name, IMP imp, const char *types)` | 动态替换方法|
+| `SEL method_getName(Method m)` | 获取方法的相关信息（带有copy的需要调用free去释放） |
+| `IMP method_getImplementation(Method m)` | 获取方法的相关信息（带有copy的需要调用free去释放）|
+| `const char *method_getTypeEncoding(Method m)` | 获取方法的相关信息（带有copy的需要调用free去释放） |
+| `unsigned int method_getNumberOfArguments(Method m)` | 获取方法的相关信息（带有copy的需要调用free去释放） |
+| `char *method_copyReturnType(Method m)` | 获取方法的相关信息（带有copy的需要调用free去释放） |
+| `char *method_copyArgumentType(Method m, unsigned int index)` | 获取方法的相关信息（带有copy的需要调用free去释放） |
+| `const char *sel_getName(SEL sel)` | 选择器相关 |
+| `SEL sel_registerName(const char *str)` | 选择器相关 |
+| `IMP imp_implementationWithBlock(id block)` | 用 block 作为方法实现 |
+| `id imp_getBlock(IMP anImp)` | 用 block 作为方法实现 |
+| `BOOL imp_removeBlock(IMP anImp)` | 用 block 作为方法实现 |
 
 
 
@@ -3580,9 +4181,202 @@ objc_msgSendSuper({ self, [Person class] }, @selector(superclass));
 
 
 
+# Runtime 应用
 
+## 查看私有成员变量
 
+修改 UITextField 占位文字的颜色：
 
+方案一：正常的 OC 代码
+```
+@interface ViewController ()
+@property (weak, nonatomic) IBOutlet UITextField *textField;
+@end
+
+@implementation ViewController
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
+    attrs[NSForegroundColorAttributeName] = [UIColor redColor];
+    self.textField.attributedPlaceholder = [[NSMutableAttributedString alloc] initWithString:@"请输入用户名" attributes:attrs];
+}
+@end
+```
+
+方案二：使用 KVC 修改（iOS 13 后禁用）
+```
+@interface ViewController ()
+@property (weak, nonatomic) IBOutlet UITextField *textField;
+@end
+
+@implementation ViewController
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    self.textField.placeholder = @"请输入用户名";
+    UILabel *placeholderLabel = [self.textField valueForKeyPath:@"_placeholderLabel"];
+    placeholderLabel.textColor = [UIColor redColor];
+
+    //简化版：[self.textField setValue:[UIColor redColor] forKeyPath:@"_placeholderLabel.textColor"];
+}
+@end
+```
+
+报错：
+```
+*** Terminating app due to uncaught exception 'NSGenericException', reason: 'Access to UITextField's _placeholderLabel ivar is prohibited. This is an application bug'
+```
+
+方案三：使用 Runtime（还不如 OC 省事）
+```
+@interface ViewController ()
+@property (weak, nonatomic) IBOutlet UITextField *textField;
+@end
+
+@implementation ViewController
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.textField.placeholder = @"请输入用户名";
+    Ivar ivar = class_getInstanceVariable([UITextField class], "_placeholderLabel");
+    UILabel *placeholderLabel = object_getIvar(self.textField, ivar);
+    placeholderLabel.textColor = [UIColor redColor];
+}
+@end
+```
+
+## 字典转模型
+```
+@interface Person : NSObject
+@property (nonatomic, assign) int ID;
+@property (nonatomic, assign) int age;
+@property (nonatomic, copy) NSString *name;
+@end
+
+@implementation Person
+@end
+
+@interface Teacher : Person
+@property (nonatomic, assign) int weight;
+@property (nonatomic, assign) int height;
+@end
+
+@implementation Teacher
+@end
+
+@interface NSObject (Json)
++ (instancetype)YQ_objectWithJson:(NSDictionary *)json;
+@end
+
+@implementation NSObject (Json)
++ (instancetype)YQ_objectWithJson:(NSDictionary *)json
+{
+    id obj = [[self alloc] init];
+    [self enumerateIvarsWithObject:obj class:self json:json];
+    return obj;
+}
+
++ (void)enumerateIvarsWithObject:(id)obj class:(Class)class json:(NSDictionary *)json
+{
+    Class superclass = [class superclass];
+    if (superclass && superclass != [NSObject class]) { //处理继承
+        [self enumerateIvarsWithObject:obj class:superclass json:json];
+    }
+    unsigned int count;
+    Ivar *ivars = class_copyIvarList(class, &count);
+    for (int i=0; i<count; i++) {
+        Ivar ivar = ivars[i]; //取出 i 位置的成员变量
+        NSMutableString *name = [NSMutableString stringWithUTF8String:ivar_getName(ivar)];
+        [name deleteCharactersInRange:NSMakeRange(0, 1)]; //去掉“_”
+        id value = json[name]; //设置
+        if ([name isEqualToString:@"ID"]) { //处理特殊数据
+            value = json[@"id"];
+        }
+        [obj setValue:value forKey:name];
+    }
+    free(ivars);
+}
+@end
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        NSDictionary *json = @{
+            @"id" : @10,
+            @"age" : @20,
+            @"weight" : @60,
+            @"height" : @160,
+            @"name" : @"Tom"
+        };
+        Teacher *teacher = [Teacher YQ_objectWithJson:json];
+        NSLog(@"%d, %d, %d, %d, %@", teacher.ID, teacher.age, teacher.weight, teacher.height, teacher.name);
+    }
+    return 0;
+}
+```
+
+打印结果：
+```
+10, 20, 60, 160, Tom
+```
+
+## 替换方法实现
+
+### class_replaceMethod
+```
+void myRun()
+{
+    NSLog(@"---myRun");
+}
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        //使用 myRun 替换类方法 +personRun，传入元类对象
+        class_replaceMethod(object_getClass([Person class]), @selector(personRun), (IMP)myRun, "v");
+        [Person personRun];
+        //使用 block 替换类方法 +personRun
+        class_replaceMethod(object_getClass([Person class]), @selector(personRun), imp_implementationWithBlock(^{
+            NSLog(@"this is a block");
+        }), "v");
+        [Person personRun];
+        
+        //使用 myRun 替换对象方法 -run，传入类对象
+        class_replaceMethod([Person class], @selector(run), (IMP)myRun, "v");
+        Person *person = [[Person alloc] init];
+        [person run];
+        //使用 block 替换对象方法 -run
+        class_replaceMethod([Person class], @selector(run), imp_implementationWithBlock(^{
+            NSLog(@"this is a block");
+        }), "v");
+        [person run];
+    }
+    return 0;
+}
+```
+
+打印结果：
+```
+---myRun
+this is a block
+---myRun
+this is a block
+```
+
+### method_exchangeImplementations
+```
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        Person *person = [[Person alloc] init];
+        
+        Method runMethod = class_getInstanceMethod([Person class], @selector(run));
+        Method testMethod = class_getInstanceMethod([Person class], @selector(test));
+        method_exchangeImplementations(runMethod, testMethod);
+        
+        [person run];
+    }
+    return 0;
+}
+```
 
 # 总结
 * 讲一下 OC 的消息机制  
@@ -3595,3 +4389,12 @@ objc_msgSend 底层有三大阶段：
 * 消息转发机制流程  
 如果没有动态添加方法，会调用 `forwardingTargetForSelector:` 方法获取可以处理消息的对象。如果没有实现  `forwardingTargetForSelector:` 方法或者该方法返回的是 nil，会调用 `methodSignatureForSelector:` 方法获取方法签名，在获取方法签名成功后再调用 `forwardInvocation:` 方法进行自定义操作。如果没有实现 `methodSignatureForSelector:` 方法或者该方法返回的是 nil，会调用 `doesNotRecognizeSelector:` 方法终止流程。 
 
+* 什么是 Runtime ？平时项目中有用过么？  
+OC 是一门动态性比较强的编程语言，允许很多操作推迟到程序运行时再进行。OC 的动态性就是由 Runtime 来支撑和实现的，Runtime 是一套 C 语言的 API，封装了很多动态性相关的函数，平时编写的OC代码，底层都是转换成了 Runtime API 进行调用。
+
+  具体应用  
+  1、利用关联对象（AssociatedObject）给分类添加属性；  
+  2、遍历类的所有成员变量（修改textfield的占位文字颜色、字典转模型、自动归档解档）；  
+  3、交换方法实现（交换系统的方法）；  
+  4、利用消息转发机制解决方法找不到的异常问题；  
+  ......
