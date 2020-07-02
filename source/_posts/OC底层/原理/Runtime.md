@@ -74,7 +74,7 @@ int main(int argc, const char * argv[]) {
 @end
 ```
 
-Objective-C 是一门动态性比较强的编程语言，跟 C、C++ 等语言有着很大的不同，Objective-C 的动态性是由 Runtime API 来支撑的，Runtime API 提供的接口基本都是 C 语言的，源码由 C\C++\汇编语言 编写。
+Objective-C 是一门动态性比较强的编程语言，跟 C、C++ 等语言有着很大的不同，Objective-C 的动态性是由 Runtime API 来支撑的，Runtime API 提供的接口基本都是 C 语言的，源码由 C\C++\汇编语言编写。
 
 # isa 详解
 学习 Runtime，首先要了解它底层的一些常用数据结构，比如 isa 指针。在 arm64 架构之前，isa 就是一个普通的指针，存储着 Class、Meta-Class 对象的内存地址。从 arm64 架构开始，对 isa 进行了优化，变成了一个共用体（union）结构，还使用位域来存储更多的信息。
@@ -139,7 +139,7 @@ _tallRichHandsome 占1个字节（8位：`0b 0000 0000`），让它最右边的3
 运算规则：`0&0=0`，`0&1=0`，`1&0=0`，`1&1=1`。  
 总结：两位同时为1，结果才为1，否则结果为0。 
 
-因为"与"运算可以获取到特定位的值，所以可以通过“与”运算分别获取三个变量的值：
+因为“与”运算可以获取到特定位的值，所以可以通过“与”运算分别获取三个变量的值：
 
 初始化 _tallRichHandsome
 ```
@@ -177,7 +177,6 @@ _tallRichHandsome = 0b00000101; //（tall：YES, rich：NO, handsome：YES）
 - (BOOL)isRich;
 - (BOOL)isHandsome;
 @end
-
 
 @interface Person()
 {
@@ -224,7 +223,7 @@ int main(int argc, const char * argv[]) {
 tall：1, rich：0, handsome：1
 ```
 
-因为返回的是 BOOL 类型，而“与”运算取出的是有值（`0b00000001`、`0b00000100`）和0（`0b00000000`），所以可以在“与”运算的结果前加`!!`取反两次：
+因为返回的是 BOOL 类型，而“与”运算取出的是有值（`0b00000001`、`0b00000100`）和0（`0b00000000`），所以为了可以获取到 YES 和 NO，可以在“与”运算的结果前加`!!`取反两次：
 ```
 !(0b00000000)   YES
 !!(0b00000000)  NO   //!!(_tallRichHandsome & 2)
@@ -410,7 +409,7 @@ tall：1, rich：0, handsome：1
 
 机构体的第一个成员变量在结构体内存的最右边一个二进制位，其它变量依次从左往右排。
 
-使用位域增加可读性。定义结构体 _tallRichHandsome，成员变量 tall，并通过“:”设置 tall 在内存中只占1位。
+使用位域增加可读性。定义结构体 _tallRichHandsome，成员变量 tall，并通过“`:`”设置 tall 在内存中只占1位。
 ```
 @interface Person()
 {
@@ -1487,7 +1486,7 @@ _mask 的值是散列表的长度-1，保证“与”运算的结果不会超出
 
 散列表（哈希表）的实现逻辑：  
 1、实现一个方法1可以计算出索引；  
-2、实现一个方法2可以解决索引冲突（如：对索引 -1 计算出新的索引值）；
+2、实现一个方法2可以解决索引冲突（如：对索引减 1 计算出新的索引值）；
 
 使用求余 `%` 也可以实现散列表（哈希表），通过求余计算出的索引也可以保证不越界。
 
@@ -1627,7 +1626,7 @@ testPerson 0xc5e8
 
 在缓存 `@selector(testPerson)` 方法时，先计算出索引（1），然后检查索引处是否有值，没值，将 `@selector(testPerson)` 缓存到对象的索引处。
 
-第二次调用 `[person testPerson]` 会先去实例对象 person 的 _buckets 里找，找到对应的索引处的值判断是否是当前方法 `@selector(testPerson)`，如果是就直接返回。（如果不是就将索引 -1 继续在 _buckets 里查找，找到了就直接返回。如果找了一圈还没有找到，会同第一次一样去类对象和父类的类对象查找，找到后缓存到 _buckets 里并返回。）
+第二次调用 `[person testPerson]` 会先去实例对象 person 的 _buckets 里找，找到对应的索引处的值判断是否是当前方法 `@selector(testPerson)`，如果是就直接返回。（如果不是就将索引减 1 继续在 _buckets 里查找，找到了就直接返回。如果找了一圈还没有找到，会同第一次一样去类对象和父类的类对象查找，找到后缓存到 _buckets 里并返回。）
 
 #### 例2：
 ```
@@ -1687,7 +1686,7 @@ testStudent 0xc5d
 
 在缓存 `@selector(testStudent)` 方法时，_buckets 的空间不够了，_buckets 清空数据 -> 扩容x2（8） -> 重新缓存。先计算出索引（3），然后检查索引处是否有值，没值，将 `@selector(testPerson)` 缓存到对象的索引处。
 
-在缓存 `@selector(testStudent2)` 方法时，先计算出索引（0），然后检查索引处是否有值，没值，将 `@selector(testStudent2)` 缓存到对象的索引处。（如果索引值与 `@selector(testStudent)` 相同（3），检查到索引处有值，然后将索引 -1 获取到新的索引（2），再检查新的索引处是否有值，没值，将 `@selector(testStudent2)` 缓存到对象的索引处。）
+在缓存 `@selector(testStudent2)` 方法时，先计算出索引（0），然后检查索引处是否有值，没值，将 `@selector(testStudent2)` 缓存到对象的索引处。（如果索引值与 `@selector(testStudent)` 相同（3），检查到索引处有值，然后将索引减 1 获取到新的索引（2），再检查新的索引处是否有值，没值，将 `@selector(testStudent2)` 缓存到对象的索引处。）
 
 #### 例3
 ```
@@ -1869,7 +1868,7 @@ LLookupStart$1:
 
 #if CACHE_MASK_STORAGE == CACHE_MASK_STORAGE_HIGH_16
 	and	p10, p11, #0x0000ffffffffffff	// p10 = buckets (缓存)
-	and	p12, p1, p11, LSR #48		// x12 = _cmd & mask (通过"与"运算计算索引)
+	and	p12, p1, p11, LSR #48		// x12 = _cmd & mask (通过“与”运算计算索引)
 #elif CACHE_MASK_STORAGE == CACHE_MASK_STORAGE_LOW_4
 	and	p10, p11, #~0xf			// p10 = buckets
 	and	p11, p11, #0xf			// p11 = maskShift
@@ -1936,7 +1935,7 @@ LLookupRecover$1:
 	// miss if bucket->sel == 0
 .if $0 == GETIMP
 	cbz	p9, LGetImpMiss
-.elseif $0 == NORMAL //调用 CacheLookup 时的参数是 NORMAL
+.elseif $0 == NORMAL //调用 CacheLookup 时传入的参数是 NORMAL
 	cbz	p9, __objc_msgSend_uncached //调用 __objc_msgSend_uncached 方法（实现👇）
 .elseif $0 == LOOKUP
 	cbz	p9, __objc_msgLookup_uncached
@@ -2092,7 +2091,7 @@ IMP lookUpImpOrForward(id inst, SEL sel, Class cls, int behavior)
     // kind of cache lookup is class_getInstanceMethod().
 
     for (unsigned attempts = unreasonableClassCount();;) {
-        // curClass method list.（curClass 的方法列表。）
+        // curClass method list.（curClass 的方法列表）
         // for 循环第一次时，curClass 代表当前类
         // for 循环非第一次时，curClass 代表父类
         Method meth = getMethodNoSuper_nolock(curClass, sel); //到 curClass 的方法列表里面找（实现👇）
@@ -2101,7 +2100,7 @@ IMP lookUpImpOrForward(id inst, SEL sel, Class cls, int behavior)
             goto done; //跳转到 done 方法
         }
         
-        // 找到 curClass 的父类赋值给 curClass，并判断新赋值的 curClass 是否为 nil（通过 for 循环重复执行 curClass = curClass->superclass，找到更上层父类）
+        // 执行 curClass = curClass->superclass，找到更上层父类，并判断新赋值的 curClass 是否为 nil（通过 for 循环重复执行，遍历父类）
         if (slowpath((curClass = curClass->superclass) == nil)) { 
             // No implementation found, and method resolver didn't help.
             // Use forwarding.
@@ -2140,7 +2139,7 @@ IMP lookUpImpOrForward(id inst, SEL sel, Class cls, int behavior)
     //---------------------------- 动态方法解析 end ----------------------------
 
  done:
-    log_and_fill_cache(cls, imp, sel, inst, curClass); //将 curClass 类里找到的函数地址 imp 填充到 cls 类（objc_msgSend 的接收者）里的缓存里（实现👇）
+    log_and_fill_cache(cls, imp, sel, inst, curClass); //将从 curClass 类里找到的函数地址 imp 填充到 cls（objc_msgSend的接收者）的缓存里（实现👇）
     runtimeLock.unlock();
  done_nolock:
     if (slowpath((behavior & LOOKUP_NIL) && imp == forward_imp)) {
@@ -2162,7 +2161,7 @@ getMethodNoSuper_nolock(Class cls, SEL sel)
     // fixme nil cls? 
     // fixme nil sel?
 
-    auto const methods = cls->data()->methods(); //cls->data() 返回到是 class_rw_t，相当于 class_rw_t->methods()
+    auto const methods = cls->data()->methods(); //cls->data() 返回到是 class_rw_t，即 class_rw_t->methods()
     for (auto mlists = methods.beginLists(),
               end = methods.endLists();
          mlists != end;
@@ -2339,7 +2338,7 @@ void cache_t::insert(Class cls, SEL sel, IMP imp, id receiver)
             // before we grabbed the cacheUpdateLock.
             return;
         }
-    } while (fastpath((i = cache_next(i, m)) != begin)); //重新计算索引（当前索引-1），判断是否查了一圈了
+    } while (fastpath((i = cache_next(i, m)) != begin)); //重新计算索引（当前索引减 1），判断是否查了一圈了
 
     cache_t::bad_cache(receiver, (SEL)sel, cls);
 }
@@ -3070,7 +3069,7 @@ int main(int argc, const char * argv[]) {
 +[Student test]
 ```
 
-[Person test] 的本质是 objc_msgSend([Person test], @selector(test))，会先走一遍“消息发送”流程。因为 Person 没有实现 `-(void)test` 方法，所以
+[Person test] 的本质是 objc_msgSend([Person class], @selector(test))，会先走一遍“消息发送”流程。因为 Person 没有实现 `-(void)test` 方法，所以
 
 #### NSInvocation
 NSInvocation 封装了一个方法调用，包括：方法调用者、方法名、方法参数和返回值（类型编码决定 NSInvocation 的方法参数和返回值）。  
@@ -3267,7 +3266,7 @@ student.age == 15
 ```
 
 ### 小结
-* `forwardingTargetForSelector:` 方法、`methodSignatureForSelector:` 方法 和 `forwardInvocation:` 方法本身并没有区分对象方法和类方法，但是在 _objc_forward_handler 的实现中，receiver （实列对象/类对象）会调用对应的方法（对象方法/类方法），所以实现的方法类型需要跟返回的类型统一（实例对象 - 对象方法，类对象 - 类方法）。消息转发中，不要在意方法是对象方法还是类方法，本质还是 objc_msgSend 的消息接收者和方法名。
+* `forwardingTargetForSelector:`、`methodSignatureForSelector:` 和 `forwardInvocation:` 方法本身并没有区分对象方法和类方法，但是在 _objc_forward_handler 的实现中，receiver （实列对象/类对象）会调用对应的方法（对象方法/类方法），所以实现的方法类型需要跟返回的类型统一。消息转发中，不要在意方法是对象方法还是类方法，本质还是 objc_msgSend 的消息接收者和方法名（实例对象 - 对象方法，类对象 - 类方法）。
 
 
 # super 的本质
@@ -3473,7 +3472,7 @@ objc_msgSendSuper({ self, [Person class] }, @selector(run));
 ......//省略
 
 Ltmp0:
-	.loc	3 21 5 prologue_end     ## Runtime-test2/Student.m:21:5
+	.loc	3 21 5 prologue_end     ## Runtime-test2/Student.m:21:5 //Student.m 文件的第 21 行
 	movq	-8(%rbp), %rax
 	movq	%rax, -32(%rbp)
 	movq	_OBJC_CLASSLIST_SUP_REFS_$_(%rip), %rax
@@ -3670,7 +3669,7 @@ objc_msgSendSuper({ self, [Person class] }, @selector(superclass));
 
 * `-isMemberOfClass:`：获取 self 的类对象与传入的 cls 进行比较。
 
-* `+isMemberOfClass:`：因为自身是类方法，所以这里是拿 self->ISA()（元类）作为 tcls 与传入的 cls 进行比较。如果不相等再遍历 tcls 的 superclass 与传入的 cls 进行比较。在遍历过程中有一个相等就结束遍历返回 YES，遍历结束后没有找到相等的类就返回 NO。
+* `+isMemberOfClass:`：因为自身是类方法，所以这里是拿 self->ISA()（元类）作为 tcls 与传入的 cls 进行比较。
 
 * `+isKindOfClass:`：方法内部是一个 for 循环，因为自身是类方法，所以这里是拿 self->ISA()（元类）与传入的 cls 进行比较。如果不相等再遍历 tcls 的 superclass 与传入的 cls 进行比较。遍历过程中有一个相等就结束遍历返回 YES，遍历结束后没有找到相等的类就返回 NO。
 
@@ -3816,7 +3815,7 @@ NSLog(@"%d", [person isMemberOfClass:[Person class]]); //1
 Person -run (null)
 ```
 
-指针 person 存储着 person 实例对象的地址（person 实例对象的 isa 地址），而 person 实例对象的 isa 指针里存储着 Person 类对象的地址（Person 类对象的 isa 地址）。`[person run]` 是通过 person 实例对象的 isa 指针找到 Person 类对象查找 `-(void)run` 方法，`-(void)run` 方法内部的 self 就是消息接收者 person 实例对象。person 实例对象内部存储着 isa 指针和成员变量，`self->_name` 是从 isa 的地址开始在 person 实例对象的内存里向下查找成员变量 _name。
+指针 person 存储着 person 实例对象的地址（person 实例对象的 isa 地址），而 person 实例对象的 isa 指针里存储着 Person 类对象的地址（Person 类对象的 isa 地址）。`[person run]` 是通过 person 实例对象的 isa 指针找到 Person 类对象查找 `-(void)run` 方法，`-(void)run` 方法内部的 self 就是消息接收者（person 实例对象）。person 实例对象内部存储着 isa 指针和成员变量，`self->_name` 是从 isa 的地址开始在 person 实例对象的内存里向下查找成员变量 _name。
 
 ### 自定义调用
 ![Runtime33](Runtime/Runtime33.png) 
@@ -3838,7 +3837,7 @@ Person -run (null)
 
 @implementation ViewController
 - (void)viewDidLoad {
-    [super viewDidLoad];
+    [super viewDidLoad]; //高地址
     
     id cls = [Person class];
     void *obj = &cls;
@@ -3894,7 +3893,7 @@ struct __rw_objc_super arg = {
 objc_msgSendSuper(arg, @selector(viewDidLoad));
 ```
 
-这一点可以通过终端打印内存进行验证（`x/4g`：打印4个数据，每个数据8个字节）：
+这一点可以通过打印内存进行验证（`x/4g`：打印4个数据，每个数据8个字节）：
 ```
 (lldb) p/x obj
 (Person *) $0 = 0x00007ffeea236178
@@ -3910,13 +3909,10 @@ objc_msgSendSuper(arg, @selector(viewDidLoad));
 (Class) $3 = ViewController
 ```
 
+从打印结果可以看到，依次是 Person 类对象、<ViewController: 0x7fc0cb00a9b0> 实列对象和 ViewController 类对象。
+
 注释掉 `[super viewDidLoad]` 就会报坏内存访问的错误：
 ![Runtime36](Runtime/Runtime36.png)
-
-* `[(__bridge id)obj run]` 为什么能够调用成功？  
-因为指针 obj 存储着 cls 的地址，而 cls 存储着 Person 类对象的地址（Person 类对象的 isa 地址），所以 `[(__bridge id)obj run]` 是通过 cls 找到 Person 类对象查找 `-(void)run` 方法(这里的 cls 相当于 person 实例对象的 isa)。
-* 为什么 self.name 变成了 ViewController？  
-因为 `-(void)run` 方法内部的 self 就是消息接收者 obj，`obj->_name` 是在 obj 所在的内存中从 obj 的地址开始向下查找成员变量 _name，而 obj 所在的内存（栈区）向下找到的是 cls 下面的指针 self（ViewController 实例对象），所以最终的打印结果是 `<ViewController: 0x7fd88fb0a400>`。
 
 修改 ViewController.m 实现，添加成员变量 test：
 ```
@@ -3942,6 +3938,10 @@ Person -run 123
 
 从图中可以看到 obj、cls 和 test 三个变量的内存都分配在栈空间，test 的地址值最大，obj 的地址值最小。
 
+* `[(__bridge id)obj run]` 为什么能够调用成功？  
+因为指针 obj 存储着 cls 的地址，而 cls 存储着 Person 类对象的地址（Person 类对象的 isa 地址），所以 `[(__bridge id)obj run]` 是通过 cls 找到 Person 类对象查找 `-(void)run` 方法(这里的 cls 相当于 person 实例对象的 isa)。
+* 为什么 self.name 变成了 ViewController？  
+因为 `-(void)run` 方法内部的 self 就是消息接收者 obj，`obj->_name` 是在 obj 所在的内存中从 obj 的地址开始向下查找成员变量 _name，而 obj 所在的内存（栈区）向下找到的是 cls 下面的指针 self（ViewController 实例对象），所以最终的打印结果是 `<ViewController: 0x7fd88fb0a400>`。
 
 # Runtime API
 
@@ -4239,6 +4239,8 @@ ID Ti,N,V_ID
 age Ti,N,V_age
 name T@"NSString",C,N,V_replaceName
 ```
+
+T 后面是该属性的数据类型。V 后面是该属性的变量名称。N 是属性的非原子属性 nonatomic 的标识。C 是属性的 copy 标识。
 
 关于 `property_getAttributes()` 获取到的结果，可以参考 [Declared Properties](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtPropertyIntrospection.html#//apple_ref/doc/uid/TP40008048-CH101-SW1)。
 ![Runtime38](Runtime/Runtime38.png)
@@ -4657,7 +4659,7 @@ void method_exchangeImplementations(Method m1, Method m2)
     // Cache updates are slow because class is unknown
     // fixme build list of classes whose Methods are known externally?
 
-    flushCaches(nil);
+    flushCaches(nil); //清空方法缓存
 
     adjustCustomFlagsForMethodChange(nil, m1);
     adjustCustomFlagsForMethodChange(nil, m2);
@@ -5015,7 +5017,6 @@ int main(int argc, const char * argv[]) {
     }
     return 0;
 }
-
 ```
 
 打印结果：
@@ -5092,9 +5093,12 @@ this is a block
 @implementation UIControl (Extension)
 + (void)load
 {
-    Method method1 = class_getInstanceMethod(self, @selector(sendAction:to:forEvent:));
-    Method method2 = class_getInstanceMethod(self, @selector(yq_sendAction:to:forEvent:));
-    method_exchangeImplementations(method1, method2);
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        Method method1 = class_getInstanceMethod(self, @selector(sendAction:to:forEvent:));
+        Method method2 = class_getInstanceMethod(self, @selector(yq_sendAction:to:forEvent:));
+        method_exchangeImplementations(method1, method2);        
+    });
 }
 
 - (void)yq_sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event
@@ -5148,16 +5152,18 @@ this is a block
 @implementation NSMutableArray (Extension)
 + (void)load
 {
-    Class cls = NSClassFromString(@"__NSArrayM");
-    Method method1 = class_getInstanceMethod(cls, @selector(insertObject:atIndex:));
-    Method method2 = class_getInstanceMethod(cls, @selector(yq_insertObject:atIndex:));
-    method_exchangeImplementations(method1, method2);
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        Class cls = NSClassFromString(@"__NSArrayM");
+        Method method1 = class_getInstanceMethod(cls, @selector(insertObject:atIndex:));
+        Method method2 = class_getInstanceMethod(cls, @selector(yq_insertObject:atIndex:));
+        method_exchangeImplementations(method1, method2);        
+    });
 }
 
 - (void)yq_insertObject:(id)anObject atIndex:(NSUInteger)index
 {
     if (anObject == nil) return;
-    
     [self yq_insertObject:anObject atIndex:index];
 }
 @end
@@ -5185,28 +5191,29 @@ this is a block
 @implementation NSMutableDictionary (Extension)
 + (void)load
 {
-    Class cls = NSClassFromString(@"__NSDictionaryM");
-    Method method1 = class_getInstanceMethod(cls, @selector(setObject:forKeyedSubscript:));
-    Method method2 = class_getInstanceMethod(cls, @selector(yq_setObject:forKeyedSubscript:));
-    method_exchangeImplementations(method1, method2);
-   
-    Class cls2 = NSClassFromString(@"__NSDictionaryI");
-    Method method3 = class_getInstanceMethod(cls2, @selector(objectForKeyedSubscript:));
-    Method method4 = class_getInstanceMethod(cls2, @selector(yq_objectForKeyedSubscript:));
-    method_exchangeImplementations(method3, method4);
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        Class cls = NSClassFromString(@"__NSDictionaryM");
+        Method method1 = class_getInstanceMethod(cls, @selector(setObject:forKeyedSubscript:));
+        Method method2 = class_getInstanceMethod(cls, @selector(yq_setObject:forKeyedSubscript:));
+        method_exchangeImplementations(method1, method2);
+        
+        Class cls2 = NSClassFromString(@"__NSDictionaryI");
+        Method method3 = class_getInstanceMethod(cls2, @selector(objectForKeyedSubscript:));
+        Method method4 = class_getInstanceMethod(cls2, @selector(yq_objectForKeyedSubscript:));
+        method_exchangeImplementations(method3, method4);
+    });
 }
 
 - (void)yq_setObject:(id)obj forKeyedSubscript:(id<NSCopying>)key
 {
     if (!key || !obj) return;
-    
     [self yq_setObject:obj forKeyedSubscript:key];
 }
 
 - (id)yq_objectForKeyedSubscript:(id)key
 {
     if (!key) return nil;
-    
     return [self yq_objectForKeyedSubscript:key];
 }
 
@@ -5217,7 +5224,6 @@ this is a block
     
     NSMutableDictionary *dictionaryM = [NSMutableDictionary dictionary];
     dictionaryM[obj] = obj;
-
     NSString *obj2 = dictionaryM[obj];
 }
 @end
