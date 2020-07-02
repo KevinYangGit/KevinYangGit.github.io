@@ -2561,7 +2561,7 @@ int __forwarding__(void *frameStackPointer, int isStret) {
         <breakpoint-interrupt>
     }
 
-    // 调用 methodSignatureForSelector 获取方法签名后再调用 forwardInvocation
+    // 调用 methodSignatureForSelector 获取类型编码后再调用 forwardInvocation
     if (class_respondsToSelector(receiverClass, @selector(methodSignatureForSelector:))) {
         NSMethodSignature *methodSignature = [receiver methodSignatureForSelector:sel]; //实例对象 - 对象方法，类对象 - 类方法
         if (methodSignature) {
@@ -2858,7 +2858,7 @@ int main(int argc, const char * argv[]) {
 
 #### -methodSignatureForSelector: 方法
 
-`-forwardingTargetForSelector:` 方法没有返回值时，会调用 `-methodSignatureForSelector:` 方法获取方法签名：
+`-forwardingTargetForSelector:` 方法没有返回值时，会调用 `-methodSignatureForSelector:` 方法获取类型编码：
 ```
 @interface Student : NSObject
 - (void)test;
@@ -2885,7 +2885,7 @@ int main(int argc, const char * argv[]) {
     return [super forwardingTargetForSelector:aSelector];;
 }
 
-//方法签名：返回值类型、参数类型
+//类型编码：返回值类型、参数类型
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
     if (aSelector == @selector(test)) {
         return [NSMethodSignature signatureWithObjCTypes:"v16@0:8"]; //也可以写成 v@:
@@ -2915,13 +2915,13 @@ int main(int argc, const char * argv[]) {
 -[Student test]
 ```
 
-如果 `-methodSignatureForSelector:` 方法没有返回方法签名，则会报错：
+如果 `-methodSignatureForSelector:` 方法没有返回类型编码，则会报错：
 ![Runtime27](Runtime/Runtime27.png)
 
 从调用栈可以看到停留在了 `doesNotRecognizeSelector:` 方法：
 ![Runtime28](Runtime/Runtime28.png)
 
-方法签名的另一种返回方式：
+类型编码的另一种返回方式：
 ```
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
     if (aSelector == @selector(test:)) {
@@ -2931,7 +2931,7 @@ int main(int argc, const char * argv[]) {
 }
 ```
 
-因为 Student 实现了 `-(void)test:(int)age` 方法，所以调用 Student 的 `methodSignatureForSelector:` 方法可以返回 `-(void)test:(int)age` 方法的方法签名。
+因为 Student 实现了 `-(void)test:(int)age` 方法，所以调用 Student 的 `methodSignatureForSelector:` 方法可以返回 `-(void)test:(int)age` 方法的类型编码。
 
 ### 类方法的消息转发
 
@@ -3019,7 +3019,7 @@ int main(int argc, const char * argv[]) {
 
 #### +methodSignatureForSelector: 方法
 
-`+forwardingTargetForSelector:` 方法没有返回值时，会调用 `+methodSignatureForSelector:` 方法获取方法签名：
+`+forwardingTargetForSelector:` 方法没有返回值时，会调用 `+methodSignatureForSelector:` 方法获取类型编码：
 ```
 @interface Student : NSObject
 + (void)test;
@@ -3073,7 +3073,7 @@ int main(int argc, const char * argv[]) {
 [Person test] 的本质是 objc_msgSend([Person test], @selector(test))，会先走一遍“消息发送”流程。因为 Person 没有实现 `-(void)test` 方法，所以
 
 #### NSInvocation
-NSInvocation 封装了一个方法调用，包括：方法调用者、方法名、方法参数和返回值（方法签名决定 NSInvocation 的方法参数和返回值）。  
+NSInvocation 封装了一个方法调用，包括：方法调用者、方法名、方法参数和返回值（类型编码决定 NSInvocation 的方法参数和返回值）。  
 anInvocation.target 方法调用者  
 anInvocation.selector 方法名  
 [anInvocation getArgument:NULL atIndex:0] 方法参数
@@ -3945,7 +3945,19 @@ Person -run 123
 
 # Runtime API
 
-实战：
+## 类
+
+|  方法   | 注释  |
+|  -----  | ---  |
+| `Class objc_allocateClassPair(Class superclass, const char *name, size_t extraBytes)` | 动态创建一个类（参数：父类，类名，额外的内存空间）|
+| `void objc_registerClassPair(Class cls)` | 注册一个类（要在类注册之前添加成员变量）|
+| `void objc_disposeClassPair(Class cls)` | 销毁一个类|
+| `Class object_getClass(id obj)` | 获取 isa 指向的 Class |
+| `Class object_setClass(id obj, Class cls)` | 设置 isa 指向的 Class |
+| `BOOL object_isClass(id obj)` | 判断一个 OC 对象是否为 Class |
+| `BOOL class_isMetaClass(Class cls)` | 判断一个 Class 是否为元类 |
+| `Class class_getSuperclass(Class cls)` | 获取父类 |
+
 ```
 @interface Person : NSObject
 - (void)run;
@@ -3971,62 +3983,40 @@ Person -run 123
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        test1();
-        test2();
+        NSLog(@"---------------------------------------//动态创建一个类，注册一个类");
+        Class Teacher = objc_allocateClassPair([NSObject class], "Teacher", 0); //创建类对象和元类对象
+        objc_registerClassPair(Teacher); //注册类
+        NSLog(@"Teacher 的内存大小%zd个字节", class_getInstanceSize(Teacher)); //8个字节
+        
+        Person *person = [[Person alloc] init];
+        
+        NSLog(@"---------------------------------------//获取 isa 指向的 Class");
+        NSLog(@"类对象：%p，类对象：%p", [Person class], object_getClass(person));
+        NSLog(@"类对象：%p，元类对象：%p", [Person class], object_getClass([Person class]));
+        
+        NSLog(@"---------------------------------------//设置 isa 指向的 Class");
+        object_setClass(person, [Student class]);
+        [person run]; //这里的 Person 是 (Student *) 类型，isa 指向 Student 类对象
+        
+        NSLog(@"---------------------------------------//判断一个 OC 对象是否为 Class");
+        NSLog(@"%d %d %d", object_isClass(person), object_isClass([Person class]), object_isClass(object_getClass([Person class]))); //元类对象是一种特殊的类对象
+        
+        NSLog(@"---------------------------------------//判断一个 Class 是否为元类");
+        NSLog(@"%d %d", class_isMetaClass([Person class]), class_isMetaClass(object_getClass([Person class]))); //元类对象是一种特殊的类对象
+        
+        NSLog(@"---------------------------------------//获取父类");
+        NSLog(@"%@类对象：%p, %@元类对象：%p", class_getSuperclass([Person class]), class_getSuperclass([Person class]),
+            class_getSuperclass(object_getClass([Person class])), class_getSuperclass(object_getClass([Person class])));
+
+        NSLog(@"---------------------------------------//销毁一个类");
+        id teacher2 = [[Teacher alloc] init];
+        //    person = nil; 
+        //    teacher = nil; 
+        teacher2 = nil; //实例中只要有一个置为 nil，就可以调用了！❓
+        objc_disposeClassPair(Teacher); //当类或者它的子类的实例还存在，则不能调用 objc_disposeClassPair 方法
+        objc_disposeClassPair(Teacher); //报错“Attempt to use unknown class 0x1030b92a0.”
     }
     return 0;
-}
-```
-
-## 类
-
-|  方法   | 注释  |
-|  -----  | ---  |
-| `Class objc_allocateClassPair(Class superclass, const char *name, size_t extraBytes)` | 动态创建一个类（参数：父类，类名，额外的内存空间）|
-| `void objc_registerClassPair(Class cls)` | 注册一个类（要在类注册之前添加成员变量）|
-| `void objc_disposeClassPair(Class cls)` | 销毁一个类|
-| `Class object_getClass(id obj)` | 获取 isa 指向的 Class |
-| `Class object_setClass(id obj, Class cls)` | 设置 isa 指向的 Class |
-| `BOOL object_isClass(id obj)` | 判断一个 OC 对象是否为 Class |
-| `BOOL class_isMetaClass(Class cls)` | 判断一个 Class 是否为元类 |
-| `Class class_getSuperclass(Class cls)` | 获取父类 |
-
-`test1()` 实现：
-```
-void test1()
-{
-    NSLog(@"---------------------------------------//动态创建一个类，注册一个类");
-    Class Teacher = objc_allocateClassPair([NSObject class], "Teacher", 0); //创建类对象和元类对象
-    objc_registerClassPair(Teacher); //注册类
-    NSLog(@"Teacher 的内存大小%zd个字节", class_getInstanceSize(Teacher)); //8个字节
-    
-    Person *person = [[Person alloc] init];
-    
-    NSLog(@"---------------------------------------//获取 isa 指向的 Class");
-    NSLog(@"类对象：%p，类对象：%p", [Person class], object_getClass(person));
-    NSLog(@"类对象：%p，元类对象：%p", [Person class], object_getClass([Person class]));
-    
-    NSLog(@"---------------------------------------//设置 isa 指向的 Class");
-    object_setClass(person, [Student class]);
-    [person run]; //这里的 Person 是 (Student *) 类型，isa 指向 Student 类对象
-    
-    NSLog(@"---------------------------------------//判断一个 OC 对象是否为 Class");
-    NSLog(@"%d %d %d", object_isClass(person), object_isClass([Person class]), object_isClass(object_getClass([Person class]))); //元类对象是一种特殊的类对象
-    
-    NSLog(@"---------------------------------------//判断一个 Class 是否为元类");
-    NSLog(@"%d %d", class_isMetaClass([Person class]), class_isMetaClass(object_getClass([Person class]))); //元类对象是一种特殊的类对象
-    
-    NSLog(@"---------------------------------------//获取父类");
-    NSLog(@"%@类对象：%p, %@元类对象：%p", class_getSuperclass([Person class]), class_getSuperclass([Person class]),
-          class_getSuperclass(object_getClass([Person class])), class_getSuperclass(object_getClass([Person class])));
-
-    NSLog(@"---------------------------------------//销毁一个类");
-    id teacher2 = [[Teacher alloc] init];
-//    person = nil; 
-//    teacher = nil; 
-    teacher2 = nil; //实例中只要有一个置为 nil，就可以调用了！❓
-    objc_disposeClassPair(Teacher); //当类或者它的子类的实例还存在，则不能调用 objc_disposeClassPair 方法
-    objc_disposeClassPair(Teacher); //报错“Attempt to use unknown class 0x1030b92a0.”
 }
 ```
 
@@ -4059,58 +4049,83 @@ objc[15858]: Attempt to use unknown class 0x102905440.
 | `id object_getIvar(id obj, Ivar ivar)` | 获取成员变量的值 |
 | `BOOL class_addIvar(Class cls, const char * name, size_t size, uint8_t alignment, const char * types)` | 动态添加成员变量（已经注册的类是不能动态添加成员变量的）|
 | `const char *ivar_getName(Ivar v)` | 获取成员变量的名字 |
-| `const char *ivar_getTypeEncoding(Ivar v)` | 获取成员变量的方法签名 |
+| `const char *ivar_getTypeEncoding(Ivar v)` | 获取成员变量的类型编码 |
 
-`test2()` 实现：
 ```
-void test2()
+@interface Person : NSObject
+@property (nonatomic, assign) int age;
+@property (nonatomic, copy) NSString *name;
+- (void)run;
+@end
+
+@implementation Person
+- (void)run
 {
-    NSLog(@"---------------------------------------//动态添加成员变量（已经注册的类是不能动态添加成员变量的）");
-    Class Teacher = objc_allocateClassPair([NSObject class], "Teacher", 0); //动态创建一个类（包括类对象和元类对象，参数：父类，类名，额外的内存空间）
-    
-    class_addIvar(Teacher, "_age", 4, 1, @encode(int)); //在类注册之前添加成员变量（因为类的成员变量列表是只读的，所有类一旦注册后就不能修改成员变量列表了）
-    class_addIvar(Teacher, "_weight", 4, 1, @encode(int));
+    NSLog(@"%s", __func__);
+}
+@end
 
-    //添加方法是随时可以操作的，最好是写在注册类前，逻辑比较清晰
-    class_addMethod(Teacher, @selector(run), (IMP)run, "v@:");
-    
-    objc_registerClassPair(Teacher); //注册类
-    NSLog(@"%zd", class_getInstanceSize(Teacher)); //isa(8个字节) + _age(4个字节) + _weight(4个字节) = 16个字节
-    
-    NSLog(@"---------------------------------------//修改/获取成员变量的值");
-    id teacher = [[Teacher alloc] init];
-    [teacher setValue:@10 forKey:@"_age"];
-    [teacher setValue:@20 forKey:@"_weight"];
-    NSLog(@"_age：%@, _weight：%@", [teacher valueForKey:@"_age"], [teacher valueForKey:@"_weight"]);
+@interface Student : NSObject
+- (void)run;
+@end
 
-    NSLog(@"---------------------------------------//调用添加的方法");
-    [teacher run];
+@implementation Student
+- (void)run
+{
+    NSLog(@"%s", __func__);
+}
+@end
 
-    NSLog(@"---------------------------------------//设置 isa 指向的 Class");
-    Person *person = [[Person alloc] init];
-    object_setClass(person, Teacher);
-    [person run];
-    
-    NSLog(@"---------------------------------------//获取成员变量的相关信息");
-    Ivar ageIvar = class_getInstanceVariable([Person class], "_age");
-    NSLog(@"%s %s", ivar_getName(ageIvar), ivar_getTypeEncoding(ageIvar));
-    
-    NSLog(@"---------------------------------------//设置和获取成员变量的值");
-    Ivar nameIvar = class_getInstanceVariable([Person class], "_name");
-    Person *person2 = [[Person alloc] init];
-    object_setIvar(person2, nameIvar, @"name"); //设置 _name
-    object_setIvar(person2, ageIvar, (__bridge id)(void *)10); //设置 _age（使用 runtime 方法，底层没有转换直接赋值，先转成指针变量，再转成 id 类型的对象）
-    //[person2 setValue:@10 forKey:@"age"]; //NSNumber 类型的 10 在赋值给 age 时会转成 int 类型
-    NSLog(@"%@", object_getIvar(person2, nameIvar)); //获取
-    
-    NSLog(@"---------------------------------------//拷贝实例变量列表（最后需要调用free释放）+ 获取成员变量的相关信息");
-    unsigned int count;
-    Ivar *ivars = class_copyIvarList([Person class], &count);
-    for (int i=0; i<count; i++) {
-        Ivar ivar = ivars[i];
-        NSLog(@"%s %s", ivar_getName(ivar), ivar_getTypeEncoding(ivar));
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        NSLog(@"---------------------------------------//动态添加成员变量（已经注册的类是不能动态添加成员变量的）");
+        Class Teacher = objc_allocateClassPair([NSObject class], "Teacher", 0); //动态创建一个类（包括类对象和元类对象，参数：父类，类名，额外的内存空间）
+        
+        class_addIvar(Teacher, "_age", 4, 1, @encode(int)); //在类注册之前添加成员变量（因为类的成员变量列表是只读的，所有类一旦注册后就不能修改成员变量列表了）
+        class_addIvar(Teacher, "_weight", 4, 1, @encode(int));
+
+        //添加方法是随时可以操作的，最好是写在注册类前，逻辑比较清晰
+        class_addMethod(Teacher, @selector(run), (IMP)run, "v@:");
+        
+        objc_registerClassPair(Teacher); //注册类
+        NSLog(@"%zd", class_getInstanceSize(Teacher)); //isa(8个字节) + _age(4个字节) + _weight(4个字节) = 16个字节
+        
+        NSLog(@"---------------------------------------//修改/获取成员变量的值");
+        id teacher = [[Teacher alloc] init];
+        [teacher setValue:@10 forKey:@"_age"];
+        [teacher setValue:@20 forKey:@"_weight"];
+        NSLog(@"_age：%@, _weight：%@", [teacher valueForKey:@"_age"], [teacher valueForKey:@"_weight"]);
+
+        NSLog(@"---------------------------------------//调用添加的方法");
+        [teacher run];
+
+        NSLog(@"---------------------------------------//设置 isa 指向的 Class");
+        Person *person = [[Person alloc] init];
+        object_setClass(person, Teacher);
+        [person run];
+        
+        NSLog(@"---------------------------------------//获取成员变量的相关信息");
+        Ivar ageIvar = class_getInstanceVariable([Person class], "_age");
+        NSLog(@"%s %s", ivar_getName(ageIvar), ivar_getTypeEncoding(ageIvar));
+        
+        NSLog(@"---------------------------------------//设置和获取成员变量的值");
+        Ivar nameIvar = class_getInstanceVariable([Person class], "_name");
+        Person *person2 = [[Person alloc] init];
+        object_setIvar(person2, nameIvar, @"name"); //设置 _name
+        object_setIvar(person2, ageIvar, (__bridge id)(void *)10); //设置 _age（使用 runtime 方法，底层没有转换直接赋值，先转成指针变量，再转成 id 类型的对象）
+        //[person2 setValue:@10 forKey:@"age"]; //NSNumber 类型的 10 在赋值给 age 时会转成 int 类型
+        NSLog(@"%@", object_getIvar(person2, nameIvar)); //获取 _name
+        
+        NSLog(@"---------------------------------------//拷贝实例变量列表（最后需要调用free释放）+ 获取成员变量的相关信息");
+        unsigned int count;
+        Ivar *ivars = class_copyIvarList([Person class], &count);
+        for (int i=0; i<count; i++) {
+            Ivar ivar = ivars[i];
+            NSLog(@"%s %s", ivar_getName(ivar), ivar_getTypeEncoding(ivar));
+        }
+        free(ivars);
     }
-    free(ivars);
+    return 0;
 }
 ```
 
@@ -4136,8 +4151,6 @@ _name @"NSString"
 ```
 
 
-
-
 ## 属性
 
 |  方法   | 注释  |
@@ -4149,41 +4162,559 @@ _name @"NSString"
 | `const char *property_getName(objc_property_t property)` | 获取属性名 |
 | `const char *property_getAttributes(objc_property_t property)` | 获取属性的真实类型 |
 
+`test3()` 实现：
+```
+@interface Person : NSObject
+@property (nonatomic, assign) int age;
+@property (nonatomic, copy) NSString *name;
+@end
+
+@implementation Person
+@end
+
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        NSLog(@"---------------------------------------//获取一个属性");
+        objc_property_t name = class_getProperty([Person class], "name");
+        NSLog(@"%s", property_getName(name));
+        
+        NSLog(@"---------------------------------------//拷贝属性列表");
+        unsigned int count;
+        objc_property_t *propertys = class_copyPropertyList([Person class], &count);
+        for (int i=0; i<count; i++) {
+            objc_property_t property = propertys[i];
+            NSLog(@"%s %s", property_getName(property), property_getAttributes(property));//T 后面是该属性的数据类型。V 后面是该属性的变量名称。N 是属性的非原子属性 nonatomic 的标识。C 是属性的 copy 标识。
+        }
+        free(propertys);
+        
+        NSLog(@"---------------------------------------//动态添加属性");
+        objc_property_attribute_t type = { "T", "@\"NSString\""}; //数据类型
+        objc_property_attribute_t ownership1 = { "C", ""}; //copy
+        objc_property_attribute_t ownership2 = { "N", ""}; //nonatomic
+        objc_property_attribute_t backingivar = { "V", "_newName"}; //_newName
+        objc_property_attribute_t attrs[] = {type, ownership1, ownership2, backingivar};
+        class_addProperty([Person class], "newName", attrs, 4);
+        objc_property_t newName = class_getProperty([Person class], "newName");
+        NSLog(@"%s %s", property_getName(newName), property_getAttributes(newName));
+        
+        NSLog(@"---------------------------------------//动态替换属性");
+        objc_property_attribute_t type1 = { "T", "@\"NSString\""}; //数据类型
+        objc_property_attribute_t ownership3 = { "C", ""}; //copy
+        objc_property_attribute_t ownership4 = { "N", ""}; //nonatomic
+        objc_property_attribute_t backingivar1 = { "V", "_replaceName"}; //_newName
+        objc_property_attribute_t attrs1[] = {type1, ownership3, ownership4, backingivar1};
+        class_replaceProperty([Person class], "name", attrs1, 4);
+        objc_property_t replaceName = class_getProperty([Person class], "name");
+        NSLog(@"%s %s", property_getName(replaceName), property_getAttributes(replaceName));
+        
+        NSLog(@"---------------------------------------//拷贝属性列表");
+        unsigned int count1;
+        objc_property_t *propertys1 = class_copyPropertyList([Person class], &count1);
+        for (int i=0; i<count1; i++) {
+            objc_property_t property = propertys1[i];
+            NSLog(@"%s %s", property_getName(property), property_getAttributes(property));//T 后面是该属性的数据类型。V 后面是该属性的变量名称。N 是属性的非原子属性 nonatomic 的标识。C 是属性的 copy 标识。
+        }
+        free(propertys1);
+    }
+    return 0;
+}
+```
+
+打印结果：
+```
+---------------------------------------//获取一个属性
+name
+---------------------------------------//拷贝属性列表
+ID Ti,N,V_ID
+age Ti,N,V_age
+name T@"NSString",C,N,V_name
+---------------------------------------//动态添加属性
+newName T@"NSString",C,N,V_newName
+---------------------------------------//动态替换属性
+name T@"NSString",C,N,V_replaceName
+---------------------------------------//拷贝属性列表
+newName T@"NSString",C,N,V_newName
+ID Ti,N,V_ID
+age Ti,N,V_age
+name T@"NSString",C,N,V_replaceName
+```
+
+关于 `property_getAttributes()` 获取到的结果，可以参考 [Declared Properties](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtPropertyIntrospection.html#//apple_ref/doc/uid/TP40008048-CH101-SW1)。
+![Runtime38](Runtime/Runtime38.png)
+
+![Runtime39](Runtime/Runtime39.png)
+
 ## 方法
 
 |  方法   | 注释  |
 |  -----  | ---  |
 | `Method class_getInstanceMethod(Class cls, SEL name)` | 获得一个实例方法 |
 | `Method class_getClassMethod(Class cls, SEL name)` | 获得一个类方法 |
-| `IMP class_getMethodImplementation(Class cls, SEL name)` | 方法实现相关操作 |
-| `IMP method_setImplementation(Method m, IMP imp)` | 方法实现相关操作 |
-| `void method_exchangeImplementations(Method m1, Method m2)` | 方法实现相关操作|
+| `IMP class_getMethodImplementation(Class cls, SEL name)` | 根据 Class 和 SEL 获取方法的 imp 指针 |
+| `IMP method_setImplementation(Method m, IMP imp)` | 修改方法的 imp 指针 |
+| `void method_exchangeImplementations(Method m1, Method m2)` | 交换方法的 imp 指针 |
 | `Method *class_copyMethodList(Class cls, unsigned int *outCount)` | 拷贝方法列表（最后需要调用free释放） |
 | `BOOL class_addMethod(Class cls, SEL name, IMP imp, const char *types)` | 动态添加方法 |
 | `IMP class_replaceMethod(Class cls, SEL name, IMP imp, const char *types)` | 动态替换方法|
-| `SEL method_getName(Method m)` | 获取方法的相关信息（带有copy的需要调用free去释放） |
-| `IMP method_getImplementation(Method m)` | 获取方法的相关信息（带有copy的需要调用free去释放）|
-| `const char *method_getTypeEncoding(Method m)` | 获取方法的相关信息（带有copy的需要调用free去释放） |
-| `unsigned int method_getNumberOfArguments(Method m)` | 获取方法的相关信息（带有copy的需要调用free去释放） |
-| `char *method_copyReturnType(Method m)` | 获取方法的相关信息（带有copy的需要调用free去释放） |
-| `char *method_copyArgumentType(Method m, unsigned int index)` | 获取方法的相关信息（带有copy的需要调用free去释放） |
-| `const char *sel_getName(SEL sel)` | 选择器相关 |
-| `SEL sel_registerName(const char *str)` | 选择器相关 |
+| `SEL method_getName(Method m)` | 获取方法名 |
+| `IMP method_getImplementation(Method m)` | 根据 Method 获取方法的 imp 指针 |
+| `const char *method_getTypeEncoding(Method m)` | 获取方法的类型编码 |
+| `unsigned int method_getNumberOfArguments(Method m)` | 根据 Method 获取方法的参数个数 |
+| `char *method_copyReturnType(Method m)` | 根据 Method 获取方法的返回值的类型编码（带有copy的需要调用free去释放） |
+| `char *method_copyArgumentType(Method m, unsigned int index)` | 根据 Method 获取方法的索引位置的参数的类型编码（带有copy的需要调用free去释放） |
+| `const char *sel_getName(SEL sel)` | 根据 SEL 获取方法的名称 |
+| `SEL sel_registerName(const char *str)` | 根据方法名注册 SEL |
 | `IMP imp_implementationWithBlock(id block)` | 用 block 作为方法实现 |
-| `id imp_getBlock(IMP anImp)` | 用 block 作为方法实现 |
-| `BOOL imp_removeBlock(IMP anImp)` | 用 block 作为方法实现 |
+| `id imp_getBlock(IMP anImp)` | 根据 block 的 IMP 生成 block 对象 |
+| `BOOL imp_removeBlock(IMP anImp)` | 移除 imp_implementationWithBlock() 生成的 IMP |
+
+```
+@interface Person : NSObject
++ (void)personRun;
+
+- (void)run;
+- (void)test;
+
+- (void)run2;
+- (void)test2;
+
+- (void)run3;
+- (void)test3;
+
+- (int)run4:(int)age name:(NSString *)name;
+@end
+
+@implementation Person
++ (void)personRun
+{
+    NSLog(@"%s", __func__);
+}
+
+- (void)run
+{
+    NSLog(@"%s", __func__);
+}
+
+- (void)test
+{
+    NSLog(@"%s", __func__);
+}
+
+- (void)run2
+{
+    NSLog(@"%s", __func__);
+}
+
+- (void)test2
+{
+    NSLog(@"%s", __func__);
+}
+
+- (void)run3
+{
+    NSLog(@"%s", __func__);
+}
+
+- (void)test3
+{
+    NSLog(@"%s", __func__);
+}
+
+- (int)run4:(int)age name:(NSString *)name
+{
+    NSLog(@"%s", __func__);
+    return 10;
+}
+@end
+
+void newRun()
+{
+    NSLog(@"newRun");
+}
+
+void newTest()
+{
+    NSLog(@"newTest");
+}
+
+typedef void(^Block)(void);
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        NSLog(@"---------------------------------------//获得一个实例方法");
+        Method runMethod = class_getInstanceMethod([Person class], @selector(run));
+        NSLog(@"%@", NSStringFromSelector(method_getName(runMethod)));
+        
+        NSLog(@"---------------------------------------//获得一个类方法");
+        Method personRunMethod = class_getClassMethod([Person class], @selector(personRun));
+        NSLog(@"%@", NSStringFromSelector(method_getName(personRunMethod)));
+        
+        NSLog(@"---------------------------------------//根据 Class 和 SEL 获取方法的 imp 指针");
+        IMP runIMP = class_getMethodImplementation([Person class], @selector(run));
+        NSLog(@"%p", runIMP);
+        
+        NSLog(@"---------------------------------------//修改方法的 imp 指针");
+        IMP testIMP = class_getMethodImplementation([Person class], @selector(test));
+        method_setImplementation(runMethod, testIMP);
+        Person *person = [[Person alloc] init];
+        [person run]; //调用 -test
+        
+        NSLog(@"---------------------------------------//交换方法的 imp 指针");
+        Method run2Method = class_getInstanceMethod([Person class], @selector(run2));
+        Method testMethod = class_getInstanceMethod([Person class], @selector(test2));
+        method_exchangeImplementations(runMethod, testMethod);
+        [person run2];
+        
+        NSLog(@"---------------------------------------//动态添加方法");
+        class_addMethod([Person class], @selector(newRun), (IMP)newRun, "v@:");
+        [person performSelector:@selector(newRun)];
+
+        NSLog(@"---------------------------------------//拷贝方法列表（最后需要调用free释放）");
+        unsigned int count;
+        Method *methods = class_copyMethodList([Person class], &count);
+        for (int i=0; i<count; i++) {
+            Method aMethod = methods[i];
+            NSLog(@"%@", NSStringFromSelector(method_getName(aMethod)));
+        }
+        free(methods);
+        
+        NSLog(@"---------------------------------------//动态替换方法");
+        class_replaceMethod([Person class], @selector(test3), (IMP)newTest, "v@:");
+        [person test3];
+        
+        NSLog(@"---------------------------------------//根据 Method 获取方法的 imp 指针");
+        Method run3Method = class_getInstanceMethod([Person class], @selector(run3));
+        IMP runIMP3 = method_getImplementation(run3Method);
+        NSLog(@"%p", runIMP3);
+        
+        NSLog(@"---------------------------------------//根据 Method 获取方法的类型编码");
+        NSLog(@"%s", method_getTypeEncoding(run3Method));
+        
+        NSLog(@"---------------------------------------//根据 Method 获取方法的参数个数");
+        Method run4Method = class_getInstanceMethod([Person class], @selector(run4:name:));
+        NSLog(@"%d", method_getNumberOfArguments(run4Method)); //self、_cmd、age 和 name
+        
+        NSLog(@"---------------------------------------//根据 Method 获取方法的返回值的类型编码");
+        const char *returnType = method_copyReturnType(run4Method);
+        NSLog(@"%@", [[NSString alloc] initWithCString:returnType encoding:NSUTF8StringEncoding]);
+        free((void *)returnType);
+        
+        NSLog(@"---------------------------------------//根据 Method 获取方法的索引位置的参数的类型编码");
+        const char *argumentType = method_copyArgumentType(run4Method, 3); //name：@
+        NSLog(@"%@", [[NSString alloc] initWithCString:argumentType encoding:NSUTF8StringEncoding]);
+        free((void *)argumentType);
+        
+        NSLog(@"---------------------------------------//根据 SEL 获取方法名");
+        const char *selName = sel_getName(@selector(run));
+        NSLog(@"%@", [[NSString alloc] initWithCString:selName encoding:NSUTF8StringEncoding]);
+        
+        NSLog(@"---------------------------------------//根据方法名注册 SEL");
+        SEL registerSel = sel_registerName("registerSel");
+        NSLog(@"%@", NSStringFromSelector(registerSel));
+        
+        NSLog(@"---------------------------------------//用 block 作为方法实现");
+        IMP blockImp = imp_implementationWithBlock(^{
+            NSLog(@"this is a block");
+        });
+        class_replaceMethod(object_getClass([Person class]), @selector(personRun), blockImp, "v");
+        [Person personRun];
+        
+        NSLog(@"---------------------------------------//根据 block 的 IMP 生成 block 对象");
+        Block aBlock = imp_getBlock(blockImp);
+        aBlock();
+        
+        
+        NSLog(@"---------------------------------------//移除 imp_implementationWithBlock() 生成的 IMP");
+        BOOL isRemvoeBlockImpSucc = imp_removeBlock(blockImp);
+        NSLog(@"isRemvoeBlockImpSucc：%d", isRemvoeBlockImpSucc);
+        Block aBlock2 = imp_getBlock(blockImp); //blockImp 已经不存在
+        NSLog(@"aBlock2：%@", aBlock2);
+    }
+    return 0;
+}
+```
+
+打印结果：
+```
+---------------------------------------//获得一个实例方法
+run
+---------------------------------------//获得一个类方法
+personRun
+---------------------------------------//根据 Class 和 SEL 获取方法的 imp 指针
+0x100001ad0
+---------------------------------------//修改方法的 imp 指针
+-[Person test]
+---------------------------------------//交换方法的 imp 指针
+-[Person run2]
+---------------------------------------//动态添加方法
+newRun
+---------------------------------------//拷贝方法列表（最后需要调用free释放）
+newRun
+run2
+test2
+run3
+test3
+run4:name:
+run
+test
+---------------------------------------//动态替换方法
+newTest
+---------------------------------------//根据 Method 获取方法的 imp 指针
+0x100001b90
+---------------------------------------//根据 Method 获取方法的类型编码
+v16@0:8
+---------------------------------------//根据 Method 获取方法的参数个数
+4
+---------------------------------------//根据 Method 获取方法的返回值的类型编码
+i
+---------------------------------------//根据 Method 获取方法的索引位置的参数的类型编码
+@
+---------------------------------------//根据 SEL 获取方法名
+run
+---------------------------------------//根据方法名注册 SEL
+registerSel
+---------------------------------------//用 block 作为方法实现
+this is a block
+---------------------------------------//根据 block 的 IMP 生成 block 对象
+this is a block
+---------------------------------------//移除 imp_implementationWithBlock() 生成的 IMP
+isRemvoeBlockImpSucc：1
+aBlock2：(null)
+```
+
+## 拓展
+
+### class_rw_ext_t
+
+`class_rw_ext_t` 里保存着 `class_rw_t` 的方法列表、属性列表、协议列表和 `class_ro_t` 等信息。
+```
+struct class_rw_ext_t {
+    const class_ro_t *ro;
+    method_array_t methods;
+    property_array_t properties;
+    protocol_array_t protocols;
+    char *demangledName;
+    uint32_t version;
+};
+
+struct class_rw_t {
+    ......//省略
+
+public:
+    class_rw_ext_t *ext() const {
+        return get_ro_or_rwe().dyn_cast<class_rw_ext_t *>();
+    }
+
+    class_rw_ext_t *extAllocIfNeeded() {
+        auto v = get_ro_or_rwe();
+        if (fastpath(v.is<class_rw_ext_t *>())) {
+            return v.get<class_rw_ext_t *>();
+        } else {
+            return extAlloc(v.get<const class_ro_t *>());
+        }
+    }
+
+    class_rw_ext_t *deepCopy(const class_ro_t *ro) {
+        return extAlloc(ro, true);
+    }
+
+    ......//省略
+```
+
+### 动态添加的属性存到哪了?  
+
+查看 `class_addProperty()` 的实现
+```
+BOOL 
+class_addProperty(Class cls, const char *name, 
+                  const objc_property_attribute_t *attrs, unsigned int n)
+{
+    return _class_addProperty(cls, name, attrs, n, NO);
+}
+
+void 
+class_replaceProperty(Class cls, const char *name, 
+                      const objc_property_attribute_t *attrs, unsigned int n)
+{
+    _class_addProperty(cls, name, attrs, n, YES);
+}
+
+static bool 
+_class_addProperty(Class cls, const char *name, 
+                   const objc_property_attribute_t *attrs, unsigned int count, 
+                   bool replace)
+{
+    if (!cls) return NO;
+    if (!name) return NO;
+
+    property_t *prop = class_getProperty(cls, name);
+    if (prop  &&  !replace) { //已经存在 & 替换
+        // already exists, refuse to replace
+        return NO;
+    } 
+    else if (prop) { //已经存在
+        // replace existing
+        mutex_locker_t lock(runtimeLock);
+        try_free(prop->attributes);
+        prop->attributes = copyPropertyAttributeString(attrs, count);
+        return YES;
+    }
+    else {
+        mutex_locker_t lock(runtimeLock); 
+        auto rwe = cls->data()->extAllocIfNeeded(); //class_rw_ext_t
+        
+        ASSERT(cls->isRealized());
+        
+        property_list_t *proplist = (property_list_t *)
+            malloc(sizeof(*proplist));
+        proplist->count = 1;
+        proplist->entsizeAndFlags = sizeof(proplist->first);
+        proplist->first.name = strdupIfMutable(name);
+        proplist->first.attributes = copyPropertyAttributeString(attrs, count);
+        
+        rwe->properties.attachLists(&proplist, 1); //保存到 class_rw_ext_t 的 properties 里
+        
+        return YES;
+    }
+}
+```
+
+查看 `class_addProperty()` 的 Runtime 实现可以看到，`class_addProperty()` 方法内部调用的是 `_class_addProperty()` 方法。`_class_addProperty()` 方法内部先判断了方法是否已经存在，又判断了是否要替换。如果即不存在也不替换，就保存到 `class_rw_ext_t` 的 properties 里，即类对象的属性列表里。（class_rw_ext_t：class_read_write_extension_table，即 class_rw_t 的拓展表）。
+
+#### 动态添加的方法存到哪了?  
+
+查看 `class_addMethod()` 的实现
+```
+BOOL 
+class_addMethod(Class cls, SEL name, IMP imp, const char *types)
+{
+    if (!cls) return NO;
+
+    mutex_locker_t lock(runtimeLock);
+    return ! addMethod(cls, name, imp, types ?: "", NO);
+}
+
+static IMP 
+addMethod(Class cls, SEL name, IMP imp, const char *types, bool replace)
+{
+    IMP result = nil;
+
+    runtimeLock.assertLocked();
+
+    checkIsKnownClass(cls);
+    
+    ASSERT(types);
+    ASSERT(cls->isRealized());
+
+    method_t *m;
+    if ((m = getMethodNoSuper_nolock(cls, name))) { //是否存在
+        // already exists
+        if (!replace) { //是否替换
+            result = m->imp;
+        } else {
+            result = _method_setImplementation(cls, m, imp);
+        }
+    } else {
+        auto rwe = cls->data()->extAllocIfNeeded(); //class_rw_ext_t
+
+        // fixme optimize
+        method_list_t *newlist;
+        newlist = (method_list_t *)calloc(sizeof(*newlist), 1);
+        newlist->entsizeAndFlags = 
+            (uint32_t)sizeof(method_t) | fixed_up_method_list;
+        newlist->count = 1;
+        newlist->first.name = name;
+        newlist->first.types = strdupIfMutable(types);
+        newlist->first.imp = imp;
+
+        prepareMethodLists(cls, &newlist, 1, NO, NO);
+        rwe->methods.attachLists(&newlist, 1); //保存到 class_rw_ext_t 的 methods 里
+        flushCaches(cls);
+
+        result = nil;
+    }
+
+    return result;
+}
+```
+查看 `class_addMethod()` 的 Runtime 实现可以看到 `class_addMethod()` 方法内部调用的是 `addMethod()` 方法。`addMethod()` 方法内部先判断了方法是否已经存在，又判断了是否要替换。如果即不存，就保存到 `class_rw_ext_t` 的 methods 里，即类对象的方法列表里。（class_rw_ext_t：class_read_write_extension_table，即 class_rw_t 的拓展表）。
+
+### method_exchangeImplementations 的实现原理
+```
+void method_exchangeImplementations(Method m1, Method m2)
+{
+    if (!m1  ||  !m2) return;
+
+    mutex_locker_t lock(runtimeLock);
+
+    IMP m1_imp = m1->imp;
+    m1->imp = m2->imp;
+    m2->imp = m1_imp;
 
 
+    // RR/AWZ updates are slow because class is unknown
+    // Cache updates are slow because class is unknown
+    // fixme build list of classes whose Methods are known externally?
 
+    flushCaches(nil);
 
+    adjustCustomFlagsForMethodChange(nil, m1);
+    adjustCustomFlagsForMethodChange(nil, m2);
+}
 
+......//省略
 
+static void flushCaches(Class cls)
+{
+    runtimeLock.assertLocked();
+#if CONFIG_USE_CACHE_LOCK
+    mutex_locker_t lock(cacheUpdateLock);
+#endif
 
+    if (cls) {
+        foreach_realized_class_and_subclass(cls, [](Class c){
+            cache_erase_nolock(c);
+            return true;
+        });
+    }
+    else {
+        foreach_realized_class_and_metaclass([](Class c){
+            cache_erase_nolock(c);
+            return true;
+        });
+    }
+}
 
+......//省略
 
-# Runtime 应用
+void cache_erase_nolock(Class cls)
+{
+#if CONFIG_USE_CACHE_LOCK
+    cacheUpdateLock.assertLocked();
+#else
+    runtimeLock.assertLocked();
+#endif
 
-## 查看私有成员变量
+    cache_t *cache = getCache(cls);
+
+    mask_t capacity = cache->capacity();
+    if (capacity > 0  &&  cache->occupied() > 0) {
+        auto oldBuckets = cache->buckets();
+        auto buckets = emptyBucketsForCapacity(capacity);
+        cache->setBucketsAndMask(buckets, capacity - 1); // also clears occupied
+
+        cache_collect_free(oldBuckets, capacity);
+    }
+}
+```
+
+method_exchangeImplementations 的底层实现是交换了两个方法的 `imp` 指针，然后调用 `flushCaches()` 方法清空了方法缓存。
+![Runtime37](Runtime/Runtime37.png)
+
+## 应用
+
+### 查看私有成员变量
 
 修改 UITextField 占位文字的颜色：
 
@@ -4246,7 +4777,7 @@ _name @"NSString"
 @end
 ```
 
-## 字典转模型
+### 字典转模型
 ```
 @interface Person : NSObject
 @property (nonatomic, assign) int ID;
@@ -4266,11 +4797,11 @@ _name @"NSString"
 @end
 
 @interface NSObject (Json)
-+ (instancetype)YQ_objectWithJson:(NSDictionary *)json;
++ (instancetype)yq_objectWithJson:(NSDictionary *)json;
 @end
 
 @implementation NSObject (Json)
-+ (instancetype)YQ_objectWithJson:(NSDictionary *)json
++ (instancetype)yq_objectWithJson:(NSDictionary *)json
 {
     id obj = [[self alloc] init];
     [self enumerateIvarsWithObject:obj class:self json:json];
@@ -4308,7 +4839,7 @@ int main(int argc, const char * argv[]) {
             @"height" : @160,
             @"name" : @"Tom"
         };
-        Teacher *teacher = [Teacher YQ_objectWithJson:json];
+        Teacher *teacher = [Teacher yq_objectWithJson:json];
         NSLog(@"%d, %d, %d, %d, %@", teacher.ID, teacher.age, teacher.weight, teacher.height, teacher.name);
     }
     return 0;
@@ -4320,10 +4851,199 @@ int main(int argc, const char * argv[]) {
 10, 20, 60, 160, Tom
 ```
 
-## 替换方法实现
-
-### class_replaceMethod
+### 归档解档
 ```
+@interface NSObject (Json)
++ (instancetype)yq_objectWithJson:(NSDictionary *)json;
+
+- (void)encodeIvarsWithCoder:(NSCoder *)coder Class:(Class)Class;
+- (void)decodeIvarsWithCoder:(NSCoder *)coder Class:(Class)Class;
+
+- (void)archive;
++ (instancetype)unarchive;
+@end
+
+@implementation NSObject (Json)
++ (instancetype)yq_objectWithJson:(NSDictionary *)json
+{
+    id obj = [[self alloc] init];
+    [self enumerateIvarsWithObject:obj class:self json:json];
+    return obj;
+}
+
++ (void)enumerateIvarsWithObject:(id)obj class:(Class)class json:(NSDictionary *)json
+{
+    Class superclass = [class superclass];
+    if (superclass && superclass != [NSObject class]) {
+        [self enumerateIvarsWithObject:obj class:superclass json:json];
+    }
+    unsigned int count;
+    Ivar *ivars = class_copyIvarList(class, &count);
+    for (int i=0; i<count; i++) {
+        //取出成员变量
+        Ivar ivar = ivars[i];
+        NSMutableString *name = [NSMutableString stringWithUTF8String:ivar_getName(ivar)];
+        [name deleteCharactersInRange:NSMakeRange(0, 1)];
+        //设置
+        id value = json[name];
+        if ([name isEqualToString:@"ID"]) {
+            value = json[@"id"];
+        }
+        [obj setValue:value forKey:name];
+    }
+    free(ivars);
+}
+
+- (void)encodeIvarsWithCoder:(NSCoder *)coder Class:(Class)Class
+{
+    unsigned int count;
+    Ivar *ivars = class_copyIvarList(Class, &count);
+    for (int i=0; i<count; i++) {
+        //取出成员变量
+        Ivar ivar = ivars[i];
+        NSString *typeEncode = [NSString stringWithUTF8String:ivar_getTypeEncoding(ivar)];
+        NSMutableString *name = [NSMutableString stringWithUTF8String:ivar_getName(ivar)];
+        [name deleteCharactersInRange:NSMakeRange(0, 1)];
+        if ([typeEncode isEqualToString:@"i"]) {
+            int value = [[self valueForKey:name] intValue];
+            [coder encodeInt:value forKey:name];
+        } else if ([typeEncode isEqualToString:@"@\"NSString\""]) {
+            id value = [self valueForKey:name];
+            [coder encodeObject:value forKey:name];
+        }
+    }
+    free(ivars);
+}
+
+- (void)decodeIvarsWithCoder:(NSCoder *)coder Class:(Class)Class
+{
+    unsigned int count;
+    Ivar *ivars = class_copyIvarList(Class, &count);
+    for (int i=0; i<count; i++) {
+        //取出成员变量
+        Ivar ivar = ivars[i];
+        NSString *typeEncode = [NSString stringWithUTF8String:ivar_getTypeEncoding(ivar)];
+        NSMutableString *name = [NSMutableString stringWithUTF8String:ivar_getName(ivar)];
+        [name deleteCharactersInRange:NSMakeRange(0, 1)];
+        if ([typeEncode isEqualToString:@"i"]) {
+            int value = [coder decodeIntForKey:name];
+            [self setValue:@(value) forKey:name];
+        } else if ([typeEncode isEqualToString:@"@\"NSString\""]) {
+            id value = [coder decodeObjectForKey:name];
+            [self setValue:value forKey:name];
+        }
+    }
+    free(ivars);
+}
+
+- (void)archive
+{
+    NSString *name = [NSString stringWithFormat:@"obj.%@", NSStringFromClass([self class])];
+    NSString *temp = NSTemporaryDirectory();
+    NSString *filePath = [temp stringByAppendingPathComponent:name]; //以类名作为保存文件的扩展名
+    [NSKeyedArchiver archiveRootObject:self toFile:filePath];
+}
+
++ (instancetype)unarchive
+{
+    NSString *name = [NSString stringWithFormat:@"obj.%@", NSStringFromClass(self)];
+    NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:name];
+    id obj = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
+    return obj;
+}
+@end
+
+@interface Person : NSObject<NSCoding>
+@property (nonatomic, assign) int ID;
+@property (nonatomic, assign) int age;
+@property (nonatomic, copy) NSString *name;
+@end
+
+@implementation Person
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+    [self encodeIvarsWithCoder:coder Class:[Person class]];
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super init];
+    if (self) {
+        [self decodeIvarsWithCoder:coder Class:[Person class]];
+    }
+    return self;
+}
+@end
+
+@interface Teacher : Person<NSCoding>
+@property (nonatomic, assign) int weight;
+@property (nonatomic, assign) int height;
+@end
+
+@implementation Teacher
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+    [super encodeWithCoder:coder];
+    [self encodeIvarsWithCoder:coder Class:[Teacher class]];
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        [self decodeIvarsWithCoder:coder Class:[Teacher class]];
+    }
+    return self;
+}
+@end
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        //归档
+//        NSDictionary *json = @{
+//            @"id" : @100,
+//            @"age" : @200,
+//            @"weight" : @700,
+//            @"height" : @1700,
+//            @"name" : @"Tom"
+//        };
+//        Teacher *teacher = [Teacher yq_objectWithJson:json];
+//        [teacher archive];
+        //解档
+        Teacher *teacher = [Teacher unarchive];
+        NSLog(@"%d, %d, %d, %d, %@", teacher.ID, teacher.age, teacher.weight, teacher.height, teacher.name);
+    }
+    return 0;
+}
+
+```
+
+打印结果：
+```
+100, 200, 700, 1700, Tom
+```
+
+### 替换方法实现
+
+class_replaceMethod
+```
+@interface Person : NSObject
+- (void)run;
++ (void)personRun;
+@end
+
+@implementation Person
+- (void)run
+{
+    NSLog(@"%s", __func__);
+}
+
++ (void)personRun
+{
+    NSLog(@"%s", __func__);
+}
+@end
+
 void myRun()
 {
     NSLog(@"---myRun");
@@ -4362,20 +5082,145 @@ this is a block
 this is a block
 ```
 
-### method_exchangeImplementations
+### 拦截所有按钮的点击事件
+
+使用 method_exchangeImplementations 交换系统方法实现方法拦截：
 ```
-int main(int argc, const char * argv[]) {
-    @autoreleasepool {
-        Person *person = [[Person alloc] init];
-        
-        Method runMethod = class_getInstanceMethod([Person class], @selector(run));
-        Method testMethod = class_getInstanceMethod([Person class], @selector(test));
-        method_exchangeImplementations(runMethod, testMethod);
-        
-        [person run];
-    }
-    return 0;
+@interface UIControl (Extension)
+@end
+
+@implementation UIControl (Extension)
++ (void)load
+{
+    Method method1 = class_getInstanceMethod(self, @selector(sendAction:to:forEvent:));
+    Method method2 = class_getInstanceMethod(self, @selector(yq_sendAction:to:forEvent:));
+    method_exchangeImplementations(method1, method2);
 }
+
+- (void)yq_sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event
+{
+    NSLog(@"%@-%@-%@", self, target, NSStringFromSelector(action));
+    //调用系统原来的实现
+    [self yq_sendAction:action to:target forEvent:event];
+}
+@end
+
+@interface ViewController : UIViewController
+@end
+
+@implementation ViewController
+- (IBAction)click1:(id)sender
+{
+    NSLog(@"%s", __func__);
+}
+- (IBAction)click2:(id)sender
+{
+    NSLog(@"%s", __func__);
+}
+- (IBAction)click3:(id)sender
+{
+    NSLog(@"%s", __func__);
+}
+@end
+```
+
+打印结果：
+```
+<UIButton: 0x7f8d0ad093e0; frame = (148 332; 46 30); opaque = NO; autoresize = RM+BM; layer = <CALayer: 0x600001bd0560>>-<ViewController: 0x7f8d0ac06850>-click1:
+-[ViewController click1:]
+<UIButton: 0x7f8d0ae0c4f0; frame = (148 411; 46 30); opaque = NO; autoresize = RM+BM; layer = <CALayer: 0x600001be5740>>-<ViewController: 0x7f8d0ac06850>-click2:
+-[ViewController click2:]
+<UIButton: 0x7f8d0ad096b0; frame = (148 492; 46 30); opaque = NO; autoresize = RM+BM; layer = <CALayer: 0x600001bd06e0>>-<ViewController: 0x7f8d0ac06850>-click3:
+-[ViewController click3:]
+```
+
+### 拦截数组添加数据方法
+
+数组的 `addObject:` 和 `insertObject:` 方法调用的都是 `insertObject:atIndex:` 方法。拦截 `insertObject:atIndex:` 方法，可以解决添加空数据导致的崩溃。
+
+类簇：NSData、NSArray、NSDictionary 和 NSString。它们的类并不一样，比如 NSMutableArray 的类是 `__NSArrayM`。
+
+使用 method_exchangeImplementations 交换系统方法实现方法拦截：
+```
+@interface NSMutableArray (Extension)
+@end
+
+@implementation NSMutableArray (Extension)
++ (void)load
+{
+    Class cls = NSClassFromString(@"__NSArrayM");
+    Method method1 = class_getInstanceMethod(cls, @selector(insertObject:atIndex:));
+    Method method2 = class_getInstanceMethod(cls, @selector(yq_insertObject:atIndex:));
+    method_exchangeImplementations(method1, method2);
+}
+
+- (void)yq_insertObject:(id)anObject atIndex:(NSUInteger)index
+{
+    if (anObject == nil) return;
+    
+    [self yq_insertObject:anObject atIndex:index];
+}
+@end
+
+@implementation ViewController
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    NSMutableArray *arrayM = [[NSMutableArray alloc] init];
+    NSString *obj = nil;
+    [arrayM addObject:obj];
+}
+@end
+```
+
+### 拦截字典添加数据方法
+
+字典赋值的 `setObject:forKey:` 方法最终调用的是 `setObject:forKeyedSubscript:`。拦截 `setObject:forKeyedSubscript:` 方法，可以解决添加空数据导致的崩溃。
+
+使用 method_exchangeImplementations 交换系统方法实现方法拦截：
+```
+@interface NSMutableDictionary (Extension)
+@end
+
+@implementation NSMutableDictionary (Extension)
++ (void)load
+{
+    Class cls = NSClassFromString(@"__NSDictionaryM");
+    Method method1 = class_getInstanceMethod(cls, @selector(setObject:forKeyedSubscript:));
+    Method method2 = class_getInstanceMethod(cls, @selector(yq_setObject:forKeyedSubscript:));
+    method_exchangeImplementations(method1, method2);
+   
+    Class cls2 = NSClassFromString(@"__NSDictionaryI");
+    Method method3 = class_getInstanceMethod(cls2, @selector(objectForKeyedSubscript:));
+    Method method4 = class_getInstanceMethod(cls2, @selector(yq_objectForKeyedSubscript:));
+    method_exchangeImplementations(method3, method4);
+}
+
+- (void)yq_setObject:(id)obj forKeyedSubscript:(id<NSCopying>)key
+{
+    if (!key || !obj) return;
+    
+    [self yq_setObject:obj forKeyedSubscript:key];
+}
+
+- (id)yq_objectForKeyedSubscript:(id)key
+{
+    if (!key) return nil;
+    
+    return [self yq_objectForKeyedSubscript:key];
+}
+
+
+@implementation ViewController
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    NSMutableDictionary *dictionaryM = [NSMutableDictionary dictionary];
+    dictionaryM[obj] = obj;
+
+    NSString *obj2 = dictionaryM[obj];
+}
+@end
 ```
 
 # 总结
@@ -4384,10 +5229,10 @@ OC 中的方法调用其实都是转成了 objc_msgSend 函数的调用，给 re
 objc_msgSend 底层有三大阶段：  
     * 消息发送：先调在当前类的 cache 里找，再到当前类的 methods 里找。如果在当前类没有找到，再遍历父类查找，先在父类的 cache 里找，再到父类的 methods 里找。
     * 动态方法解析：在当前类及其父类里没有找到方法时，会调用 `resolveInstanceMethod:` 或者 `resolveClassMethod:` 方法动态添加方法。  
-    * 消息转发：如果没有动态添加方法，会调用 `forwardingTargetForSelector:` 方法获取可以处理消息的对象。如果没有实现  `forwardingTargetForSelector:` 方法或者该方法返回的是 nil，会调用 `methodSignatureForSelector:` 方法获取方法签名，在获取方法签名成功后再调用 `forwardInvocation:` 方法进行自定义操作。如果没有实现 `methodSignatureForSelector:` 方法或者该方法返回的是 nil，会调用 `doesNotRecognizeSelector:` 方法终止流程。 
+    * 消息转发：如果没有动态添加方法，会调用 `forwardingTargetForSelector:` 方法获取可以处理消息的对象。如果没有实现  `forwardingTargetForSelector:` 方法或者该方法返回的是 nil，会调用 `methodSignatureForSelector:` 方法获取类型编码，在获取类型编码成功后再调用 `forwardInvocation:` 方法进行自定义操作。如果没有实现 `methodSignatureForSelector:` 方法或者该方法返回的是 nil，会调用 `doesNotRecognizeSelector:` 方法终止流程。 
 
 * 消息转发机制流程  
-如果没有动态添加方法，会调用 `forwardingTargetForSelector:` 方法获取可以处理消息的对象。如果没有实现  `forwardingTargetForSelector:` 方法或者该方法返回的是 nil，会调用 `methodSignatureForSelector:` 方法获取方法签名，在获取方法签名成功后再调用 `forwardInvocation:` 方法进行自定义操作。如果没有实现 `methodSignatureForSelector:` 方法或者该方法返回的是 nil，会调用 `doesNotRecognizeSelector:` 方法终止流程。 
+如果没有动态添加方法，会调用 `forwardingTargetForSelector:` 方法获取可以处理消息的对象。如果没有实现  `forwardingTargetForSelector:` 方法或者该方法返回的是 nil，会调用 `methodSignatureForSelector:` 方法获取类型编码，在获取类型编码成功后再调用 `forwardInvocation:` 方法进行自定义操作。如果没有实现 `methodSignatureForSelector:` 方法或者该方法返回的是 nil，会调用 `doesNotRecognizeSelector:` 方法终止流程。 
 
 * 什么是 Runtime ？平时项目中有用过么？  
 OC 是一门动态性比较强的编程语言，允许很多操作推迟到程序运行时再进行。OC 的动态性就是由 Runtime 来支撑和实现的，Runtime 是一套 C 语言的 API，封装了很多动态性相关的函数，平时编写的OC代码，底层都是转换成了 Runtime API 进行调用。
