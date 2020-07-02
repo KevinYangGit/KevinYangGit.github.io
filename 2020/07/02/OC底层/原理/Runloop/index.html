@@ -69,18 +69,18 @@
 
 
 
-<meta name="description" content="思考：  讲讲 RunLoop，项目中有用到吗？ runloop内部实现逻辑？ runloop和线程的关系？ timer 与 runloop 的关系？ 程序中添加每3秒响应一次的NSTimer，当拖动tableview时timer可能无法响应要怎么解决？ runloop 是怎么响应用户操作的， 具体流程是什么样的？ 说说runLoop的几种状态 runloop的mode作用是什么？">
+<meta name="description" content="思考：  讲讲 RunLoop，项目中有用到吗？ RunLoop 内部实现逻辑？ RunLoop 和线程的关系？ timer 与 RunLoop 的关系？ 程序中添加每3秒响应一次的 NSTimer，当拖动 tableview 时 timer 可能无法响应要怎么解决？ RunLoop 是怎么响应用户操作的， 具体流程是什么样的？ 说说 RunLoop 的几种状态 RunLoop 的 mode 作用">
 <meta name="keywords" content="OC底层原理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Runloop">
 <meta property="og:url" content="http://yoursite.com/2020/07/02/OC底层/原理/Runloop/index.html">
 <meta property="og:site_name" content="Kevin&#39;s  blog">
-<meta property="og:description" content="思考：  讲讲 RunLoop，项目中有用到吗？ runloop内部实现逻辑？ runloop和线程的关系？ timer 与 runloop 的关系？ 程序中添加每3秒响应一次的NSTimer，当拖动tableview时timer可能无法响应要怎么解决？ runloop 是怎么响应用户操作的， 具体流程是什么样的？ 说说runLoop的几种状态 runloop的mode作用是什么？">
+<meta property="og:description" content="思考：  讲讲 RunLoop，项目中有用到吗？ RunLoop 内部实现逻辑？ RunLoop 和线程的关系？ timer 与 RunLoop 的关系？ 程序中添加每3秒响应一次的 NSTimer，当拖动 tableview 时 timer 可能无法响应要怎么解决？ RunLoop 是怎么响应用户操作的， 具体流程是什么样的？ 说说 RunLoop 的几种状态 RunLoop 的 mode 作用">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-07-02T08:21:35.092Z">
+<meta property="og:updated_time" content="2020-07-02T08:25:10.580Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Runloop">
-<meta name="twitter:description" content="思考：  讲讲 RunLoop，项目中有用到吗？ runloop内部实现逻辑？ runloop和线程的关系？ timer 与 runloop 的关系？ 程序中添加每3秒响应一次的NSTimer，当拖动tableview时timer可能无法响应要怎么解决？ runloop 是怎么响应用户操作的， 具体流程是什么样的？ 说说runLoop的几种状态 runloop的mode作用是什么？">
+<meta name="twitter:description" content="思考：  讲讲 RunLoop，项目中有用到吗？ RunLoop 内部实现逻辑？ RunLoop 和线程的关系？ timer 与 RunLoop 的关系？ 程序中添加每3秒响应一次的 NSTimer，当拖动 tableview 时 timer 可能无法响应要怎么解决？ RunLoop 是怎么响应用户操作的， 具体流程是什么样的？ 说说 RunLoop 的几种状态 RunLoop 的 mode 作用">
 
 
 
@@ -313,13 +313,13 @@
         <p>思考：</p>
 <ul>
 <li>讲讲 RunLoop，项目中有用到吗？</li>
-<li>runloop内部实现逻辑？</li>
-<li>runloop和线程的关系？</li>
-<li>timer 与 runloop 的关系？</li>
-<li>程序中添加每3秒响应一次的NSTimer，当拖动tableview时timer可能无法响应要怎么解决？</li>
-<li>runloop 是怎么响应用户操作的， 具体流程是什么样的？</li>
-<li>说说runLoop的几种状态</li>
-<li>runloop的mode作用是什么？</li>
+<li>RunLoop 内部实现逻辑？</li>
+<li>RunLoop 和线程的关系？</li>
+<li>timer 与 RunLoop 的关系？</li>
+<li>程序中添加每3秒响应一次的 NSTimer，当拖动 tableview 时 timer 可能无法响应要怎么解决？</li>
+<li>RunLoop 是怎么响应用户操作的， 具体流程是什么样的？</li>
+<li>说说 RunLoop 的几种状态</li>
+<li>RunLoop 的 mode 作用是什么？</li>
 </ul>
 <a id="more"></a>
       
