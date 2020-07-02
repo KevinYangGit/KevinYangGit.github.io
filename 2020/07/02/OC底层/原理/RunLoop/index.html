@@ -78,7 +78,9 @@
 <meta property="og:description" content="思考：  讲讲 RunLoop，项目中有用到吗？ RunLoop 内部实现逻辑？ RunLoop 和线程的关系？ timer 与 RunLoop 的关系？ 程序中添加每3秒响应一次的 NSTimer，当拖动 tableview 时 timer 可能无法响应要怎么解决？ RunLoop 是怎么响应用户操作的， 具体流程是什么样的？ 说说 RunLoop 的几种状态 RunLoop 的 mode 作用">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/07/02/OC底层/原理/RunLoop/RunLoop01.png">
-<meta property="og:updated_time" content="2020-07-02T10:06:03.849Z">
+<meta property="og:image" content="http://yoursite.com/2020/07/02/OC底层/原理/RunLoop/RunLoop02.png">
+<meta property="og:image" content="http://yoursite.com/2020/07/02/OC底层/原理/RunLoop/RunLoop03.png">
+<meta property="og:updated_time" content="2020-07-02T10:32:09.123Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RunLoop">
 <meta name="twitter:description" content="思考：  讲讲 RunLoop，项目中有用到吗？ RunLoop 内部实现逻辑？ RunLoop 和线程的关系？ timer 与 RunLoop 的关系？ 程序中添加每3秒响应一次的 NSTimer，当拖动 tableview 时 timer 可能无法响应要怎么解决？ RunLoop 是怎么响应用户操作的， 具体流程是什么样的？ 说说 RunLoop 的几种状态 RunLoop 的 mode 作用">
@@ -350,7 +352,16 @@
 <li>RunLoop 会在线程结束时销毁</li>
 <li>主线程的 RunLoop 已经自动获取（创建），子线程默认没有开启 RunLoop</li>
 </ul>
-<h1 id="RunLoop-相关的类"><a href="#RunLoop-相关的类" class="headerlink" title="RunLoop 相关的类"></a>RunLoop 相关的类</h1>
+<h1 id="RunLoop-相关的类"><a href="#RunLoop-相关的类" class="headerlink" title="RunLoop 相关的类"></a>RunLoop 相关的类</h1><p>Core Foundation 中关于 RunLoop 的5个类：</p>
+<ul>
+<li>CFRunLoopRef</li>
+<li>CFRunLoopModeRef</li>
+<li>CFRunLoopSourceRef</li>
+<li>CFRunLoopTimerRef</li>
+<li>CFRunLoopObserverRef</li>
+</ul>
+<h2 id="CFRunLoopModeRef"><a href="#CFRunLoopModeRef" class="headerlink" title="CFRunLoopModeRef"></a>CFRunLoopModeRef</h2><p>CFRunLoopModeRef 代表 RunLoop 的运行模式。RunLoop 启动时只能选择其中一个 Mode，作为 currentMode。如果需要切换 Mode，只能退出当前 Loop，再重新选择一个 Mode 进入。<br><img src="/2020/07/02/OC底层/原理/RunLoop/RunLoop02.png" alt="RunLoop02"><br>一个 RunLoop 包含若干个 Mode，每个 Mode 又包含若干个 Source0/Source1/Timer/Observer。不同组的 Source0/Source1/Timer/Observer 能分隔开来，互不影响。如果 Mode 里没有任何 Source0/Source1/Timer/Observer，RunLoop 会立马退出。<br><img src="/2020/07/02/OC底层/原理/RunLoop/RunLoop03.png" alt="RunLoop03"></p>
+
       
     </div>
     
@@ -532,7 +543,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是-RunLoop"><span class="nav-number">1.</span> <span class="nav-text">什么是 RunLoop</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#如果没有-RunLoop"><span class="nav-number">1.1.</span> <span class="nav-text">如果没有 RunLoop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如果有了-RunLoop"><span class="nav-number">1.2.</span> <span class="nav-text">如果有了 RunLoop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RunLoop-的基本作用"><span class="nav-number">1.3.</span> <span class="nav-text">RunLoop 的基本作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RunLoop-的实现原理（伪代码）"><span class="nav-number">1.4.</span> <span class="nav-text">RunLoop 的实现原理（伪代码）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RunLoop-对象"><span class="nav-number">2.</span> <span class="nav-text">RunLoop 对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#获取-RunLoop-对象"><span class="nav-number">2.1.</span> <span class="nav-text">获取 RunLoop 对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RunLoop-与线程"><span class="nav-number">2.2.</span> <span class="nav-text">RunLoop 与线程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RunLoop-相关的类"><span class="nav-number">3.</span> <span class="nav-text">RunLoop 相关的类</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是-RunLoop"><span class="nav-number">1.</span> <span class="nav-text">什么是 RunLoop</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#如果没有-RunLoop"><span class="nav-number">1.1.</span> <span class="nav-text">如果没有 RunLoop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如果有了-RunLoop"><span class="nav-number">1.2.</span> <span class="nav-text">如果有了 RunLoop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RunLoop-的基本作用"><span class="nav-number">1.3.</span> <span class="nav-text">RunLoop 的基本作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RunLoop-的实现原理（伪代码）"><span class="nav-number">1.4.</span> <span class="nav-text">RunLoop 的实现原理（伪代码）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RunLoop-对象"><span class="nav-number">2.</span> <span class="nav-text">RunLoop 对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#获取-RunLoop-对象"><span class="nav-number">2.1.</span> <span class="nav-text">获取 RunLoop 对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RunLoop-与线程"><span class="nav-number">2.2.</span> <span class="nav-text">RunLoop 与线程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RunLoop-相关的类"><span class="nav-number">3.</span> <span class="nav-text">RunLoop 相关的类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CFRunLoopModeRef"><span class="nav-number">3.1.</span> <span class="nav-text">CFRunLoopModeRef</span></a></li></ol></li></ol></div>
             
 
           </div>
