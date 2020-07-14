@@ -92,7 +92,9 @@
 <meta property="og:image" content="http://yoursite.com/2020/07/02/OC底层/原理/RunLoop/RunLoop14.png">
 <meta property="og:image" content="http://yoursite.com/2020/07/02/OC底层/原理/RunLoop/RunLoop08.png">
 <meta property="og:image" content="http://yoursite.com/2020/07/02/OC底层/原理/RunLoop/RunLoop15.png">
-<meta property="og:updated_time" content="2020-07-14T09:04:36.736Z">
+<meta property="og:image" content="http://yoursite.com/2020/07/02/OC底层/原理/RunLoop/RunLoop08.png">
+<meta property="og:image" content="http://yoursite.com/2020/07/02/OC底层/原理/RunLoop/RunLoop08.png">
+<meta property="og:updated_time" content="2020-07-14T09:43:37.651Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RunLoop">
 <meta name="twitter:description" content="思考：  讲讲 RunLoop，项目中有用到吗？ RunLoop 内部实现逻辑？ RunLoop 和线程的关系？ timer 与 RunLoop 的关系？ 程序中添加每3秒响应一次的 NSTimer，当拖动 tableview 时 timer 可能无法响应要怎么解决？ RunLoop 是怎么响应用户操作的， 具体流程是什么样的？ 说说 RunLoop 的几种状态 RunLoop 的 mode 作用">
@@ -535,7 +537,18 @@
 </li>
 </ol>
 <ul>
-<li>RunLoop 内部实现逻辑？  </li>
+<li><p>RunLoop 内部实现逻辑？<br><img src="/2020/07/02/OC底层/原理/RunLoop/RunLoop08.png" alt="RunLoop08"></p>
+</li>
+<li><p>RunLoop 和线程的关系？<br>每条线程都有唯一的一个与之对应的 RunLoop 对象。RunLoop 保存在一个全局的 Dictionary 里，线程作为 key，RunLoop 作为 value。线程刚创建时并没有 RunLoop 对象，RunLoop 会在第一次获取它时创建。RunLoop 会在线程结束时销毁。主线程的 RunLoop 已经自动获取（创建），子线程默认没有开启 RunLoop；</p>
+</li>
+<li><p>timer 与 RunLoop 的关系？<br>一般情况下添加 timer 到 RunLoop 时 mode 设置为 kCFRunLoopDefaultMode，timer 运行在 RunLoop 的 _modes 里的模式下，同时 timer 被保存到 mode 里的 _timers 中。当添加 timer 到 RunLoop 将 mode 设置为 NSRunLoopCommonModes 标记时，那么 timer 能在 _commonModes 里的模式下运行，同时 timer 被保存到了 RunLoop 的 _commonModeItems 中。</p>
+</li>
+<li><p>程序中添加每3秒响应一次的 NSTimer，当拖动 tableview 时 timer 可能无法响应要怎么解决？<br>通过 +timerWithTimeInterval:repeats:block: 方法创建 timer，然后手动添加到 RunLoop 中，并将 RunLoop 的 mode 设置为 NSRunLoopCommonModes。这个时候拖拽 TextView 就不会影响到 timer 了。原因在上面“timer 与 RunLoop 的关系”。</p>
+</li>
+<li><p>RunLoop 是怎么响应用户操作的， 具体流程是什么样的？<br><img src="/2020/07/02/OC底层/原理/RunLoop/RunLoop08.png" alt="RunLoop08"></p>
+</li>
+<li><p>说说 RunLoop 的几种状态  </p>
+</li>
 </ul>
 
       
