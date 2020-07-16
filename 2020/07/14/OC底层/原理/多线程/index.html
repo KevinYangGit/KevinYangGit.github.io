@@ -69,15 +69,18 @@
 
 
 
+<meta name="description" content="思考：  你理解的多线程？  iOS的多线程方案有哪几种？你更倾向于哪一种？  你在项目中用过 GCD 吗？  GCD 的队列类型  说一下 OperationQueue 和 GCD 的区别，以及各自的优势  线程安全的处理手段有哪些？  OC你了解的锁有哪些？在你回答基础上进行二次提问；追问一：自旋和互斥对比？追问二：使用以上锁需要注意哪些？追问三：用C/OC/C++，任选其一，实现自旋或互斥？">
 <meta name="keywords" content="OC底层原理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="多线程">
 <meta property="og:url" content="http://yoursite.com/2020/07/14/OC底层/原理/多线程/index.html">
 <meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="思考：  你理解的多线程？  iOS的多线程方案有哪几种？你更倾向于哪一种？  你在项目中用过 GCD 吗？  GCD 的队列类型  说一下 OperationQueue 和 GCD 的区别，以及各自的优势  线程安全的处理手段有哪些？  OC你了解的锁有哪些？在你回答基础上进行二次提问；追问一：自旋和互斥对比？追问二：使用以上锁需要注意哪些？追问三：用C/OC/C++，任选其一，实现自旋或互斥？">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-07-14T08:31:39.016Z">
+<meta property="og:updated_time" content="2020-07-16T07:50:32.887Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="多线程">
+<meta name="twitter:description" content="思考：  你理解的多线程？  iOS的多线程方案有哪几种？你更倾向于哪一种？  你在项目中用过 GCD 吗？  GCD 的队列类型  说一下 OperationQueue 和 GCD 的区别，以及各自的优势  线程安全的处理手段有哪些？  OC你了解的锁有哪些？在你回答基础上进行二次提问；追问一：自旋和互斥对比？追问二：使用以上锁需要注意哪些？追问三：用C/OC/C++，任选其一，实现自旋或互斥？">
 
 
 
@@ -307,7 +310,33 @@
       
 
       
-        
+        <p>思考：</p>
+<ul>
+<li><p>你理解的多线程？</p>
+</li>
+<li><p>iOS的多线程方案有哪几种？你更倾向于哪一种？</p>
+</li>
+<li><p>你在项目中用过 GCD 吗？</p>
+</li>
+<li><p>GCD 的队列类型</p>
+</li>
+<li><p>说一下 OperationQueue 和 GCD 的区别，以及各自的优势</p>
+</li>
+<li><p>线程安全的处理手段有哪些？</p>
+</li>
+<li><p>OC你了解的锁有哪些？在你回答基础上进行二次提问；<br>追问一：自旋和互斥对比？<br>追问二：使用以上锁需要注意哪些？<br>追问三：用C/OC/C++，任选其一，实现自旋或互斥？</p>
+</li>
+</ul>
+<a id="more"></a>
+<ul>
+<li><p>请问下面代码的打印结果是什么？</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></div><div class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</div><div class="line">    [<span class="keyword">super</span> viewDidLoad];</div><div class="line">    </div><div class="line">    <span class="built_in">dispatch_queue_t</span> queue = dispatch_get_global_queue(<span class="number">0</span>, <span class="number">0</span>);</div><div class="line">    <span class="built_in">dispatch_async</span>(queue, ^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"1"</span>);</div><div class="line">        [<span class="keyword">self</span> performSelector:<span class="keyword">@selector</span>(test) withObject:<span class="literal">nil</span> afterDelay:<span class="number">.0</span>];</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"3"</span>);</div><div class="line">    &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)test</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"2"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>请问下面代码的打印结果是什么？</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)test</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"2"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)touchesBegan:(<span class="built_in">NSSet</span>&lt;<span class="built_in">UITouch</span> *&gt; *)touches withEvent:(<span class="built_in">UIEvent</span> *)event</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSThread</span> *thread = [[<span class="built_in">NSThread</span> alloc] initWithBlock:^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"1"</span>);</div><div class="line">    &#125;];</div><div class="line">    [thread start];</div><div class="line">    </div><div class="line">    [<span class="keyword">self</span> performSelector:<span class="keyword">@selector</span>(test) onThread:thread withObject:<span class="literal">nil</span> waitUntilDone:<span class="literal">YES</span>];</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+
       
     </div>
     
