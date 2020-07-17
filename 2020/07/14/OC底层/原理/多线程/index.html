@@ -77,7 +77,7 @@
 <meta property="og:site_name" content="Kevin&#39;s  blog">
 <meta property="og:description" content="思考：  你理解的多线程？ iOS的多线程方案有哪几种？你更倾向于哪一种？ 你在项目中用过 GCD 吗？ GCD 的队列类型 说一下 OperationQueue 和 GCD 的区别，以及各自的优势 线程安全的处理手段有哪些？ OC你了解的锁有哪些？在你回答基础上进行二次提问；追问一：自旋和互斥对比？追问二：使用以上锁需要注意哪些？追问三：用C/OC/C++，任选其一，实现自旋或互斥？">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-07-17T03:09:57.063Z">
+<meta property="og:updated_time" content="2020-07-17T03:36:34.095Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="多线程">
 <meta name="twitter:description" content="思考：  你理解的多线程？ iOS的多线程方案有哪几种？你更倾向于哪一种？ 你在项目中用过 GCD 吗？ GCD 的队列类型 说一下 OperationQueue 和 GCD 的区别，以及各自的优势 线程安全的处理手段有哪些？ OC你了解的锁有哪些？在你回答基础上进行二次提问；追问一：自旋和互斥对比？追问二：使用以上锁需要注意哪些？追问三：用C/OC/C++，任选其一，实现自旋或互斥？">
@@ -394,6 +394,24 @@ table th:nth-of-type(5){
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dispatch_async(<span class="keyword">dispatch_queue_t</span> <span class="built_in">queue</span>, <span class="keyword">dispatch_block_t</span> block);</div></pre></td></tr></table></figure>
 </li>
 </ul>
+<p>队列相关函数：</p>
+<ul>
+<li><p>获取主队列</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dispatch_queue_t<span class="built_in"> queue </span>= dispatch_get_main_queue();</div></pre></td></tr></table></figure>
+</li>
+<li><p>获取全局并发队列</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dispatch_queue_t<span class="built_in"> queue </span>= dispatch_get_global_queue(0, 0);</div></pre></td></tr></table></figure>
+</li>
+<li><p>手动创建并发队列</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dispatch_queue_t<span class="built_in"> queue </span>= dispatch_queue_create(<span class="string">"myQueue"</span>, DISPATCH_QUEUE_CONCURRENT);</div></pre></td></tr></table></figure>
+</li>
+<li><p>手动创建串行队列</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dispatch_queue_t<span class="built_in"> queue </span>= dispatch_queue_create(<span class="string">"mySerialQueue"</span>, DISPATCH_QUEUE_SERIAL);</div></pre></td></tr></table></figure>
+</li>
+<li><p>手动创建队列组</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dispatch_group_t<span class="built_in"> group </span>= dispatch_group_create();</div></pre></td></tr></table></figure>
+</li>
+</ul>
 <p>👉 <a href="https://github.com/apple/swift-corelibs-libdispatch" target="_blank" rel="external">GCD源码</a></p>
 <h2 id="GCD的队列"><a href="#GCD的队列" class="headerlink" title="GCD的队列"></a>GCD的队列</h2><p>GCD的队列可以分为2大类型</p>
 <ul>
@@ -433,6 +451,7 @@ table th:nth-of-type(5){
 </tr>
 </tbody>
 </table>
+<p>主队列是一个特殊的串行队列，async 方法在主队列中不会开启新线程，并且是串行执行任务。</p>
 <h2 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h2><p>使用sync函数往当前串行队列中添加任务，会卡住当前的串行队列（产生死锁）</p>
 
       
