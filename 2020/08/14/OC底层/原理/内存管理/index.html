@@ -81,7 +81,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/08/14/OC底层/原理/内存管理/内存管理02.png">
 <meta property="og:image" content="http://yoursite.com/2020/08/14/OC底层/原理/内存管理/内存管理03.png">
 <meta property="og:image" content="http://yoursite.com/2020/08/14/OC底层/原理/内存管理/内存管理04.png">
-<meta property="og:updated_time" content="2020-08-17T14:48:01.066Z">
+<meta property="og:updated_time" content="2020-08-17T15:01:54.135Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="内存管理">
 <meta name="twitter:description" content="思考：  使用 CADisplayLink、NSTimer 有什么注意点？ 介绍下内存的几大区域 讲一下你对 iOS 内存管理的理解 ARC 都帮我们做了什么？(LLVM + Runtime) weak 指针的实现原理 autorelease 对象在什么时机会被调用 release 方法里有局部对象， 出了方法后会立即释放吗?">
@@ -377,7 +377,7 @@
 </code></pre><p>  } start:2 interval:1 repeats:YES async:NO];<br>}</p>
 </li>
 <li><p>(void)touchesBegan:(NSSet<uitouch *=""> <em>)touches withEvent:(UIEvent </em>)event<br>{<br>  [YQGCDTimer cancelTask:self.task];<br>}<br>@end</uitouch></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">调用函数回调方法：</div></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line">调用函数回调方法：</div></pre></td></tr></table></figure>
 </li>
 </ul>
 <p>@interface TimerViewController ()<br>@property (nonatomic, copy) NSString *task;<br>@end</p>
