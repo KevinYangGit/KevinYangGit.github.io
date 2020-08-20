@@ -93,7 +93,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_07.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_08.png">
 <meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_09.png">
-<meta property="og:updated_time" content="2020-08-12T16:35:04.414Z">
+<meta property="og:updated_time" content="2020-08-20T08:45:22.692Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="KVO">
 <meta name="twitter:description" content="思考：  iOS 用什么方式实现对一个对象的 KVO？(KVO的本质是什么？)   如何手动触发 KVO ？   直接修改成员变量会触发 KVO 么？   通过 KVC 修改属性会触发 KVO 么？  KVC 的赋值和取值过程是怎样的？原理是什么？">
@@ -358,9 +358,9 @@
 <p>查看 _NSSet*AndNotify 的存在：<br><img src="/2020/05/13/OC底层/原理/KVO/KVO04.png" alt="isa和superclass"></p>
 <p>_NSSet*ValueAndNotify 的内部实现：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> _NSSet*ValueAndNotify </div><div class="line">&#123;</div><div class="line">    [<span class="meta">self willChangeValueForKey:@<span class="meta-string">"key"</span></span>];</div><div class="line">    <span class="comment">// 原来的 setter 实现</span></div><div class="line">    [<span class="meta">self didChagneValueForKey:@<span class="meta-string">"key"</span></span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <ul>
-<li>调用 willChangeValueForKey:  </li>
+<li>调用 <code>willChangeValueForKey:</code>  </li>
 <li>调用原来的 setter 实现  </li>
-<li>调用 didChangeValueForKey:，其内部会调用 observer 的 <code>observeValueForKeyPath:ofObject:change:context:</code> 方法</li>
+<li>调用 <code>didChangeValueForKey:</code>，其内部会调用 observer 的 <code>observeValueForKeyPath:ofObject:change:context:</code> 方法</li>
 </ul>
 <h3 id="NSKVONotifying-Person-元类对象"><a href="#NSKVONotifying-Person-元类对象" class="headerlink" title="NSKVONotifying_Person 元类对象"></a>NSKVONotifying_Person 元类对象</h3><p>打印 person1 的元类对象：<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">NSLog(@<span class="string">"person1添加KVO之后，类对象 - %@, %@"</span>, object_getClass(<span class="name">person1</span>), object_getClass(<span class="name">person2</span>))<span class="comment">;</span></div><div class="line">NSLog(@<span class="string">"person1添加KVO之后，元类对象 - %@, %@"</span>, object_getClass(<span class="name">object_getClass</span>(<span class="name">person1</span>)), object_getClass(<span class="name">object_getClass</span>(<span class="name">person2</span>)))<span class="comment">;</span></div></pre></td></tr></table></figure></p>
 <p>打印结果：<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">person1添加KVO之后，类对象 - NSKVONotifying_Person, <span class="keyword">Person</span></div><div class="line">person1添加KVO之后，元类对象 - NSKVONotifying_Person, <span class="keyword">Person</span></div></pre></td></tr></table></figure></p>
