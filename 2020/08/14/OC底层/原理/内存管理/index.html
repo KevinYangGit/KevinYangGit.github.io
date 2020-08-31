@@ -96,7 +96,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/08/14/OC底层/原理/内存管理/内存管理18.png">
 <meta property="og:image" content="http://yoursite.com/2020/08/14/OC底层/原理/内存管理/内存管理19.png">
 <meta property="og:image" content="http://yoursite.com/2020/08/14/OC底层/原理/内存管理/内存管理20.png">
-<meta property="og:updated_time" content="2020-08-28T10:19:02.229Z">
+<meta property="og:updated_time" content="2020-08-28T10:30:07.567Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="内存管理">
 <meta name="twitter:description" content="思考：  使用 CADisplayLink、NSTimer 有什么注意点？ 介绍下内存的几大区域 讲一下你对 iOS 内存管理的理解 ARC 都帮我们做了什么？(LLVM + Runtime) weak 指针的实现原理 autorelease 对象在什么时机会被调用 release 方法里有局部对象， 出了方法后会立即释放吗?">
@@ -702,11 +702,13 @@
 <p><code>activities</code> 对应的枚举：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) &#123;</div><div class="line">    kCFRunLoopEntry = (<span class="number">1</span>UL &lt;&lt; <span class="number">0</span>),          <span class="comment">// 1（十进制）</span></div><div class="line">    kCFRunLoopBeforeTimers = (<span class="number">1</span>UL &lt;&lt; <span class="number">1</span>),   <span class="comment">// 2</span></div><div class="line">    kCFRunLoopBeforeSources = (<span class="number">1</span>UL &lt;&lt; <span class="number">2</span>),  <span class="comment">// 4</span></div><div class="line">    kCFRunLoopBeforeWaiting = (<span class="number">1</span>UL &lt;&lt; <span class="number">5</span>),  <span class="comment">// 32</span></div><div class="line">    kCFRunLoopAfterWaiting = (<span class="number">1</span>UL &lt;&lt; <span class="number">6</span>),   <span class="comment">// 64</span></div><div class="line">    kCFRunLoopExit = (<span class="number">1</span>UL &lt;&lt; <span class="number">7</span>),           <span class="comment">// 128</span></div><div class="line">    kCFRunLoopAllActivities = <span class="number">0x0FFFFFFF</span>U</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
 <p>因为：<br><code>0x1</code>（十六进制）-&gt; 1（十进制）<br><code>0xa0</code>（十六进制）-&gt; 160（十进制）<br>所以：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="number">0x1</span>：kCFRunLoopEntry</div><div class="line"><span class="number">0xa0</span>：kCFRunLoopAfterWaiting | kCFRunLoopExit</div></pre></td></tr></table></figure></p>
 <p>所以第一个 observe 监听的状态就是 <code>kCFRunLoopEntry</code>，第二个 observe 监听的状态就是 <code>kCFRunLoopAfterWaiting</code> 和 <code>kCFRunLoopExit</code>。 </p>
-<p>第一次循环：<br>01 状态是 <code>kCFRunLoopEntry</code>，RunLoop 会调用 <code>objc_autoreleasePoolPush()</code> 方法；<br>07 状态是 <code>kCFRunLoopAfterWaiting</code>，RunLoop 会先调用 <code>objc_autoreleasePoolPop()</code> 方法，然后调用 <code>objc_autoreleasePoolPush()</code> 方法； </p>
-<p>非第一次循环：<br>10-1 回到 02 继续循环至 07；<br>07 状态是 <code>kCFRunLoopAfterWaiting</code>，RunLoop 会先调用 <code>objc_autoreleasePoolPop()</code> 方法，然后调用 <code>objc_autoreleasePoolPush()</code> 方法；<br>10-1 回到 02 继续循环至 07；  </p>
-<p>结束循环：<br>10-2 退出 RunLoop；<br>11 状态是 <code>kCFRunLoopExit</code>，RunLoop 会调用 <code>objc_autoreleasePoolPop()</code> 方法。</p>
 <p><img src="/2020/08/14/OC底层/原理/内存管理/内存管理20.png" alt="内存管理20"></p>
-<p>因为 02 会调用 <code>objc_autoreleasePoolPop()</code> 方法，然后调用 <code>objc_autoreleasePoolPush()</code> 方法，所以 <code>push()</code> 和 <code>pop()</code> 实现了一一对应的关系。</p>
+<ul>
+<li>第一次循环：<br>01 状态是 <code>kCFRunLoopEntry</code>，RunLoop 会调用 <code>objc_autoreleasePoolPush()</code> 方法；<br>07 状态是 <code>kCFRunLoopAfterWaiting</code>，RunLoop 会先调用 <code>objc_autoreleasePoolPop()</code> 方法，然后调用 <code>objc_autoreleasePoolPush()</code> 方法； </li>
+<li>非第一次循环：<br>10-1 回到 02 继续循环至 07；<br>07 状态是 <code>kCFRunLoopAfterWaiting</code>，RunLoop 会先调用 <code>objc_autoreleasePoolPop()</code> 方法，然后调用 <code>objc_autoreleasePoolPush()</code> 方法；<br>10-1 回到 02 继续循环至 07；  </li>
+<li>结束循环：<br>10-2 退出 RunLoop；<br>11 状态是 <code>kCFRunLoopExit</code>，RunLoop 会调用 <code>objc_autoreleasePoolPop()</code> 方法。</li>
+</ul>
+<p>因为 02 会先调用 <code>objc_autoreleasePoolPop()</code> 方法，然后调用 <code>objc_autoreleasePoolPush()</code> 方法，所以 <code>push()</code> 和 <code>pop()</code> 实现了一一对应的关系。</p>
 <p>在看打印结果：<br><figure class="highlight haml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">-<span class="ruby">[ViewController viewDidLoad]</span></div><div class="line"><span class="ruby">-[ViewController <span class="symbol">viewWillAppear:</span>]</span></div><div class="line"><span class="ruby">-[Person dealloc]</span></div><div class="line"><span class="ruby">-[ViewController <span class="symbol">viewDidAppear:</span>]</span></div></pre></td></tr></table></figure></p>
 <p>在 <code>viewWillAppear</code> 执行完成后，RunLoop 到了 02 的位置。此时 RunLoop 监听到了 <code>kCFRunLoopAfterWaiting</code> 状态，会先调用 <code>objc_autoreleasePoolPop()</code> 方法，然后调用 <code>objc_autoreleasePoolPush()</code> 方法。在调用 <code>objc_autoreleasePoolPop()</code> 方法时，Autorelease 中的 person 对象就被释放了。</p>
 <p>另外，打印结果也说明了 <code>viewDidLoad</code> 和 <code>viewWillAppear</code> 方法是在同一个循环中的。</p>
@@ -716,7 +718,7 @@
 <li>讲一下你对 iOS 内存管理的理解<br>在 iOS 中，使用引用计数来管理 OC 对象的内存。<br>一个新创建的 OC 对象引用计数默认是1，当引用计数减为0，OC 对象就会销毁，释放其占用的内存空间。<br>调用 retain 会让 OC 对象的引用计数+1，调用 release 会让 OC 对象的引用计数-1。<br>内存管理的经验总结：<br>当调用 alloc、new、copy、mutableCopy 方法返回了一个对象，在不需要这个对象时，要调用 release 或者 autorelease 来释放它。<br>想拥有某个对象，就让它的引用计数+1；不想再拥有某个对象，就让它的引用计数-1。  </li>
 <li>ARC 都帮我们做了什么？(LLVM + Runtime)<br>ARC 是 LLVM 编译器和 Runtime 协作协作实现的。ARC 利用 LLVM 编译器自动生成 release、retain 和 autorelease 等内存管理相关的代码，利用 Runtime 实现在运行时对弱引用的管理（添加和清除）。</li>
 <li>weak 指针的实现原理<br>将弱引用存储在一个弱引用表（哈希表）里面，在对象要销毁时，就以对象的地址值 &amp; mask 得到一个索引取出对应的弱引用表，并把弱引用表里存储的弱引用都清除掉。</li>
-<li>autorelease 对象在什么时机会被调用 release</li>
+<li>autorelease 对象在什么时机会被调用 release？<br>autorelease 对象在什么时候调用 release 是由 RunLoop 控制的，在 RunLoop 监听到 <code>kCFRunLoopAfterWaiting</code> 或 <code>kCFRunLoopExit</code> 状态时会调用 <code>objc_autoreleasePoolPop()</code> 方法，此时 autorelease 对象会调用 release。即在 RunLoop 进入休眠或者退出时调用 release。</li>
 </ul>
 <p><a href="https://www.infoq.cn/article/deep-understanding-of-tagged-pointer/" target="_blank" rel="external">深入理解 Tagged Pointer</a></p>
 
