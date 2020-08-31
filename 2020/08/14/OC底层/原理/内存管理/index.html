@@ -96,7 +96,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/08/14/OC底层/原理/内存管理/内存管理18.png">
 <meta property="og:image" content="http://yoursite.com/2020/08/14/OC底层/原理/内存管理/内存管理19.png">
 <meta property="og:image" content="http://yoursite.com/2020/08/14/OC底层/原理/内存管理/内存管理20.png">
-<meta property="og:updated_time" content="2020-08-31T02:33:06.639Z">
+<meta property="og:updated_time" content="2020-08-31T02:33:52.109Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="内存管理">
 <meta name="twitter:description" content="思考：  使用 CADisplayLink、NSTimer 有什么注意点？ 介绍下内存的几大区域 讲一下你对 iOS 内存管理的理解 ARC 都帮我们做了什么？(LLVM + Runtime) weak 指针的实现原理 autorelease 对象在什么时机会被调用 release 方法里有局部对象， 出了方法后会立即释放吗?">
@@ -716,13 +716,20 @@
 <p>打印结果：<br><figure class="highlight haml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">-<span class="ruby">[ViewController viewDidLoad]</span></div><div class="line"><span class="ruby">-[Person dealloc]</span></div><div class="line"><span class="ruby">-[ViewController <span class="symbol">viewWillAppear:</span>]</span></div><div class="line"><span class="ruby">-[ViewController <span class="symbol">viewDidAppear:</span>]</span></div></pre></td></tr></table></figure></p>
 <p>从打印结果可以看到，person 对象在 <code>viewDidLoad</code> 方法执行完就释放了。所以在 ARC 环境下，在方法最后结束前，对方法内部的局部变量调用了 release 方法：<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (void)viewDidLoad &#123;</div><div class="line">    <span class="comment">[super viewDidLoad]</span>;</div><div class="line">    <span class="keyword">Person</span> *<span class="keyword">person</span> = <span class="comment">[<span class="comment">[Person alloc]</span> init]</span>;</div><div class="line">    NSLog(@<span class="string">"%s"</span>, __func__);</div><div class="line">    </div><div class="line">    // <span class="comment">[person release]</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
-<li>使用 CADisplayLink、NSTimer 有什么注意点？<br>CADisplayLink 和 NSTimer 依赖于 RunLoop，如果 RunLoop 的任务过于繁重，可能会导致 CADisplayLink 和 NSTimer 不准时。<br>CADisplayLink 和 NSTimer 有可能会造成循环引用问题，CADisplayLink 可以通过使用代理对象（NSProxy）解决，NSTimer 除了可以通过使用代理对象（NSProxy）解决外，还可以使用带有 block 回调的初始化方法。  </li>
-<li>介绍下内存的几大区域<br>代码段：编译之后的代码<br>数据段：字符串常量、已初始化数据和未初始化数据<br>栈：函数调用开销，比如局部变量。（分配的内存空间地址越来越小）<br>堆：通过 alloc、malloc、calloc 等动态分配的空间，分配的内存空间地址越来越大</li>
-<li>讲一下你对 iOS 内存管理的理解<br>在 iOS 中，使用引用计数来管理 OC 对象的内存。<br>一个新创建的 OC 对象引用计数默认是1，当引用计数减为0，OC 对象就会销毁，释放其占用的内存空间。<br>调用 retain 会让 OC 对象的引用计数+1，调用 release 会让 OC 对象的引用计数-1。<br>内存管理的经验总结：<br>当调用 alloc、new、copy、mutableCopy 方法返回了一个对象，在不需要这个对象时，要调用 release 或者 autorelease 来释放它。<br>想拥有某个对象，就让它的引用计数+1；不想再拥有某个对象，就让它的引用计数-1。  </li>
-<li>ARC 都帮我们做了什么？(LLVM + Runtime)<br>ARC 是 LLVM 编译器和 Runtime 协作协作实现的。ARC 利用 LLVM 编译器自动生成 release、retain 和 autorelease 等内存管理相关的代码，利用 Runtime 实现在运行时对弱引用的管理（添加和清除）。</li>
-<li>weak 指针的实现原理<br>将弱引用存储在一个弱引用表（哈希表）里面，在对象要销毁时，就以对象的地址值 &amp; mask 得到一个索引取出对应的弱引用表，并把弱引用表里存储的弱引用都清除掉。</li>
-<li>autorelease 对象在什么时机会被调用 release？<br>autorelease 对象在什么时候调用 release 是由 RunLoop 控制的，在 RunLoop 监听到 <code>kCFRunLoopAfterWaiting</code> 或 <code>kCFRunLoopExit</code> 状态时会调用 <code>objc_autoreleasePoolPop()</code> 方法，此时 autorelease 对象会调用 release。即在 RunLoop 进入休眠或者退出时调用 release。</li>
-<li>方法里有局部对象， 出了方法后会立即释放吗?<br>会。在方法结束前，runtime 会自动为方法内部的局部对象调用 release 方法进行释放。</li>
+<li><p>使用 CADisplayLink、NSTimer 有什么注意点？<br>CADisplayLink 和 NSTimer 依赖于 RunLoop，如果 RunLoop 的任务过于繁重，可能会导致 CADisplayLink 和 NSTimer 不准时。<br>CADisplayLink 和 NSTimer 有可能会造成循环引用问题，CADisplayLink 可以通过使用代理对象（NSProxy）解决，NSTimer 除了可以通过使用代理对象（NSProxy）解决外，还可以使用带有 block 回调的初始化方法。  </p>
+</li>
+<li><p>介绍下内存的几大区域<br>代码段：编译之后的代码<br>数据段：字符串常量、已初始化数据和未初始化数据<br>栈：函数调用开销，比如局部变量。（分配的内存空间地址越来越小）<br>堆：通过 alloc、malloc、calloc 等动态分配的空间，分配的内存空间地址越来越大</p>
+</li>
+<li><p>讲一下你对 iOS 内存管理的理解<br>在 iOS 中，使用引用计数来管理 OC 对象的内存。<br>一个新创建的 OC 对象引用计数默认是1，当引用计数减为0，OC 对象就会销毁，释放其占用的内存空间。<br>调用 retain 会让 OC 对象的引用计数+1，调用 release 会让 OC 对象的引用计数-1。<br>内存管理的经验总结：<br>当调用 alloc、new、copy、mutableCopy 方法返回了一个对象，在不需要这个对象时，要调用 release 或者 autorelease 来释放它。<br>想拥有某个对象，就让它的引用计数+1；不想再拥有某个对象，就让它的引用计数-1。  </p>
+</li>
+<li><p>ARC 都帮我们做了什么？(LLVM + Runtime)<br>ARC 是 LLVM 编译器和 Runtime 协作协作实现的。ARC 利用 LLVM 编译器自动生成 release、retain 和 autorelease 等内存管理相关的代码，利用 Runtime 实现在运行时对弱引用的管理（添加和清除）。</p>
+</li>
+<li><p>weak 指针的实现原理<br>将弱引用存储在一个弱引用表（哈希表）里面，在对象要销毁时，就以对象的地址值 &amp; mask 得到一个索引取出对应的弱引用表，并把弱引用表里存储的弱引用都清除掉。</p>
+</li>
+<li><p>autorelease 对象在什么时机会被调用 release？<br>autorelease 对象在什么时候调用 release 是由 RunLoop 控制的，在 RunLoop 监听到 <code>kCFRunLoopAfterWaiting</code> 或 <code>kCFRunLoopExit</code> 状态时会调用 <code>objc_autoreleasePoolPop()</code> 方法，此时 autorelease 对象会调用 release。即在 RunLoop 进入休眠或者退出时调用 release。</p>
+</li>
+<li><p>方法里有局部对象， 出了方法后会立即释放吗?<br>会。在方法结束前，runtime 会自动为方法内部的局部对象调用 release 方法进行释放。</p>
+</li>
 </ul>
 <p>相关阅读：<br><a href="https://www.infoq.cn/article/deep-understanding-of-tagged-pointer/" target="_blank" rel="external">深入理解 Tagged Pointer</a></p>
 
