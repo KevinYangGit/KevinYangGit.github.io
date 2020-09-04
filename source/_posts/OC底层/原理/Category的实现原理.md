@@ -273,20 +273,20 @@ static void methodizeClass(Class cls, Class previously)
     }
 
     // Install methods and properties that the class implements itself.
-	// 方法数组
+    // 方法数组
     method_list_t *list = ro->baseMethods();
     if (list) {
         prepareMethodLists(cls, &list, 1, YES, isBundleClass(cls));
         if (rwe) rwe->methods.attachLists(&list, 1);
     }
-
-	// 属性数组
+    
+    // 属性数组
     property_list_t *proplist = ro->baseProperties;
     if (rwe && proplist) {
         rwe->properties.attachLists(&proplist, 1);
     }
-
-	// 协议数组
+    
+    // 协议数组
     protocol_list_t *protolist = ro->baseProtocols;
     if (rwe && protolist) {
         rwe->protocols.attachLists(&protolist, 1);
@@ -298,8 +298,8 @@ static void methodizeClass(Class cls, Class previously)
         // root metaclass
         addMethod(cls, @selector(initialize), (IMP)&objc_noop_imp, "", NO);
     }
-	
-	// 添加分类方法、属性、协议数据
+    
+    // 添加分类方法、属性、协议数据
     // Attach categories.
     if (previously) {
         if (isMeta) {
@@ -396,11 +396,11 @@ attachCategories(Class cls, const locstamped_category_t *cats_list, uint32_t cat
     auto rwe = cls->data()->extAllocIfNeeded();
 
     for (uint32_t i = 0; i < cats_count; i++) {
-		
-		// 取出某个分类 entry 是 category_t 类型
+        
+        // 取出某个分类 entry 是 category_t 类型
         auto& entry = cats_list[i];
-		
-		// 方法数组
+        
+        // 方法数组
         method_list_t *mlist = entry.cat->methodsForMeta(isMeta);
         if (mlist) {
             if (mcount == ATTACH_BUFSIZ) {
@@ -411,8 +411,8 @@ attachCategories(Class cls, const locstamped_category_t *cats_list, uint32_t cat
             mlists[ATTACH_BUFSIZ - ++mcount] = mlist;
             fromBundle |= entry.hi->isBundle();
         }
-
-		//属性数组
+        
+        // 属性数组
         property_list_t *proplist =
             entry.cat->propertiesForMeta(isMeta, entry.hi);
         if (proplist) {
@@ -422,8 +422,8 @@ attachCategories(Class cls, const locstamped_category_t *cats_list, uint32_t cat
             }
             proplists[ATTACH_BUFSIZ - ++propcount] = proplist;
         }
-
-		// 协议数组
+        
+        // 协议数组
         protocol_list_t *protolist = entry.cat->protocolsForMeta(isMeta);
         if (protolist) {
             if (protocount == ATTACH_BUFSIZ) {
@@ -549,12 +549,10 @@ struct Persion_IMPL {
 
 ## 小结
 * 运行时入口 objc-os.mm，初始化方法 void _objc_init(void) 方法。
-
 * objc4 的代码虽然改了，但是实现原理还是没变。
 
 # 总结
 * Category 的实现原理  
 Category 编译之后的底层结构是 struct category_t，里面存储着分类的对象方法、类方法、属性、协议信息，在程序运行的时候，runtime 会将 Category 的数据，合并到类信息中（类对象、元类对象中）。
-
 * Category 和 Class Extension 的区别是什么？  
 Class Extension 在编译的时候，它的数据就已经包含在类信息中。Category 是在运行时，才会将数据合并到类信息中。

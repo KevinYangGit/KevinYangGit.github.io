@@ -577,7 +577,7 @@ _class_createInstanceFromZone(Class cls, size_t extraBytes, void *zone,
 }
 ```
 
-可以看出，代码最终是调用 obj = (id)calloc(1, size); 创建的实列对象。而 size = cls->instanceSize(extraBytes); 是根据成员变量大小计算出来的需要开辟的内存大小。instanceSize(extraBytes) 的参数 extraBytes 是额外空间，来自 _objc_rootAllocWithZone，_objc_rootAllocWithZone 传入的 extraBytes = 0：
+可以看出，代码最终是调用 `obj = (id)calloc(1, size);` 创建的实列对象。而 `size = cls->instanceSize(extraBytes);` 是根据成员变量大小计算出来的需要开辟的内存大小。`instanceSize(extraBytes)` 的参数 extraBytes 是额外空间，来自 `_objc_rootAllocWithZone`，`_objc_rootAllocWithZone` 传入的 extraBytes = 0：
 ```
 id
 _objc_rootAllocWithZone(Class cls, malloc_zone_t *zone)
@@ -595,7 +595,7 @@ _objc_rootAllocWithZone(Class cls, malloc_zone_t *zone)
 }
 ```
 
-排查完 instanceSize(extraBytes) 后，可以确定 class_getInstanceSize() 与 malloc_size() 获取到的内存大小不同的原因来自 calloc。
+排查完 `instanceSize(extraBytes)` 后，可以确定 `class_getInstanceSize()` 与 `malloc_size()` 获取到的内存大小不同的原因来自 calloc。
 
 # 窥视 calloc
 calloc 是 c 语言的标准库，需要下载 [libmalloc](https://opensource.apple.com/tarballs/libmalloc/)（libmalloc-283 文件里没有 malloc.c 文件了，这里下的是 libmalloc-166.200.60.tar.gz）。
@@ -639,14 +639,14 @@ malloc_zone_calloc(malloc_zone_t *zone, size_t num_items, size_t size)
 }
 ```
 
-malloc_zone_calloc 中就是系统分配内存的具体实现。另外，在系统分配内存时有一个 NANO_MAX_SIZE：
+`malloc_zone_calloc` 中就是系统分配内存的具体实现。另外，在系统分配内存时有一个 `NANO_MAX_SIZE`：
 ```
 #define NANO_MAX_SIZE			256 /* Buckets sized {16, 32, 48, 64, 80, 96, 112, ...} */
 ```
 
 Buckets sized：iOS 堆空间里内存分为一块一块的内存空间，大小都是16的倍数，最大的内存空间块是256。
 
-malloc_zone_calloc 这里也存在内存对齐原则。前面在生成结构体的时候提到过，根据内存对齐原则，结构体的大小必须是最大成员大小的倍数。而在这里，系统在分配内存时，分配的内存必须是16的倍数。因为 ios 系统为了提升内存分配的速度，固定了需要分配的内存空间块（Buckets sized）。在需要分配内存的时候，会找到最合适的内存空间块们来分配给实例对象。
+`malloc_zone_calloc` 这里也存在内存对齐原则。前面在生成结构体的时候提到过，根据内存对齐原则，结构体的大小必须是最大成员大小的倍数。而在这里，系统在分配内存时，分配的内存必须是16的倍数。因为 ios 系统为了提升内存分配的速度，固定了需要分配的内存空间块（Buckets sized）。在需要分配内存的时候，会找到最合适的内存空间块们来分配给实例对象。
 
 # 总结
 
