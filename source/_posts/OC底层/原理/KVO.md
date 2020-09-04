@@ -166,9 +166,9 @@ void _NSSet*ValueAndNotify
 }
 ```
 
-* 调用 willChangeValueForKey:  
+* 调用 `willChangeValueForKey:`  
 * 调用原来的 setter 实现  
-* 调用 didChangeValueForKey:，其内部会调用 observer 的 `observeValueForKeyPath:ofObject:change:context:` 方法
+* 调用 `didChangeValueForKey:`，其内部会调用 observer 的 `observeValueForKeyPath:ofObject:change:context:` 方法
 
 
 ### NSKVONotifying_Person 元类对象

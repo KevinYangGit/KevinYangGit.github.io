@@ -768,7 +768,7 @@ objc_class、class_rw_t 和 class_ro_t 之间的关系可以简化为：
 
 ## 查看 objc_class 对象的真实结构
 
-导入 ClassInfo.h，定义 MJPerson、MJStudent：
+导入 ClassInfo.h，定义 Person 和 Student 类：
 ```
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>

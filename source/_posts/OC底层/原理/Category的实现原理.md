@@ -132,7 +132,7 @@ void _objc_init(void)
     // fixme defer initialization until an objc-using image is found?
     environ_init(); //设置系统的环境变量
     tls_init(); //线程相关的处理
-    static_init(); //运行C ++静态构造函数
+    static_init(); //运行C++静态构造函数
     runtime_init();
     exception_init(); //注册异常的回调
     cache_init();
