@@ -96,7 +96,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/08/14/OC底层/原理/内存管理/内存管理18.png">
 <meta property="og:image" content="http://yoursite.com/2020/08/14/OC底层/原理/内存管理/内存管理19.png">
 <meta property="og:image" content="http://yoursite.com/2020/08/14/OC底层/原理/内存管理/内存管理20.png">
-<meta property="og:updated_time" content="2020-08-31T02:43:51.579Z">
+<meta property="og:updated_time" content="2020-09-04T07:38:41.010Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="内存管理">
 <meta name="twitter:description" content="思考：  使用 CADisplayLink、NSTimer 有什么注意点？ 介绍下内存的几大区域 讲一下你对 iOS 内存管理的理解 ARC 都帮我们做了什么？(LLVM + Runtime) weak 指针的实现原理 autorelease 对象在什么时机会被调用 release 方法里有局部对象， 出了方法后会立即释放吗?">
@@ -391,7 +391,7 @@
 <p><code>&quot;-Warc-performSelector-leaks&quot;</code> 可以在这里找到：<br><img src="/2020/08/14/OC底层/原理/内存管理/内存管理05.png" alt="内存管理05"> </p>
 <h1 id="iOS程序的内存布局"><a href="#iOS程序的内存布局" class="headerlink" title="iOS程序的内存布局"></a>iOS程序的内存布局</h1><ul>
 <li>代码段：编译之后的代码</li>
-<li>数据段：<br>字符串常量<br>已初始化数据<br>未初始化数据</li>
+<li>数据段：字符串常量、已初始化数据和未初始化数据</li>
 <li>栈：函数调用开销，比如局部变量。（分配的内存空间地址越来越小）</li>
 <li>堆：通过 alloc、malloc、calloc 等动态分配的空间，分配的内存空间地址越来越大<br><img src="/2020/08/14/OC底层/原理/内存管理/内存管理06.png" alt="内存管理06"> </li>
 </ul>
