@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="OC底层原理," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="思考：  Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？ 类对象可以关联对象吗？ 关联对象存储在什么位置？ 对象及其关联对象之间有强引用关系吗？ 对象释放后，关联对象会被释放吗？">
+<meta name="keywords" content="OC底层原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关联对象">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/index.html">
+<meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="思考：  Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？ 类对象可以关联对象吗？ 关联对象存储在什么位置？ 对象及其关联对象之间有强引用关系吗？ 对象释放后，关联对象会被释放吗？">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象01.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象02.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象05.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象03.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象04.png">
+<meta property="og:updated_time" content="2020-08-12T16:35:04.471Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关联对象">
+<meta name="twitter:description" content="思考：  Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？ 类对象可以关联对象吗？ 关联对象存储在什么位置？ 对象及其关联对象之间有强引用关系吗？ 对象释放后，关联对象会被释放吗？">
+<meta name="twitter:image" content="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/关联对象01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/"/>
+
+
+
+
+
+  <title>关联对象 | Kevin's  blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's  blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/26/OC底层/原理/关联对象/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">关联对象</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-26T11:16:15+08:00">
+                2020-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>思考：</p>
+<ul>
+<li>Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？</li>
+<li>类对象可以关联对象吗？</li>
+<li>关联对象存储在什么位置？</li>
+<li>对象及其关联对象之间有强引用关系吗？</li>
+<li>对象释放后，关联对象会被释放吗？</li>
+</ul>
+<a id="more"></a>
+<h1 id="Category-的成员变量"><a href="#Category-的成员变量" class="headerlink" title="Category 的成员变量"></a>Category 的成员变量</h1><h2 id="category-t-结构体"><a href="#category-t-结构体" class="headerlink" title="_category_t 结构体"></a>_category_t 结构体</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">category_t</span> &#123;</span></div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *name; <span class="comment">//类名</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> _<span class="title">class_t</span> *<span class="title">cls</span>;</span> <span class="comment">//父类</span></div><div class="line">    <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> _<span class="title">method_list_t</span> *<span class="title">instance_methods</span>;</span> <span class="comment">//对象方法列表</span></div><div class="line">    <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> _<span class="title">method_list_t</span> *<span class="title">class_methods</span>;</span> <span class="comment">//类方法列表</span></div><div class="line">    <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> _<span class="title">protocol_list_t</span> *<span class="title">protocols</span>;</span> <span class="comment">//协议列表</span></div><div class="line">    <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> _<span class="title">prop_list_t</span> *<span class="title">properties</span>;</span> <span class="comment">//属性列表</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>从 _category_t 的结构体可以看出，Category 中并没有存放成员变量的容器，所以 Category 本身是不支持添加成员变量的。</p>
+<h2 id="在-Persion-h-中定义属性"><a href="#在-Persion-h-中定义属性" class="headerlink" title="在 Persion.h 中定义属性"></a>在 Persion.h 中定义属性</h2><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@interface</span> <span class="attribute">Persion </span>: NSObject</div><div class="line"><span class="variable">@property</span> (nonatomic, assign) int age;</div><div class="line"><span class="variable">@end</span></div></pre></td></tr></table></figure>
+<p>在 Persion.h 中定义了属性后，系统会在 Persion.m 里自动做三件事：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@implementation</span> Persion</div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> _age; <span class="comment">//第一件事：定义成员变量</span></div><div class="line">&#125;</div><div class="line"><span class="comment">//第二件事：实现 age 的 set 方法</span></div><div class="line">- (<span class="keyword">void</span>)<span class="string">setAge:</span>(<span class="keyword">int</span>)age &#123; </div><div class="line">    _age = age;</div><div class="line">&#125;</div><div class="line"><span class="comment">//第三件事：实现 age 的 get 方法</span></div><div class="line">- (<span class="keyword">int</span>)age &#123; </div><div class="line">    <span class="keyword">return</span> _age;</div><div class="line">&#125;</div><div class="line"><span class="meta">@end</span></div></pre></td></tr></table></figure></p>
+<h2 id="在-Persion-Test-h-中定义属性"><a href="#在-Persion-Test-h-中定义属性" class="headerlink" title="在 Persion+Test.h 中定义属性"></a>在 Persion+Test.h 中定义属性</h2><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@interface</span> Persion (Test)</div><div class="line"><span class="variable">@property</span> (nonatomic, assign) int weight;</div><div class="line"><span class="variable">@end</span></div></pre></td></tr></table></figure>
+<p>在 Persion+Test.h 中定义了属性后，系统会在 Persion+Test.h 里自动是实现两件事：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@interface</span> Persion (Test)</div><div class="line"><span class="comment">//第一件事：生成 weight 的 set 方法的声明</span></div><div class="line">- (<span class="keyword">void</span>)<span class="string">setWeight:</span>(<span class="keyword">int</span>)weight;</div><div class="line"><span class="comment">//第二件事：生成 weight 的 get 方法的声明</span></div><div class="line">- (<span class="keyword">int</span>)weight;</div><div class="line"><span class="meta">@end</span></div></pre></td></tr></table></figure></p>
+<p>在分类里定义的属性，并没有对应的成员变量和 set/get 方法的实现。如果尝试手动添加，系统会报错。<br><img src="/2020/05/26/OC底层/原理/关联对象/关联对象01.png" alt="关联对象01"></p>
+<h2 id="定义全局变量-int-weight"><a href="#定义全局变量-int-weight" class="headerlink" title="定义全局变量 int weight_"></a>定义全局变量 int weight_</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> weight_;</div><div class="line"><span class="meta">@implementation</span> Persion (Test)</div><div class="line">- (<span class="keyword">void</span>)<span class="string">setWeight:</span>(<span class="keyword">int</span>)weight &#123;</div><div class="line">    weight_ = weight;</div><div class="line">&#125;</div><div class="line">- (<span class="keyword">int</span>)weight &#123;</div><div class="line">    <span class="keyword">return</span> weight_;</div><div class="line">&#125;</div><div class="line"><span class="meta">@end</span></div></pre></td></tr></table></figure>
+<p>通过定义全局变量 _weight 的方式可以实现成员变量的效果，但是 _weight 是全局变量，所有的实例对象 person 会共用同一个 _weight。这样会导致所有的实例对象 person 都可以修改 _weight，无法保证单个实例对象 person 与 _weight 一一对应关系。</p>
+<h2 id="定义全局变量-NSMutableDictionary-weights"><a href="#定义全局变量-NSMutableDictionary-weights" class="headerlink" title="定义全局变量 NSMutableDictionary *weights_"></a>定义全局变量 NSMutableDictionary *weights_</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSMutableDictionary</span> *weights_;</div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Persion</span> (<span class="title">Test</span>)</span></div><div class="line">+ (<span class="keyword">void</span>)load &#123;</div><div class="line">    weights_ = [<span class="built_in">NSMutableDictionary</span> dictionary];</div><div class="line">&#125;</div><div class="line">- (<span class="keyword">void</span>)setWeight:(<span class="keyword">int</span>)weight &#123;</div><div class="line">    <span class="built_in">NSString</span> *key = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%p"</span>, <span class="keyword">self</span>];</div><div class="line">    weights_[key] = @(weight);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">int</span>)weight &#123;</div><div class="line">    <span class="built_in">NSString</span> *key = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%p"</span>, <span class="keyword">self</span>];</div><div class="line">    <span class="keyword">return</span> [weights_[key] intValue];</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        Persion *persion1 = [[Persion alloc] init];</div><div class="line">        persion1.age = <span class="number">10</span>;</div><div class="line">        persion1.weight = <span class="number">20</span>;</div><div class="line">        </div><div class="line">        Persion *persion2 = [[Persion alloc] init];</div><div class="line">        persion2.age = <span class="number">30</span>;</div><div class="line">        persion2.weight = <span class="number">40</span>;</div><div class="line">        </div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"persion1.age = %d, persion1.wight = %d"</span>, persion1.age, persion1.weight);</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"persion2.age = %d, persion2.wight = %d"</span>,persion2.age, persion2.weight);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">persion1<span class="selector-class">.age</span> = <span class="number">10</span>, persion1<span class="selector-class">.wight</span> = <span class="number">20</span></div><div class="line">persion2<span class="selector-class">.age</span> = <span class="number">30</span>, persion2<span class="selector-class">.wight</span> = <span class="number">40</span></div></pre></td></tr></table></figure></p>
+<ul>
+<li>注意：<br>10和30是存储在 persion 对象的内部，20和40是存放在全局的字典 weights_ 对象里面。</li>
+</ul>
+<p>优点：通过定义全局变量字典，以 persion 对象的地址作 key，属性 weight 作 value，保证了 persion 对象与 weight 的一一对相应关系。<br>缺点：这种方式可能会有线程问题，在 <code>- (void)setWeight:(int)weight</code> 方法里需要加锁。另外每添加一个属性就要定义一个新的全局变量字典。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>因为分类底层结构的限制，不能直接添加成员变量到分类中，但是可以通过关联对象来间接实现。</p>
+<h1 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h1><h2 id="方法列表"><a href="#方法列表" class="headerlink" title="方法列表"></a>方法列表</h2><p>参数：<br>id _Nonnull object：需要添加关联对象的对象（通常写法传 self）;<br>const void * _Nonnull key：指针类型，保存关联对象的key；<br>id _Nullable value：关联对象；<br>objc_AssociationPolicy policy：关联策略；</p>
+<p>添加关联对象：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">OBJC_EXPORT <span class="keyword">void</span></div><div class="line">objc_setAssociatedObject(id _Nonnull <span class="keyword">object</span>, <span class="keyword">const</span> <span class="keyword">void</span> * _Nonnull key,</div><div class="line">                         id _Nullable <span class="keyword">value</span>, objc_AssociationPolicy policy)</div><div class="line">    OBJC_AVAILABLE(<span class="number">10.6</span>, <span class="number">3.1</span>, <span class="number">9.0</span>, <span class="number">1.0</span>, <span class="number">2.0</span>);</div></pre></td></tr></table></figure></p>
+<p>获取关联对象：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">OBJC_EXPORT id _Nullable</div><div class="line">objc_getAssociatedObject(id _Nonnull object, const void * _Nonnull <span class="type">key</span>)</div><div class="line">    OBJC_AVAILABLE(<span class="number">10.6</span>, <span class="number">3.1</span>, <span class="number">9.0</span>, <span class="number">1.0</span>, <span class="number">2.0</span>);</div></pre></td></tr></table></figure></p>
+<p>移除所有的关联对象：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">OBJC_EXPORT</span> <span class="selector-tag">void</span></div><div class="line"><span class="selector-tag">objc_removeAssociatedObjects</span>(<span class="selector-tag">id</span> _<span class="selector-tag">Nonnull</span> <span class="selector-tag">object</span>)</div><div class="line">    <span class="selector-tag">OBJC_AVAILABLE</span>(10<span class="selector-class">.6</span>, 3<span class="selector-class">.1</span>, 9<span class="selector-class">.0</span>, 1<span class="selector-class">.0</span>, 2<span class="selector-class">.0</span>);</div></pre></td></tr></table></figure></p>
+<h3 id="关联策略-objc-AssociationPolicy"><a href="#关联策略-objc-AssociationPolicy" class="headerlink" title="关联策略 objc_AssociationPolicy"></a>关联策略 objc_AssociationPolicy</h3><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">typedef OBJC_ENUM(uintptr_t, objc_AssociationPolicy) &#123;</div><div class="line">    OBJC_ASSOCIATION_ASSIGN = <span class="number">0</span>,           <span class="comment">/**&lt; Specifies a weak reference to the associated object. */</span></div><div class="line">    OBJC_ASSOCIATION_RETAIN_NONATOMIC = <span class="number">1</span>, <span class="comment">/**&lt; Specifies a strong reference to the associated object. </span></div><div class="line"><span class="comment">                                            *   The association is not made atomically. */</span></div><div class="line">    OBJC_ASSOCIATION_COPY_NONATOMIC = <span class="number">3</span>,   <span class="comment">/**&lt; Specifies that the associated object is copied. </span></div><div class="line"><span class="comment">                                            *   The association is not made atomically. */</span></div><div class="line">    OBJC_ASSOCIATION_RETAIN = <span class="number">01401</span>,       <span class="comment">/**&lt; Specifies a strong reference to the associated object.</span></div><div class="line"><span class="comment">                                            *   The association is made atomically. */</span></div><div class="line">    OBJC_ASSOCIATION_COPY = <span class="number">01403</span>          <span class="comment">/**&lt; Specifies that the associated object is copied.</span></div><div class="line"><span class="comment">                                            *   The association is made atomically. */</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>关联策略 objc_AssociationPolicy 类似于定义属性时设置的参数，确定要关联的对象的内存内存管理方式。</p>
+<p><img src="/2020/05/26/OC底层/原理/关联对象/关联对象02.png" alt="关联对象02"></p>
+<p>关联策略中没有 week，因为关联对象的实现并没有弱引用效果：</p>
+<p><img src="/2020/05/26/OC底层/原理/关联对象/关联对象05.png" alt="关联对象05"></p>
+<p>👆通过 OBJC_ASSOCIATION_ASSIGN 策略关联了对象 persion3，此时在 ObjcAssociation 对象里的 value 记住的是关联对象 persion3 的地址值，当关联对象 persion3 离开大括号销毁后，value 依然保存着关联对象的地址值。如果这个时候再通过 value 去访问关联对象就会出现坏内存访问的错误。</p>
+<h2 id="key的常见用法"><a href="#key的常见用法" class="headerlink" title="key的常见用法"></a>key的常见用法</h2><p>先添加打印：<br><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">int main(int argc, const char * argv[]) &#123;</div><div class="line">    @autoreleasepool &#123;</div><div class="line">        Persion *persion1 = [[Persion alloc] init]<span class="comment">;</span></div><div class="line">        persion1.name = @<span class="string">"persion1"</span><span class="comment">;</span></div><div class="line">        persion1.weight = <span class="number">20</span><span class="comment">;</span></div><div class="line">        </div><div class="line">        Persion *persion2 = [[Persion alloc] init]<span class="comment">;</span></div><div class="line">        persion2.name = @<span class="string">"persion2"</span><span class="comment">;</span></div><div class="line">        persion2.weight = <span class="number">40</span><span class="comment">;</span></div><div class="line">        </div><div class="line">        NSLog(@<span class="string">"persion1.name = %@, persion1.wight = %d"</span>, persion1.name, persion1.weight)<span class="comment">;</span></div><div class="line">        NSLog(@<span class="string">"persion2.name = %@, persion2.wight = %d"</span>,persion2.name, persion2.weight)<span class="comment">;</span></div><div class="line">    &#125;</div><div class="line">    return <span class="number">0</span><span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="用法一：static-const-void-Key-Key"><a href="#用法一：static-const-void-Key-Key" class="headerlink" title="用法一：static const void *Key = &Key;"></a>用法一：static const void *Key = &Key;</h3><h4 id="const-void-Key"><a href="#const-void-Key" class="headerlink" title="const void *Key;"></a>const void *Key;</h4><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@interface</span> Person (Test)</div><div class="line"><span class="variable">@property</span> (copy, nonatomic) NSString *name;</div><div class="line"><span class="variable">@property</span> (assign, nonatomic) int weight;</div><div class="line"><span class="variable">@end</span></div><div class="line"></div><div class="line"><span class="variable">@implementation</span> Person (Test)</div><div class="line">const void *NameKey;</div><div class="line"><span class="selector-tag">const</span> <span class="selector-tag">void</span> *<span class="selector-tag">WeightKey</span>;</div><div class="line"><span class="selector-tag">-</span> (void)<span class="selector-tag">setName</span><span class="selector-pseudo">:(NSString</span> *)<span class="selector-tag">name</span></div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">objc_setAssociatedObject</span>(self, NameKey, name, OBJC_ASSOCIATION_COPY_NONATOMIC);</div><div class="line">&#125;</div><div class="line"><span class="selector-tag">-</span> (NSString *)<span class="selector-tag">name</span></div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">return</span> <span class="selector-tag">objc_getAssociatedObject</span>(self, NameKey);</div><div class="line">&#125;</div><div class="line"><span class="selector-tag">-</span> (void)<span class="selector-tag">setWeight</span><span class="selector-pseudo">:(int)weight</span></div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">objc_setAssociatedObject</span>(self, WeightKey, @(weight), OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">&#125;</div><div class="line"><span class="selector-tag">-</span> (int)<span class="selector-tag">weight</span></div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">return</span> <span class="selector-attr">[objc_getAssociatedObject(self, WeightKey) intValue]</span>;</div><div class="line">&#125;</div><div class="line">@<span class="selector-tag">end</span></div></pre></td></tr></table></figure>
+<p>打印结果：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">persion1<span class="selector-class">.name</span> = <span class="number">20</span>, persion1<span class="selector-class">.wight</span> = <span class="number">20</span></div><div class="line">persion2<span class="selector-class">.name</span> = <span class="number">40</span>, persion2<span class="selector-class">.wight</span> = <span class="number">40</span></div></pre></td></tr></table></figure></p>
+<p>因为这种方式定义的 NameKey/WeightKey 没有赋值，都是 NULL。这样 name 和 weight 在赋值或取值的时候用的 key 都是 NULL，所以打印结果 name == weight。</p>
+<h4 id="const-void-Key-Key"><a href="#const-void-Key-Key" class="headerlink" title="const void *Key = &Key;"></a>const void *Key = &Key;</h4><p>修改 NameKey/WeightKey 的定义：<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> <span class="keyword">void</span> *NameKey = &amp;NameKey;</div><div class="line"><span class="keyword">const</span> <span class="keyword">void</span> *WeightKey = &amp;WeightKey;</div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">persion1<span class="selector-class">.name</span> = persion1, persion1<span class="selector-class">.wight</span> = <span class="number">20</span></div><div class="line">persion2<span class="selector-class">.name</span> = persion2, persion2<span class="selector-class">.wight</span> = <span class="number">40</span></div></pre></td></tr></table></figure></p>
+<p>这样定义的 NameKey/WeightKey 内部存储的分别是 NameKey/WeightKey 的地址值，这样保证了 name 和 weight 在赋值或取值的时候用的 key 是不同的值。但是这种方式定义的 NameKey/WeightKey 是全局变量，在其它文件可以通过 exten 访问到：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">extern</span> <span class="keyword">const</span> <span class="keyword">void</span> *NameKey;</div><div class="line"><span class="keyword">extern</span> <span class="keyword">const</span> <span class="keyword">void</span> *WeightKey;</div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"NameKey = %p, WeightKey = %p"</span>, NameKey, WeightKey);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight dns"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">NameKey = <span class="number">0x100002338</span>, WeightKey = <span class="number">0x100002340</span></div></pre></td></tr></table></figure></p>
+<h4 id="static-const-void-Key-Key"><a href="#static-const-void-Key-Key" class="headerlink" title="static const void *Key = &Key;"></a>static const void *Key = &Key;</h4><p>使用 static，限定全局变量的作用域，修改 NameKey/WeightKey 的定义：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span> (<span class="title">Test</span>)</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">void</span> *NameKey = &amp;NameKey;</div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">void</span> *WeightKey = &amp;WeightKey;</div><div class="line">- (<span class="keyword">void</span>)setName:(<span class="built_in">NSString</span> *)name</div><div class="line">&#123;</div><div class="line">    objc_setAssociatedObject(<span class="keyword">self</span>, NameKey, name, OBJC_ASSOCIATION_COPY_NONATOMIC);</div><div class="line">&#125;</div><div class="line">- (<span class="built_in">NSString</span> *)name</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> objc_getAssociatedObject(<span class="keyword">self</span>, NameKey);</div><div class="line">&#125;</div><div class="line">- (<span class="keyword">void</span>)setWeight:(<span class="keyword">int</span>)weight</div><div class="line">&#123;</div><div class="line">    objc_setAssociatedObject(<span class="keyword">self</span>, WeightKey, @(weight), OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">&#125;</div><div class="line">- (<span class="keyword">int</span>)weight</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> [objc_getAssociatedObject(<span class="keyword">self</span>, WeightKey) intValue];</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">persion1<span class="selector-class">.name</span> = persion1, persion1<span class="selector-class">.wight</span> = <span class="number">20</span></div><div class="line">persion2<span class="selector-class">.name</span> = persion2, persion2<span class="selector-class">.wight</span> = <span class="number">40</span></div></pre></td></tr></table></figure></p>
+<p>这个时候再使用 extern 的方式查找全局变量 NameKey/WeightKey 就会报错：<br><img src="/2020/05/26/OC底层/原理/关联对象/关联对象03.png" alt="关联对象03"></p>
+<h4 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h4><ul>
+<li>static：保证了全局变量的作用域仅限于当前文件。  </li>
+<li><code>Key = &amp;Key</code>：Key 内部存储的是 Key 的地址值。</li>
+</ul>
+<h3 id="用法二：static-const-char-Key"><a href="#用法二：static-const-char-Key" class="headerlink" title="用法二：static const char Key;"></a>用法二：static const char Key;</h3><h4 id="static-const-int-Key"><a href="#static-const-int-Key" class="headerlink" title="static const int Key;"></a>static const int Key;</h4><p><code>const void * _Nonnull key</code> 要求的参数是指针（地址值），所以可以定义一个 int Key，传入 &amp;Key。<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Persion</span> (<span class="title">Test</span>)</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> NameKey; <span class="comment">//占用4个字节</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> WeightKey; <span class="comment">//占用4个字节</span></div><div class="line">- (<span class="keyword">void</span>)setName:(<span class="built_in">NSString</span> *)name</div><div class="line">&#123;</div><div class="line">    objc_setAssociatedObject(<span class="keyword">self</span>, &amp;NameKey, name, OBJC_ASSOCIATION_COPY_NONATOMIC);</div><div class="line">&#125;</div><div class="line">- (<span class="built_in">NSString</span> *)name</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> objc_getAssociatedObject(<span class="keyword">self</span>, &amp;NameKey);</div><div class="line">&#125;</div><div class="line">- (<span class="keyword">void</span>)setWeight:(<span class="keyword">int</span>)weight</div><div class="line">&#123;</div><div class="line">    objc_setAssociatedObject(<span class="keyword">self</span>, &amp;WeightKey, @(weight), OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">&#125;</div><div class="line">- (<span class="keyword">int</span>)weight</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> [objc_getAssociatedObject(<span class="keyword">self</span>, &amp;WeightKey) intValue];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<h4 id="static-const-char-Key"><a href="#static-const-char-Key" class="headerlink" title="static const char Key;"></a>static const char Key;</h4><p>int 类型在内存中占用4个字节，既然只是要求指针，也可以定义一个 char Key，传入 &amp;Key，这样就只占用1个字节了👇。<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Persion</span> (<span class="title">Test</span>)</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> NameKey; <span class="comment">//占用1个字节</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> WeightKey; <span class="comment">//占用1个字节</span></div><div class="line">- (<span class="keyword">void</span>)setName:(<span class="built_in">NSString</span> *)name</div><div class="line">&#123;</div><div class="line">    objc_setAssociatedObject(<span class="keyword">self</span>, &amp;NameKey, name, OBJC_ASSOCIATION_COPY_NONATOMIC);</div><div class="line">&#125;</div><div class="line">- (<span class="built_in">NSString</span> *)name</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> objc_getAssociatedObject(<span class="keyword">self</span>, &amp;NameKey);</div><div class="line">&#125;</div><div class="line">- (<span class="keyword">void</span>)setWeight:(<span class="keyword">int</span>)weight</div><div class="line">&#123;</div><div class="line">    objc_setAssociatedObject(<span class="keyword">self</span>, &amp;WeightKey, @(weight), OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">&#125;</div><div class="line">- (<span class="keyword">int</span>)weight</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> [objc_getAssociatedObject(<span class="keyword">self</span>, &amp;WeightKey) intValue];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">persion1<span class="selector-class">.name</span> = persion1, persion1<span class="selector-class">.wight</span> = <span class="number">20</span></div><div class="line">persion2<span class="selector-class">.name</span> = persion2, persion2<span class="selector-class">.wight</span> = <span class="number">40</span></div></pre></td></tr></table></figure></p>
+<h3 id="用法三：使用属性名作为-key"><a href="#用法三：使用属性名作为-key" class="headerlink" title="用法三：使用属性名作为 key"></a>用法三：使用属性名作为 key</h3><p>使用属性名作为 key 可以很好的增加代码的可读性：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Persion</span> (<span class="title">Test</span>)</span></div><div class="line">- (<span class="keyword">void</span>)setName:(<span class="built_in">NSString</span> *)name</div><div class="line">&#123;</div><div class="line">    objc_setAssociatedObject(<span class="keyword">self</span>, <span class="string">@"name"</span>, name, OBJC_ASSOCIATION_COPY_NONATOMIC);</div><div class="line">&#125;</div><div class="line">- (<span class="built_in">NSString</span> *)name</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> objc_getAssociatedObject(<span class="keyword">self</span>, <span class="string">@"name"</span>);</div><div class="line">&#125;</div><div class="line">- (<span class="keyword">void</span>)setWeight:(<span class="keyword">int</span>)weight</div><div class="line">&#123;</div><div class="line">    objc_setAssociatedObject(<span class="keyword">self</span>, <span class="string">@"weight"</span>, @(weight), OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">&#125;</div><div class="line">- (<span class="keyword">int</span>)weight</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> [objc_getAssociatedObject(<span class="keyword">self</span>, <span class="string">@"weight"</span>) intValue];</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">persion1<span class="selector-class">.name</span> = persion1, persion1<span class="selector-class">.wight</span> = <span class="number">20</span></div><div class="line">persion2<span class="selector-class">.name</span> = persion2, persion2<span class="selector-class">.wight</span> = <span class="number">40</span></div></pre></td></tr></table></figure></p>
+<h4 id="”name”-与-const-void-Nonnull-key。"><a href="#”name”-与-const-void-Nonnull-key。" class="headerlink" title="@”name” 与 const void * _Nonnull key。"></a>@”name” 与 const void * _Nonnull key。</h4><p>定义一个字符串：<br><figure class="highlight axapta"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">NSString *<span class="keyword">str</span> = @<span class="string">"name"</span>;</div></pre></td></tr></table></figure></p>
+<p>str 里装的就是 @”name” 的地址值。因为 str == @”name”，所以字符串 @”name” 就是其地址值，可以直接让字符串 @”name” 作 key。  </p>
+<p>字符串 @”name” 是放在内存常量区的，所以不同位置的字符串 @”name” 都是同一个字符串，这样也能保证了存储和读取时传入的 key 是同一个地址值👇 :<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Persion</span> (<span class="title">Test</span>)</span></div><div class="line">- (<span class="keyword">void</span>)logName</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%p"</span>, <span class="string">@"name"</span>);</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%p"</span>, <span class="string">@"name"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"main - %p"</span>, <span class="string">@"name"</span>);</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"main - %p"</span>, <span class="string">@"name"</span>);</div><div class="line"></div><div class="line">        Persion *persion1 = [[Persion alloc] init];</div><div class="line">        [persion1 logName];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight dns"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">main - <span class="number">0x100001080</span></div><div class="line">main - <span class="number">0x100001080</span></div><div class="line">Persion+Test - <span class="number">0x100001080</span></div><div class="line">Persion+Test - <span class="number">0x100001080</span></div></pre></td></tr></table></figure></p>
+<h2 id="用法四：使用-get-方法的-selecor-作为-key"><a href="#用法四：使用-get-方法的-selecor-作为-key" class="headerlink" title="用法四：使用 get 方法的 @selecor 作为 key"></a>用法四：使用 get 方法的 @selecor 作为 key</h2><h3 id="selecor"><a href="#selecor" class="headerlink" title="@selecor"></a>@selecor</h3><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@implementation</span> Persion (Test)</div><div class="line">- (void)<span class="attribute">setName</span>:(NSString *)name</div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">objc_setAssociatedObject</span>(self, <span class="variable">@selector</span>(name), name, OBJC_ASSOCIATION_COPY_NONATOMIC);</div><div class="line">&#125;</div><div class="line"><span class="selector-tag">-</span> (NSString *)<span class="selector-tag">name</span></div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">return</span> <span class="selector-tag">objc_getAssociatedObject</span>(self, <span class="variable">@selector</span>(name));</div><div class="line">&#125;</div><div class="line"><span class="selector-tag">-</span> (void)<span class="selector-tag">setWeight</span><span class="selector-pseudo">:(int)weight</span></div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">objc_setAssociatedObject</span>(self, <span class="variable">@selector</span>(weight), @(weight), OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">&#125;</div><div class="line"><span class="selector-tag">-</span> (int)<span class="selector-tag">weight</span></div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">return</span> <span class="selector-attr">[objc_getAssociatedObject(self, @selector(weight)) intValue]</span>;</div><div class="line">&#125;</div><div class="line">@<span class="selector-tag">end</span></div></pre></td></tr></table></figure>
+<p>打印结果：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">persion1<span class="selector-class">.name</span> = persion1, persion1<span class="selector-class">.wight</span> = <span class="number">20</span></div><div class="line">persion2<span class="selector-class">.name</span> = persion2, persion2<span class="selector-class">.wight</span> = <span class="number">40</span></div></pre></td></tr></table></figure></p>
+<p><code>@selector()</code> 方法是一个指向结构体的指针，即返回某个结构体的指针，方法名相同的 <code>@selector()</code> 地址值相等：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)setName:(<span class="built_in">NSString</span> *)name</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"selector(name) = %p"</span>, <span class="keyword">@selector</span>(name));</div><div class="line">    objc_setAssociatedObject(<span class="keyword">self</span>, <span class="keyword">@selector</span>(name), name, OBJC_ASSOCIATION_COPY_NONATOMIC);</div><div class="line">&#125;</div><div class="line">- (<span class="built_in">NSString</span> *)name</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"selector(name) = %p"</span>, <span class="keyword">@selector</span>(name));</div><div class="line">    <span class="keyword">return</span> objc_getAssociatedObject(<span class="keyword">self</span>, <span class="keyword">@selector</span>(name));</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        Persion *persion1 = [[Persion alloc] init];</div><div class="line">        persion1.name = <span class="string">@"persion1"</span>;</div><div class="line">        persion1.weight = <span class="number">20</span>;</div><div class="line"></div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"persion1.name = %@, persion1.wight = %d"</span>, persion1.name, persion1.weight);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="title">selector</span><span class="params">(name)</span></span> = <span class="number">0</span>x7fff2e86480f</div><div class="line"><span class="function"><span class="title">selector</span><span class="params">(name)</span></span> = <span class="number">0</span>x7fff2e86480f</div><div class="line">ersion1<span class="selector-class">.name</span> = persion1, persion1<span class="selector-class">.wight</span> = <span class="number">20</span></div></pre></td></tr></table></figure></p>
+<p>使用 <code>@selector()</code> 作为 key，即增加可读性，又在编写时会有代码提示，如果写错了还会出现方法不存在的警告。</p>
+<h3 id="cmd"><a href="#cmd" class="headerlink" title="_cmd"></a>_cmd</h3><p>在 get 方法里可以使用 _cmd 替换 @selecor(方法名)：<br><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@implementation</span> Persion (Test)</div><div class="line">- (void)<span class="attribute">setName</span>:(NSString *)name</div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">objc_setAssociatedObject</span>(self, <span class="variable">@selector</span>(name), name, OBJC_ASSOCIATION_COPY_NONATOMIC);</div><div class="line">&#125;</div><div class="line"><span class="selector-tag">-</span> (NSString *)<span class="selector-tag">name</span></div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">return</span> <span class="selector-tag">objc_getAssociatedObject</span>(self, _cmd);</div><div class="line">&#125;</div><div class="line"><span class="selector-tag">-</span> (void)<span class="selector-tag">setWeight</span><span class="selector-pseudo">:(int)weight</span></div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">objc_setAssociatedObject</span>(self, <span class="variable">@selector</span>(weight), @(weight), OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">&#125;</div><div class="line"><span class="selector-tag">-</span> (int)<span class="selector-tag">weight</span></div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">return</span> <span class="selector-attr">[objc_getAssociatedObject(self, _cmd) intValue]</span>;</div><div class="line">&#125;</div><div class="line">@<span class="selector-tag">end</span></div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">persion1<span class="selector-class">.name</span> = persion1, persion1<span class="selector-class">.wight</span> = <span class="number">20</span></div><div class="line">persion2<span class="selector-class">.name</span> = persion2, persion2<span class="selector-class">.wight</span> = <span class="number">40</span></div></pre></td></tr></table></figure></p>
+<p>隐式参数：OC 方法在被调用的时候，有两个隐式的参数传入，self 和 _cmd。_cmd 就是当前方法的 SEL，即 @selecor(name)：<br><figure class="highlight erlang"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- <span class="params">(NSString *)</span>name:<span class="params">(id)</span>self _cmd:<span class="params">(SEL)</span>_cmd</div></pre></td></tr></table></figure></p>
+<p>因为 set 方法中的 <code>_cmd == @selecor(setName:)</code>，get 方法中的 <code>_cmd == @selecor(name)</code>，所以为了保证存储和读取时用到的 key 是同一个，set 方法和 get 方法不能同时使用 _cmd。</p>
+<h2 id="类对象添加关联对象"><a href="#类对象添加关联对象" class="headerlink" title="类对象添加关联对象"></a>类对象添加关联对象</h2><p>类对象只有一个，不同的实例对象在修改和读取被新关联的对象时，都是在操作类对象关联的这个对象，这样又会出现实例对象和关联对象不是一一对应的关系。<br><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@implementation</span> Persion (Test)</div><div class="line">- (void)<span class="attribute">setName</span>:(NSString *)name</div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">objc_setAssociatedObject</span>([Persion class], <span class="variable">@selector</span>(name), name, OBJC_ASSOCIATION_COPY_NONATOMIC);</div><div class="line">&#125;</div><div class="line"><span class="selector-tag">-</span> (NSString *)<span class="selector-tag">name</span></div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">return</span> <span class="selector-tag">objc_getAssociatedObject</span>([Persion class], _cmd);</div><div class="line">&#125;</div><div class="line">@<span class="selector-tag">end</span></div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">persion1<span class="selector-class">.name</span> = persion2, persion1<span class="selector-class">.wight</span> = <span class="number">20</span></div><div class="line">persion2<span class="selector-class">.name</span> = persion2, persion2<span class="selector-class">.wight</span> = <span class="number">40</span></div></pre></td></tr></table></figure></p>
+<h1 id="关联对象的原理"><a href="#关联对象的原理" class="headerlink" title="关联对象的原理"></a>关联对象的原理</h1><p>实现关联对象技术的核心对象有：</p>
+<ul>
+<li>AssociationsManager：关联对象管理类，内部管理着所有的 AssociationsHashMap； </li>
+<li>AssociationsHashMap：存储着所有添加了关联对象的对象，及其添加的关联对象的信息；  </li>
+<li>ObjectAssociationMap：存储着某一个关联对象的 key、value 和 policy 信息；  </li>
+<li>ObjcAssociation：存储着某一个关联对象的 value 和 policy 信息；</li>
+</ul>
+<p><img src="/2020/05/26/OC底层/原理/关联对象/关联对象04.png" alt="关联对象04"></p>
+<p>打开 runtime 源码 <a href="https://opensource.apple.com/tarballs/objc4/" target="_blank" rel="external">objc4-781</a>，找到 _base_objc_setAssociatedObject 方法的实现👇：</p>
+<h2 id="base-objc-setAssociatedObject"><a href="#base-objc-setAssociatedObject" class="headerlink" title="_base_objc_setAssociatedObject"></a>_base_objc_setAssociatedObject</h2><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="keyword">void</span></div><div class="line">_base_objc_setAssociatedObject(id <span class="keyword">object</span>, <span class="keyword">const</span> <span class="keyword">void</span> *key, id <span class="keyword">value</span>, objc_AssociationPolicy policy)</div><div class="line">&#123;</div><div class="line">  _object_set_associative_reference(<span class="keyword">object</span>, key, <span class="keyword">value</span>, policy);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>找到 objc-references.mm 文件里的 _object_set_associative_reference，<br>Jump To Definition -&gt; _object_set_associative_reference：<br><figure class="highlight ceylon"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span></div><div class="line"><span class="number">_</span><span class="keyword">object</span><span class="number">_</span>set<span class="number">_</span>associative<span class="number">_</span>reference(id <span class="keyword">object</span>, const <span class="keyword">void</span> *key, id <span class="keyword">value</span>, uintptr<span class="number">_</span>t policy)</div><div class="line">&#123;</div><div class="line">    <span class="comment">// This code used to work when nil was passed for object and key. Some code</span></div><div class="line">    <span class="comment">// probably relies on that to not crash. Check and handle it explicitly.</span></div><div class="line">    <span class="comment">// rdar://problem/44094390</span></div><div class="line">    <span class="keyword">if</span> (!<span class="keyword">object</span> &amp;&amp; !<span class="keyword">value</span>) <span class="keyword">return</span>;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (<span class="keyword">object</span>-&gt;getIsa()-&gt;forbidsAssociatedObjects())</div><div class="line">        <span class="number">_</span>objc<span class="number">_f</span>atal(<span class="string">"objc_setAssociatedObject called on instance (%p) of class %s which does not allow associated objects"</span>, <span class="keyword">object</span>, <span class="keyword">object</span><span class="number">_</span>getClassName(<span class="keyword">object</span>));</div><div class="line"></div><div class="line">    DisguisedPtr&lt;objc<span class="number">_</span><span class="keyword">object</span>&gt; disguised&#123;(objc<span class="number">_</span><span class="keyword">object</span> *)<span class="keyword">object</span>&#125;; <span class="comment">//根据传入的 object 封装成 DisguisedPtr，作为读写 ObjectAssociationMap 的 key</span></div><div class="line">    ObjcAssociation association&#123;policy, <span class="keyword">value</span>&#125;; <span class="comment">//根据 policy 和 value 生成 ObjcAssociation 对象</span></div><div class="line"></div><div class="line">    <span class="comment">// retain the new value (if any) outside the lock.</span></div><div class="line">    association.acquireValue();</div><div class="line"></div><div class="line">    &#123;</div><div class="line">        AssociationsManager manager; <span class="comment">//关联对象管理类</span></div><div class="line">        AssociationsHashMap &amp;associations(manager.get()); <span class="comment">//获取关联对象管理类里的 AssociationsHashMap，AssociationsHashMap 保存了所有对象的关联对象信息</span></div><div class="line"></div><div class="line">        <span class="keyword">if</span> (<span class="keyword">value</span>) &#123; <span class="comment">//传入的关联对象有值（value != nil）</span></div><div class="line">            auto refs<span class="number">_</span>result = associations.<span class="keyword">try</span><span class="number">_</span>emplace(disguised, ObjectAssociationMap&#123;&#125;); <span class="comment">//如果键不在 associations 中，则将键和值对插入到 associations 中</span></div><div class="line">            <span class="keyword">if</span> (refs<span class="number">_</span>result.second) &#123;</div><div class="line">                <span class="comment">/* it's the first association we make */</span></div><div class="line">                <span class="keyword">object</span>-&gt;setHasAssociatedObjects(); <span class="comment">//标记其被关联状态</span></div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">/* establish or replace the association */</span></div><div class="line">            auto &amp;refs = refs<span class="number">_</span>result.first-&gt;second; <span class="comment">//生成 ObjectAssociationMap 对象</span></div><div class="line">            auto result = refs.<span class="keyword">try</span><span class="number">_</span>emplace(key, std::move(association)); <span class="comment">//如果键不在 refs 中，则将键和值对插入到 refs 中</span></div><div class="line">            <span class="keyword">if</span> (!result.second) &#123; <span class="comment">//如果键在 refs 中，更新 ObjectAssociation</span></div><div class="line">                association.swap(result.first-&gt;second);</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">//传入的关联对象没有值（value == nil）</span></div><div class="line">            auto refs<span class="number">_</span>it = associations.find(disguised); <span class="comment">//找到 ObjectAssociationMap 的遍历器</span></div><div class="line">            <span class="keyword">if</span> (refs<span class="number">_</span>it != associations.end()) &#123;</div><div class="line">                auto &amp;refs = refs<span class="number">_</span>it-&gt;second; <span class="comment">//找到 ObjectAssociationMap 对象</span></div><div class="line">                auto it = refs.find(key); <span class="comment">//找到 key 对应的 ObjcAssociation 遍历器</span></div><div class="line">                <span class="keyword">if</span> (it != refs.end()) &#123;</div><div class="line">                    association.swap(it-&gt;second);</div><div class="line">                    refs.erase(it); <span class="comment">//擦除 ObjcAssociation 对象</span></div><div class="line">                    <span class="keyword">if</span> (refs.size() == <span class="number">0</span>) &#123; </div><div class="line">                        associations.erase(refs<span class="number">_</span>it); <span class="comment">//如果遍历器 refs 里数据为空，即 ObjectAssociationMap 里的数据为空，则擦除掉 ObjectAssociationMap 对象</span></div><div class="line"></div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// release the old value (outside of the lock).</span></div><div class="line">    association.releaseHeldValue();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="AssociationsManager"><a href="#AssociationsManager" class="headerlink" title="AssociationsManager"></a>AssociationsManager</h3><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> <span class="title">AssociationsManager</span> &#123;</div><div class="line">    <span class="keyword">using</span> Storage = ExplicitInitDenseMap&lt;DisguisedPtr&lt;objc_object&gt;, ObjectAssociationMap&gt;; </div><div class="line">    <span class="keyword">static</span> Storage _mapStorage; <span class="comment">//声明 AssociationsHashMap 对象</span></div><div class="line"></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    AssociationsManager()   &#123; AssociationsManagerLock.<span class="keyword">lock</span>(); &#125;</div><div class="line">    ~AssociationsManager()  &#123; AssociationsManagerLock.unlock(); &#125;</div><div class="line"></div><div class="line">    AssociationsHashMap &amp;<span class="keyword">get</span>() &#123;</div><div class="line">        <span class="keyword">return</span> _mapStorage.<span class="keyword">get</span>(); <span class="comment">//获取 AssociationsHashMap 对象</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">init</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        _mapStorage.init();</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h3 id="AssociationsHashMap"><a href="#AssociationsHashMap" class="headerlink" title="AssociationsHashMap"></a>AssociationsHashMap</h3><p>可以看到 AssociationsManager 中有一个 AssociationsHashMap 对象，并且 AssociationsHashMap 对象是一个通过 DenseMap 定义的，DenseMap 是以 DisguisedPtr<objc_object> 为 key，ObjectAssociationMap 为 value 的字典。ExplicitInitDenseMap：</objc_object></p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExplicitInitDenseMap</span> : <span class="title">public</span> <span class="title">ExplicitInit</span>&lt;DenseMap&lt;Key, <span class="title">Value</span>&gt;&gt; &#123; &#125;;</span></div></pre></td></tr></table></figure>
+<h3 id="ObjectAssociationMap"><a href="#ObjectAssociationMap" class="headerlink" title="ObjectAssociationMap"></a>ObjectAssociationMap</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> DenseMap&lt;<span class="keyword">const</span> <span class="keyword">void</span> *, ObjcAssociation&gt; ObjectAssociationMap;</div></pre></td></tr></table></figure>
+<p>👆从 ObjectAssociationMap 的定义可以看出，ObjectAssociationMap 是一个通过 DenseMap 定义的，以指针(地址值)为 key，ObjcAssociation 为 value 的字典。ObjcAssociation：</p>
+<h3 id="ObjcAssociation"><a href="#ObjcAssociation" class="headerlink" title="ObjcAssociation"></a>ObjcAssociation</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ObjcAssociation</span> &#123;</span></div><div class="line">    <span class="keyword">uintptr_t</span> _policy; <span class="comment">//关联策略</span></div><div class="line">    id _value; <span class="comment">//关联对象</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    ObjcAssociation(<span class="keyword">uintptr_t</span> policy, id value) : _policy(policy), _value(value) &#123;&#125;</div><div class="line">    ObjcAssociation() : _policy(<span class="number">0</span>), _value(nil) &#123;&#125;</div><div class="line">    ObjcAssociation(<span class="keyword">const</span> ObjcAssociation &amp;other) = <span class="keyword">default</span>;</div><div class="line">    ObjcAssociation &amp;<span class="keyword">operator</span>=(<span class="keyword">const</span> ObjcAssociation &amp;other) = <span class="keyword">default</span>;</div><div class="line">    ObjcAssociation(ObjcAssociation &amp;&amp;other) : ObjcAssociation() &#123;</div><div class="line">        swap(other);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">swap</span><span class="params">(ObjcAssociation &amp;other)</span> </span>&#123;</div><div class="line">        <span class="built_in">std</span>::swap(_policy, other._policy);</div><div class="line">        <span class="built_in">std</span>::swap(_value, other._value);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">inline</span> uintptr_t <span class="title">policy</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> _policy; &#125;</div><div class="line">    <span class="function"><span class="keyword">inline</span> id <span class="title">value</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> _value; &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">acquireValue</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (_value) &#123;</div><div class="line">            <span class="keyword">switch</span> (_policy &amp; <span class="number">0xFF</span>) &#123;</div><div class="line">            <span class="keyword">case</span> OBJC_ASSOCIATION_SETTER_RETAIN:</div><div class="line">                _value = objc_retain(_value);</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">case</span> OBJC_ASSOCIATION_SETTER_COPY:</div><div class="line">                _value = ((id(*)(id, SEL))objc_msgSend)(_value, @selector(copy));</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">releaseHeldValue</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (_value &amp;&amp; (_policy &amp; OBJC_ASSOCIATION_SETTER_RETAIN)) &#123;</div><div class="line">            objc_release(_value);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">retainReturnedValue</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (_value &amp;&amp; (_policy &amp; OBJC_ASSOCIATION_GETTER_RETAIN)) &#123;</div><div class="line">            objc_retain(_value);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">inline</span> id <span class="title">autoreleaseReturnedValue</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (slowpath(_value &amp;&amp; (_policy &amp; OBJC_ASSOCIATION_GETTER_AUTORELEASE))) &#123;</div><div class="line">            <span class="keyword">return</span> objc_autorelease(_value);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> _value;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>可以看出 ObjcAssociation 有两个变量 _policy 和 _value。</p>
+<h2 id="objc-getAssociatedObject"><a href="#objc-getAssociatedObject" class="headerlink" title="objc_getAssociatedObject"></a>objc_getAssociatedObject</h2><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">id</div><div class="line">objc_getAssociatedObject(id <span class="keyword">object</span>, <span class="keyword">const</span> <span class="keyword">void</span> *key)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> _object_get_associative_reference(<span class="keyword">object</span>, key);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>找到 objc-references.mm 文件里的 _object_get_associative_reference，<br>Jump To Definition -&gt; _object_get_associative_reference：<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">id</div><div class="line">_object_get_associative_reference(id object, <span class="keyword">const</span> <span class="keyword">void</span> *key)</div><div class="line">&#123;</div><div class="line">    ObjcAssociation association&#123;&#125;;</div><div class="line"></div><div class="line">    &#123;</div><div class="line">        AssociationsManager manager; <span class="comment">//关联对象管理类</span></div><div class="line">        AssociationsHashMap &amp;associations(manager.<span class="built_in">get</span>()); <span class="comment">//获取关联对象管理类里的 AssociationsHashMap，AssociationsHashMap 保存了所有对象的关联对象信息</span></div><div class="line">        AssociationsHashMap::iterator i = associations.<span class="built_in">find</span>((objc_object *)object); <span class="comment">//根据 object 找到 ObjectAssociationMap 遍历器 </span></div><div class="line">        <span class="built_in">if</span> (i != associations.<span class="built_in">end</span>()) &#123;</div><div class="line">            ObjectAssociationMap &amp;refs = i-&gt;second; <span class="comment">//获取到 ObjectAssociationMap 对象</span></div><div class="line">            ObjectAssociationMap::iterator j = refs.<span class="built_in">find</span>(key); <span class="comment">//根据 key 找到 ObjcAssociation 遍历器</span></div><div class="line">            <span class="built_in">if</span> (j != refs.<span class="built_in">end</span>()) &#123;</div><div class="line">                association = j-&gt;second;</div><div class="line">                association.retainReturnedValue();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="built_in">return</span> association.autoreleaseReturnedValue();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li><p>Category 能否添加成员变量？如果可以，如何给 Category 添加成员变量？<br>因为分类底层结构的限制，不能直接添加成员变量到分类中，但是可以通过关联对象来间接实现。<br>给 Category 添加成员变量的方式有很多，不过主要是通过下面两个方法添加成员变量：  </p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//添加关联对象</span></div><div class="line">objc_setAssociatedObject<span class="comment">()</span>;</div><div class="line"><span class="comment">//获取关联对象</span></div><div class="line">objc_getAssociatedObject<span class="comment">()</span>;</div></pre></td></tr></table></figure>
+</li>
+<li><p>类对象可以关联对象吗？<br>关联对象方法可以给任何对象关联新的对象，类对象自然也是可以关联对象的。但是类对象只有一个，不同的实例对象在修改和读取被新关联的对象时，都是在操作类对象关联的这个对象，这样又会出现实例对象和关联对象不是一一对应的关系。</p>
+</li>
+<li><p>关联对象存储在什么位置？<br>关联对象并不是存储在被关联对象本身内存中，关联对象存储在全局的统一的一个 AssociationsManager 中。</p>
+</li>
+<li><p>对象及其关联对象之间有强引用关系吗？<br>不存在。在 set 方法中并没有直接使用传入的 object 对象，而是通过的 disguised 方法将传入的 object 对象生成了 DisguisedPtr 对象，并作为 key。</p>
+</li>
+<li><p>对象释放后，关联对象会被释放吗？<br>会释放。参考内存管理-release。</p>
+</li>
+<li><p>设置关联对象为nil，就相当于是移除关联对象。</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OC底层原理/" rel="tag"># OC底层原理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/22/OC底层/原理/initialize方法/" rel="next" title="+initialize方法">
+                <i class="fa fa-chevron-left"></i> +initialize方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/31/OC底层/原理/block/" rel="prev" title="block">
+                block <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/myAvatar.gif"
+              alt="Kevin" />
+          
+            <p class="site-author-name" itemprop="name">Kevin</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KevinYangGit" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yangqioffice@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_YangQI" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.cnblogs.com/mjios" title="Title" target="_blank">Title</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Category-的成员变量"><span class="nav-number">1.</span> <span class="nav-text">Category 的成员变量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#category-t-结构体"><span class="nav-number">1.1.</span> <span class="nav-text">_category_t 结构体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在-Persion-h-中定义属性"><span class="nav-number">1.2.</span> <span class="nav-text">在 Persion.h 中定义属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在-Persion-Test-h-中定义属性"><span class="nav-number">1.3.</span> <span class="nav-text">在 Persion+Test.h 中定义属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义全局变量-int-weight"><span class="nav-number">1.4.</span> <span class="nav-text">定义全局变量 int weight_</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义全局变量-NSMutableDictionary-weights"><span class="nav-number">1.5.</span> <span class="nav-text">定义全局变量 NSMutableDictionary *weights_</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">1.6.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本用法"><span class="nav-number">2.</span> <span class="nav-text">基本用法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方法列表"><span class="nav-number">2.1.</span> <span class="nav-text">方法列表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关联策略-objc-AssociationPolicy"><span class="nav-number">2.1.1.</span> <span class="nav-text">关联策略 objc_AssociationPolicy</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#key的常见用法"><span class="nav-number">2.2.</span> <span class="nav-text">key的常见用法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#用法一：static-const-void-Key-Key"><span class="nav-number">2.2.1.</span> <span class="nav-text">用法一：static const void *Key = &Key;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#const-void-Key"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">const void *Key;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#const-void-Key-Key"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">const void *Key = &Key;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#static-const-void-Key-Key"><span class="nav-number">2.2.1.3.</span> <span class="nav-text">static const void *Key = &Key;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#小结-1"><span class="nav-number">2.2.1.4.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用法二：static-const-char-Key"><span class="nav-number">2.2.2.</span> <span class="nav-text">用法二：static const char Key;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#static-const-int-Key"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">static const int Key;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#static-const-char-Key"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">static const char Key;</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用法三：使用属性名作为-key"><span class="nav-number">2.2.3.</span> <span class="nav-text">用法三：使用属性名作为 key</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#”name”-与-const-void-Nonnull-key。"><span class="nav-number">2.2.3.1.</span> <span class="nav-text">@”name” 与 const void * _Nonnull key。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用法四：使用-get-方法的-selecor-作为-key"><span class="nav-number">2.3.</span> <span class="nav-text">用法四：使用 get 方法的 @selecor 作为 key</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#selecor"><span class="nav-number">2.3.1.</span> <span class="nav-text">@selecor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cmd"><span class="nav-number">2.3.2.</span> <span class="nav-text">_cmd</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类对象添加关联对象"><span class="nav-number">2.4.</span> <span class="nav-text">类对象添加关联对象</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关联对象的原理"><span class="nav-number">3.</span> <span class="nav-text">关联对象的原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#base-objc-setAssociatedObject"><span class="nav-number">3.1.</span> <span class="nav-text">_base_objc_setAssociatedObject</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AssociationsManager"><span class="nav-number">3.1.1.</span> <span class="nav-text">AssociationsManager</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AssociationsHashMap"><span class="nav-number">3.1.2.</span> <span class="nav-text">AssociationsHashMap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ObjectAssociationMap"><span class="nav-number">3.1.3.</span> <span class="nav-text">ObjectAssociationMap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ObjcAssociation"><span class="nav-number">3.1.4.</span> <span class="nav-text">ObjcAssociation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#objc-getAssociatedObject"><span class="nav-number">3.2.</span> <span class="nav-text">objc_getAssociatedObject</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://rawgit.com/qhh0205/78e9e0b1f3114db6737f3ed8cdd51d3a/raw/3894c5be5aa2378336b1f5ee0f296fa0b22d06e9/md5.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '82b6ced795961ee1fcca',
+          clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
+          repo: 'KevinYangGit.github.io',
+          owner: '',
+          admin: [''],
+          id: md5(location.pathname),
+          distractionFreeMode: ''
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

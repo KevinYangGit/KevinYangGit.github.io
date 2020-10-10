@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="OC底层原理," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="思考：  你在项目中是怎么优化内存的？ 优化你是从哪几方面着手？ 列表卡顿的原因可能有哪些？你平时是怎么优化的？ 遇到tableView卡顿嘛？会造成卡顿的原因大致有哪些？">
+<meta name="keywords" content="OC底层原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="性能优化">
+<meta property="og:url" content="http://yoursite.com/2020/08/31/OC底层/原理/性能优化/index.html">
+<meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="思考：  你在项目中是怎么优化内存的？ 优化你是从哪几方面着手？ 列表卡顿的原因可能有哪些？你平时是怎么优化的？ 遇到tableView卡顿嘛？会造成卡顿的原因大致有哪些？">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2020/08/31/OC底层/原理/性能优化/性能优化01.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/31/OC底层/原理/性能优化/性能优化02.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/31/OC底层/原理/性能优化/性能优化03.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/31/OC底层/原理/性能优化/性能优化07.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/31/OC底层/原理/性能优化/性能优化08.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/31/OC底层/原理/性能优化/性能优化09.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/31/OC底层/原理/性能优化/性能优化04.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/31/OC底层/原理/性能优化/性能优化05.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/31/OC底层/原理/性能优化/性能优化10.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/31/OC底层/原理/性能优化/性能优化11.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/31/OC底层/原理/性能优化/性能优化06.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/31/OC底层/原理/性能优化/性能优化12.png">
+<meta property="og:updated_time" content="2020-09-04T07:38:41.010Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="性能优化">
+<meta name="twitter:description" content="思考：  你在项目中是怎么优化内存的？ 优化你是从哪几方面着手？ 列表卡顿的原因可能有哪些？你平时是怎么优化的？ 遇到tableView卡顿嘛？会造成卡顿的原因大致有哪些？">
+<meta name="twitter:image" content="http://yoursite.com/2020/08/31/OC底层/原理/性能优化/性能优化01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/08/31/OC底层/原理/性能优化/"/>
+
+
+
+
+
+  <title>性能优化 | Kevin's  blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's  blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/31/OC底层/原理/性能优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">性能优化</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-31T11:37:02+08:00">
+                2020-08-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>思考：</p>
+<ul>
+<li>你在项目中是怎么优化内存的？</li>
+<li>优化你是从哪几方面着手？</li>
+<li>列表卡顿的原因可能有哪些？你平时是怎么优化的？</li>
+<li>遇到tableView卡顿嘛？会造成卡顿的原因大致有哪些？<a id="more"></a>
+</li>
+</ul>
+<h1 id="卡顿"><a href="#卡顿" class="headerlink" title="卡顿"></a>卡顿</h1><h2 id="CPU和GPU"><a href="#CPU和GPU" class="headerlink" title="CPU和GPU"></a>CPU和GPU</h2><p>在屏幕成像的过程中，CPU和GPU起着至关重要的作用</p>
+<ul>
+<li><p>CPU（Central Processing Unit，中央处理器）<br>对象的创建和销毁、对象属性的调整、布局计算、文本的计算和排版、图片的格式转换和解码、图像的绘制（Core Graphics）</p>
+</li>
+<li><p>GPU（Graphics Processing Unit，图形处理器）<br>纹理的渲染</p>
+</li>
+</ul>
+<p>在iOS中是双缓冲机制，有前帧缓存、后帧缓存。<br><img src="/2020/08/31/OC底层/原理/性能优化/性能优化01.png" alt="性能优化01"></p>
+<h2 id="屏幕成像原理"><a href="#屏幕成像原理" class="headerlink" title="屏幕成像原理"></a>屏幕成像原理</h2><p>显示器上的所有图像都是一线一线的扫描上去的，无论是隔行扫描还是逐行扫描，显示器，都有2种同步参数——水平同步和垂直同步。</p>
+<p>水平同步脉冲（Horizontal synchronization pulse, Hsync）加在两个扫描行之间。它是一个短小的脉冲，在一行扫描完成之后，它就会出现，指示着这一行扫描完成，同时它也指示着下一行将要开始。 水平同步脉冲出现后，会有一小段叫horizontal back porch的时间，这段时间里的像素信号是不会被显示出来，过了这一小段时间之后，电子枪就开始扫描新的一行，将要显示的内容扫描到显示器上。</p>
+<p>垂直同步脉冲（Vertical synchronization, Vsync）是加在两帧之间。跟水平同步脉冲类似，但它指示着前一帧的结束，和新一帧的开始。 垂直同步脉冲是一个持续时间比较长的脉冲，可能持续一行或几行的扫描时间，但在这段时间内，没有像素信号出现。<br><img src="/2020/08/31/OC底层/原理/性能优化/性能优化02.png" alt="性能优化02"></p>
+<h2 id="卡顿产生的原因"><a href="#卡顿产生的原因" class="headerlink" title="卡顿产生的原因"></a>卡顿产生的原因</h2><p>红色箭头表示CPU处理过程，蓝色箭头表示GPU处理过程，箭头的长短代表处理时间的长短。按照60FPS的刷帧率，每隔 16ms 就会有一次 VSync 信号：<br><img src="/2020/08/31/OC底层/原理/性能优化/性能优化03.png" alt="性能优化03"></p>
+<p>在图像渲染的过程中主要有三种情况（图中从左至右）：<br>第一种情况：CPU和GPU处理完成后，正好有一次 VSync 信号，将刚刚处理好的帧数据渲染到屏幕上；<br>第二种情况：CPU和GPU处理完成后，因为用时较短，VSync 信号过了一会才到，将刚刚处理好的帧数据渲染到屏幕上；<br>第三种情况：CPU和GPU处理完成后，因为用时较长错过了一次 VSync 信号，这条被错过的 VSync 信号只能将之前处理好的帧数据再次渲染到屏幕上，而这一次处理好的帧数据就要等下一次 VSync 信号才能渲染到屏幕上；</p>
+<p>第三种情况就是卡顿产生的原因。分析第三种情况可以看出，卡顿产生的主要原因是CPU、GPU处理时间的长短，那么解决卡顿的主要思路就是尽可能减少CPU、GPU资源消耗。</p>
+<h2 id="卡顿优化"><a href="#卡顿优化" class="headerlink" title="卡顿优化"></a>卡顿优化</h2><h3 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h3><ul>
+<li><p>尽量用轻量级的对象<br>比如用不到事件处理的地方，可以考虑使用 CALayer 取代 UIView；<br>基本数据类型能用 int 的就不要用 NSNumber；</p>
+</li>
+<li><p>不要频繁地调用 UIView 的相关属性，比如 frame、bounds、transform 等属性，尽量减少不必要的修改；</p>
+</li>
+<li>尽量提前计算好布局，在有需要时一次性调整对应的属性，不要多次修改属性；</li>
+<li>Autolayout 会比直接设置 frame 消耗更多的 CPU 资源；</li>
+<li>图片的 size 最好刚好跟 UIImageView 的 size 保持一致；（避免CPU对不同size的图片进行伸缩计算）</li>
+<li>控制一下线程的最大并发数量；</li>
+<li>尽量把耗时的操作放到子线程，如：文本处理（尺寸计算、绘制）、图片处理（解码、绘制）；</li>
+</ul>
+<p>子线程绘制图片：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</div><div class="line">    [<span class="keyword">super</span> viewDidLoad];</div><div class="line">    </div><div class="line">    <span class="built_in">UIImageView</span> *imageView = [[<span class="built_in">UIImageView</span> alloc] init];</div><div class="line">    imageView.frame = <span class="built_in">CGRectMake</span>(<span class="number">50</span>, <span class="number">100</span>, <span class="number">300</span>, <span class="number">300</span>);</div><div class="line">    [<span class="keyword">self</span> initImageWithName:<span class="string">@"test"</span> completion:^(<span class="built_in">UIImage</span> *image) &#123;</div><div class="line">        imageView.image = image;</div><div class="line">    &#125;];</div><div class="line">    [<span class="keyword">self</span>.view addSubview:imageView];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)initImageWithName:(<span class="built_in">NSString</span> *)imageName completion:(<span class="keyword">void</span>(^)(<span class="built_in">UIImage</span> *image))completion</div><div class="line">&#123;</div><div class="line">    <span class="built_in">dispatch_async</span>(dispatch_get_global_queue(<span class="number">0</span>, <span class="number">0</span>), ^&#123;</div><div class="line">        <span class="comment">// 获取网络图片</span></div><div class="line">        <span class="comment">// CGImageRef cgImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:@"imageUrlString"]]].CGImage;</span></div><div class="line">        <span class="comment">// 获取CGImage</span></div><div class="line">        <span class="built_in">CGImageRef</span> cgImage = [<span class="built_in">UIImage</span> imageNamed:imageName].CGImage;</div><div class="line"></div><div class="line">        <span class="comment">// alphaInfo</span></div><div class="line">        <span class="built_in">CGImageAlphaInfo</span> alphaInfo = <span class="built_in">CGImageGetAlphaInfo</span>(cgImage) &amp; kCGBitmapAlphaInfoMask;</div><div class="line">        <span class="built_in">BOOL</span> hasAlpha = <span class="literal">NO</span>;</div><div class="line">        <span class="keyword">if</span> (alphaInfo == kCGImageAlphaPremultipliedLast ||</div><div class="line">            alphaInfo == kCGImageAlphaPremultipliedFirst ||</div><div class="line">            alphaInfo == kCGImageAlphaLast ||</div><div class="line">            alphaInfo == kCGImageAlphaFirst) &#123;</div><div class="line">            hasAlpha = <span class="literal">YES</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// bitmapInfo</span></div><div class="line">        <span class="built_in">CGBitmapInfo</span> bitmapInfo = kCGBitmapByteOrder32Host;</div><div class="line">        bitmapInfo |= hasAlpha ? kCGImageAlphaPremultipliedFirst : kCGImageAlphaNoneSkipFirst;</div><div class="line"></div><div class="line">        <span class="comment">// size</span></div><div class="line">        size_t width = <span class="built_in">CGImageGetWidth</span>(cgImage);</div><div class="line">        size_t height = <span class="built_in">CGImageGetHeight</span>(cgImage);</div><div class="line"></div><div class="line">        <span class="comment">// context</span></div><div class="line">        <span class="built_in">CGContextRef</span> context = <span class="built_in">CGBitmapContextCreate</span>(<span class="literal">NULL</span>, width, height, <span class="number">8</span>, <span class="number">0</span>, <span class="built_in">CGColorSpaceCreateDeviceRGB</span>(), bitmapInfo);</div><div class="line"></div><div class="line">        <span class="comment">// draw</span></div><div class="line">        <span class="built_in">CGContextDrawImage</span>(context, <span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, width, height), cgImage);</div><div class="line"></div><div class="line">        <span class="comment">// get CGImage</span></div><div class="line">        cgImage = <span class="built_in">CGBitmapContextCreateImage</span>(context);</div><div class="line"></div><div class="line">        <span class="comment">// into UIImage</span></div><div class="line">        <span class="built_in">UIImage</span> *newImage = [<span class="built_in">UIImage</span> imageWithCGImage:cgImage];</div><div class="line"></div><div class="line">        <span class="comment">// release</span></div><div class="line">        <span class="built_in">CGContextRelease</span>(context);</div><div class="line">        <span class="built_in">CGImageRelease</span>(cgImage);</div><div class="line"></div><div class="line">        <span class="comment">// back to the main thread</span></div><div class="line">        <span class="built_in">dispatch_async</span>(dispatch_get_main_queue(), ^&#123;</div><div class="line">            <span class="keyword">if</span> (completion) &#123;</div><div class="line">                completion(newImage);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<p><img src="/2020/08/31/OC底层/原理/性能优化/性能优化07.png" alt="性能优化07"></p>
+<h3 id="GPU"><a href="#GPU" class="headerlink" title="GPU"></a>GPU</h3><ul>
+<li>尽量避免短时间内大量图片的显示，尽可能将多张图片合成一张进行显示；</li>
+<li>GPU能处理的最大纹理尺寸是4096x4096，一旦超过这个尺寸，就会占用CPU资源进行处理，所以纹理尽量不要超过这个尺寸；</li>
+<li>尽量减少视图数量和层次；</li>
+<li>减少透明的视图（alpha&lt;1），不透明的就设置 opaque 为 YES；</li>
+<li>尽量避免出现离屏渲染；</li>
+</ul>
+<h3 id="离屏渲染"><a href="#离屏渲染" class="headerlink" title="离屏渲染"></a>离屏渲染</h3><ul>
+<li><p>在 OpenGL 中，GPU 有2种渲染方式<br>On-Screen Rendering：当前屏幕渲染，在当前用于显示的屏幕缓冲区进行渲染操作；<br>Off-Screen Rendering：离屏渲染，在当前屏幕缓冲区以外新开辟一个缓冲区进行渲染操作；</p>
+</li>
+<li><p>离屏渲染消耗性能的原因<br>1.需要创建新的缓冲区；<br>2.离屏渲染的整个过程，需要多次切换上下文环境，先是从当前屏幕（On-Screen）切换到离屏（Off-Screen）；等到离屏渲染结束以后，将离屏缓冲区的渲染结果显示到屏幕上，又需要将上下文环境从离屏切换到当前屏幕；</p>
+</li>
+<li><p>哪些操作会触发离屏渲染？<br>1.光栅化，<code>layer.shouldRasterize = YES</code>；<br>2.遮罩，<code>layer.mask</code>；<br>3.圆角，同时设置 <code>layer.masksToBounds = YES</code>、<code>layer.cornerRadius</code> 大于0；（考虑通过 CoreGraphics 绘制裁剪圆角，或者叫美工提供圆角图片）<br>4.阴影，<code>layer.shadowXXX</code>；（如果设置了 <code>layer.shadowPath</code> 就不会产生离屏渲染）</p>
+</li>
+</ul>
+<p>添加圆角：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</div><div class="line">    [<span class="keyword">super</span> viewDidLoad];</div><div class="line">    </div><div class="line">    <span class="built_in">UIImageView</span> *imageView = [[<span class="built_in">UIImageView</span> alloc] init];</div><div class="line">    imageView.frame = <span class="built_in">CGRectMake</span>(<span class="number">50</span>, <span class="number">100</span>, <span class="number">300</span>, <span class="number">300</span>);</div><div class="line">    [<span class="keyword">self</span> initImageWithName:<span class="string">@"test"</span> completion:^(<span class="built_in">UIImage</span> *image) &#123;</div><div class="line">        imageView.image = image;</div><div class="line">        [<span class="keyword">self</span> setCornerRadius:<span class="number">150</span> forImageView:imageView];</div><div class="line">    &#125;];</div><div class="line"><span class="comment">//    [self addShadowForImageView:imageView];</span></div><div class="line">    [<span class="keyword">self</span>.view addSubview:imageView];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">使用 CAShapeLayer 与 UIBezierPath 配合画圆角</span></div><div class="line"><span class="comment">*/</span></div><div class="line">- (<span class="keyword">void</span>)addCornerRadius:(<span class="built_in">CGFloat</span>)radius forImageView:(<span class="built_in">UIImageView</span> *)imageView</div><div class="line">&#123;</div><div class="line">    <span class="comment">// 开启图片上下文</span></div><div class="line">    <span class="comment">// UIGraphicsBeginImageContext(imageView.bounds.size);</span></div><div class="line">    <span class="comment">// 一般使用下面的方法</span></div><div class="line">    <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(imageView.bounds.size, <span class="literal">NO</span>, <span class="number">0</span>);</div><div class="line">    <span class="comment">// 绘制贝塞尔曲线</span></div><div class="line">    <span class="built_in">UIBezierPath</span> *bezierPath = [<span class="built_in">UIBezierPath</span> bezierPathWithRoundedRect:imageView.bounds cornerRadius:<span class="number">100</span>];</div><div class="line">    <span class="comment">// 按绘制的贝塞尔曲线剪切</span></div><div class="line">    [bezierPath addClip];</div><div class="line">    <span class="comment">// 画图</span></div><div class="line">    [imageView drawRect:imageView.bounds];</div><div class="line">    <span class="comment">// 获取上下文中的图片</span></div><div class="line">    imageView.image = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</div><div class="line">    <span class="comment">// 关闭图片上下文</span></div><div class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">使用 Core Graphics 画圆角</span></div><div class="line"><span class="comment">*/</span></div><div class="line">- (<span class="keyword">void</span>)setCornerRadius:(<span class="built_in">CGFloat</span>)radius forImageView:(<span class="built_in">UIImageView</span> *)imageView</div><div class="line">&#123;</div><div class="line">    <span class="comment">// NO代表透明</span></div><div class="line">    <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(imageView.bounds.size, <span class="literal">NO</span>, <span class="number">0.0</span>);</div><div class="line">    <span class="comment">// 获得上下文</span></div><div class="line">    <span class="built_in">CGContextRef</span> context = <span class="built_in">UIGraphicsGetCurrentContext</span>();</div><div class="line">    <span class="comment">// 添加一个圆</span></div><div class="line">    <span class="built_in">CGRect</span> rect = <span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, imageView.bounds.size.width, imageView.bounds.size.height);</div><div class="line">    <span class="built_in">CGContextAddEllipseInRect</span>(context, rect);</div><div class="line">    <span class="comment">// 裁剪</span></div><div class="line">    <span class="built_in">CGContextClip</span>(context);</div><div class="line">    <span class="comment">// 将图片画上去</span></div><div class="line">    [imageView.image drawInRect:rect];</div><div class="line">    imageView.image = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</div><div class="line">    <span class="comment">// 关闭上下文</span></div><div class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><img src="/2020/08/31/OC底层/原理/性能优化/性能优化08.png" alt="性能优化08"></p>
+<h2 id="卡顿检测"><a href="#卡顿检测" class="headerlink" title="卡顿检测"></a>卡顿检测</h2><p>平时所说的“卡顿”主要是因为在主线程执行了比较耗时的操作，可以添加 Observer 到主线程 RunLoop 中，通过监听 RunLoop 状态切换的耗时，以达到监控卡顿的目的。</p>
+<p><img src="/2020/08/31/OC底层/原理/性能优化/性能优化09.png" alt="性能优化09"></p>
+<p>NSRunLoop 调用方法主要就是在 06 ~&gt; 05 的循环，如果这段时间内耗时太长，就说明这段时间主线程出现卡顿。</p>
+<h3 id="LXDAppFluecyMonitor"><a href="#LXDAppFluecyMonitor" class="headerlink" title="LXDAppFluecyMonitor"></a>LXDAppFluecyMonitor</h3><p>使用 <a href="https://github.com/UIControl/LXDAppFluecyMonitor" target="_blank" rel="external">LXDAppFluecyMonitor</a> 监测卡顿：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()&lt;<span class="title">UITableViewDelegate</span>, <span class="title">UITableViewDataSource</span>&gt;</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">weak</span>, <span class="keyword">nonatomic</span>) <span class="keyword">IBOutlet</span> <span class="built_in">UITableView</span> *tableView;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></div><div class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</div><div class="line">    [<span class="keyword">super</span> viewDidLoad];</div><div class="line">    [[LXDAppFluecyMonitor sharedMonitor] startMonitoring];</div><div class="line">    [<span class="keyword">self</span>.tableView registerClass: [<span class="built_in">UITableViewCell</span> <span class="keyword">class</span>] forCellReuseIdentifier: <span class="string">@"cell"</span>];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">#pragma mark - UITableViewDataSource</span></div><div class="line">- (<span class="built_in">NSInteger</span>)tableView: (<span class="built_in">UITableView</span> *)tableView numberOfRowsInSection: (<span class="built_in">NSInteger</span>)section &#123;</div><div class="line">    <span class="keyword">return</span> <span class="number">1000</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">UITableViewCell</span> *)tableView: (<span class="built_in">UITableView</span> *)tableView cellForRowAtIndexPath: (<span class="built_in">NSIndexPath</span> *)indexPath &#123;</div><div class="line">    <span class="built_in">UITableViewCell</span> * cell = [tableView dequeueReusableCellWithIdentifier: <span class="string">@"cell"</span>];</div><div class="line">    cell.textLabel.text = [<span class="built_in">NSString</span> stringWithFormat: <span class="string">@"%lu"</span>, indexPath.row];</div><div class="line">    <span class="keyword">if</span> (indexPath.row &gt; <span class="number">0</span> &amp;&amp; indexPath.row % <span class="number">30</span> == <span class="number">0</span>) &#123;</div><div class="line">        usleep(<span class="number">2000000</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> cell;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="number">2020</span>-<span class="number">09</span>-<span class="number">01</span> <span class="number">18</span>:<span class="number">26</span>:<span class="number">51.657686</span>+<span class="number">0800</span> LXDAppFluecyMonitor[<span class="number">17096</span>:<span class="number">323364</span>] Backtrace of Thread <span class="number">771</span>:</div><div class="line">======================================================================================</div><div class="line">libsystem_kernel.dylib         <span class="number">0x7fff52208756</span> __semwait_signal + <span class="number">10</span></div><div class="line">libsystem_c.dylib              <span class="number">0x7fff52198510</span> usleep + <span class="number">53</span></div><div class="line">LXDAppFluecyMonitor            <span class="number">0x10876d58f</span> -[ViewController tableView:cellForRowAtIndexPath:] + <span class="number">351</span></div><div class="line">UIKitCore                      <span class="number">0x7fff4953de96</span> -[UITableView _createPreparedCellForGlobalRow:withIndexPath:willDisplay:] + <span class="number">867</span></div><div class="line">UIKitCore                      <span class="number">0x7fff49507522</span> -[UITableView _updateVisibleCellsNow:] + <span class="number">3010</span></div><div class="line">UIKitCore                      <span class="number">0x7fff4952724e</span> -[UITableView layoutSubviews] + <span class="number">194</span></div><div class="line">UIKitCore                      <span class="number">0x7fff4982d5f4</span> -[UIView(CALayerDelegate) layoutSublayersOfLayer:] + <span class="number">2478</span></div><div class="line">QuartzCore                     <span class="number">0x7fff2b4e9260</span> -[CALayer layoutSublayers] + <span class="number">255</span></div><div class="line">QuartzCore                     <span class="number">0x7fff2b4ef3eb</span> _ZN2CA5Layer16layout_if_neededEPNS_11TransactionE + <span class="number">523</span></div><div class="line">QuartzCore                     <span class="number">0x7fff2b4faa8a</span> _ZN2CA5Layer28layout_and_display_if_neededEPNS_11TransactionE + <span class="number">80</span></div><div class="line">QuartzCore                     <span class="number">0x7fff2b443a7c</span> _ZN2CA7Context18commit_transactionEPNS_11TransactionEd + <span class="number">324</span></div><div class="line">QuartzCore                     <span class="number">0x7fff2b477467</span> _ZN2CA11Transaction6commitEv + <span class="number">649</span></div><div class="line">QuartzCore                     <span class="number">0x7fff2b3a4305</span> _ZN2CA7Display11DisplayLink14dispatch_itemsEyyy + <span class="number">921</span></div><div class="line">QuartzCore                     <span class="number">0x7fff2b47b768</span> _ZL22display_timer_callbackP12__CFMachPortPvlS1_ + <span class="number">299</span></div><div class="line">CoreFoundation                 <span class="number">0x7fff23d627dd</span> __CFMachPortPerform + <span class="number">157</span></div><div class="line">CoreFoundation                 <span class="number">0x7fff23da2449</span> __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE1_PERFORM_FUNCTION__ + <span class="number">41</span></div><div class="line">CoreFoundation                 <span class="number">0x7fff23da1a48</span> __CFRunLoopDoSource1 + <span class="number">472</span></div><div class="line">CoreFoundation                 <span class="number">0x7fff23d9c474</span> __CFRunLoopRun + <span class="number">2228</span></div><div class="line">CoreFoundation                 <span class="number">0x7fff23d9b8a4</span> CFRunLoopRunSpecific + <span class="number">404</span></div><div class="line">GraphicsServices               <span class="number">0x7fff38c39bbe</span> GSEventRunModal + <span class="number">139</span></div><div class="line">UIKitCore                      <span class="number">0x7fff49325968</span> UIApplicationMain + <span class="number">1605</span></div><div class="line">LXDAppFluecyMonitor            <span class="number">0x10876ea40</span> main + <span class="number">112</span></div><div class="line">libdyld.dylib                  <span class="number">0x7fff520ce1fd</span> start + <span class="number">1</span></div><div class="line"></div><div class="line">======================================================================================</div></pre></td></tr></table></figure></p>
+<p><code>LXDAppFluecyMonitor</code> 的核心代码：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="keyword">void</span> lxdRunLoopObserverCallback(<span class="built_in">CFRunLoopObserverRef</span> observer, <span class="built_in">CFRunLoopActivity</span> activity, <span class="keyword">void</span> * info) &#123;</div><div class="line">    SHAREDMONITOR.currentActivity = activity;</div><div class="line">    dispatch_semaphore_signal(SHAREDMONITOR.semphore); <span class="comment">// semphore加1</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)startMonitoring &#123;</div><div class="line">    <span class="keyword">if</span> (_isMonitoring) &#123; <span class="keyword">return</span>; &#125;</div><div class="line">    _isMonitoring = <span class="literal">YES</span>;</div><div class="line">    <span class="comment">// 注册RunLoop状态观察</span></div><div class="line">    <span class="built_in">CFRunLoopObserverContext</span> context = &#123;</div><div class="line">        <span class="number">0</span>,</div><div class="line">        (__bridge <span class="keyword">void</span> *)<span class="keyword">self</span>,</div><div class="line">        <span class="literal">NULL</span>,</div><div class="line">        <span class="literal">NULL</span></div><div class="line">    &#125;;</div><div class="line">    <span class="comment">/** 创建RunLoop observer对象</span></div><div class="line"><span class="comment">     分配内存</span></div><div class="line"><span class="comment">     设置要关注的事件</span></div><div class="line"><span class="comment">     标识在第一次进入run loop时执行还是每次进入run loop处理时均执行</span></div><div class="line"><span class="comment">     设置优先级</span></div><div class="line"><span class="comment">     设置回调函数</span></div><div class="line"><span class="comment">     设置运行环境</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    _observer = <span class="built_in">CFRunLoopObserverCreate</span>(kCFAllocatorDefault, kCFRunLoopAllActivities, <span class="literal">YES</span>, <span class="number">0</span>, &amp;lxdRunLoopObserverCallback, &amp;context);</div><div class="line">    <span class="built_in">CFRunLoopAddObserver</span>(<span class="built_in">CFRunLoopGetMain</span>(), _observer, kCFRunLoopCommonModes);</div><div class="line">    </div><div class="line">    <span class="built_in">dispatch_async</span>(lxd_event_monitor_queue(), ^&#123;</div><div class="line">        <span class="keyword">while</span> (SHAREDMONITOR.isMonitoring) &#123;</div><div class="line">            <span class="comment">// kCFRunLoopBeforeWaiting - 即将进入休眠</span></div><div class="line">            <span class="keyword">if</span> (SHAREDMONITOR.currentActivity == kCFRunLoopBeforeWaiting) &#123;</div><div class="line">                __block <span class="built_in">BOOL</span> timeOut = <span class="literal">YES</span>;</div><div class="line">                <span class="built_in">dispatch_async</span>(dispatch_get_main_queue(), ^&#123;</div><div class="line">                    timeOut = <span class="literal">NO</span>;</div><div class="line">                    dispatch_semaphore_signal(SHAREDMONITOR.eventSemphore); <span class="comment">// eventSemphore加1</span></div><div class="line">                &#125;);</div><div class="line">                [<span class="built_in">NSThread</span> sleepForTimeInterval: lxd_time_out_interval]; <span class="comment">// 当前线程睡1s</span></div><div class="line">                <span class="keyword">if</span> (timeOut) &#123; <span class="comment">// 1s后主线程还没有将timeOut修改为NO，默认主线程阻塞</span></div><div class="line">                    [LXDBacktraceLogger lxd_logMain]; <span class="comment">// 打印日志</span></div><div class="line">                &#125;</div><div class="line">                dispatch_wait(SHAREDMONITOR.eventSemphore, DISPATCH_TIME_FOREVER); <span class="comment">// eventSemphore减1</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    </div><div class="line">    <span class="built_in">dispatch_async</span>(lxd_fluecy_monitor_queue(), ^&#123;</div><div class="line">        <span class="keyword">while</span> (SHAREDMONITOR.isMonitoring) &#123;</div><div class="line">            <span class="comment">// semphore减1（等待200s，semphore == 0 或者“超时”会继续向下执行）</span></div><div class="line">            <span class="keyword">long</span> waitTime = dispatch_semaphore_wait(<span class="keyword">self</span>.semphore, dispatch_time(DISPATCH_TIME_NOW, lxd_wait_interval)); </div><div class="line">            <span class="keyword">if</span> (waitTime != LXD_SEMPHORE_SUCCESS) &#123;</div><div class="line">                <span class="comment">// 信号量超时了（runloop 的状态长时间没有发生变更,长期处于某一个状态下）</span></div><div class="line">                <span class="keyword">if</span> (!SHAREDMONITOR.observer) &#123; <span class="comment">// 异常处理</span></div><div class="line">                    SHAREDMONITOR.timeOut = <span class="number">0</span>;</div><div class="line">                    [SHAREDMONITOR stopMonitoring];</div><div class="line">                    <span class="keyword">continue</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="comment">// kCFRunLoopBeforeSources - 即将处理source</span></div><div class="line">                <span class="comment">// kCFRunLoopAfterWaiting - 刚从休眠中唤醒</span></div><div class="line">                <span class="keyword">if</span> (SHAREDMONITOR.currentActivity == kCFRunLoopBeforeSources || SHAREDMONITOR.currentActivity == kCFRunLoopAfterWaiting) &#123;</div><div class="line">                    <span class="keyword">if</span> (++SHAREDMONITOR.timeOut &lt; <span class="number">5</span>) &#123;</div><div class="line">                        <span class="keyword">continue</span>; <span class="comment">// timeOut标记信号量超时次数，不足5次则停止当次循环开启下一次循环</span></div><div class="line">                    &#125;</div><div class="line">                    [LXDBacktraceLogger lxd_logMain]; <span class="comment">// 打印日志</span></div><div class="line">                    [<span class="built_in">NSThread</span> sleepForTimeInterval: lxd_restore_interval]; <span class="comment">// 当前线程睡1s</span></div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            SHAREDMONITOR.timeOut = <span class="number">0</span>; <span class="comment">// 将 timeOut 置为0</span></div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)stopMonitoring &#123;</div><div class="line">    <span class="keyword">if</span> (!_isMonitoring) &#123; <span class="keyword">return</span>; &#125;</div><div class="line">    _isMonitoring = <span class="literal">NO</span>;</div><div class="line">    </div><div class="line">    <span class="built_in">CFRunLoopRemoveObserver</span>(<span class="built_in">CFRunLoopGetMain</span>(), _observer, kCFRunLoopCommonModes);</div><div class="line">    <span class="built_in">CFRelease</span>(_observer);</div><div class="line">    _observer = <span class="literal">nil</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="耗电"><a href="#耗电" class="headerlink" title="耗电"></a>耗电</h1><h2 id="耗电的主要来源"><a href="#耗电的主要来源" class="headerlink" title="耗电的主要来源"></a>耗电的主要来源</h2><p><img src="/2020/08/31/OC底层/原理/性能优化/性能优化04.png" alt="性能优化04"></p>
+<ul>
+<li>CPU处理，Processing</li>
+<li>网络，Networking</li>
+<li>定位，Location</li>
+<li>图像，Graphics</li>
+</ul>
+<h2 id="耗电优化"><a href="#耗电优化" class="headerlink" title="耗电优化"></a>耗电优化</h2><p>尽可能降低CPU、GPU功耗：</p>
+<ul>
+<li><p>少用定时器</p>
+</li>
+<li><p>优化I/O操作<br>1.尽量不要频繁写入小数据，最好批量一次性写入；<br>2.读写大量重要数据时，考虑用 <code>dispatch_io</code>，其提供了基于GCD的异步操作文件 <code>I/O</code> 的API。用 <code>dispatch_io</code> 系统会优化磁盘访问；<br>3.数据量比较大的，建议使用数据库（比如SQLite、CoreData）；</p>
+</li>
+<li><p>网络优化<br>1.减少、压缩网络数据；<br>2.如果多次请求的结果是相同的，尽量使用缓存；<br>3.使用断点续传，否则网络不稳定时可能多次传输相同的内容；<br>4.网络不可用时，不要尝试执行网络请求；<br>5.让用户可以取消长时间运行或者速度很慢的网络操作，设置合适的超时时间；<br>6.批量传输，比如，下载视频流时，不要传输很小的数据包，直接下载整个文件或者一大块一大块地下载。如果下载广告，一次性多下载一些，然后再慢慢展示。如果下载电子邮件，一次下载多封，不要一封一封地下载；</p>
+</li>
+<li><p>定位优化<br>1.如果只是需要快速确定用户位置，最好用 <code>CLLocationManager</code> 的 <code>requestLocation</code> 方法。定位完成后，会自动让定位硬件断电；<br>2.如果不是导航应用，尽量不要实时更新位置，定位完毕就关掉定位服务；<br>3.尽量降低定位精度，比如尽量不要使用精度最高的 <code>kCLLocationAccuracyBest</code>；<br>4.需要后台定位时，尽量设置 <code>pausesLocationUpdatesAutomatically</code> 为YES，如果用户不太可能移动的时候系统会自动暂停位置更新；<br>5.尽量不要使用 <code>startMonitoringSignificantLocationChanges</code>，优先考虑 <code>startMonitoringForRegion:</code>；</p>
+</li>
+<li><p>硬件检测优化<br>1.用户移动、摇晃、倾斜设备时，会产生动作(motion)事件，这些事件由加速度计、陀螺仪、磁力计等硬件检测。在不需要检测的场合，应该及时关闭这些硬件；</p>
+</li>
+</ul>
+<h1 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h1><h2 id="APP的启动"><a href="#APP的启动" class="headerlink" title="APP的启动"></a>APP的启动</h2><ul>
+<li><p>APP的启动可以分为2种<br>冷启动（Cold Launch）：从零开始启动APP；<br>热启动（Warm Launch）：APP已经在内存中，在后台存活着，再次点击图标启动APP；</p>
+</li>
+<li><p>APP启动时间的优化，主要是针对冷启动进行优化</p>
+</li>
+<li><p>通过添加环境变量可以打印出APP的启动时间分析（Edit scheme -&gt; Run -&gt; Arguments）<br>1.<code>DYLD_PRINT_STATISTICS</code> 设置为1；</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Total pre-main <span class="selector-tag">time</span>:  <span class="number">59.28</span> milliseconds (<span class="number">100.0%</span>)</div><div class="line">       dylib loading <span class="selector-tag">time</span>:  <span class="number">52.30</span> milliseconds (<span class="number">88.2%</span>)</div><div class="line">      rebase/binding <span class="selector-tag">time</span>: <span class="number">126687488.9</span> seconds (<span class="number">190140774.5%</span>)</div><div class="line">          ObjC setup <span class="selector-tag">time</span>:   <span class="number">7.95</span> milliseconds (<span class="number">13.4%</span>)</div><div class="line">         initializer <span class="selector-tag">time</span>:  <span class="number">34.35</span> milliseconds (<span class="number">57.9%</span>)</div><div class="line">         slowest intializers :</div><div class="line">           libSystem<span class="selector-class">.B</span><span class="selector-class">.dylib</span> :   <span class="number">2.69</span> milliseconds (<span class="number">4.5%</span>)</div><div class="line"> libBacktraceRecording<span class="selector-class">.dylib</span> :   <span class="number">5.37</span> milliseconds (<span class="number">9.0%</span>)</div><div class="line">  libMainThreadChecker<span class="selector-class">.dylib</span> :  <span class="number">23.06</span> milliseconds (<span class="number">38.8%</span>)</div></pre></td></tr></table></figure>
+<p>2.如果需要更详细的信息，那就将 <code>DYLD_PRINT_STATISTICS_DETAILS</code> 设置为1；</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">time</span>: 433<span class="selector-class">.28</span> <span class="selector-tag">milliseconds</span> (100<span class="selector-class">.0</span>%)</div><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">images</span> <span class="selector-tag">loaded</span>:  318 (311 <span class="selector-tag">from</span> <span class="selector-tag">dyld</span> <span class="selector-tag">shared</span> <span class="selector-tag">cache</span>)</div><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">segments</span> <span class="selector-tag">mapped</span>: 21, <span class="selector-tag">into</span> 385 <span class="selector-tag">pages</span></div><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">images</span> <span class="selector-tag">loading</span> <span class="selector-tag">time</span>: 299<span class="selector-class">.19</span> <span class="selector-tag">milliseconds</span> (69<span class="selector-class">.0</span>%)</div><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">load</span> <span class="selector-tag">time</span> <span class="selector-tag">in</span> <span class="selector-tag">ObjC</span>:   9<span class="selector-class">.88</span> <span class="selector-tag">milliseconds</span> (2<span class="selector-class">.2</span>%)</div><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">debugger</span> <span class="selector-tag">pause</span> <span class="selector-tag">time</span>: 145<span class="selector-class">.67</span> <span class="selector-tag">milliseconds</span> (33<span class="selector-class">.6</span>%)</div><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">dtrace</span> <span class="selector-tag">DOF</span> <span class="selector-tag">registration</span> <span class="selector-tag">time</span>:   0<span class="selector-class">.14</span> <span class="selector-tag">milliseconds</span> (0<span class="selector-class">.0</span>%)</div><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">rebase</span> <span class="selector-tag">fixups</span>:  18,196</div><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">rebase</span> <span class="selector-tag">fixups</span> <span class="selector-tag">time</span>:   0<span class="selector-class">.32</span> <span class="selector-tag">milliseconds</span> (0<span class="selector-class">.0</span>%)</div><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">binding</span> <span class="selector-tag">fixups</span>: 436,908</div><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">binding</span> <span class="selector-tag">fixups</span> <span class="selector-tag">time</span>:  86<span class="selector-class">.76</span> <span class="selector-tag">milliseconds</span> (20<span class="selector-class">.0</span>%)</div><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">weak</span> <span class="selector-tag">binding</span> <span class="selector-tag">fixups</span> <span class="selector-tag">time</span>:   0<span class="selector-class">.01</span> <span class="selector-tag">milliseconds</span> (0<span class="selector-class">.0</span>%)</div><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">redo</span> <span class="selector-tag">shared</span> <span class="selector-tag">cached</span> <span class="selector-tag">bindings</span> <span class="selector-tag">time</span>: 130<span class="selector-class">.32</span> <span class="selector-tag">milliseconds</span> (30<span class="selector-class">.0</span>%)</div><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">bindings</span> <span class="selector-tag">lazily</span> <span class="selector-tag">fixed</span> <span class="selector-tag">up</span>: 0 <span class="selector-tag">of</span> 0</div><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">time</span> <span class="selector-tag">in</span> <span class="selector-tag">initializers</span> <span class="selector-tag">and</span> <span class="selector-tag">ObjC</span> +<span class="selector-tag">load</span>:  36<span class="selector-class">.94</span> <span class="selector-tag">milliseconds</span> (8<span class="selector-class">.5</span>%)</div><div class="line">                       <span class="selector-tag">libSystem</span><span class="selector-class">.B</span><span class="selector-class">.dylib</span> :   2<span class="selector-class">.94</span> <span class="selector-tag">milliseconds</span> (0<span class="selector-class">.6</span>%)</div><div class="line">             <span class="selector-tag">libBacktraceRecording</span><span class="selector-class">.dylib</span> :   6<span class="selector-class">.00</span> <span class="selector-tag">milliseconds</span> (1<span class="selector-class">.3</span>%)</div><div class="line">                         <span class="selector-tag">libobjc</span><span class="selector-class">.A</span><span class="selector-class">.dylib</span> :   0<span class="selector-class">.86</span> <span class="selector-tag">milliseconds</span> (0<span class="selector-class">.1</span>%)</div><div class="line">                          <span class="selector-tag">CoreFoundation</span> :   0<span class="selector-class">.86</span> <span class="selector-tag">milliseconds</span> (0<span class="selector-class">.2</span>%)</div><div class="line">              <span class="selector-tag">libMainThreadChecker</span><span class="selector-class">.dylib</span> :  24<span class="selector-class">.27</span> <span class="selector-tag">milliseconds</span> (5<span class="selector-class">.6</span>%)</div><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">symbol</span> <span class="selector-tag">trie</span> <span class="selector-tag">searches</span>:    1056780</div><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">symbol</span> <span class="selector-tag">table</span> <span class="selector-tag">binary</span> <span class="selector-tag">searches</span>:    0</div><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">images</span> <span class="selector-tag">defining</span> <span class="selector-tag">weak</span> <span class="selector-tag">symbols</span>:  32</div><div class="line"><span class="selector-tag">total</span> <span class="selector-tag">images</span> <span class="selector-tag">using</span> <span class="selector-tag">weak</span> <span class="selector-tag">symbols</span>:  84</div></pre></td></tr></table></figure>
+</li>
+<li><p>APP的冷启动可以概括为3大阶段：dyld、runtime 和 main</p>
+</li>
+</ul>
+<p><img src="/2020/08/31/OC底层/原理/性能优化/性能优化05.png" alt="性能优化05"></p>
+<h3 id="dyld"><a href="#dyld" class="headerlink" title="dyld"></a>dyld</h3><p>dyld（dynamic link editor），Apple的动态链接器，可以用来装载Mach-O文件（可执行文件、动态库等）。启动APP时，dyld 所做的事情有：<br>1.装载APP的可执行文件，同时会递归加载所有依赖的动态库；<br>2.当dyld把可执行文件、动态库都装载完毕后，会通知Runtime进行下一步的处理；<br><img src="/2020/08/31/OC底层/原理/性能优化/性能优化10.png" alt="性能优化10"><br>显示包内容：<br><img src="/2020/08/31/OC底层/原理/性能优化/性能优化11.png" alt="性能优化11"></p>
+<h3 id="runtime"><a href="#runtime" class="headerlink" title="runtime"></a>runtime</h3><p>启动APP时，runtime 所做的事情有：<br>1.调用 <code>map_images</code> 进行可执行文件内容的解析和处理；<br>2.在 <code>load_images</code> 中调用 <code>call_load_methods</code>，调用所有 Class 和 Category 的 <code>+load</code> 方法；<br>3.进行各种objc结构的初始化（注册Objc类 、初始化类对象等等）；<br>4.调用C++静态初始化器和 <code>__attribute__((constructor))</code> 修饰的函数；(被 <code>__attribute__((constructor))</code> 修饰的函数在程序启动时，系统会自动调用该函数)</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> _objc_init(<span class="keyword">void</span>)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">bool</span> initialized = <span class="literal">false</span>;</div><div class="line">    <span class="keyword">if</span> (initialized) <span class="keyword">return</span>;</div><div class="line">    initialized = <span class="literal">true</span>;</div><div class="line">    </div><div class="line">    environ_init();</div><div class="line">    tls_init();</div><div class="line">    static_init();</div><div class="line">    runtime_init();</div><div class="line">    exception_init();</div><div class="line">    cache_init();</div><div class="line">    _imp_implementationWithBlock_init();</div><div class="line"></div><div class="line">    <span class="comment">// 调用 map_images 和 load_images</span></div><div class="line">    _dyld_objc_notify_register(&amp;map_images, load_images, unmap_image);</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> __OBJC2__</span></div><div class="line">    didCallDyldNotifyRegister = <span class="literal">true</span>;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面就是 APP 启动时 dyld 和 runtime 全部的处理内容了，到此为止，可执行文件和动态库中所有的符号(Class，Protocol，Selector，IMP，…)都已经按格式成功加载到内存中，被 runtime 所管理。</p>
+<h3 id="main"><a href="#main" class="headerlink" title="main"></a>main</h3><p>1.APP 的启动由 dyld 主导，将可执行文件加载到内存，顺便加载所有依赖的动态库；<br>2.并由 runtime 负责加载成 objc 定义的结构；<br>3.所有初始化工作结束后，dyld 就会调用 main 函数；<br>4.接下来就是 UIApplicationMain 函数，AppDelegate 的 <code>application:didFinishLaunchingWithOptions:</code> 方法；</p>
+<h2 id="APP的启动优化"><a href="#APP的启动优化" class="headerlink" title="APP的启动优化"></a>APP的启动优化</h2><p>按照不同的阶段</p>
+<ul>
+<li><p>dyld<br>1.减少动态库、合并一些动态库（定期清理不必要的动态库）；<br>2.减少Objc类、分类的数量、减少Selector数量（定期清理不必要的类、分类）；<br>3.减少C++虚函数数量；<br>4.Swift尽量使用struct；</p>
+</li>
+<li><p>runtime<br>1.用 <code>+initialize</code> 方法和 <code>dispatch_once</code> 取代所有的 <code>__attribute__((constructor))</code>、C++静态构造器、ObjC的 <code>+load</code>；</p>
+</li>
+<li><p>main<br>1.在不影响用户体验的前提下，尽可能将一些操作延迟，不要全部都放在 <code>application:didFinishLaunchingWithOptions:</code> 方法中；<br>2.按需加载</p>
+</li>
+</ul>
+<h1 id="安装包瘦身"><a href="#安装包瘦身" class="headerlink" title="安装包瘦身"></a>安装包瘦身</h1><p>安装包（IPA）主要由可执行文件、资源组成：</p>
+<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><p>资源：图片、音频、视频等。</p>
+<p>1.采取无损压缩；<br>2.去除没有用到的资源，工具 <a href="https://github.com/tinymind/LSUnusedResources" target="_blank" rel="external">LSUnusedResources</a>；</p>
+<h2 id="可执行文件瘦身"><a href="#可执行文件瘦身" class="headerlink" title="可执行文件瘦身"></a>可执行文件瘦身</h2><ul>
+<li>编译器优化：<br>1.Strip Linked Product、Make Strings Read-Only、Symbols Hidden by Default设置为YES；<br>2.去掉异常支持，<code>Enable C++ Exceptions</code>、<code>Enable Objective-C Exceptions</code> 设置为NO， <code>Other C Flags</code> 添加 <code>-fno-exceptions</code>；</li>
+<li>利用 <a href="https://www.jetbrains.com/objc/" target="_blank" rel="external">AppCode</a> 检测未使用的代码：菜单栏 -&gt; Code -&gt; Inspect Code；</li>
+<li>编写 LLVM 插件检测出重复代码、未被调用的代码；</li>
+<li>生成 LinkMap 文件，可以查看可执行文件的具体组成<br><img src="/2020/08/31/OC底层/原理/性能优化/性能优化06.png" alt="性能优化06"><br>可借助第三方工具解析LinkMap文件，工具 <a href="https://github.com/huanxsd/LinkMap" target="_blank" rel="external">LinkMap</a><br><img src="/2020/08/31/OC底层/原理/性能优化/性能优化12.png" alt="性能优化12"></li>
+</ul>
+<h1 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h1><p><a href="https://baike.baidu.com/item/%E6%89%8B%E6%9C%BAGPU/4688178?fr=aladdin" target="_blank" rel="external">手机GPU</a><br><a href="https://baike.baidu.com/item/%E5%9B%BE%E5%BD%A2%E5%A4%84%E7%90%86%E5%99%A8/8694767?fromtitle=gpu&amp;fromid=105524&amp;fr=aladdin" target="_blank" rel="external">图形处理器</a><br><a href="https://www.cnblogs.com/jys509/p/13296128.html" target="_blank" rel="external">iOS应用千万级架构：性能优化与卡顿监控</a><br><a href="https://www.cnblogs.com/biglucky/p/4223565.html" target="_blank" rel="external">CPU和GPU的设计区别</a><br><a href="http://chuquan.me/2018/09/25/ios-graphics-render-principle/" target="_blank" rel="external">iOS 图像渲染原理</a><br><a href="https://cloud.tencent.com/developer/article/1427933" target="_blank" rel="external">Matrix-iOS 卡顿监控</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OC底层原理/" rel="tag"># OC底层原理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/14/OC底层/原理/内存管理/" rel="next" title="内存管理">
+                <i class="fa fa-chevron-left"></i> 内存管理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/09/02/OC底层/原理/架构设计/" rel="prev" title="架构设计">
+                架构设计 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/myAvatar.gif"
+              alt="Kevin" />
+          
+            <p class="site-author-name" itemprop="name">Kevin</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KevinYangGit" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yangqioffice@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_YangQI" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.cnblogs.com/mjios" title="Title" target="_blank">Title</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#卡顿"><span class="nav-number">1.</span> <span class="nav-text">卡顿</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CPU和GPU"><span class="nav-number">1.1.</span> <span class="nav-text">CPU和GPU</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#屏幕成像原理"><span class="nav-number">1.2.</span> <span class="nav-text">屏幕成像原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卡顿产生的原因"><span class="nav-number">1.3.</span> <span class="nav-text">卡顿产生的原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卡顿优化"><span class="nav-number">1.4.</span> <span class="nav-text">卡顿优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU"><span class="nav-number">1.4.1.</span> <span class="nav-text">CPU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GPU"><span class="nav-number">1.4.2.</span> <span class="nav-text">GPU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#离屏渲染"><span class="nav-number">1.4.3.</span> <span class="nav-text">离屏渲染</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卡顿检测"><span class="nav-number">1.5.</span> <span class="nav-text">卡顿检测</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LXDAppFluecyMonitor"><span class="nav-number">1.5.1.</span> <span class="nav-text">LXDAppFluecyMonitor</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#耗电"><span class="nav-number">2.</span> <span class="nav-text">耗电</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#耗电的主要来源"><span class="nav-number">2.1.</span> <span class="nav-text">耗电的主要来源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#耗电优化"><span class="nav-number">2.2.</span> <span class="nav-text">耗电优化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动"><span class="nav-number">3.</span> <span class="nav-text">启动</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#APP的启动"><span class="nav-number">3.1.</span> <span class="nav-text">APP的启动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dyld"><span class="nav-number">3.1.1.</span> <span class="nav-text">dyld</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#runtime"><span class="nav-number">3.1.2.</span> <span class="nav-text">runtime</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#main"><span class="nav-number">3.1.3.</span> <span class="nav-text">main</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#APP的启动优化"><span class="nav-number">3.2.</span> <span class="nav-text">APP的启动优化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装包瘦身"><span class="nav-number">4.</span> <span class="nav-text">安装包瘦身</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#资源"><span class="nav-number">4.1.</span> <span class="nav-text">资源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可执行文件瘦身"><span class="nav-number">4.2.</span> <span class="nav-text">可执行文件瘦身</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#相关阅读"><span class="nav-number">5.</span> <span class="nav-text">相关阅读</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://rawgit.com/qhh0205/78e9e0b1f3114db6737f3ed8cdd51d3a/raw/3894c5be5aa2378336b1f5ee0f296fa0b22d06e9/md5.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '82b6ced795961ee1fcca',
+          clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
+          repo: 'KevinYangGit.github.io',
+          owner: '',
+          admin: [''],
+          id: md5(location.pathname),
+          distractionFreeMode: ''
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
