@@ -118,8 +118,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/07/14/OC底层/原理/多线程/多线程40.png">
 <meta property="og:image" content="http://yoursite.com/2020/07/14/OC底层/原理/多线程/多线程32.png">
 <meta property="og:image" content="http://yoursite.com/2020/07/14/OC底层/原理/多线程/多线程41.png">
-<meta property="og:image" content="https://juejin.im/post/6862464169158344717">
-<meta property="og:updated_time" content="2020-09-04T07:38:41.010Z">
+<meta property="og:updated_time" content="2020-10-10T01:00:41.644Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="多线程">
 <meta name="twitter:description" content="思考：  你理解的多线程？ iOS的多线程方案有哪几种？你更倾向于哪一种？ 你在项目中用过 GCD 吗？ GCD 的队列类型 说一下 OperationQueue 和 GCD 的区别，以及各自的优势 线程安全的处理手段有哪些？ OC你了解的锁有哪些？在你回答基础上进行二次提问；追问一：自旋和互斥对比？追问二：使用以上锁需要注意哪些？追问三：用C/OC/C++，任选其一，实现自旋或互斥？">
@@ -795,7 +794,7 @@ table th:nth-of-type(5){
 <p>上面有详解👆。</p>
 <h2 id="请问下面代码的打印结果是什么？-1"><a href="#请问下面代码的打印结果是什么？-1" class="headerlink" title="请问下面代码的打印结果是什么？"></a>请问下面代码的打印结果是什么？</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></div><div class="line">- (<span class="keyword">void</span>)test</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"2"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)touchesBegan:(<span class="built_in">NSSet</span>&lt;<span class="built_in">UITouch</span> *&gt; *)touches withEvent:(<span class="built_in">UIEvent</span> *)event</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSThread</span> *thread = [[<span class="built_in">NSThread</span> alloc] initWithBlock:^&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"1"</span>);</div><div class="line">    &#125;];</div><div class="line">    [thread start];</div><div class="line">    </div><div class="line">    [<span class="keyword">self</span> performSelector:<span class="keyword">@selector</span>(test) onThread:thread withObject:<span class="literal">nil</span> waitUntilDone:<span class="literal">YES</span>];</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
 <p>上面有详解👆。</p>
-<p><img src="https://juejin.im/post/6862464169158344717" alt="2w字 + 40张图带你参透并发编程！"></p>
+<p><a href="https://juejin.im/post/6862464169158344717" target="_blank" rel="external">2w字 + 40张图带你参透并发编程！</a></p>
 
       
     </div>
@@ -920,7 +919,7 @@ table th:nth-of-type(5){
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -933,7 +932,7 @@ table th:nth-of-type(5){
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -953,6 +952,12 @@ table th:nth-of-type(5){
               </span>
             
               <span class="links-of-author-item">
+                <a href="mailto:yangqioffice@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+              <span class="links-of-author-item">
                 <a href="https://twitter.com/_YangQI" target="_blank" title="Twitter">
                   
                     <i class="fa fa-fw fa-twitter"></i>Twitter</a>
@@ -965,6 +970,20 @@ table th:nth-of-type(5){
         
 
         
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.cnblogs.com/mjios" title="M了个J" target="_blank">M了个J</a>
+                </li>
+              
+            </ul>
+          </div>
         
 
         
@@ -1147,19 +1166,19 @@ table th:nth-of-type(5){
 
   <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
   <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-  <script src="https://rawgit.com/qhh0205/78e9e0b1f3114db6737f3ed8cdd51d3a/raw/3894c5be5aa2378336b1f5ee0f296fa0b22d06e9/md5.min.js"></script>
-   <script type="text/javascript">
-        var gitalk = new Gitalk({
-          clientID: '82b6ced795961ee1fcca',
-          clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
-          repo: 'KevinYangGit.github.io',
-          owner: '',
-          admin: [''],
-          id: md5(location.pathname),
-          distractionFreeMode: ''
-        })
-        gitalk.render('gitalk-container')
-    </script>
+  <script src="/js/src/md5.min.js"></script>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: '82b6ced795961ee1fcca',
+      clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
+      repo: 'KevinYangGit.github.io',
+      owner: 'KevinYangGit',
+      admin: ['KevinYangGit'],
+      id: md5(location.pathname),
+      distractionFreeMode: 'true'
+    })
+    gitalk.render('gitalk-container')
+  </script>
 
   
 
