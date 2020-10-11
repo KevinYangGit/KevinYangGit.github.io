@@ -658,7 +658,6 @@
   <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
   <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
   <script src="/js/src/md5.min.js"></script>
-  <div id="gitalk-container"></div>
   <script type="text/javascript">
     var gitalk = new Gitalk({
       clientID: '82b6ced795961ee1fcca',
@@ -667,7 +666,7 @@
       owner: 'KevinYangGit',
       admin: ['KevinYangGit'],
       id: md5(location.pathname),
-      distractionFreeMode: 'false'
+      distractionFreeMode: 'true'
     })
     gitalk.render('gitalk-container')
   </script>
