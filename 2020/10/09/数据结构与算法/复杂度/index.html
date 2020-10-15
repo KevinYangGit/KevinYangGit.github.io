@@ -82,7 +82,8 @@
 <meta property="og:image" content="http://yoursite.com/2020/10/09/数据结构与算法/复杂度/复杂度03.png">
 <meta property="og:image" content="http://yoursite.com/2020/10/09/数据结构与算法/复杂度/复杂度04.png">
 <meta property="og:image" content="http://yoursite.com/2020/10/09/数据结构与算法/复杂度/复杂度05.png">
-<meta property="og:updated_time" content="2020-10-13T10:28:40.233Z">
+<meta property="og:image" content="http://yoursite.com/2020/10/09/数据结构与算法/复杂度/复杂度06.png">
+<meta property="og:updated_time" content="2020-10-14T09:45:31.836Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="复杂度">
 <meta name="twitter:description" content="斐波那契数 &amp;amp; 算法的评估 &amp;amp; 时间复杂度的估算 &amp;amp; 大O表示法 &amp;amp; 斐波那契数复杂度分析">
@@ -366,11 +367,16 @@
 <p>在 fib1 中，如果 n = 5，那么结果就是：1 + 2 + 4 + 8 = 2^0 + 2^1 + 2^2 + 2^3 = 2^4 - 1，即 fib1(n) = 2^(n-1) - 1 = 0.5 * 2^n - 1，所以 fib1(n) 的复杂度为 O(2^n)。<br><img src="/2020/10/09/数据结构与算法/复杂度/复杂度04.png" alt="复杂度04"></p>
 <p>使用<a href="https://zh.numberempire.com/graphingcalculator.php" target="_blank" rel="external">函数图像绘制工具</a>绘制 <code>n,2^n</code>：<br><img src="/2020/10/09/数据结构与算法/复杂度/复杂度05.png" alt="复杂度05"></p>
 <p>可以看出 fib1(n) 和 fib2(n) 的差别很大，如果有一台1GHz的普通计算机，运算速度为10^9次每秒，让 n = 64，那么：<br>O(n)大约耗时6.4 * 10^-8秒<br>O(2^n)大约耗时584.94年</p>
+<p>fib2 补充一：<br><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// O(n)</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">int</span> fib2(<span class="built_in">int</span> N) &#123;</div><div class="line">    <span class="keyword">if</span> (N &lt;= <span class="number">1</span>) <span class="keyword">return</span> N;</div><div class="line"></div><div class="line">    <span class="built_in">int</span> first = <span class="number">0</span>;</div><div class="line">    <span class="built_in">int</span> <span class="built_in">second</span> = <span class="number">1</span>;</div><div class="line">    <span class="keyword">while</span>(N-- &gt; <span class="number">1</span>) &#123;</div><div class="line">        <span class="built_in">second</span> += first;</div><div class="line">        first = <span class="built_in">second</span> - first;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">second</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>fib2 补充二：使用斐波那契公式<br><img src="/2020/10/09/数据结构与算法/复杂度/复杂度06.png" alt="复杂度06"><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// O(1)</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">fib2</span><span class="params">(<span class="keyword">int</span> N)</span> </span>&#123;</div><div class="line">    <span class="keyword">double</span> c = Math.<span class="built_in">sqrt</span>(<span class="number">5</span>); <span class="comment">// 根号5</span></div><div class="line">    <span class="keyword">return</span> (<span class="keyword">int</span>)((Math.<span class="built_in">pow</span>((<span class="number">1</span> + c) / <span class="number">2</span>, N) - Math.<span class="built_in">pow</span>((<span class="number">1</span> - c) / <span class="number">2</span>, N)) / c);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>👉 注意：这里是假定 sqrt 和 pow 的时间复杂度都是 O(1) 的前提下，得出 fib3 的时间复杂度是 O(1)。实际情况还得根据使用的 sqrt 和 pow 的真实时间复杂度而定，比如有些 pow 实现的真实复杂度是 O(logn)。</p>
 <h1 id="算法的优化方向"><a href="#算法的优化方向" class="headerlink" title="算法的优化方向"></a>算法的优化方向</h1><ul>
 <li>用尽量稍等存储空间</li>
 <li>用尽量少的执行步骤</li>
-<li>空间换时间/时间换空间</li>
+<li>空间换时间</li>
+<li>时间换空间</li>
 </ul>
+<p>ps：<br><a href="https://leetcode-cn.com/" target="_blank" rel="external">leetcode</a><br><a href="https://leetcode-cn.com/problems/fibonacci-number/" target="_blank" rel="external">斐波那契数</a></p>
 
       
     </div>
@@ -495,7 +501,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
