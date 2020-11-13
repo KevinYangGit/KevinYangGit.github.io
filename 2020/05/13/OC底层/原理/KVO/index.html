@@ -1,35 +1,819 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+  
 
 
-{% block content %}
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="OC底层原理," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="思考：  iOS 用什么方式实现对一个对象的 KVO？(KVO的本质是什么？)   如何手动触发 KVO ？   直接修改成员变量会触发 KVO 么？   通过 KVC 修改属性会触发 KVO 么？  KVC 的赋值和取值过程是怎样的？原理是什么？">
+<meta name="keywords" content="OC底层原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KVO">
+<meta property="og:url" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/index.html">
+<meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="思考：  iOS 用什么方式实现对一个对象的 KVO？(KVO的本质是什么？)   如何手动触发 KVO ？   直接修改成员变量会触发 KVO 么？   通过 KVC 修改属性会触发 KVO 么？  KVC 的赋值和取值过程是怎样的？原理是什么？">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/KVO01.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/KVO02.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/KVO03.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/KVO04.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/KVO05.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/KVO07.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_05.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_06.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_01.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_02.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_03.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_04.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/KVO06.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_07.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_08.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_09.png">
+<meta property="og:updated_time" content="2020-08-20T08:45:22.692Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="KVO">
+<meta name="twitter:description" content="思考：  iOS 用什么方式实现对一个对象的 KVO？(KVO的本质是什么？)   如何手动触发 KVO ？   直接修改成员变量会触发 KVO 么？   通过 KVC 修改属性会触发 KVO 么？  KVC 的赋值和取值过程是怎样的？原理是什么？">
+<meta name="twitter:image" content="http://yoursite.com/2020/05/13/OC底层/原理/KVO/KVO01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/05/13/OC底层/原理/KVO/"/>
+
+
+
+
+
+  <title>KVO | Kevin's  blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a073c6e38282486853e19b272e9e7c34";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's  blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/13/OC底层/原理/KVO/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">KVO</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-13T14:59:58+08:00">
+                2020-05-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>思考：</p>
+<ul>
+<li>iOS 用什么方式实现对一个对象的 KVO？(KVO的本质是什么？)  </li>
+<li>如何手动触发 KVO ？  </li>
+<li>直接修改成员变量会触发 KVO 么？  </li>
+<li>通过 KVC 修改属性会触发 KVO 么？ </li>
+<li>KVC 的赋值和取值过程是怎样的？原理是什么？  </li>
+</ul>
+<a id="more"></a>
+<h1 id="KVO-监听"><a href="#KVO-监听" class="headerlink" title="KVO 监听"></a>KVO 监听</h1><p>KVO 的全称是 Key-Value Observing，俗称“键值监听”，可以用于监听某个对象属性值的改变。<br><img src="/2020/05/13/OC底层/原理/KVO/KVO01.png" alt="isa和superclass"></p>
+<p>定义 Person、Observer<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">assign</span>, <span class="keyword">nonatomic</span>) <span class="keyword">int</span> age;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></div><div class="line">- (<span class="keyword">void</span>)setAge:(<span class="keyword">int</span>)age</div><div class="line">&#123;</div><div class="line">    _age = age;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"setAge: - %d"</span>, age);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Observer</span> : <span class="title">NSObject</span></span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Observer</span></span></div><div class="line">- (<span class="keyword">void</span>)observeValueForKeyPath:(<span class="built_in">NSString</span> *)keyPath ofObject:(<span class="keyword">id</span>)object change:(<span class="built_in">NSDictionary</span>&lt;<span class="built_in">NSKeyValueChangeKey</span>,<span class="keyword">id</span>&gt; *)change context:(<span class="keyword">void</span> *)context</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"observeValueForKeyPath - %@"</span>, change);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        Observer *observer = [[Observer alloc] init];</div><div class="line">        Person *person1 = [[Person alloc] init];</div><div class="line">        Person *person2 = [[Person alloc] init];</div><div class="line">        </div><div class="line">        [person1 addObserver:observer forKeyPath:<span class="string">@"age"</span> options:<span class="built_in">NSKeyValueObservingOptionNew</span> | <span class="built_in">NSKeyValueObservingOptionOld</span> context:<span class="literal">NULL</span>];</div><div class="line">        </div><div class="line">        [person1 setAge:<span class="number">10</span>];</div><div class="line">        [person2 setAge:<span class="number">20</span>];</div><div class="line"></div><div class="line">        [person1 removeObserver:observer forKeyPath:<span class="string">@"age"</span>];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">observeValueForKeyPath</span> - &#123;</div><div class="line">    <span class="attribute">kind</span> = <span class="number">1</span>;</div><div class="line">    <span class="attribute">new</span> = <span class="number">10</span>;</div><div class="line">    <span class="attribute">old</span> = <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>person2 和 person1 拥有同一个类对象，修改属性 age 时调用的是同一个类对象里的对象方法 <code>-(void)setAge</code>。</p>
+<h2 id="未使用-KVO-监听的对象"><a href="#未使用-KVO-监听的对象" class="headerlink" title="未使用 KVO 监听的对象"></a>未使用 KVO 监听的对象</h2><ul>
+<li>思考：person2 修改 age 时为什么在 Observer 里没有打印？  </li>
+</ul>
+<p>因为 person2 没有使用 KVO 监听，修改属性 age 时调用的是 Person 类对象里的对象方法 <code>-(void)setAge</code>，所以在 Observer 里没有打印。</p>
+<p><img src="/2020/05/13/OC底层/原理/KVO/KVO02.png" alt="isa和superclass"></p>
+<h2 id="使用了-KVO-监听的对象"><a href="#使用了-KVO-监听的对象" class="headerlink" title="使用了 KVO 监听的对象"></a>使用了 KVO 监听的对象</h2><p>打印 person1、person2 类对象：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"person1添加KVO之前 - %@"</span>, object_getClass(person1));</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"person1添加KVO之前 - %@"</span>, object_getClass(person2));</div><div class="line"></div><div class="line">[person1 addObserver:observer forKeyPath:<span class="string">@"age"</span> options:<span class="built_in">NSKeyValueObservingOptionNew</span> | <span class="built_in">NSKeyValueObservingOptionOld</span> context:<span class="literal">NULL</span>];</div><div class="line">        </div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"person1添加KVO之后 - %@"</span>, object_getClass(person1));</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"person1添加KVO之后 - %@"</span>, object_getClass(person2));</div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">person1添加KVO之前 - <span class="keyword">Person</span></div><div class="line">person1添加KVO之前 - <span class="keyword">Person</span></div><div class="line">person1添加KVO之后 - NSKVONotifying_Person</div><div class="line">person1添加KVO之后 - <span class="keyword">Person</span></div></pre></td></tr></table></figure></p>
+<p>从打印结果看出，因为 person1 使用了 KVO 监听，所以系统通过 runtime 生成了一个NSKVONotifying_Person 对象，所以 person1 修改属性 age 时调用的是 生成了一个NSKVONotifying_Person 类对象里的对象方法 <code>-(void)setAge</code>。  </p>
+<h3 id="NSKVONotifying-Person-类对象"><a href="#NSKVONotifying-Person-类对象" class="headerlink" title="NSKVONotifying_Person 类对象"></a>NSKVONotifying_Person 类对象</h3><p><img src="/2020/05/13/OC底层/原理/KVO/KVO03.png" alt="isa和superclass"></p>
+<p>打印对象方法 <code>-(void)setAge</code> 的地址：<br><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">NSLog</span>(@<span class="string">"person1添加KVO之前 - %p %p"</span>, [person <span class="attribute">methodForSelector</span>:<span class="variable">@selector</span>(<span class="attribute">setAge</span>:)], [person1 <span class="attribute">methodForSelector</span>:<span class="variable">@selector</span>(<span class="attribute">setAge</span>:)]);</div><div class="line"></div><div class="line"><span class="selector-attr">[person1 addObserver:observer forKeyPath:@"age" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL]</span>;</div><div class="line"></div><div class="line"><span class="selector-tag">NSLog</span>(@<span class="string">"person1添加KVO之后 - %p %p"</span>, [person <span class="attribute">methodForSelector</span>:<span class="variable">@selector</span>(<span class="attribute">setAge</span>:)], [person1 <span class="attribute">methodForSelector</span>:<span class="variable">@selector</span>(<span class="attribute">setAge</span>:)]);</div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">person1添加KVO之前 - <span class="number">0x100001cf</span>0 <span class="number">0x100001cf</span>0</div><div class="line">person1添加KVO之后 - <span class="number">0x7fff304af</span>a0b <span class="number">0x100001cf</span>0</div></pre></td></tr></table></figure></p>
+<p>从打印结果看出，person1 添加 KVO 监听前后，对象方法 <code>-(void)setAge</code> 的地址变了。</p>
+<p>打印地址对应的方法名：<br><figure class="highlight gcode"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">(lldb)</span> p <span class="comment">(IMP)</span><span class="number">0</span>x<span class="number">100001</span>cf<span class="number">0</span></div><div class="line"><span class="comment">(IMP)</span> $<span class="number">0</span> = <span class="number">0</span>x<span class="number">0000000100001</span>cf<span class="number">0</span> <span class="comment">(Interview01-KVC`-[Person setAge:] at Person.h:16)</span></div><div class="line"><span class="comment">(lldb)</span> p <span class="comment">(IMP)</span><span class="number">0</span>x<span class="number">7</span>fff<span class="number">304</span>afa<span class="number">0</span>b</div><div class="line"><span class="comment">(IMP)</span> $<span class="number">1</span> = <span class="number">0</span>x<span class="number">00007</span>fff<span class="number">304</span>afa<span class="number">0</span>b <span class="comment">(Foundation`_NSSetIntValueAndNotify)</span></div></pre></td></tr></table></figure></p>
+<p>从打印结果看出，person1 添加 KVO 监听后，修改 age 时调用的是 Foundation 框架里的  _NSSetIntValueAndNotify 方法。</p>
+<h3 id="NSSetIntValueAndNotify-方法"><a href="#NSSetIntValueAndNotify-方法" class="headerlink" title="_NSSetIntValueAndNotify 方法"></a>_NSSetIntValueAndNotify 方法</h3><p>_NSSetIntValueAndNotify 方法实现猜想：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)<span class="string">setAge:</span>(<span class="keyword">int</span>)age &#123;</div><div class="line">    _NSSetIntValueAndNotify();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">void</span> _NSSetIntValueAndNotify </div><div class="line">&#123;</div><div class="line">    [self <span class="string">willChangeValueForKey:</span>@<span class="string">"age"</span>];</div><div class="line">    [<span class="keyword">super</span> <span class="string">setAge:</span>age];</div><div class="line">    [self <span class="string">didChagneValueForKey:</span>@<span class="string">"age"</span>];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)<span class="string">didChagneValueForKey:</span>(NSString *)key</div><div class="line">&#123;</div><div class="line">    <span class="comment">// 通知监听器，某属性值发生了改变</span></div><div class="line">    [observer <span class="string">observeValueForKeyPath:</span>key <span class="string">ofObject:</span>nil <span class="string">change:</span>nil <span class="string">context:</span>nil];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>查看 _NSSet*AndNotify 的存在：<br><img src="/2020/05/13/OC底层/原理/KVO/KVO04.png" alt="isa和superclass"></p>
+<p>_NSSet*ValueAndNotify 的内部实现：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> _NSSet*ValueAndNotify </div><div class="line">&#123;</div><div class="line">    [<span class="meta">self willChangeValueForKey:@<span class="meta-string">"key"</span></span>];</div><div class="line">    <span class="comment">// 原来的 setter 实现</span></div><div class="line">    [<span class="meta">self didChagneValueForKey:@<span class="meta-string">"key"</span></span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>调用 <code>willChangeValueForKey:</code>  </li>
+<li>调用原来的 setter 实现  </li>
+<li>调用 <code>didChangeValueForKey:</code>，其内部会调用 observer 的 <code>observeValueForKeyPath:ofObject:change:context:</code> 方法</li>
+</ul>
+<h3 id="NSKVONotifying-Person-元类对象"><a href="#NSKVONotifying-Person-元类对象" class="headerlink" title="NSKVONotifying_Person 元类对象"></a>NSKVONotifying_Person 元类对象</h3><p>打印 person1 的元类对象：<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">NSLog(@<span class="string">"person1添加KVO之后，类对象 - %@, %@"</span>, object_getClass(<span class="name">person1</span>), object_getClass(<span class="name">person2</span>))<span class="comment">;</span></div><div class="line">NSLog(@<span class="string">"person1添加KVO之后，元类对象 - %@, %@"</span>, object_getClass(<span class="name">object_getClass</span>(<span class="name">person1</span>)), object_getClass(<span class="name">object_getClass</span>(<span class="name">person2</span>)))<span class="comment">;</span></div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">person1添加KVO之后，类对象 - NSKVONotifying_Person, <span class="keyword">Person</span></div><div class="line">person1添加KVO之后，元类对象 - NSKVONotifying_Person, <span class="keyword">Person</span></div></pre></td></tr></table></figure></p>
+<p>NSKVONotifying_Person 类对象的 isa 指针指向的是 NSKVONotifying_Person 元类对象。</p>
+<h3 id="修改成员变量的值是否会触发-KVO"><a href="#修改成员变量的值是否会触发-KVO" class="headerlink" title="修改成员变量的值是否会触发 KVO"></a>修改成员变量的值是否会触发 KVO</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@interface</span> <span class="string">MJPerson :</span> NSObject</div><div class="line">&#123;</div><div class="line">    <span class="meta">@public</span></div><div class="line">    <span class="keyword">int</span> _age;</div><div class="line">&#125;</div><div class="line"><span class="meta">@end</span></div><div class="line"></div><div class="line"><span class="meta">@implementation</span> MJPerson</div><div class="line"><span class="meta">@end</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, const <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="meta">@autoreleasepool</span> &#123;</div><div class="line">        MJObserver *observer = [[MJObserver alloc] init];</div><div class="line">        MJPerson *person = [[MJPerson alloc] init];</div><div class="line">        </div><div class="line">        [person <span class="string">addObserver:</span>observer <span class="string">forKeyPath:</span>@<span class="string">"age"</span> <span class="string">options:</span>NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld <span class="string">context:</span>NULL];</div><div class="line"></div><div class="line">        person-&gt;_age = <span class="number">10</span>;</div><div class="line"></div><div class="line">        [person <span class="string">removeObserver:</span>observer <span class="string">forKeyPath:</span>@<span class="string">"age"</span>];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>运行后并没有出现打印。虽然 person 添加了 KVO 监听，但是修改 age 时并没有调用 <code>-(void)setAge</code> 方法。</p>
+<h1 id="KVC"><a href="#KVC" class="headerlink" title="KVC"></a>KVC</h1><p>KVC 的全称是 Key-Value Coding，俗称“键值编码”，可以通过一个 key 来访问某个属性。常见的API有：<br><figure class="highlight erlang"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- <span class="params">(void)</span>setValue:<span class="params">(id)</span>value forKeyPath:<span class="params">(NSString *)</span>keyPath;</div><div class="line">- <span class="params">(void)</span>setValue:<span class="params">(id)</span>value forKey:<span class="params">(NSString *)</span>key;</div><div class="line">- <span class="params">(id)</span>valueForKeyPath:<span class="params">(NSString *)</span>keyPath;</div><div class="line">- <span class="params">(id)</span>valueForKey:<span class="params">(NSString *)</span>key;</div></pre></td></tr></table></figure></p>
+<h2 id="setValue-forKey-原理"><a href="#setValue-forKey-原理" class="headerlink" title="setValue: forKey: 原理"></a>setValue: forKey: 原理</h2><p><img src="/2020/05/13/OC底层/原理/KVO/KVO05.png" alt="isa和superclass"></p>
+<p>定义 Person：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">@public</span></div><div class="line">    <span class="keyword">int</span> _age;</div><div class="line">    <span class="keyword">int</span> _isAge;</div><div class="line">    <span class="keyword">int</span> age;</div><div class="line">    <span class="keyword">int</span> isAge;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></div><div class="line">- (<span class="keyword">void</span>)setAge:(<span class="keyword">int</span>)age</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"setAge: - %d"</span>, age);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)_setAge:(<span class="keyword">int</span>)age</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"_setAge: - %d"</span>, age);</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (<span class="built_in">BOOL</span>)accessInstanceVariablesDirectly</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> <span class="literal">YES</span>; <span class="comment">//默认的返回值就是YES（YES表示可以访问成员变量）</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<p>通过你 kvc 修改 age 的值：<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">Person</span> *<span class="keyword">person</span> = <span class="comment">[<span class="comment">[Person alloc]</span> init]</span>;</div><div class="line"><span class="comment">[person setValue:@10 forKey:@"age"]</span>;</div></pre></td></tr></table></figure></p>
+<p>依次注释掉 <code>setAge:</code>、<code>_setAge:</code> 方法，可以发现 <code>setValue:forKey:</code> 会优先调用 <code>setAge:</code>，<code>setAge:</code> 不存在时会调用 <code>_setAge:</code> 方法。如果 <code>setAge:</code> 和 <code>_setAge:</code> 都不存在时，会调用 <code>+(BOOL)accessInstanceVariablesDirectly</code> 方法判断是否可以访问成员变量。</p>
+<p>打断点后，可以在控制台看到 _age、_isAge、age、isAge 被依次赋值：<br><img src="/2020/05/13/OC底层/原理/KVO/KVO07.png" alt="isa和superclass"></p>
+<h2 id="KVC-触发-KVO"><a href="#KVC-触发-KVO" class="headerlink" title="KVC 触发 KVO"></a>KVC 触发 KVO</h2><p>定义 Person：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@interface</span> <span class="string">Person :</span> NSObject</div><div class="line">&#123;</div><div class="line">    <span class="meta">@public</span></div><div class="line">    <span class="keyword">int</span> age;</div><div class="line">&#125;</div><div class="line"><span class="meta">@end</span></div><div class="line"></div><div class="line"><span class="meta">@implementation</span> Person</div><div class="line">- (<span class="keyword">void</span>)<span class="string">willChangeValueForKey:</span>(NSString *)key</div><div class="line">&#123;</div><div class="line">    [<span class="keyword">super</span> <span class="string">willChangeValueForKey:</span>key];</div><div class="line">    NSLog(@<span class="string">"willChangeValueForKey - %@"</span>, key);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)<span class="string">didChangeValueForKey:</span>(NSString *)key</div><div class="line">&#123;</div><div class="line">    NSLog(@<span class="string">"didChangeValueForKey - begin - %@"</span>, key);</div><div class="line">    [<span class="keyword">super</span> <span class="string">didChangeValueForKey:</span>key];</div><div class="line">    NSLog(@<span class="string">"didChangeValueForKey - end - %@"</span>, key);</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (BOOL)accessInstanceVariablesDirectly</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> YES; <span class="comment">//默认的返回值就是YES（YES表示可以访问成员变量）</span></div><div class="line">&#125;</div><div class="line"><span class="meta">@end</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, const <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="meta">@autoreleasepool</span> &#123;</div><div class="line">        MJObserver *observer = [[MJObserver alloc] init];</div><div class="line">        MJPerson *person = [[MJPerson alloc] init];</div><div class="line">        </div><div class="line">        [person <span class="string">addObserver:</span>observer <span class="string">forKeyPath:</span>@<span class="string">"age"</span> <span class="string">options:</span>NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld <span class="string">context:</span>NULL];</div><div class="line"></div><div class="line">        [person <span class="string">setValue:</span>@<span class="number">10</span> <span class="string">forKey:</span>@<span class="string">"age"</span>];</div><div class="line"></div><div class="line">        [person <span class="string">removeObserver:</span>observer <span class="string">forKeyPath:</span>@<span class="string">"age"</span>];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">willChangeValueForKey - age</div><div class="line"><span class="keyword">didChangeValueForKey </span>- <span class="keyword">begin </span>- age</div><div class="line">observeValueForKeyPath - &#123;</div><div class="line">    kind = <span class="number">1</span><span class="comment">;</span></div><div class="line">    new = <span class="number">10</span><span class="comment">;</span></div><div class="line">    old = <span class="number">0</span><span class="comment">;</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">didChangeValueForKey </span>- end - age</div></pre></td></tr></table></figure></p>
+<h3 id="setKey-和-setKey-存在"><a href="#setKey-和-setKey-存在" class="headerlink" title="setKey 和 _setKey 存在"></a>setKey 和 _setKey 存在</h3><p>添加 KVO 监听时会调用一次 <code>+(BOOL)accessInstanceVariablesDirectly</code>， 调用 <code>setValue:forKey:</code> 时会调用一次 <code>+(BOOL)accessInstanceVariablesDirectly</code>，再去调用 <code>willChangeValueForKey</code> 和 <code>didChangeValueForKey</code>。 </p>
+<p>添加 KVO 监听第一次调用 accessInstanceVariablesDirectly 方法：<br><img src="/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_05.png" alt="isa和superclass"><br>setValue:forKey: 第一次调用 accessInstanceVariablesDirectly 方法：<br><img src="/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_06.png" alt="isa和superclass"></p>
+<h3 id="setKey-和-setKey-不存在"><a href="#setKey-和-setKey-不存在" class="headerlink" title="setKey 和 _setKey 不存在"></a>setKey 和 _setKey 不存在</h3><p>添加 KVO 监听时会调用两次 <code>+ (BOOL)accessInstanceVariablesDirectly</code>， 调用 <code>setValue:forKey:</code> 时会调用两次 <code>+ (BOOL)accessInstanceVariablesDirectly</code>，再去调用 <code>willChangeValueForKey</code> 和 <code>didChangeValueForKey</code>。 </p>
+<p>添加 KVO 监听第一次调用 accessInstanceVariablesDirectly 方法：<br><img src="/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_01.png" alt="isa和superclass"><br>添加 KVO 监听第二次调用 accessInstanceVariablesDirectly 方法：<br><img src="/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_02.png" alt="isa和superclass"><br>setValue:forKey: 第一次调用 accessInstanceVariablesDirectly 方法：<br><img src="/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_03.png" alt="isa和superclass"><br>setValue:forKey: 第二次调用 accessInstanceVariablesDirectly 方法：<br><img src="/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_04.png" alt="isa和superclass"></p>
+<h2 id="valueForKey-原理"><a href="#valueForKey-原理" class="headerlink" title="valueForKey: 原理"></a>valueForKey: 原理</h2><p><img src="/2020/05/13/OC底层/原理/KVO/KVO06.png" alt="isa和superclass"></p>
+<p>定义 Person：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">@public</span></div><div class="line">    <span class="keyword">int</span> _age;</div><div class="line">    <span class="keyword">int</span> _isAge;</div><div class="line">    <span class="keyword">int</span> age;</div><div class="line">    <span class="keyword">int</span> isAge;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></div><div class="line">- (<span class="keyword">int</span>)getAge</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> <span class="number">11</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">int</span>)age</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> <span class="number">12</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">int</span>)isAge</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> <span class="number">13</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">int</span>)_age</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> <span class="number">14</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<p>依次注释掉 <code>- (int)getAge</code>、<code>- (int)age</code>、<code>- (int)isAge</code>、<code>- (int)_age</code> 方法，从打印结果可以发现，<code>setValue:forKey:</code> 方法会优先调用 <code>- (void)setAge:(int)age</code>，<code>- (void)setAge:(int)age</code> 不存在时会调用 <code>- (void)_setAge:(int)age</code> 方法，以此类推。</p>
+<h3 id="setKey-和-setKey-存在-1"><a href="#setKey-和-setKey-存在-1" class="headerlink" title="setKey 和 _setKey 存在"></a>setKey 和 _setKey 存在</h3><p>添加 KVO 监听第一次调用 accessInstanceVariablesDirectly 方法：<br><img src="/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_07.png" alt="isa和superclass"></p>
+<h3 id="setKey-和-setKey-不存在-1"><a href="#setKey-和-setKey-不存在-1" class="headerlink" title="setKey 和 _setKey 不存在"></a>setKey 和 _setKey 不存在</h3><p>添加 KVO 监听第一次调用 accessInstanceVariablesDirectly 方法：<br><img src="/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_08.png" alt="isa和superclass"><br>valueForKey: 第一次调用 accessInstanceVariablesDirectly 方法：<br><img src="/2020/05/13/OC底层/原理/KVO/accessInstanceVariablesDirectly_09.png" alt="isa和superclass"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li>iOS 用什么方式实现对一个对象的 KVO？(KVO的本质是什么？)<br>利用 RuntimeAPI 动态生成一个子类，并且让 instance 对象的 isa 指向这个全新的子类。<br>当修改 instance 对象的属性时，会调用 Foundation 的 _NSSetXXXValueAndNotify 函数：  <figure class="highlight avrasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">willChangeValueForKey:</span></div><div class="line">父类原来的setter</div><div class="line"><span class="symbol">didChangeValueForKey:</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>didChangeValueForKey: 内部会触发监听器（Oberser）的监听方法( observeValueForKeyPath:ofObject:change:context:）</p>
+<ul>
+<li><p>如何手动触发 KVO ？<br>手动调用 willChangeValueForKey: 和 didChangeValueForKey:  </p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">willChangeValueForKey:</span></div><div class="line">person-&gt;age = <span class="number">10</span><span class="comment">;</span></div><div class="line"><span class="symbol">didChangeValueForKey:</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>直接修改成员变量会触发 KVO 么？<br>不会触发，修改 age 时并没有调用 -(void)setAge 方法。</p>
+</li>
+<li><p>通过 KVC 修改属性会触发 KVO 么？<br>会触发KVO。通过KVC修改属性会调用 willChangeValueForKey: 和 didChangeValueForKey: 方法，而 didChangeValueForKey: 方法内部会触发 KVO 监听。  </p>
+</li>
+<li><p>KVC 的赋值和取值过程是怎样的？原理是什么？<br>赋值：<code>setValue:forKey:</code> 会按照 <code>setKey:</code>/<code>_setKey:</code> 顺序查找方法，如果方法存在，直接调用方法赋值。如果方法不存在，会调用 <code>accessInstanceVariablesDirectly</code> 方法，判断是否可以访问成员变量。如果可以，会按照 <code>_key</code>/<code>_isKey</code>/<code>key</code>/<code>isKsy</code> 顺序查找成员变量，找到后赋值。如果不可以访问成员变量，或者成员变量不存在，就会调用 <code>setValue:forUndefinedKey:</code> 并抛出异常 NSUnknownKeyException。  </p>
+<p>取值：<code>valueForKey:</code> 会按照 <code>getKey</code>/<code>key</code>/<code>isKey</code>/<code>_key</code> 顺序查找方法，如果方法存在，直接调用方法取值。如果方法不存在，会调用 <code>accessInstanceVariablesDirectly</code> 方法，判断是否可以访问成员变量。会按照 <code>_key</code>/<code>_isKey</code>/<code>key</code>/<code>isKsy</code> 顺序查找成员变量，找到成员变量后取值。如果不可以访问成员变量，或者成员变量不存在，就会调用 <code>valueForUndefinedKey:</code> 并抛出异常 NSUnknownKeyException。  </p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OC底层原理/" rel="tag"># OC底层原理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/11/OC底层/原理/isa和superclass/" rel="next" title="isa和superclass">
+                <i class="fa fa-chevron-left"></i> isa和superclass
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/18/OC底层/原理/Category的实现原理/" rel="prev" title="Category 的实现原理">
+                Category 的实现原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
 
     <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+      
     </div>
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+          </div>
+          
 
-{% block script_extra %}{% endblock %}
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/myAvatar.gif"
+              alt="Kevin" />
+          
+            <p class="site-author-name" itemprop="name">Kevin</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KevinYangGit" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yangqioffice@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_YangQI" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.cnblogs.com/mjios" title="M了个J" target="_blank">M了个J</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#KVO-监听"><span class="nav-number">1.</span> <span class="nav-text">KVO 监听</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#未使用-KVO-监听的对象"><span class="nav-number">1.1.</span> <span class="nav-text">未使用 KVO 监听的对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用了-KVO-监听的对象"><span class="nav-number">1.2.</span> <span class="nav-text">使用了 KVO 监听的对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NSKVONotifying-Person-类对象"><span class="nav-number">1.2.1.</span> <span class="nav-text">NSKVONotifying_Person 类对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSSetIntValueAndNotify-方法"><span class="nav-number">1.2.2.</span> <span class="nav-text">_NSSetIntValueAndNotify 方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSKVONotifying-Person-元类对象"><span class="nav-number">1.2.3.</span> <span class="nav-text">NSKVONotifying_Person 元类对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改成员变量的值是否会触发-KVO"><span class="nav-number">1.2.4.</span> <span class="nav-text">修改成员变量的值是否会触发 KVO</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KVC"><span class="nav-number">2.</span> <span class="nav-text">KVC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#setValue-forKey-原理"><span class="nav-number">2.1.</span> <span class="nav-text">setValue: forKey: 原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KVC-触发-KVO"><span class="nav-number">2.2.</span> <span class="nav-text">KVC 触发 KVO</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#setKey-和-setKey-存在"><span class="nav-number">2.2.1.</span> <span class="nav-text">setKey 和 _setKey 存在</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#setKey-和-setKey-不存在"><span class="nav-number">2.2.2.</span> <span class="nav-text">setKey 和 _setKey 不存在</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#valueForKey-原理"><span class="nav-number">2.3.</span> <span class="nav-text">valueForKey: 原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#setKey-和-setKey-存在-1"><span class="nav-number">2.3.1.</span> <span class="nav-text">setKey 和 _setKey 存在</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#setKey-和-setKey-不存在-1"><span class="nav-number">2.3.2.</span> <span class="nav-text">setKey 和 _setKey 不存在</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="/js/src/md5.min.js"></script>
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: '82b6ced795961ee1fcca',
+      clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
+      repo: 'KevinYangGit.github.io',
+      owner: 'KevinYangGit',
+      admin: ['KevinYangGit'],
+      id: md5(location.pathname),
+      distractionFreeMode: 'true'
+    })
+    gitalk.render('gitalk-container')
+  </script>
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
