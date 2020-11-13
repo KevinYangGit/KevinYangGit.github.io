@@ -1,35 +1,785 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+  
 
 
-{% block content %}
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数据结构与算法," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="斐波那契数 &amp;amp; 算法的评估 &amp;amp; 时间复杂度的估算 &amp;amp; 大O表示法 &amp;amp; 斐波那契数复杂度分析">
+<meta name="keywords" content="数据结构与算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="复杂度">
+<meta property="og:url" content="http://yoursite.com/2020/10/09/数据结构与算法/复杂度/index.html">
+<meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="斐波那契数 &amp;amp; 算法的评估 &amp;amp; 时间复杂度的估算 &amp;amp; 大O表示法 &amp;amp; 斐波那契数复杂度分析">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2020/10/09/数据结构与算法/复杂度/复杂度01.png">
+<meta property="og:image" content="http://yoursite.com/2020/10/09/数据结构与算法/复杂度/复杂度02.png">
+<meta property="og:image" content="http://yoursite.com/2020/10/09/数据结构与算法/复杂度/复杂度03.png">
+<meta property="og:image" content="http://yoursite.com/2020/10/09/数据结构与算法/复杂度/复杂度04.png">
+<meta property="og:image" content="http://yoursite.com/2020/10/09/数据结构与算法/复杂度/复杂度05.png">
+<meta property="og:image" content="http://yoursite.com/2020/10/09/数据结构与算法/复杂度/复杂度06.png">
+<meta property="og:updated_time" content="2020-10-14T09:45:31.836Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="复杂度">
+<meta name="twitter:description" content="斐波那契数 &amp;amp; 算法的评估 &amp;amp; 时间复杂度的估算 &amp;amp; 大O表示法 &amp;amp; 斐波那契数复杂度分析">
+<meta name="twitter:image" content="http://yoursite.com/2020/10/09/数据结构与算法/复杂度/复杂度01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/10/09/数据结构与算法/复杂度/"/>
+
+
+
+
+
+  <title>复杂度 | Kevin's  blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a073c6e38282486853e19b272e9e7c34";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's  blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
 
   <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/09/数据结构与算法/复杂度/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">复杂度</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-10-09T10:27:38+08:00">
+                2020-10-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>斐波那契数 &amp; 算法的评估 &amp; 时间复杂度的估算 &amp; 大O表示法 &amp; 斐波那契数复杂度分析<br><a id="more"></a></p>
+<h1 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h1><p><a href="https://baike.baidu.com/item/%E7%AE%97%E6%B3%95/209025?fr=aladdin" target="_blank" rel="external">算法</a>是用于解决特定问题的一系列的执行步骤。如：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 计算a跟b的和</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">plus</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> a + b;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 计算1+2+3+...+n的和</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">sum</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> result = <span class="number">0</span>;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</div><div class="line">        result += i;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="例一"><a href="#例一" class="headerlink" title="例一"></a>例一</h1><p>使用不同的算法解决同一个问题，效率可能相差非常大。如：求第n个斐波那契数。</p>
+<p>👉 斐波那契数列又称黄金分割数列，指的是这样一个数列：0、1、1、2、3、5、8、13、21、34、…… 在数学上，斐波那契数列以如下被以递推的方法定义：F(0)=0，F(1)=1, F(n)=F(n - 1)+F(n - 2)（n ≥ 3，n ∈ N*）。</p>
+<p>方式一：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">fib1</span>(<span class="params"><span class="keyword">int</span> n</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (n &lt;= <span class="number">1</span>) <span class="keyword">return</span> n;</div><div class="line">    <span class="keyword">return</span> fib1(n - <span class="number">1</span>) + fib1(n - <span class="number">2</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>) </span>&#123;</div><div class="line">    System.<span class="keyword">out</span>.println(fib1(<span class="number">1</span>));</div><div class="line">    System.<span class="keyword">out</span>.println(fib1(<span class="number">2</span>));</div><div class="line">    System.<span class="keyword">out</span>.println(fib1(<span class="number">3</span>));</div><div class="line">    System.<span class="keyword">out</span>.println(fib1(<span class="number">4</span>));</div><div class="line">    System.<span class="keyword">out</span>.println(fib1(<span class="number">64</span>));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="number">1</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">3</span></div></pre></td></tr></table></figure></p>
+<p>从打印结果可以看到，第1、2、3、4个斐波那契数能够正常打印，而第64个斐波那契数却无法正常打印。</p>
+<p>方式二：<br><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment">* 下标：0 1 2 3 4 5 6 7</span></div><div class="line"><span class="comment">* 数值：0 1 1 2 3 5 8 13 ...</span></div><div class="line"><span class="comment">*/</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">int</span> fib2(<span class="built_in">int</span> n) &#123;</div><div class="line">    <span class="keyword">if</span> (n &lt;= <span class="number">1</span>) <span class="keyword">return</span> n;</div><div class="line">    </div><div class="line">    <span class="built_in">int</span> first = <span class="number">0</span>;</div><div class="line">    <span class="built_in">int</span> <span class="built_in">second</span> = <span class="number">1</span>;</div><div class="line">    <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++) &#123;</div><div class="line">        <span class="built_in">int</span> sum = first + <span class="built_in">second</span>;</div><div class="line">        first = <span class="built_in">second</span>;</div><div class="line">        <span class="built_in">second</span> = sum;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">second</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="keyword">String</span>[] args) &#123;</div><div class="line">    System.out.<span class="built_in">println</span>(fib2(<span class="number">64</span>));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight dns"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="number">695895453</span></div></pre></td></tr></table></figure></p>
+<h1 id="算法的评估"><a href="#算法的评估" class="headerlink" title="算法的评估"></a>算法的评估</h1><h2 id="事后统计法"><a href="#事后统计法" class="headerlink" title="事后统计法"></a>事后统计法</h2><p>如果单从执行效率上进行评估，可以比较不同算法对同一组输入的执行处理时间，这种方案也叫作：事后统计法。</p>
+<ul>
+<li>优点：<br>从执行处理时间可以直观的看出来算法的优劣；</li>
+<li>缺点：<br>执行时间严重依赖硬件以及运行时葛总不确定的环境因素；<br>必须编写相应的测算代码（Times）；<br>测试数据的选择比较难保证公正性；</li>
+</ul>
+<p>使用自定义工具 Times 查看两种实现方式的执行时间：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(String[] args) &#123;</div><div class="line">    <span class="keyword">int</span> n = <span class="number">44</span>;</div><div class="line"></div><div class="line">    <span class="keyword">Times</span>.test(<span class="string">"fib1"</span>, <span class="keyword">new</span> <span class="keyword">Task</span>() &#123;</div><div class="line">        <span class="keyword">public</span> <span class="keyword">void</span> execute() &#123;</div><div class="line">            System.out.<span class="keyword">println</span>(fib1(n));</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    <span class="keyword">Times</span>.test(<span class="string">"fib2"</span>, <span class="keyword">new</span> <span class="keyword">Task</span>() &#123;</div><div class="line">        <span class="keyword">public</span> <span class="keyword">void</span> execute() &#123;</div><div class="line">            System.out.<span class="keyword">println</span>(fib2(n));</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">695895453</div><div class="line">【fib1】</div><div class="line">开始：17:58:32.163</div><div class="line">-298632863</div><div class="line">结束：17:59:19.046</div><div class="line">耗时：46.883秒</div><div class="line">-------------------------------------</div><div class="line">【fib2】</div><div class="line">开始：17:59:19.047</div><div class="line">-1109825406</div><div class="line">结束：17:59:19.047</div><div class="line">耗时：0.0秒</div><div class="line">-------------------------------------</div></pre></td></tr></table></figure></p>
+<p>从打印结果可以看到，fib1 是非常耗时的，而 fib2 在同样的数据条件下，执行时间基本为0。</p>
+<h2 id="算法的优劣"><a href="#算法的优劣" class="headerlink" title="算法的优劣"></a>算法的优劣</h2><p>一般从以下维度评估算法的优劣：  </p>
+<ul>
+<li>正确性、可读性、健壮性（对不合理输入的反应能力和处理能力）。</li>
+<li>时间复杂度（time complexity）：估算程序指令的执行次数（执行时间）。</li>
+<li>空间复杂度（space complexity）：估算所需占用的存储空间。</li>
+</ul>
+<h1 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h1><p>[时间复杂度]（<a href="https://baike.baidu.com/item/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E6%80%A7/5930669?fromtitle=%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6&amp;fromid=1894057&amp;fr=aladdin）：在计算机科学中，时间复杂性，又称时间复杂度，算法的时间复杂度是一个函数，它定性描述该算法的运行时间。这是一个代表算法输入值的字符串的长度的函数。时间复杂度常用大O符号表述，不包括这个函数的低阶项和首项系数。使用这种方式时，时间复杂度可被称为是渐近的，亦即考察输入值大小趋近无穷时的情况。" target="_blank" rel="external">https://baike.baidu.com/item/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E6%80%A7/5930669?fromtitle=%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6&amp;fromid=1894057&amp;fr=aladdin）：在计算机科学中，时间复杂性，又称时间复杂度，算法的时间复杂度是一个函数，它定性描述该算法的运行时间。这是一个代表算法输入值的字符串的长度的函数。时间复杂度常用大O符号表述，不包括这个函数的低阶项和首项系数。使用这种方式时，时间复杂度可被称为是渐近的，亦即考察输入值大小趋近无穷时的情况。</a></p>
+<h2 id="大O表示法"><a href="#大O表示法" class="headerlink" title="大O表示法"></a>大O表示法</h2><p>一般用大O表示法来描述复杂度，它表示的是数据规模 n 对应的复杂度。  </p>
+<p><a href="https://baike.baidu.com/item/%E5%A4%A7O%E8%A1%A8%E7%A4%BA%E6%B3%95/1851162?fr=aladdin" target="_blank" rel="external">大O表示法</a>：算法的时间复杂度通常用大O符号表述，定义为T[n] = O(f(n))。称函数T(n)以f(n)为界或者称T(n)受限于f(n)。 如果一个问题的规模是n，解这一问题的某一算法所需要的时间为T(n)。T(n)称为这一算法的“时间复杂度”。当输入量n逐渐加大时，时间复杂度的极限情形称为算法的“渐近时间复杂度”。</p>
+<p>使用大O表示法时会忽略常数、系数、低阶，如：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="number">9</span> &gt;&gt; O(<span class="number">1</span>)</div><div class="line"><span class="number">2</span>*n + <span class="number">3</span> &gt;&gt; O(n)</div><div class="line">n^<span class="number">2</span> + <span class="number">2</span>n + <span class="number">6</span> &gt;&gt; O(n^<span class="number">2</span>)</div><div class="line"><span class="number">4</span>*n^<span class="number">3</span> + <span class="number">3</span>*n^<span class="number">2</span> + <span class="number">22</span>*n + <span class="number">100</span> &gt;&gt; O(n^<span class="number">3</span>)</div></pre></td></tr></table></figure></p>
+<p>👉 注意：大O表示法仅仅是一种粗略的分析模型，是一种估算，能帮助我们短时间内了解一个算法的执行效率。</p>
+<p>对数：<code>8 = 2^3  -&gt;  3 = log2(8)</code>、<code>16 = 2^4  -&gt;  4 = log2(16)</code></p>
+<p>对数阶的细节：<br>对数阶一般省略底数，如：<code>log2(n) = log2(9) * log9(n)</code>，省略常数项后就是 <code>log2(n) = log9(n)</code>，所以 log2(n)、log9(n) 统称为 logn。</p>
+<p>示例：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// O(1)</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test1</span>(<span class="params"><span class="keyword">int</span> n</span>) </span>&#123;</div><div class="line">    <span class="comment">// 1</span></div><div class="line">    <span class="keyword">if</span> (n &gt; <span class="number">10</span>) &#123; </div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"n &gt; 10"</span>);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (n &gt; <span class="number">5</span>) &#123; <span class="comment">// 2</span></div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"n &gt; 5"</span>);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"n &lt;= 5"</span>); </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">// 1 + 4 + 4 + 4</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) &#123;</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"test"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// O(n)</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test2</span>(<span class="params"><span class="keyword">int</span> n</span>) </span>&#123;</div><div class="line">    <span class="comment">// 1 + 3n</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"test"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// O(n)</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test3</span>(<span class="params"><span class="keyword">int</span> n</span>) </span>&#123;</div><div class="line">    <span class="comment">// 1 + 2n + n * (1 + 3n)</span></div><div class="line">    <span class="comment">// 1 + 2n + n + 3n^2</span></div><div class="line">    <span class="comment">// 3n^2 + 3n + 1</span></div><div class="line">    <span class="comment">// O(n^2)</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) &#123;</div><div class="line">            System.<span class="keyword">out</span>.println(<span class="string">"test"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// O(n)</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test4</span>(<span class="params"><span class="keyword">int</span> n</span>) </span>&#123;</div><div class="line">    <span class="comment">// 1 + 2n + n * (1 + 45)</span></div><div class="line">    <span class="comment">// 1 + 2n + 46n</span></div><div class="line">    <span class="comment">// 48n + 1</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">15</span>; j++) &#123;</div><div class="line">            System.<span class="keyword">out</span>.println(<span class="string">"test"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/* 对数</span></div><div class="line"><span class="comment"> *  8 = 2^3  -&gt;  3 = log2(8)</span></div><div class="line"><span class="comment"> * 16 = 2^4  -&gt;  4 = log2(16)</span></div><div class="line"><span class="comment"> */</span></div><div class="line"></div><div class="line"><span class="comment">// O(logn)</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test5</span>(<span class="params"><span class="keyword">int</span> n</span>) </span>&#123;</div><div class="line">    <span class="comment">// log2(n)</span></div><div class="line">    <span class="keyword">while</span> ((n = n / <span class="number">2</span>) &gt; <span class="number">0</span>) &#123;</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"test"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// O(logn + nlogn) -&gt; O(logn)</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test6</span>(<span class="params"><span class="keyword">int</span> n</span>) </span>&#123;</div><div class="line">    <span class="comment">// log5(n)</span></div><div class="line">    <span class="keyword">while</span> ((n = n / <span class="number">5</span>) &gt; <span class="number">0</span>) &#123;</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"test"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// O(nlogn)</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test7</span>(<span class="params"><span class="keyword">int</span> n</span>) </span>&#123;</div><div class="line">    <span class="comment">// 1 + 2*log2(n) + log2(n) * (1 + 3n)</span></div><div class="line">    <span class="comment">// 1 + 3*log2(n) + 2 * nlog2(n)</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; i = i * <span class="number">2</span>) &#123;</div><div class="line">        <span class="comment">// 1 + 3n</span></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) &#123;</div><div class="line">            System.<span class="keyword">out</span>.println(<span class="string">"test"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="常见的复杂度"><a href="#常见的复杂度" class="headerlink" title="常见的复杂度"></a>常见的复杂度</h2><p>O(1) &lt; O(logn) &lt; O(n) &lt; O(nlogn) &lt; O(n^2) &lt; O(n^3) &lt; O(2^n) &lt; O(n!) &lt; O(n^n)<br><img src="/2020/10/09/数据结构与算法/复杂度/复杂度01.png" alt="复杂度01"></p>
+<p>使用<a href="https://zh.numberempire.com/graphingcalculator.php" target="_blank" rel="external">函数图像绘制工具</a>绘制 <code>log(n),n,n*log(n),n^2,n^3,2^n</code>：</p>
+<p>数据规模比较小时<br><img src="/2020/10/09/数据结构与算法/复杂度/复杂度02.png" alt="复杂度02"><br>数据规模比较大时<br><img src="/2020/10/09/数据结构与算法/复杂度/复杂度03.png" alt="复杂度03"></p>
+<h2 id="多个数据规模的情况"><a href="#多个数据规模的情况" class="headerlink" title="多个数据规模的情况"></a>多个数据规模的情况</h2><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// O(n + k)</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test</span>(<span class="params"><span class="keyword">int</span> n, <span class="keyword">int</span> k</span>) </span>&#123;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"test"</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k; i++) &#123;</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"test"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h1><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// O(1)</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> test1(<span class="keyword">int</span> n) &#123;</div><div class="line">    <span class="built_in">if</span> (n &gt; <span class="number">10</span>) &#123; </div><div class="line">        System.out.<span class="built_in">println</span>(<span class="string">"n &gt; 10"</span>);</div><div class="line">    &#125; <span class="built_in">else</span> <span class="built_in">if</span> (n &gt; <span class="number">5</span>) &#123; <span class="comment">// 2</span></div><div class="line">        System.out.<span class="built_in">println</span>(<span class="string">"n &gt; 5"</span>);</div><div class="line">    &#125; <span class="built_in">else</span> &#123;</div><div class="line">        System.out.<span class="built_in">println</span>(<span class="string">"n &lt;= 5"</span>); </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">// 只初始化了一个 i</span></div><div class="line">    <span class="built_in">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) &#123;</div><div class="line">        System.out.<span class="built_in">println</span>(<span class="string">"test"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// O(1)</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> test2(<span class="keyword">int</span> n) &#123;</div><div class="line">    <span class="comment">// 只初始化了一个 i</span></div><div class="line">    <span class="built_in">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</div><div class="line">        System.out.<span class="built_in">println</span>(<span class="string">"test"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// O(n)</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> test10(<span class="keyword">int</span> n) &#123;</div><div class="line">    <span class="keyword">int</span> a = <span class="number">10</span>;</div><div class="line">    <span class="keyword">int</span> b = <span class="number">20</span>;</div><div class="line">    <span class="keyword">int</span> c = a + b;</div><div class="line">    <span class="keyword">int</span>[] <span class="keyword">array</span> = <span class="keyword">new</span> <span class="keyword">int</span>[n]; <span class="comment">// 申请大小为n的空间</span></div><div class="line">    <span class="built_in">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">array</span>.length; i++) &#123;</div><div class="line">        System.out.<span class="built_in">println</span>(<span class="keyword">array</span>[i] + c);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="例一的时间复杂度"><a href="#例一的时间复杂度" class="headerlink" title="例一的时间复杂度"></a>例一的时间复杂度</h1><figure class="highlight excel"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">// O(<span class="number">2</span>^<span class="built_in">n</span>)</div><div class="line">public static <span class="built_in">int</span> fib1(<span class="built_in">int</span> <span class="built_in">n</span>) &#123;</div><div class="line">    <span class="built_in">if</span> (<span class="built_in">n</span> &lt;= <span class="number">1</span>) return <span class="built_in">n</span>;</div><div class="line">    return fib1(<span class="built_in">n</span> - <span class="number">1</span>) + fib1(<span class="built_in">n</span> - <span class="number">2</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line">// O(<span class="built_in">n</span>)</div><div class="line">public static <span class="built_in">int</span> fib2(<span class="built_in">int</span> <span class="built_in">n</span>) &#123;</div><div class="line">    <span class="built_in">if</span> (<span class="built_in">n</span> &lt;= <span class="number">1</span>) return <span class="built_in">n</span>;</div><div class="line">    </div><div class="line">    <span class="built_in">int</span> first = <span class="number">0</span>;</div><div class="line">    <span class="built_in">int</span> <span class="built_in">second</span> = <span class="number">1</span>;</div><div class="line">    for (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">n</span> - <span class="number">1</span>; i++) &#123;</div><div class="line">        <span class="built_in">int</span> <span class="built_in">sum</span> = first + <span class="built_in">second</span>;</div><div class="line">        first = <span class="built_in">second</span>;</div><div class="line">        <span class="built_in">second</span> = <span class="built_in">sum</span>;</div><div class="line">    &#125;</div><div class="line">    return <span class="built_in">second</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在 fib1 中，如果 n = 5，那么结果就是：1 + 2 + 4 + 8 = 2^0 + 2^1 + 2^2 + 2^3 = 2^4 - 1，即 fib1(n) = 2^(n-1) - 1 = 0.5 * 2^n - 1，所以 fib1(n) 的复杂度为 O(2^n)。<br><img src="/2020/10/09/数据结构与算法/复杂度/复杂度04.png" alt="复杂度04"></p>
+<p>使用<a href="https://zh.numberempire.com/graphingcalculator.php" target="_blank" rel="external">函数图像绘制工具</a>绘制 <code>n,2^n</code>：<br><img src="/2020/10/09/数据结构与算法/复杂度/复杂度05.png" alt="复杂度05"></p>
+<p>可以看出 fib1(n) 和 fib2(n) 的差别很大，如果有一台1GHz的普通计算机，运算速度为10^9次每秒，让 n = 64，那么：<br>O(n)大约耗时6.4 * 10^-8秒<br>O(2^n)大约耗时584.94年</p>
+<p>fib2 补充一：<br><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// O(n)</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">int</span> fib2(<span class="built_in">int</span> N) &#123;</div><div class="line">    <span class="keyword">if</span> (N &lt;= <span class="number">1</span>) <span class="keyword">return</span> N;</div><div class="line"></div><div class="line">    <span class="built_in">int</span> first = <span class="number">0</span>;</div><div class="line">    <span class="built_in">int</span> <span class="built_in">second</span> = <span class="number">1</span>;</div><div class="line">    <span class="keyword">while</span>(N-- &gt; <span class="number">1</span>) &#123;</div><div class="line">        <span class="built_in">second</span> += first;</div><div class="line">        first = <span class="built_in">second</span> - first;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">second</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>fib2 补充二：使用斐波那契公式<br><img src="/2020/10/09/数据结构与算法/复杂度/复杂度06.png" alt="复杂度06"><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// O(1)</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">fib2</span><span class="params">(<span class="keyword">int</span> N)</span> </span>&#123;</div><div class="line">    <span class="keyword">double</span> c = Math.<span class="built_in">sqrt</span>(<span class="number">5</span>); <span class="comment">// 根号5</span></div><div class="line">    <span class="keyword">return</span> (<span class="keyword">int</span>)((Math.<span class="built_in">pow</span>((<span class="number">1</span> + c) / <span class="number">2</span>, N) - Math.<span class="built_in">pow</span>((<span class="number">1</span> - c) / <span class="number">2</span>, N)) / c);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>👉 注意：这里是假定 sqrt 和 pow 的时间复杂度都是 O(1) 的前提下，得出 fib3 的时间复杂度是 O(1)。实际情况还得根据使用的 sqrt 和 pow 的真实时间复杂度而定，比如有些 pow 实现的真实复杂度是 O(logn)。</p>
+<h1 id="算法的优化方向"><a href="#算法的优化方向" class="headerlink" title="算法的优化方向"></a>算法的优化方向</h1><ul>
+<li>用尽量稍等存储空间</li>
+<li>用尽量少的执行步骤</li>
+<li>空间换时间</li>
+<li>时间换空间</li>
+</ul>
+<p>ps：<br><a href="https://leetcode-cn.com/" target="_blank" rel="external">leetcode</a><br><a href="https://leetcode-cn.com/problems/fibonacci-number/" target="_blank" rel="external">斐波那契数</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构与算法/" rel="tag"># 数据结构与算法</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/09/29/数据结构与算法/环境搭建/" rel="next" title="环境搭建">
+                <i class="fa fa-chevron-left"></i> 环境搭建
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/10/11/Personal blog/gitalk/" rel="prev" title="gitalk">
+                gitalk <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
 
     <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+      
     </div>
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+          </div>
+          
 
-{% block script_extra %}{% endblock %}
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/myAvatar.gif"
+              alt="Kevin" />
+          
+            <p class="site-author-name" itemprop="name">Kevin</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KevinYangGit" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yangqioffice@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_YangQI" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.cnblogs.com/mjios" title="M了个J" target="_blank">M了个J</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#算法"><span class="nav-number">1.</span> <span class="nav-text">算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#例一"><span class="nav-number">2.</span> <span class="nav-text">例一</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法的评估"><span class="nav-number">3.</span> <span class="nav-text">算法的评估</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#事后统计法"><span class="nav-number">3.1.</span> <span class="nav-text">事后统计法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法的优劣"><span class="nav-number">3.2.</span> <span class="nav-text">算法的优劣</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#时间复杂度"><span class="nav-number">4.</span> <span class="nav-text">时间复杂度</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#大O表示法"><span class="nav-number">4.1.</span> <span class="nav-text">大O表示法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见的复杂度"><span class="nav-number">4.2.</span> <span class="nav-text">常见的复杂度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多个数据规模的情况"><span class="nav-number">4.3.</span> <span class="nav-text">多个数据规模的情况</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#空间复杂度"><span class="nav-number">5.</span> <span class="nav-text">空间复杂度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#例一的时间复杂度"><span class="nav-number">6.</span> <span class="nav-text">例一的时间复杂度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法的优化方向"><span class="nav-number">7.</span> <span class="nav-text">算法的优化方向</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="/js/src/md5.min.js"></script>
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: '82b6ced795961ee1fcca',
+      clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
+      repo: 'KevinYangGit.github.io',
+      owner: 'KevinYangGit',
+      admin: ['KevinYangGit'],
+      id: md5(location.pathname),
+      distractionFreeMode: 'true'
+    })
+    gitalk.render('gitalk-container')
+  </script>
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
