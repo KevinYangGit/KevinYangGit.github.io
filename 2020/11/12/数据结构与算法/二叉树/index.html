@@ -79,7 +79,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树01.png">
 <meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树02.png">
-<meta property="og:updated_time" content="2020-11-13T07:28:07.197Z">
+<meta property="og:updated_time" content="2020-11-13T07:41:19.131Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="二叉树">
 <meta name="twitter:description" content="二叉树（Binary tree）是树形结构的一个重要类型。许多实际问题抽象出来的数据结构往往是二叉树形式，即使是一般的树也能简单地转换为二叉树，而且二叉树的存储结构及其算法都较为简单，因此二叉树显得特别重要。二叉树特点是每个结点最多只能有两棵子树，且有左右之分。">
@@ -363,7 +363,7 @@
 <li>左子树和右子树是有顺序的，即使某节点只有一棵子树，也要区分左右子树。</li>
 </ol>
 <h2 id="二叉树的性质"><a href="#二叉树的性质" class="headerlink" title="二叉树的性质"></a>二叉树的性质</h2><ol>
-<li>非空二叉树的第 i 层，最多有 $2^{}$ 个节点（i &gt;= 1）；</li>
+<li>非空二叉树的第 i 层，最多有 $2^{i-1}$ 个节点（i &gt;= 1）；</li>
 <li>在高度为 h 的二叉树上最多有 <code>2^h - 1</code> 个节点（h &gt;= 1）;</li>
 <li>对于任何一棵非空二叉树，如果叶子节点个数为 n0，度为 2 的节点个数为 n2，则有：<code>n0 = n2 + 1</code>；<br>假设度为1的节点个数为 n1，那么二叉树的节点总数 <code>n = n0 + n1 + n2</code>，<br>二叉树的边数 <code>T = n1 + 2 * n2 = n - 1 = n0 + n1 + n2 - 1</code>，<br>因此 n0 = n2 + 1。</li>
 </ol>
@@ -372,6 +372,7 @@
 <p>在同样高度的二叉树中，满二叉树的叶子节点数量最多，总节点数量最多。</p>
 <p>满二叉树一定是真二叉树，真二叉树不一定是满二叉树。</p>
 <p>假设满二叉树的高度为 h（h &gt;= 1），那么<br>第 i 层的节点数量：2^(h-1)；<br>叶子节点数量：2^(h-1)；<br>总结点数量 n = 2^h - 1 = 2^0 + 2^1 + 2^2 + … + 2^(h-1)；<br>高度 h = log2</p>
+<p>$$2^{i-1}$$</p>
 
       
     </div>
