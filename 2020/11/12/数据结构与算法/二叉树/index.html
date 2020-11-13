@@ -79,7 +79,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树01.png">
 <meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树02.png">
-<meta property="og:updated_time" content="2020-11-12T10:23:36.990Z">
+<meta property="og:updated_time" content="2020-11-13T02:31:51.939Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="二叉树">
 <meta name="twitter:description" content="二叉树（Binary tree）是树形结构的一个重要类型。许多实际问题抽象出来的数据结构往往是二叉树形式，即使是一般的树也能简单地转换为二叉树，而且二叉树的存储结构及其算法都较为简单，因此二叉树显得特别重要。二叉树特点是每个结点最多只能有两棵子树，且有左右之分。">
@@ -326,9 +326,33 @@
         <p><a href="https://baike.baidu.com/item/%E4%BA%8C%E5%8F%89%E6%A0%91/1602879?fr=aladdin" target="_blank" rel="external">二叉树（Binary tree）</a>是树形结构的一个重要类型。许多实际问题抽象出来的数据结构往往是二叉树形式，即使是一般的树也能简单地转换为二叉树，而且二叉树的存储结构及其算法都较为简单，因此二叉树显得特别重要。二叉树特点是每个结点最多只能有两棵子树，且有左右之分。</p>
 <a id="more"></a>
 <h1 id="树形结构"><a href="#树形结构" class="headerlink" title="树形结构"></a>树形结构</h1><p>二叉树：<br><img src="/2020/11/12/数据结构与算法/二叉树/二叉树01.png" alt="二叉树01"><br>多叉树：<br><img src="/2020/11/12/数据结构与算法/二叉树/二叉树02.png" alt="二叉树02"></p>
-<h2 id="树的基本概念"><a href="#树的基本概念" class="headerlink" title="树的基本概念"></a>树的基本概念</h2><p>空树：一课树可以没有任何节点，称为空树（一课树可以只有1个节点，也就是只有根节点）；<br>节点：每一个数字都代表一个节点；<br>根节点：<code>1</code> 是整棵数的根节点，一棵树只有一个根节点；<br>父节点：<code>1</code> 是 <code>2、3、4、5、6</code> 的父节点，<code>2</code> 是 <code>21、22</code> 的父节点，<code>22</code> 是 <code>221、222、223</code> 的父节点；<br>子节点：<code>2、3、4、5、6</code> 是 <code>1</code> 的子节点，<code>21、22</code> 是 <code>2</code> 的子节点，<code>221、222、223</code> 是 <code>22</code> 的子节点；<br>兄弟节点：同一个父节点下的子节点互为兄弟节点，如 <code>2、3、4、5、6</code> 互为兄弟节点，<code>21、22</code> 互为兄弟节点。<br>子树：<code>2、21、22、221、222、223</code> 与 <code>3、31</code> 与 <code>4</code> 与 <code>5、51、52</code> 与 <code>6、61</code> 称为 <code>1</code> 的子树；<br>左子树：<code>21</code> 称为 <code>2</code> 的左子树；<br>右子树：<code>22、221、222、223</code> 称为 <code>2</code> 的右子树；<br>节点的度（degree）：子树的个数，如 <code>1</code> 的度等于5，<code>2</code> 的度等于2，<code>6</code> 的度等于1，<code>61</code> 的度等于0；<br>树的度：所有节点度中的最大值，如上面这棵多叉树的度就是 <code>1</code> 的度，等于5；<br>叶子节点（leaf）：度为0的节点，如21、221、222、223、31、4、51、52、61都是叶子节点；<br>非叶子节点：度不为0的节点；</p>
-<p>层数（level）：根节点在第1层，根节点的子节点在第2层，以此类推 <code>221</code> 在第四层（有些教程也从第0层开始计算）；<br>节点的深度（depth）：从根节点到当前节点的唯一路径上的节点总数，<code>2</code> 的深度等于2，<code>31</code> 的深度等于3；<br>节点的高度（height）：从当前节点到最远叶子节点的路径上的节点总数，<code>2</code> 的深度等于3，<code>31</code> 的深度等于0；<br>树的深度：所有节点深度中的最大值，这个树的深度就是 <code>221</code>、<code>222</code>、<code>223</code> 的深度，等于4；<br>树的高度：所有节点高度中的最大值，这棵树的高度就是 <code>1</code> 的高度，等于4；<br>树的深度等于树的高度；</p>
-<h2 id="有序树、无序树、森林"><a href="#有序树、无序树、森林" class="headerlink" title="有序树、无序树、森林"></a>有序树、无序树、森林</h2><p>有序树：树中的任意节点的子节点之间有顺序关系，如 <code>2、3、4、5、6</code> 按照大小关系从左至右排；<br>无序树：树中任意节点的子节点之间没有顺序关系，也成为“自由树”；<br>森林：由 m（m &gt;= 0）棵互不相交的树组成的集合；  </p>
+<h2 id="树的基本概念"><a href="#树的基本概念" class="headerlink" title="树的基本概念"></a>树的基本概念</h2><ul>
+<li>空树<br>一课树可以没有任何节点，称为空树（一课树可以只有1个节点，也就是只有根节点）；  </li>
+<li>节点<br>每一个数字都代表一个节点；  </li>
+<li>根节点<br><code>1</code> 是整棵数的根节点，一棵树只有一个根节点；  </li>
+<li>父节点<br><code>1</code> 是 <code>2、3、4、5、6</code> 的父节点，<code>2</code> 是 <code>21、22</code> 的父节点，<code>22</code> 是 <code>221、222、223</code> 的父节点；  </li>
+<li>子节点<br><code>2、3、4、5、6</code> 是 <code>1</code> 的子节点，<code>21、22</code> 是 <code>2</code> 的子节点，<code>221、222、223</code> 是 <code>22</code> 的子节点；  </li>
+<li>兄弟节点<br>同一个父节点下的子节点互为兄弟节点，如 <code>2、3、4、5、6</code> 互为兄弟节点，<code>21、22</code> 互为兄弟节点。  </li>
+<li>子树<br><code>2、21、22、221、222、223</code> 与 <code>3、31</code> 与 <code>4</code> 与 <code>5、51、52</code> 与 <code>6、61</code> 都是 <code>1</code> 的子树；  </li>
+<li>左子树<br><code>21</code> 称为 <code>2</code> 的左子树；  </li>
+<li>右子树<br><code>22、221、222、223</code> 称为 <code>2</code> 的右子树；  </li>
+<li>节点的度（degree）<br>子树的个数，如 <code>1</code> 的度等于5，<code>2</code> 的度等于2，<code>6</code> 的度等于1，<code>61</code> 的度等于0；  </li>
+<li>树的度<br>所有节点度中的最大值，如上面这棵多叉树的度就是 <code>1</code> 的度，等于5；  </li>
+<li>叶子节点（leaf）<br>度为0的节点，如21、221、222、223、31、4、51、52、61都是叶子节点；  </li>
+<li><p>非叶子节点<br>度不为0的节点；</p>
+</li>
+<li><p>层数（level）<br>根节点在第1层，根节点的子节点在第2层，以此类推 <code>221</code> 在第四层（有些教程也从第0层开始计算）；  </p>
+</li>
+<li>节点的深度（depth）<br>从根节点到当前节点的唯一路径上的节点总数，<code>2</code> 的深度等于2，<code>31</code> 的深度等于3；  </li>
+<li>节点的高度（height）<br>从当前节点到最远叶子节点的路径上的节点总数，<code>2</code> 的深度等于3，<code>31</code> 的深度等于0；  </li>
+<li>树的深度<br>所有节点深度中的最大值，这个树的深度就是 <code>221</code>、<code>222</code>、<code>223</code> 的深度，等于4；  </li>
+<li>树的高度<br>所有节点高度中的最大值，这棵树的高度就是 <code>1</code> 的高度，等于4；<br>树的深度等于树的高度；</li>
+</ul>
+<h2 id="有序树、无序树、森林"><a href="#有序树、无序树、森林" class="headerlink" title="有序树、无序树、森林"></a>有序树、无序树、森林</h2><ul>
+<li>有序树<br>树中的任意节点的子节点之间有顺序关系，如 <code>2、3、4、5、6</code> 按照大小关系从左至右排；  </li>
+<li>无序树<br>树中任意节点的子节点之间没有顺序关系，也成为“自由树”；  </li>
+<li>森林<br>由 m（m &gt;= 0）棵互不相交的树组成的集合；  </li>
+</ul>
 
       
     </div>
