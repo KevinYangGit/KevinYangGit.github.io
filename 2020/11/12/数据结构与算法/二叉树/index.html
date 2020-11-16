@@ -91,7 +91,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树12.png">
 <meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树12.png">
 <meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树14.png">
-<meta property="og:updated_time" content="2020-11-16T08:39:19.134Z">
+<meta property="og:updated_time" content="2020-11-16T08:41:22.616Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="二叉树">
 <meta name="twitter:description" content="二叉树（Binary tree）是树形结构的一个重要类型。许多实际问题抽象出来的数据结构往往是二叉树形式，即使是一般的树也能简单地转换为二叉树，而且二叉树的存储结构及其算法都较为简单，因此二叉树显得特别重要。二叉树特点是每个结点最多只能有两棵子树，且有左右之分。">
@@ -390,9 +390,9 @@
 <li>度为 1 的节点只有左子树。  </li>
 <li>度为 1 的节点要么是 1 个，要么是 0 个。  </li>
 <li>同样节点数量的二叉树，完全二叉树的高度最小。  </li>
+<li>假设完全二叉树的高度为 <code>h</code>（<code>h &gt;= 1</code>），那么<br>至少有 <code>2^(h-1)</code> 个节点（<code>2^0 + 2^1 + 2^2 + ... + 2^(h-2) + 1</code>）；<br>最多有 <code>2^h - 1</code> 个节点（<code>2^0 + 2^1 + 2^2 + ... + 2^(h-2)</code>，即满二叉树）；  </li>
+<li>假设总结点数量为 <code>n</code>，那么<br><code>2^(h-1) &lt;= n &lt; 2^h</code> -&gt; <code>h - 1 &lt;= log(2)(n) &lt; h</code> -&gt; <code>h = floor(log(2)(n)) + 1</code>  </li>
 </ol>
-<p>假设完全二叉树的高度为 <code>h</code>（<code>h &gt;= 1</code>），那么<br>至少有 <code>2^(h-1)</code> 个节点（<code>2^0 + 2^1 + 2^2 + ... + 2^(h-2) + 1</code>）；<br>最多有 <code>2^h - 1</code> 个节点（<code>2^0 + 2^1 + 2^2 + ... + 2^(h-2)</code>，即满二叉树）； </p>
-<p>设总结点数量为 <code>n</code>，那么<br><code>2^(h-1) &lt;= n &lt; 2^h</code> -&gt; <code>h - 1 &lt;= log(2)(n) &lt; h</code> -&gt; <code>h = floor(log(2)(n)) + 1</code>  </p>
 <p>ps：<code>floor</code> 是向下取整，另外，<code>ceiling</code> 是向上取整，编程中的 <code>*</code>、<code>/</code> 都是向下取整。</p>
 
       
