@@ -84,7 +84,14 @@
 <meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树06.png">
 <meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树05.png">
 <meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树07.png">
-<meta property="og:updated_time" content="2020-11-16T06:59:13.883Z">
+<meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树08.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树09.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树10.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树11.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树12.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树12.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树14.png">
+<meta property="og:updated_time" content="2020-11-16T08:35:30.055Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="二叉树">
 <meta name="twitter:description" content="二叉树（Binary tree）是树形结构的一个重要类型。许多实际问题抽象出来的数据结构往往是二叉树形式，即使是一般的树也能简单地转换为二叉树，而且二叉树的存储结构及其算法都较为简单，因此二叉树显得特别重要。二叉树特点是每个结点最多只能有两棵子树，且有左右之分。">
@@ -360,24 +367,33 @@
 <h2 id="有序树、无序树、森林"><a href="#有序树、无序树、森林" class="headerlink" title="有序树、无序树、森林"></a>有序树、无序树、森林</h2><ul>
 <li>有序树<br>树中的任意节点的子节点之间有顺序关系，如 <code>2、3、4、5、6</code> 按照大小关系从左至右排。  </li>
 <li>无序树<br>树中任意节点的子节点之间没有顺序关系，也成为“自由树”。</li>
-<li>森林<br>由 m（m &gt;= 0）棵互不相交的树组成的集合。</li>
+<li>森林<br>由 <code>m</code>（<code>m &gt;= 0</code>）棵互不相交的树组成的集合。</li>
 </ul>
 <h1 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h1><p>二叉树是有序树，二叉树的特点有：</p>
 <ol>
-<li>每个节点的度最大为 2（最多拥有 2 棵子树）；</li>
-<li>左子树和右子树是有顺序的，即使某节点只有一棵子树，也要区分左右子树。</li>
+<li>每个节点的度最大为 2（最多拥有 2 棵子树，所以所有节点的度要么为 2，要么为 1，要么为 0）；</li>
+<li>左子树和右子树是有顺序的，即使某节点只有一棵子树，也要区分左右子树（49 在左，56 在右；96 在右）。<br><img src="/2020/11/12/数据结构与算法/二叉树/二叉树08.png" alt="二叉树08"><br>各种情况：<br><img src="/2020/11/12/数据结构与算法/二叉树/二叉树09.png" alt="二叉树09"><br>只有左子树或者只有右子树的二叉树，从结构上看跟链表相似：<br><img src="/2020/11/12/数据结构与算法/二叉树/二叉树10.png" alt="二叉树10"></li>
 </ol>
 <h2 id="二叉树的性质"><a href="#二叉树的性质" class="headerlink" title="二叉树的性质"></a>二叉树的性质</h2><ol>
-<li>非空二叉树的第 i 层，最多有 2^(i-1) 个节点（i &gt;= 1）；</li>
-<li>在高度为 h 的二叉树上最多有 <code>2^h - 1</code> 个节点（h &gt;= 1）;</li>
-<li>对于任何一棵非空二叉树，如果叶子节点个数为 n0，度为 2 的节点个数为 n2，则有：<code>n0 = n2 + 1</code>；<br>假设度为1的节点个数为 n1，那么二叉树的节点总数 <code>n = n0 + n1 + n2</code>，<br>二叉树的边数 <code>T = n1 + 2 * n2 = n - 1 = n0 + n1 + n2 - 1</code>，<br>因此 n0 = n2 + 1。</li>
+<li>非空二叉树的第 i 层，最多有 <code>2^(i-1)</code> 个节点（<code>i &gt;= 1</code>）；</li>
+<li>在高度为 h 的二叉树上最多有 <code>2^h - 1</code> 个节点（<code>h &gt;= 1</code>）;</li>
+<li>对于任何一棵非空二叉树，如果叶子节点个数为 n0，度为 2 的节点个数为 n2，则有：<code>n0 = n2 + 1</code>；<br>假设度为1的节点个数为 n1，那么二叉树的节点总数 <code>n = n0 + n1 + n2</code>，<br>二叉树的边数 <code>T = n1 + 2 * n2 = n - 1 = n0 + n1 + n2 - 1</code>，<br>因此 n0 = n2 + 1。<br><img src="/2020/11/12/数据结构与算法/二叉树/二叉树11.png" alt="二叉树11"></li>
 </ol>
-<h1 id="真二叉树"><a href="#真二叉树" class="headerlink" title="真二叉树"></a>真二叉树</h1><p>真二叉树：所有的节点的度都要么为 0，要么为 2。</p>
-<h1 id="满二叉树"><a href="#满二叉树" class="headerlink" title="满二叉树"></a>满二叉树</h1><p>满二叉树：最后一层节点的度为 0，其它节点度都为 2。</p>
+<h1 id="真二叉树"><a href="#真二叉树" class="headerlink" title="真二叉树"></a>真二叉树</h1><p>真二叉树：所有的节点的度都要么为 0，要么为 2。<br><img src="/2020/11/12/数据结构与算法/二叉树/二叉树12.png" alt="二叉树12"></p>
+<h1 id="满二叉树"><a href="#满二叉树" class="headerlink" title="满二叉树"></a>满二叉树</h1><p>满二叉树：最后一层节点的度为 0，其它节点度都为 2。<br><img src="/2020/11/12/数据结构与算法/二叉树/二叉树12.png" alt="二叉树12"></p>
 <p>在同样高度的二叉树中，满二叉树的叶子节点数量最多，总节点数量最多。</p>
 <p>满二叉树一定是真二叉树，真二叉树不一定是满二叉树。</p>
-<p>假设满二叉树的高度为 h（h &gt;= 1），那么<br>第 i 层的节点数量：2^(h-1)；<br>叶子节点数量：2^(h-1)；<br>总结点数量 n = 2^h - 1 = 2^0 + 2^1 + 2^2 + … + 2^(h-1)；<br>高度 h = log(2)(n+1)；</p>
-<h1 id="完全二叉树"><a href="#完全二叉树" class="headerlink" title="完全二叉树"></a>完全二叉树</h1><p>完全二叉树：对节点从上至下、左至右开始编号，其所有编号都能与相同高度的满二叉树中的编号对应。</p>
+<p>假设满二叉树的高度为 <code>h</code>（<code>h &gt;= 1</code>），那么<br>第 <code>i</code> 层的节点数量：<code>2^(h-1)</code>；<br>叶子节点数量：<code>2^(h-1)</code>；<br>总结点数量 <code>n = 2^h - 1 = 2^0 + 2^1 + 2^2 + ... + 2^(h-1)</code>；<br>高度 <code>h = log(2)(n+1)</code>；</p>
+<h1 id="完全二叉树"><a href="#完全二叉树" class="headerlink" title="完全二叉树"></a>完全二叉树</h1><p>完全二叉树：对节点从上至下、左至右开始编号，其所有编号都能与相同高度的满二叉树中的编号对应。<br><img src="/2020/11/12/数据结构与算法/二叉树/二叉树14.png" alt="二叉树14"></p>
+<p>叶子节点只会出现在最后两层，最后一层的叶子节点都是靠左对齐。<br>完全二叉树从根节点至倒数第二层是一棵满二叉树。<br>满二叉树一定是完全二叉树，完全二叉树不一定是满二叉树。</p>
+<h2 id="完全二叉树的性质"><a href="#完全二叉树的性质" class="headerlink" title="完全二叉树的性质"></a>完全二叉树的性质</h2><ol>
+<li>度为 1 的节点只有左子树。  </li>
+<li>度为 1 的节点要么是 1 个，要么是 0 个。  </li>
+<li>同样节点数量的二叉树，完全二叉树的高度最小。  </li>
+</ol>
+<p>假设完全二叉树的高度为 <code>h</code>（<code>h &gt;= 1</code>），那么<br>至少有 <code>2^(h-1)</code> 个节点（<code>2^0 + 2^1 + 2^2 + ... + 2^(h-2) + 1</code>）；<br>最多有 <code>2^h - 1</code> 个节点（<code>2^0 + 2^1 + 2^2 + ... + 2^(h-2)</code>，即满二叉树）； </p>
+<p>设总结点数量为 <code>n</code>，那么<br><code>2^(h-1) &lt;= n &lt; 2^h</code> -&gt; <code>h - 1 &lt;= log(2)(n) &lt; h</code> -&gt; <code>h = floor(log(2)(n)) + 1</code>  </p>
+<p>ps：<code>floor</code> 是向下取整，另外，<code>ceiling</code> 是向上取整，编程中的 <code>*</code>、<code>/</code> 都是向下取整。</p>
 
       
     </div>
@@ -580,7 +596,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#树形结构"><span class="nav-number">1.</span> <span class="nav-text">树形结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#树的基本概念"><span class="nav-number">1.1.</span> <span class="nav-text">树的基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#有序树、无序树、森林"><span class="nav-number">1.2.</span> <span class="nav-text">有序树、无序树、森林</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二叉树"><span class="nav-number">2.</span> <span class="nav-text">二叉树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉树的性质"><span class="nav-number">2.1.</span> <span class="nav-text">二叉树的性质</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#真二叉树"><span class="nav-number">3.</span> <span class="nav-text">真二叉树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#满二叉树"><span class="nav-number">4.</span> <span class="nav-text">满二叉树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#完全二叉树"><span class="nav-number">5.</span> <span class="nav-text">完全二叉树</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#树形结构"><span class="nav-number">1.</span> <span class="nav-text">树形结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#树的基本概念"><span class="nav-number">1.1.</span> <span class="nav-text">树的基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#有序树、无序树、森林"><span class="nav-number">1.2.</span> <span class="nav-text">有序树、无序树、森林</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二叉树"><span class="nav-number">2.</span> <span class="nav-text">二叉树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉树的性质"><span class="nav-number">2.1.</span> <span class="nav-text">二叉树的性质</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#真二叉树"><span class="nav-number">3.</span> <span class="nav-text">真二叉树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#满二叉树"><span class="nav-number">4.</span> <span class="nav-text">满二叉树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#完全二叉树"><span class="nav-number">5.</span> <span class="nav-text">完全二叉树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#完全二叉树的性质"><span class="nav-number">5.1.</span> <span class="nav-text">完全二叉树的性质</span></a></li></ol></li></ol></div>
             
 
           </div>
