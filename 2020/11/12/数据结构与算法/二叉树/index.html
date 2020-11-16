@@ -94,7 +94,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树14.png">
 <meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树15.png">
 <meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树16.png">
-<meta property="og:updated_time" content="2020-11-16T09:44:22.129Z">
+<meta property="og:updated_time" content="2020-11-16T09:50:00.965Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="二叉树">
 <meta name="twitter:description" content="二叉树（Binary tree）是树形结构的一个重要类型。许多实际问题抽象出来的数据结构往往是二叉树形式，即使是一般的树也能简单地转换为二叉树，而且二叉树的存储结构及其算法都较为简单，因此二叉树显得特别重要。二叉树特点是每个结点最多只能有两棵子树，且有左右之分。">
@@ -401,10 +401,10 @@
 <p>下图不是完全二叉树：<br><img src="/2020/11/12/数据结构与算法/二叉树/二叉树16.png" alt="二叉树16"></p>
 <p>ps：<code>floor</code> 是向下取整；另外，<code>ceiling</code> 是向上取整；编程中的 <code>*</code>、<code>/</code> 都是向下取整。</p>
 <h1 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h1><p>如果一个完全二叉树有 768 个节点，求叶子节点的个数？<br>叶子节点个数为 768/2 = 389。</p>
-<p>解析：<br>设叶子节点个数为 <code>n0</code>，度为 1 的节点个数为 <code>n1</code>，度为 2 的节点个数为 <code>n2</code><br>则总结点个数 <code>n = n0 + n1 + n2</code>，<br>又 <code>n0 = n2 + 1</code>，所以 <code>n = 2 * n0 + n1 - 1</code>。</p>
-<p>因为完全二叉树的度为 1 的节点个数 <code>n1</code> 要么等于 0，要么等于 1，则<br>当 <code>n1 == 1</code> 时，<code>n = 2 * n0</code>（n必然是偶数），所以叶子节点个数 <code>n0 = n/2</code>，非叶子节点个数 <code>n1 + n2 = n/2</code>；<br>当 <code>n1 == 0</code> 时，<code>n = 2 * n0 - 1</code>（<code>n</code>必然是奇数），所有叶子节点个数 <code>n0 = (n + 1)/2</code>，非叶子节点个数 <code>n1 + n2 = (n - 1)/2</code>。</p>
+<p>解析：<br>设叶子节点个数为 <code>n0</code>，度为 1 的节点个数为 <code>n1</code>，度为 2 的节点个数为 <code>n2</code>，<br>则总结点个数 <code>n = n0 + n1 + n2</code>，<br>又 <code>n0 = n2 + 1</code>，所以 <code>n = 2 * n0 + n1 - 1</code>。</p>
+<p>因为完全二叉树的度为 1 的节点个数 <code>n1</code> 要么等于 0，要么等于 1，则<br>当 <code>n1 == 1</code> 时，<code>n = 2 * n0</code>，<code>n</code> 必然是偶数，所以叶子节点个数 <code>n0 = n/2</code>，非叶子节点个数 <code>n1 + n2 = n/2</code>；<br>当 <code>n1 == 0</code> 时，<code>n = 2 * n0 - 1</code>，<code>n</code> 必然是奇数，所有叶子节点个数 <code>n0 = (n + 1)/2</code>，非叶子节点个数 <code>n1 + n2 = (n - 1)/2</code>。</p>
 <p>（<code>n0 = (n + 1)/2</code> 可以写作 <code>n0 = n/2 + 1/2</code>，结合 <code>n1 == 1</code> 的情况，叶子节点个数可以总结为👇）</p>
-<p>综上，叶子节点个数 <code>n0 = floor((n + 1)/2) = ceiling(n/2)</code>；<br>非叶子节点个数 <code>n1 + n2 = floor(n/2) = ceiling((n-1)/2)</code>；</p>
+<p>综上，叶子节点个数 <code>n0 = floor((n + 1)/2) = ceiling(n/2)</code>，非叶子节点个数 <code>n1 + n2 = floor(n/2) = ceiling((n-1)/2)</code>。</p>
 
       
     </div>
