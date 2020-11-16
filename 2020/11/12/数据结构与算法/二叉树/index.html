@@ -79,7 +79,12 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树01.png">
 <meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树02.png">
-<meta property="og:updated_time" content="2020-11-13T08:12:37.334Z">
+<meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树03.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树04.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树06.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树05.png">
+<meta property="og:image" content="http://yoursite.com/2020/11/12/数据结构与算法/二叉树/二叉树07.png">
+<meta property="og:updated_time" content="2020-11-16T06:59:13.883Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="二叉树">
 <meta name="twitter:description" content="二叉树（Binary tree）是树形结构的一个重要类型。许多实际问题抽象出来的数据结构往往是二叉树形式，即使是一般的树也能简单地转换为二叉树，而且二叉树的存储结构及其算法都较为简单，因此二叉树显得特别重要。二叉树特点是每个结点最多只能有两棵子树，且有左右之分。">
@@ -329,26 +334,26 @@
 <h2 id="树的基本概念"><a href="#树的基本概念" class="headerlink" title="树的基本概念"></a>树的基本概念</h2><ul>
 <li>节点<br>每一个数字都代表一个节点。</li>
 <li>根节点<br><code>1</code> 是整棵数的根节点，一棵树只有一个根节点。</li>
-<li>父节点<br><code>1</code> 是 <code>2、3、4、5、6</code> 的父节点，<code>2</code> 是 <code>21、22</code> 的父节点，<code>22</code> 是 <code>221、222、223</code> 的父节点。</li>
-<li>子节点<br><code>2、3、4、5、6</code> 是 <code>1</code> 的子节点，<code>21、22</code> 是 <code>2</code> 的子节点，<code>221、222、223</code> 是 <code>22</code> 的子节点。</li>
-<li><p>兄弟节点<br>同一个父节点下的子节点互为兄弟节点，如 <code>2、3、4、5、6</code> 互为兄弟节点，<code>21、22</code> 互为兄弟节点。</p>
+<li>父节点<br><code>1</code> 是 <code>2、3、4、5、6</code> 的父节点，<code>2</code> 是 <code>21、22</code> 的父节点，<code>3</code> 是 <code>31</code> 的父节点，<code>5</code> 是 <code>51、52</code> 的父节点，<code>6</code> 是 <code>61</code> 的父节点，<code>22</code> 是 <code>221、222、223</code> 的父节点。</li>
+<li>子节点<br><code>2、3、4、5、6</code> 是 <code>1</code> 的子节点，<code>21、22</code> 是 <code>2</code> 的子节点，<code>31</code> 是 <code>3</code> 的子节点，<code>51、52</code> 是 <code>5</code> 的子节点，<code>61</code> 是 <code>6</code> 的子节点，<code>221、222、223</code> 是 <code>22</code> 的子节点。</li>
+<li><p>兄弟节点<br>同一个父节点下的子节点互为兄弟节点，如 <code>2、3、4、5、6</code> 互为兄弟节点，<code>21、22</code> 互为兄弟节点，<code>51、52</code> 互为兄弟节点，<code>221、222、223</code> 互为兄弟节点。<br><img src="/2020/11/12/数据结构与算法/二叉树/二叉树03.png" alt="二叉树03"></p>
 </li>
 <li><p>空树<br>一课树可以没有任何节点，称为空树（一课树可以只有1个节点，也就是只有根节点）。</p>
 </li>
-<li>子树<br><code>2、21、22、221、222、223</code> 与 <code>3、31</code> 与 <code>4</code> 与 <code>5、51、52</code> 与 <code>6、61</code> 都是 <code>1</code> 的子树。</li>
+<li>子树<br><code>2、21、22、221、222、223</code> 与 <code>3、31</code> 与 <code>4</code> 与 <code>5、51、52</code> 与 <code>6、61</code> 都是 <code>1</code> 的子树。<br><img src="/2020/11/12/数据结构与算法/二叉树/二叉树04.png" alt="二叉树04"></li>
 <li>左子树<br><code>21</code> 称为 <code>2</code> 的左子树。</li>
 <li><p>右子树<br><code>22、221、222、223</code> 称为 <code>2</code> 的右子树。</p>
 </li>
-<li><p>节点的度（degree）<br>子树的个数，如 <code>1</code> 的度等于 5，<code>2</code> 的度等于 2，<code>6</code> 的度等于 1，<code>61</code> 的度等于 0。</p>
+<li><p>节点的度（degree）<br>子树的个数，如 <code>1</code> 的度等于 5，<code>2</code> 的度等于 2，<code>3</code> 的度等于 1，<code>4</code> 的度等于 0，<code>5</code> 的度等于 2，<code>6</code> 的度等于 1，<code>22</code> 的度等于 3。<br><img src="/2020/11/12/数据结构与算法/二叉树/二叉树06.png" alt="二叉树06"></p>
 </li>
 <li>树的度<br>所有节点度中的最大值，如上面这棵多叉树的度就是 <code>1</code> 的度，等于 5。</li>
-<li>叶子节点（leaf）<br>度为 0 的节点，如 <code>21</code>、<code>221</code>、<code>222</code>、<code>223</code>、<code>31</code>、<code>4</code>、<code>51</code>、<code>52</code>、<code>61</code> 都是叶子节点。</li>
+<li>叶子节点（leaf）<br>度为 0 的节点，如 <code>21</code>、<code>221</code>、<code>222</code>、<code>223</code>、<code>31</code>、<code>4</code>、<code>51</code>、<code>52</code>、<code>61</code> 都是叶子节点。<br><img src="/2020/11/12/数据结构与算法/二叉树/二叉树05.png" alt="二叉树05"></li>
 <li><p>非叶子节点<br>度不为 0 的节点。</p>
 </li>
 <li><p>层数（level）<br>根节点在第 1 层，根节点的子节点在第 2 层，以此类推 <code>221</code> 在第四层（有些教程也从第 0 层开始计算）。</p>
 </li>
-<li>节点的深度（depth）<br>从根节点到当前节点的唯一路径上的节点总数，<code>2</code> 的深度等于2，<code>31</code> 的深度等于 3。</li>
-<li>节点的高度（height）<br>从当前节点到最远叶子节点的路径上的节点总数，<code>2</code> 的深度等于3，<code>31</code> 的深度等于 0。</li>
+<li>节点的深度（depth）<br>从根节点到当前节点的唯一路径上的节点总数，<code>2</code> 的深度等于 2，<code>31</code> 的深度等于 3。<br><img src="/2020/11/12/数据结构与算法/二叉树/二叉树07.png" alt="二叉树07"></li>
+<li>节点的高度（height）<br>从当前节点到最远叶子节点的路径上的节点总数，<code>2</code> 的深度等于 3，<code>31</code> 的深度等于 0。</li>
 <li>树的深度<br>所有节点深度中的最大值，这个树的深度就是 <code>221</code>、<code>222</code>、<code>223</code> 的深度，等于 4。</li>
 <li>树的高度<br>所有节点高度中的最大值，这棵树的高度就是 <code>1</code> 的高度，等于 4。树的深度等于树的高度。</li>
 </ul>
@@ -363,7 +368,7 @@
 <li>左子树和右子树是有顺序的，即使某节点只有一棵子树，也要区分左右子树。</li>
 </ol>
 <h2 id="二叉树的性质"><a href="#二叉树的性质" class="headerlink" title="二叉树的性质"></a>二叉树的性质</h2><ol>
-<li>非空二叉树的第 i 层，最多有 $2^{i-1}$ 个节点（i &gt;= 1）；</li>
+<li>非空二叉树的第 i 层，最多有 2^(i-1) 个节点（i &gt;= 1）；</li>
 <li>在高度为 h 的二叉树上最多有 <code>2^h - 1</code> 个节点（h &gt;= 1）;</li>
 <li>对于任何一棵非空二叉树，如果叶子节点个数为 n0，度为 2 的节点个数为 n2，则有：<code>n0 = n2 + 1</code>；<br>假设度为1的节点个数为 n1，那么二叉树的节点总数 <code>n = n0 + n1 + n2</code>，<br>二叉树的边数 <code>T = n1 + 2 * n2 = n - 1 = n0 + n1 + n2 - 1</code>，<br>因此 n0 = n2 + 1。</li>
 </ol>
@@ -371,10 +376,9 @@
 <h1 id="满二叉树"><a href="#满二叉树" class="headerlink" title="满二叉树"></a>满二叉树</h1><p>满二叉树：最后一层节点的度为 0，其它节点度都为 2。</p>
 <p>在同样高度的二叉树中，满二叉树的叶子节点数量最多，总节点数量最多。</p>
 <p>满二叉树一定是真二叉树，真二叉树不一定是满二叉树。</p>
-<p>假设满二叉树的高度为 h（h &gt;= 1），那么<br>第 i 层的节点数量：2^(h-1)；<br>叶子节点数量：2^(h-1)；<br>总结点数量 n = 2^h - 1 = 2^0 + 2^1 + 2^2 + … + 2^(h-1)；<br>高度 h = log2</p>
-<script type="math/tex; mode=display">2^{i-1}</script><script type="math/tex; mode=display">\begin{equation}
-e=mc^2
-\end{equation}</script>
+<p>假设满二叉树的高度为 h（h &gt;= 1），那么<br>第 i 层的节点数量：2^(h-1)；<br>叶子节点数量：2^(h-1)；<br>总结点数量 n = 2^h - 1 = 2^0 + 2^1 + 2^2 + … + 2^(h-1)；<br>高度 h = log(2)(n+1)；</p>
+<h1 id="完全二叉树"><a href="#完全二叉树" class="headerlink" title="完全二叉树"></a>完全二叉树</h1><p>完全二叉树：对节点从上至下、左至右开始编号，其所有编号都能与相同高度的满二叉树中的编号对应。</p>
+
       
     </div>
     
@@ -576,7 +580,7 @@ e=mc^2
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#树形结构"><span class="nav-number">1.</span> <span class="nav-text">树形结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#树的基本概念"><span class="nav-number">1.1.</span> <span class="nav-text">树的基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#有序树、无序树、森林"><span class="nav-number">1.2.</span> <span class="nav-text">有序树、无序树、森林</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二叉树"><span class="nav-number">2.</span> <span class="nav-text">二叉树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉树的性质"><span class="nav-number">2.1.</span> <span class="nav-text">二叉树的性质</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#真二叉树"><span class="nav-number">3.</span> <span class="nav-text">真二叉树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#满二叉树"><span class="nav-number">4.</span> <span class="nav-text">满二叉树</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#树形结构"><span class="nav-number">1.</span> <span class="nav-text">树形结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#树的基本概念"><span class="nav-number">1.1.</span> <span class="nav-text">树的基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#有序树、无序树、森林"><span class="nav-number">1.2.</span> <span class="nav-text">有序树、无序树、森林</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二叉树"><span class="nav-number">2.</span> <span class="nav-text">二叉树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉树的性质"><span class="nav-number">2.1.</span> <span class="nav-text">二叉树的性质</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#真二叉树"><span class="nav-number">3.</span> <span class="nav-text">真二叉树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#满二叉树"><span class="nav-number">4.</span> <span class="nav-text">满二叉树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#完全二叉树"><span class="nav-number">5.</span> <span class="nav-text">完全二叉树</span></a></li></ol></div>
             
 
           </div>
