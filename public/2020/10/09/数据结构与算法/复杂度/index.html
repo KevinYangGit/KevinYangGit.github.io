@@ -83,7 +83,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/10/09/数据结构与算法/复杂度/复杂度04.png">
 <meta property="og:image" content="http://yoursite.com/2020/10/09/数据结构与算法/复杂度/复杂度05.png">
 <meta property="og:image" content="http://yoursite.com/2020/10/09/数据结构与算法/复杂度/复杂度06.png">
-<meta property="og:updated_time" content="2020-10-14T09:45:31.836Z">
+<meta property="og:updated_time" content="2020-11-23T09:06:37.592Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="复杂度">
 <meta name="twitter:description" content="斐波那契数 &amp;amp; 算法的评估 &amp;amp; 时间复杂度的估算 &amp;amp; 大O表示法 &amp;amp; 斐波那契数复杂度分析">
@@ -350,7 +350,7 @@
 <li>时间复杂度（time complexity）：估算程序指令的执行次数（执行时间）。</li>
 <li>空间复杂度（space complexity）：估算所需占用的存储空间。</li>
 </ul>
-<h1 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h1><p>[时间复杂度]（<a href="https://baike.baidu.com/item/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E6%80%A7/5930669?fromtitle=%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6&amp;fromid=1894057&amp;fr=aladdin）：在计算机科学中，时间复杂性，又称时间复杂度，算法的时间复杂度是一个函数，它定性描述该算法的运行时间。这是一个代表算法输入值的字符串的长度的函数。时间复杂度常用大O符号表述，不包括这个函数的低阶项和首项系数。使用这种方式时，时间复杂度可被称为是渐近的，亦即考察输入值大小趋近无穷时的情况。" target="_blank" rel="external">https://baike.baidu.com/item/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E6%80%A7/5930669?fromtitle=%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6&amp;fromid=1894057&amp;fr=aladdin）：在计算机科学中，时间复杂性，又称时间复杂度，算法的时间复杂度是一个函数，它定性描述该算法的运行时间。这是一个代表算法输入值的字符串的长度的函数。时间复杂度常用大O符号表述，不包括这个函数的低阶项和首项系数。使用这种方式时，时间复杂度可被称为是渐近的，亦即考察输入值大小趋近无穷时的情况。</a></p>
+<h1 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h1><p><a href="https://baike.baidu.com/item/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E6%80%A7/5930669?fromtitle=%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6&amp;fromid=1894057&amp;fr=aladdin" target="_blank" rel="external">时间复杂度</a>：在计算机科学中，时间复杂性，又称时间复杂度，算法的时间复杂度是一个函数，它定性描述该算法的运行时间。这是一个代表算法输入值的字符串的长度的函数。时间复杂度常用大O符号表述，不包括这个函数的低阶项和首项系数。使用这种方式时，时间复杂度可被称为是渐近的，亦即考察输入值大小趋近无穷时的情况。</p>
 <h2 id="大O表示法"><a href="#大O表示法" class="headerlink" title="大O表示法"></a>大O表示法</h2><p>一般用大O表示法来描述复杂度，它表示的是数据规模 n 对应的复杂度。  </p>
 <p><a href="https://baike.baidu.com/item/%E5%A4%A7O%E8%A1%A8%E7%A4%BA%E6%B3%95/1851162?fr=aladdin" target="_blank" rel="external">大O表示法</a>：算法的时间复杂度通常用大O符号表述，定义为T[n] = O(f(n))。称函数T(n)以f(n)为界或者称T(n)受限于f(n)。 如果一个问题的规模是n，解这一问题的某一算法所需要的时间为T(n)。T(n)称为这一算法的“时间复杂度”。当输入量n逐渐加大时，时间复杂度的极限情形称为算法的“渐近时间复杂度”。</p>
 <p>使用大O表示法时会忽略常数、系数、低阶，如：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="number">9</span> &gt;&gt; O(<span class="number">1</span>)</div><div class="line"><span class="number">2</span>*n + <span class="number">3</span> &gt;&gt; O(n)</div><div class="line">n^<span class="number">2</span> + <span class="number">2</span>n + <span class="number">6</span> &gt;&gt; O(n^<span class="number">2</span>)</div><div class="line"><span class="number">4</span>*n^<span class="number">3</span> + <span class="number">3</span>*n^<span class="number">2</span> + <span class="number">22</span>*n + <span class="number">100</span> &gt;&gt; O(n^<span class="number">3</span>)</div></pre></td></tr></table></figure></p>
@@ -776,6 +776,8 @@
   
 
   
+  
+
 
   
 
