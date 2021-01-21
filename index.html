@@ -320,7 +320,23 @@
       
         
           
-            
+            <p>AVL树是最先发明的自平衡二叉查找树。在AVL树中任何节点的两个子树的高度最大差别为1，所以它也被称为高度平衡树。增加和删除可能需要通过一次或多次树旋转来重新平衡这个树。AVL树得名于它的发明者G. M. Adelson-Velsky和E. M. Landis，他们在1962年的论文《An algorithm for the organization of information》中发表了它。</p>
+<h1 id="平衡二叉搜索树"><a href="#平衡二叉搜索树" class="headerlink" title="平衡二叉搜索树"></a>平衡二叉搜索树</h1><h2 id="二叉搜索树的复杂度分析"><a href="#二叉搜索树的复杂度分析" class="headerlink" title="二叉搜索树的复杂度分析"></a>二叉搜索树的复杂度分析</h2><p>依次添加节点 <code>7、4、9、2、5、8、11</code> 得到的二叉搜索树，添加和删除操作的复杂度跟二叉搜索树的高度有关，O(h) == O(logn)。</p>
+<p>依次添加节点 <code>2、4、5、7、8、9、11</code> 得到的二叉搜索树，添加和删除操作的复杂度跟节点个数有关，O(h) == O(n)。二叉搜索树退化成了链表。</p>
+<p>当 n 比较大时，两者的性能差异比较大。如 n == 1000000 时，二叉搜索树的最低高度是 20。</p>
+<h2 id="平衡"><a href="#平衡" class="headerlink" title="平衡"></a>平衡</h2><p>平衡：当节点数固定时，左右子树的高度越接近，这课二叉树就越平衡（高度越低）</p>
+<h2 id="理想平衡"><a href="#理想平衡" class="headerlink" title="理想平衡"></a>理想平衡</h2><p>最理想的平衡，就是像完全二叉树、满二叉树那样，高度是最小的。</p>
+<h2 id="如何改进二叉搜索树？"><a href="#如何改进二叉搜索树？" class="headerlink" title="如何改进二叉搜索树？"></a>如何改进二叉搜索树？</h2><p>因为节点的添加、删除顺序是无法限制的，可以认为是随机的，所以改进方案是：在节点的添加、删除操作之后，先办法让二叉搜索树恢复平衡（减小树的高度）。用尽量少的调整次数达到适合平衡即可，即平衡二叉搜索树。</p>
+<h2 id="经典的平衡二叉搜索树"><a href="#经典的平衡二叉搜索树" class="headerlink" title="经典的平衡二叉搜索树"></a>经典的平衡二叉搜索树</h2><p>平衡二叉搜索树简称：BBST。</p>
+<h3 id="AVL-树"><a href="#AVL-树" class="headerlink" title="AVL 树"></a>AVL 树</h3><p>Windows NT 内核中广泛使用</p>
+<h3 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h3><ol>
+<li>C++ STL（比如：map、set）；</li>
+<li>Java 的 TreeMap、TreeSet、HashMap、HashSet；</li>
+<li>Linux 的进度调整；</li>
+<li>Ngix 的 timer 管理；</li>
+</ol>
+<p>AVL 树、红黑树一般也称为自平衡的二叉搜索树。</p>
+<h1 id="AVL-树-1"><a href="#AVL-树-1" class="headerlink" title="AVL 树"></a>AVL 树</h1>
           
         
       
