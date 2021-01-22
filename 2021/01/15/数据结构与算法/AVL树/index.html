@@ -82,7 +82,11 @@
 <meta property="og:image" content="http://yoursite.com/2021/01/15/数据结构与算法/AVL树/AVL树03.png">
 <meta property="og:image" content="http://yoursite.com/2021/01/15/数据结构与算法/AVL树/AVL树04.png">
 <meta property="og:image" content="http://yoursite.com/2021/01/15/数据结构与算法/AVL树/AVL树05.png">
-<meta property="og:updated_time" content="2021-01-21T05:41:07.058Z">
+<meta property="og:image" content="http://yoursite.com/2021/01/15/数据结构与算法/AVL树/AVL树06.png">
+<meta property="og:image" content="http://yoursite.com/2021/01/15/数据结构与算法/AVL树/AVL树08.png">
+<meta property="og:image" content="http://yoursite.com/2021/01/15/数据结构与算法/AVL树/AVL树09.png">
+<meta property="og:image" content="http://yoursite.com/2021/01/15/数据结构与算法/AVL树/AVL树10.png">
+<meta property="og:updated_time" content="2021-01-22T09:58:10.783Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AVL树">
 <meta name="twitter:description" content="AVL树是最先发明的自平衡二叉查找树。在AVL树中任何节点的两个子树的高度最大差别为1，所以它也被称为高度平衡树。增加和删除可能需要通过一次或多次树旋转来重新平衡这个树。AVL树得名于它的发明者G. M. Adelson-Velsky和E. M. Landis，他们在1962年的论文《An algorithm for the organization of information》中发表了它。">
@@ -349,8 +353,24 @@
 <ol>
 <li>每个节点的平衡因子只可能是 1、0、-1（绝对值 &lt;= 1，如果超过 1，称之为“失衡”）；</li>
 <li>每个节点的左右子树高度差不超过 1；</li>
-<li>搜索、添加和删除的时间复杂度是 O(logn)；</li>
+<li>搜索、添加和删除的时间复杂度是 O(logn)；<br><img src="/2021/01/15/数据结构与算法/AVL树/AVL树06.png" alt="AVL树"></li>
 </ol>
+<h2 id="添加导致的失衡"><a href="#添加导致的失衡" class="headerlink" title="添加导致的失衡"></a>添加导致的失衡</h2><p>下面这个子树原本是平衡的，添加节点<code>13</code>后出现失衡。最坏情况是导致节点<code>13</code>的所有祖先节点都失衡（<code>14</code>、<code>15</code>、<code>9</code>及其父节点）。节点<code>13</code>的父节点、非祖先节点都不可能失衡。<br><img src="/2021/01/15/数据结构与算法/AVL树/AVL树08.png" alt="AVL树"></p>
+<h2 id="LL-右旋转（单旋）"><a href="#LL-右旋转（单旋）" class="headerlink" title="LL-右旋转（单旋）"></a>LL-右旋转（单旋）</h2><p><code>n</code>（node）、<code>p</code>（paren）和<code>g</code>（grandparent），<code>T0</code>（n的左子树）、<code>T1</code>（n的右子树）、<code>T2</code>（p的右子树）、<code>T3</code>（g的右子树）。</p>
+<ol>
+<li><code>g.left = p.right</code></li>
+<li><code>p.right = g</code></li>
+<li>让<code>p</code>成为这棵子树的根节点</li>
+</ol>
+<p>旋转后的子树又恢复了平衡，仍然是一棵二叉搜索树：T0 &lt; g &lt; T1 &lt; p &lt; T2 &lt; n &lt; T3。</p>
+<p>注意：一定要修改<code>T2</code>、<code>p</code>、<code>g</code>的 parent 属性；依次更新<code>g</code>、<code>p</code>的高度（因为旋转后，<code>g</code>是<code>p</code>的右子树，所以先计算子树的高度，然后 +1 就是<code>p</code>的高度）。<br><img src="/2021/01/15/数据结构与算法/AVL树/AVL树09.png" alt="AVL树"></p>
+<h2 id="RR-左旋转"><a href="#RR-左旋转" class="headerlink" title="RR-左旋转"></a>RR-左旋转</h2><ol>
+<li><code>g.right = p.left</code></li>
+<li><code>p.left = g</code></li>
+<li>让<code>p</code>成为这个子树的根节点</li>
+</ol>
+<p>旋转后的子树又恢复了平衡，仍然是一棵二叉搜索树：T0 &lt; g &lt; T1 &lt; p &lt; T2 &lt; n &lt; T3。</p>
+<p>注意：一定要修改<code>T1</code>、<code>p</code>、<code>g</code>的 parent 属性；依次更新<code>g</code>、<code>p</code>的高度。<br><img src="/2021/01/15/数据结构与算法/AVL树/AVL树10.png" alt="AVL树"></p>
 
       
     </div>
@@ -553,7 +573,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#平衡二叉搜索树（Balanced-Binary-Search-Tree）"><span class="nav-number">1.</span> <span class="nav-text">平衡二叉搜索树（Balanced Binary Search Tree）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉搜索树的复杂度分析"><span class="nav-number">1.1.</span> <span class="nav-text">二叉搜索树的复杂度分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#平衡（Balance）"><span class="nav-number">1.2.</span> <span class="nav-text">平衡（Balance）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#理想平衡"><span class="nav-number">1.3.</span> <span class="nav-text">理想平衡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何改进二叉搜索树？"><span class="nav-number">1.4.</span> <span class="nav-text">如何改进二叉搜索树？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#经典的平衡二叉搜索树"><span class="nav-number">1.5.</span> <span class="nav-text">经典的平衡二叉搜索树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AVL-树"><span class="nav-number">1.5.1.</span> <span class="nav-text">AVL 树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#红黑树"><span class="nav-number">1.5.2.</span> <span class="nav-text">红黑树</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AVL-树-1"><span class="nav-number">2.</span> <span class="nav-text">AVL 树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#平衡因子"><span class="nav-number">2.1.</span> <span class="nav-text">平衡因子</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#平衡二叉搜索树（Balanced-Binary-Search-Tree）"><span class="nav-number">1.</span> <span class="nav-text">平衡二叉搜索树（Balanced Binary Search Tree）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉搜索树的复杂度分析"><span class="nav-number">1.1.</span> <span class="nav-text">二叉搜索树的复杂度分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#平衡（Balance）"><span class="nav-number">1.2.</span> <span class="nav-text">平衡（Balance）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#理想平衡"><span class="nav-number">1.3.</span> <span class="nav-text">理想平衡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何改进二叉搜索树？"><span class="nav-number">1.4.</span> <span class="nav-text">如何改进二叉搜索树？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#经典的平衡二叉搜索树"><span class="nav-number">1.5.</span> <span class="nav-text">经典的平衡二叉搜索树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AVL-树"><span class="nav-number">1.5.1.</span> <span class="nav-text">AVL 树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#红黑树"><span class="nav-number">1.5.2.</span> <span class="nav-text">红黑树</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AVL-树-1"><span class="nav-number">2.</span> <span class="nav-text">AVL 树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#平衡因子"><span class="nav-number">2.1.</span> <span class="nav-text">平衡因子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加导致的失衡"><span class="nav-number">2.2.</span> <span class="nav-text">添加导致的失衡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LL-右旋转（单旋）"><span class="nav-number">2.3.</span> <span class="nav-text">LL-右旋转（单旋）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RR-左旋转"><span class="nav-number">2.4.</span> <span class="nav-text">RR-左旋转</span></a></li></ol></li></ol></div>
             
 
           </div>
