@@ -53,7 +53,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="数据结构与算法," />
 
 
 
@@ -69,14 +69,18 @@
 
 
 
+<meta name="description" content="B树是一种平衡的多路搜索树，多用于文件系统，数据库的实现。">
+<meta name="keywords" content="数据结构与算法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="B树">
 <meta property="og:url" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/index.html">
 <meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="B树是一种平衡的多路搜索树，多用于文件系统，数据库的实现。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2021-02-19T09:08:12.729Z">
+<meta property="og:updated_time" content="2021-02-19T10:20:09.003Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="B树">
+<meta name="twitter:description" content="B树是一种平衡的多路搜索树，多用于文件系统，数据库的实现。">
 
 
 
@@ -316,7 +320,24 @@
       
 
       
-        
+        <p>B树是一种平衡的多路搜索树，多用于文件系统，数据库的实现。</p>
+<a id="more"></a>
+<h1 id="B树"><a href="#B树" class="headerlink" title="B树"></a>B树</h1><p>一棵 m 阶B树是一棵平衡的 m 路搜索树。它或者是空树，或者是满足下列性质的树：</p>
+<ol>
+<li>根节点至少有两个子树；</li>
+<li>每个非根节点所包含的元素个数 <code>j</code> 满足：<code>┌m/2┐ - 1 &lt;= j &lt;= m - 1</code>；</li>
+<li>除根节点以外的所有节点（不包含叶子节点）的度数正好是元素总数加1，故“内部子树”个数 <code>k</code>（度）满足：<code>┌m/2┐ &lt;= k &lt;= m</code>；</li>
+<li>所有的叶子节点都位于同一层。</li>
+</ol>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><ul>
+<li>一个几点可以存储超过两个元素，可以拥有超过两个节点。</li>
+<li>拥有二叉搜索树的一些性质，如：平衡，每个节点的所有子树高度一致。</li>
+<li>比较矮。</li>
+<li>每个节点中元素从小到大排列。</li>
+</ul>
+<h2 id="m-阶-B-树的性质（m-gt-2）"><a href="#m-阶-B-树的性质（m-gt-2）" class="headerlink" title="m 阶 B 树的性质（m &gt;= 2）"></a>m 阶 B 树的性质（m &gt;= 2）</h2><p>假设一个节点存储的元素个数为 <code>j</code>，则根节点：<code>1 &lt;= j &lt;= m-1</code>，非根节点：<code>┌m/2┐ - 1 &lt;= j &lt;= m - 1</code>。  </p>
+<p>如果有子节点，子节点个数 <code>y = j + 1</code>，则根节点的子节点个数：<code>2 &lt;= y &lt;= m</code>。非根节点的子节点个数：<code>┌m/2┐ &lt;= y &lt;= m</code>。<br>比如 m = 3，2 &lt;= y &lt;= 3，因此可以成为（2，3）树或 2-3 树；<br>比如 m = 4，2 &lt;= y &lt;= 4，因此可以成为（2，4）树或 2-3-4 树；<br>比如 m = 5，3 &lt;= y &lt;= 5，因此可以成为（3，5）树；<br>比如 m = 6，3 &lt;= y &lt;= 6，因此可以成为（3，6）树；<br>比如 m = 7，4 &lt;= y &lt;= 7，因此可以成为（4，7）树；  </p>
+
       
     </div>
     
@@ -330,6 +351,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构与算法/" rel="tag"># 数据结构与算法</a>
+          
+        </div>
       
 
       
@@ -402,8 +429,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           
             <img class="site-author-image" itemprop="image"
@@ -493,6 +529,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#B树"><span class="nav-number">1.</span> <span class="nav-text">B树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#特点"><span class="nav-number">1.1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#m-阶-B-树的性质（m-gt-2）"><span class="nav-number">1.2.</span> <span class="nav-text">m 阶 B 树的性质（m >= 2）</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
