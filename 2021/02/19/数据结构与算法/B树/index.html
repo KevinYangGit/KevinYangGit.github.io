@@ -86,7 +86,15 @@
 <meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树06.png">
 <meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树07.png">
 <meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树07.png">
-<meta property="og:updated_time" content="2021-03-01T02:25:26.591Z">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树09.png">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树10.png">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树11.png">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树12.png">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树13.png">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树14.png">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树15.png">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树16.png">
+<meta property="og:updated_time" content="2021-03-01T03:44:57.500Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="B树">
 <meta name="twitter:description" content="B树是一种平衡的多路搜索树，多用于文件系统，数据库的实现。">
@@ -360,7 +368,11 @@
 <li>如果为命中，再去对应的子节点中搜索元素，重复步骤1；</li>
 </ol>
 <p>如：搜索<code>52</code><br><img src="/2021/02/19/数据结构与算法/B树/B树07.png" alt="B树07.png"><br>搜索<code>72</code>：<br><img src="/2021/02/19/数据结构与算法/B树/B树07.png" alt="B树07.png"></p>
-<h1 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h1>
+<h1 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h1><p><img src="/2021/02/19/数据结构与算法/B树/B树09.png" alt="B树09.png"><br>添加<code>55</code>：<br><img src="/2021/02/19/数据结构与算法/B树/B树10.png" alt="B树10.png"><br>添加<code>95</code>：<br><img src="/2021/02/19/数据结构与算法/B树/B树11.png" alt="B树11.png"></p>
+<h2 id="上溢（overflow）"><a href="#上溢（overflow）" class="headerlink" title="上溢（overflow）"></a>上溢（overflow）</h2><p>假设这是一棵4阶B树，再插入<code>98</code>时，最右下角的叶子节点（<code>90、95、98、100</code>）的元素个数超过限制，这种现象可以称之为：上溢（overflow）。<br>插入<code>98</code>，产生上溢：<br><img src="/2021/02/19/数据结构与算法/B树/B树12.png" alt="B树12.png"><br>解决上溢：<br><img src="/2021/02/19/数据结构与算法/B树/B树13.png" alt="B树13.png"></p>
+<p>插入<code>52</code>：<br><img src="/2021/02/19/数据结构与算法/B树/B树14.png" alt="B树14.png"></p>
+<p>插入<code>54</code>，产生上溢:<br><img src="/2021/02/19/数据结构与算法/B树/B树15.png" alt="B树15.png"><br>解决上溢：<br><img src="/2021/02/19/数据结构与算法/B树/B树16.png" alt="B树16.png"></p>
+
       
     </div>
     
@@ -562,7 +574,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#B树"><span class="nav-number">1.</span> <span class="nav-text">B树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#特点"><span class="nav-number">1.1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#m-阶-B-树的性质（m-gt-2）"><span class="nav-number">1.2.</span> <span class="nav-text">m 阶 B 树的性质（m >= 2）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#B树-VS-二叉搜索树"><span class="nav-number">2.</span> <span class="nav-text">B树 VS 二叉搜索树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#搜索"><span class="nav-number">3.</span> <span class="nav-text">搜索</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加"><span class="nav-number">4.</span> <span class="nav-text">添加</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#B树"><span class="nav-number">1.</span> <span class="nav-text">B树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#特点"><span class="nav-number">1.1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#m-阶-B-树的性质（m-gt-2）"><span class="nav-number">1.2.</span> <span class="nav-text">m 阶 B 树的性质（m >= 2）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#B树-VS-二叉搜索树"><span class="nav-number">2.</span> <span class="nav-text">B树 VS 二叉搜索树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#搜索"><span class="nav-number">3.</span> <span class="nav-text">搜索</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加"><span class="nav-number">4.</span> <span class="nav-text">添加</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#上溢（overflow）"><span class="nav-number">4.1.</span> <span class="nav-text">上溢（overflow）</span></a></li></ol></li></ol></div>
             
 
           </div>
