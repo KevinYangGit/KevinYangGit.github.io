@@ -97,7 +97,15 @@
 <meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树14.png">
 <meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树15.png">
 <meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树16.png">
-<meta property="og:updated_time" content="2021-03-01T07:34:57.071Z">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树20.png">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树21.png">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树22.png">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树23.png">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树24.png">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树25.png">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树26.png">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树27.png">
+<meta property="og:updated_time" content="2021-03-01T10:28:49.169Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="B树">
 <meta name="twitter:description" content="B树是一种平衡的多路搜索树，多用于文件系统，数据库的实现。">
@@ -371,20 +379,53 @@
 <li>如果为命中，再去对应的子节点中搜索元素，重复步骤1；</li>
 </ol>
 <p>如：搜索<code>52</code><br><img src="/2021/02/19/数据结构与算法/B树/B树07.png" alt="B树07.png"><br>搜索<code>72</code>：<br><img src="/2021/02/19/数据结构与算法/B树/B树07.png" alt="B树07.png"></p>
-<h1 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h1><p><img src="/2021/02/19/数据结构与算法/B树/B树09.png" alt="B树09.png"><br>添加<code>55</code>：<br><img src="/2021/02/19/数据结构与算法/B树/B树10.png" alt="B树10.png"><br>添加<code>95</code>：<br><img src="/2021/02/19/数据结构与算法/B树/B树11.png" alt="B树11.png"></p>
-<h2 id="上溢（overflow）"><a href="#上溢（overflow）" class="headerlink" title="上溢（overflow）"></a>上溢（overflow）</h2><p>假设这是一棵4阶B树，再插入<code>98</code>时，最右下角的叶子节点（<code>90、95、98、100</code>）的元素个数超过限制，这种现象可以称之为：上溢（overflow）。<br>插入<code>98</code>，产生上溢：<br><img src="/2021/02/19/数据结构与算法/B树/B树12.png" alt="B树12.png"></p>
-<h2 id="上溢的解决"><a href="#上溢的解决" class="headerlink" title="上溢的解决"></a>上溢的解决</h2><p>假设有一个5阶B树，插入了<code>34</code>产生上溢：<br>从图中可以看到，上溢节点的元素个数等于5，即B树的阶数。<br><img src="/2021/02/19/数据结构与算法/B树/B树17.png" alt="B树17.png"><br>上溢节点最中间元素的位置为<code>2</code>，将<code>2</code>位置的元素向上与父节点合并。<br>将 [0, 1] 和 [3, 4] 位置的元素分裂成2个子节点。这2个子节点的元素个数都等于2（必然都不低于最低限制<code>┌m/2┐ - 1</code>）。<br><img src="/2021/02/19/数据结构与算法/B树/B树18.png" alt="B树18.png"><br>分裂完毕后，导致父节点上溢。按照上述方法，将最中间位置的元素向上与父节点合并。最极端的情况是，一直分裂到根节点。<br><img src="/2021/02/19/数据结构与算法/B树/B树19.png" alt="B树19.png"></p>
-<p>小结：</p>
-<ol>
-<li><code>m</code>阶B树上溢节点的元素个数必然等于<code>m</code>。</li>
-<li>假设上溢节点最中间元素的位置为<code>k</code>，将<code>k</code>位置的元素向上与父节点合并。</li>
-<li>将[0,k-1]和[k+1,m-1]位置的元素分裂成2个子节点，这2个子节点的元素个数必然都不会低于最低限制<code>┌m/2┐ - 1</code>。</li>
+<h1 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h1><p>新添加的元素必定是添加到叶子节点。<br>假设这是一棵4阶B树：<br><img src="/2021/02/19/数据结构与算法/B树/B树09.png" alt="B树09.png"><br>添加<code>55</code>：<br><img src="/2021/02/19/数据结构与算法/B树/B树10.png" alt="B树10.png"><br>添加<code>95</code>：<br><img src="/2021/02/19/数据结构与算法/B树/B树11.png" alt="B树11.png"></p>
+<h1 id="上溢（overflow）"><a href="#上溢（overflow）" class="headerlink" title="上溢（overflow）"></a>上溢（overflow）</h1><p>插入<code>98</code>时，最右下角的叶子节点（<code>90、95、98、100</code>）的元素个数超过限制，这种现象可以称之为：上溢（overflow）。<br>插入<code>98</code>，产生上溢：<br><img src="/2021/02/19/数据结构与算法/B树/B树12.png" alt="B树12.png"></p>
+<h2 id="上溢的解决"><a href="#上溢的解决" class="headerlink" title="上溢的解决"></a>上溢的解决</h2><ol>
+<li><code>m</code> 阶B树上溢节点的元素个数必然等于 <code>m</code>。</li>
+<li>假设上溢节点最中间元素的位置为 <code>k</code>，将 <code>k</code> 位置的元素向上与父节点合并。</li>
+<li>将 [0, k-1] 和 [k+1, m-1] 位置的元素分裂成 2 个子节点，这 2 个子节点的元素个数必然都不会低于最低限制 <code>┌m/2┐ - 1</code>。</li>
 <li>一次分裂完毕后，有可能导致父节点上溢，依然按照上述方法解决。最极端的情况，有可能一直分裂到根节点。</li>
 </ol>
+<p>假设有一个5阶B树，插入了<code>34</code>产生上溢：<br>从图中可以看到，上溢节点的元素个数等于5，即B树的阶数。<br><img src="/2021/02/19/数据结构与算法/B树/B树17.png" alt="B树17.png"><br>上溢节点最中间元素的位置为<code>2</code>，将<code>2</code>位置的元素向上与父节点合并。<br>将 [0, 1] 和 [3, 4] 位置的元素分裂成2个子节点。这2个子节点的元素个数都等于2（必然都不低于最低限制<code>┌m/2┐ - 1</code>）。<br><img src="/2021/02/19/数据结构与算法/B树/B树18.png" alt="B树18.png"><br>分裂完毕后，导致父节点上溢。按照上述方法，将最中间位置的元素向上与父节点合并。最极端的情况是，一直分裂到根节点。<br><img src="/2021/02/19/数据结构与算法/B树/B树19.png" alt="B树19.png"></p>
 <p>解决在插入<code>98</code>时产生的上溢：<br><img src="/2021/02/19/数据结构与算法/B树/B树13.png" alt="B树13.png"></p>
 <p>插入<code>52</code>：<br><img src="/2021/02/19/数据结构与算法/B树/B树14.png" alt="B树14.png"></p>
 <p>插入<code>54</code>，产生上溢:<br><img src="/2021/02/19/数据结构与算法/B树/B树15.png" alt="B树15.png"></p>
 <p>解决上溢：<br><img src="/2021/02/19/数据结构与算法/B树/B树16.png" alt="B树16.png"></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
+<li>最极端的情况是，一直分裂到根节点，是唯一一种可以让 B 树长高的情况。</li>
+</ul>
+<h1 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h1><h2 id="叶子节点"><a href="#叶子节点" class="headerlink" title="叶子节点"></a>叶子节点</h2><p>假设需要删除的元素在叶子节点中，那么直接删除即可：<br><img src="/2021/02/19/数据结构与算法/B树/B树20.png" alt="B树20.png"><br>删除<code>30</code>：<br><img src="/2021/02/19/数据结构与算法/B树/B树21.png" alt="B树21.png"></p>
+<h2 id="非叶子节点"><a href="#非叶子节点" class="headerlink" title="非叶子节点"></a>非叶子节点</h2><p>假设需要删除的元素在非叶子节点中，则：</p>
+<ol>
+<li>先找到前驱或后继元素；</li>
+<li>覆盖所需删除的元素的值，再把前驱或后继元素删除。</li>
+</ol>
+<p>删除<code>60</code>：<br>找到前驱元素（前驱节点里最靠右的元素）：<br><img src="/2021/02/19/数据结构与算法/B树/B树22.png" alt="B树22.png"><br>覆盖所需删除的元素的值，再把前驱或后继元素删除：<br><img src="/2021/02/19/数据结构与算法/B树/B树23.png" alt="B树23.png"></p>
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><ul>
+<li>非叶子节点的前驱或后继元素，必定在叶子节点中</li>
+<li>删除前驱或后继元素，等同于删除叶子节点中的元素</li>
+<li>真正的删除元素都是繁盛在叶子节点中</li>
+</ul>
+<h1 id="下溢"><a href="#下溢" class="headerlink" title="下溢"></a>下溢</h1><p>设有一棵5阶B树：<br><img src="/2021/02/19/数据结构与算法/B树/B树24.png" alt="B树24.png"><br>删除<code>22</code>：叶子节点被删除一个元素，导致元素个数可能会低于最低限制（<code>┌m/2┐ - 1</code>），这种现象称为：下溢（underflow）。</p>
+<h2 id="下溢的解决"><a href="#下溢的解决" class="headerlink" title="下溢的解决"></a>下溢的解决</h2><ul>
+<li>下溢节点的元素数量必然等于<code>┌m/2┐ - 2</code>。</li>
+</ul>
+<h3 id="元素个数-gt-┌m-2┐"><a href="#元素个数-gt-┌m-2┐" class="headerlink" title="元素个数 &gt;= ┌m/2┐"></a>元素个数 &gt;= ┌m/2┐</h3><p>如果下溢节点临近的兄弟节点，有至少<code>┌m/2┐</code>个元素，可以向其借一个元素：  </p>
+<ol>
+<li>将父节点的元素<code>b</code>插入到下溢节点的0位置（最小位置）；  </li>
+<li>用兄弟节点的元素<code>a</code>（最大的元素）替代父节点的元素<code>b</code>。  </li>
+</ol>
+<p>这种操作就是“旋转”。<br><img src="/2021/02/19/数据结构与算法/B树/B树25.png" alt="B树25.png"><br><img src="/2021/02/19/数据结构与算法/B树/B树26.png" alt="B树26.png"></p>
+<h3 id="元素个数-┌m-2┐-1"><a href="#元素个数-┌m-2┐-1" class="headerlink" title="元素个数 == ┌m/2┐-1"></a>元素个数 == ┌m/2┐-1</h3><p>如果下溢节点临近的兄弟节点只有<code>┌m/2┐ - 1</code>个元素：</p>
+<ol>
+<li>将父节点的元素<code>b</code>挪下来跟左右子节点进行合并；</li>
+<li>合并后的节点元素个数等于 <code>┌m/2┐ + ┌m/2┐ - 2</code>，不超过<code>m-1</code>；</li>
+</ol>
+<p>这个操作可能会导致父节点下溢，依然按照上述方法解决，下溢现象可能会一直向上传播。<br><img src="/2021/02/19/数据结构与算法/B树/B树27.png" alt="B树27.png"></p>
+<h2 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h2><ul>
+<li>最极端的情况是，一直下溢到根节点，是唯一一种可以让 B 树变矮的情况。</li>
+</ul>
 
       
     </div>
@@ -587,7 +628,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#B树"><span class="nav-number">1.</span> <span class="nav-text">B树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#特点"><span class="nav-number">1.1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#m-阶-B-树的性质（m-gt-2）"><span class="nav-number">1.2.</span> <span class="nav-text">m 阶 B 树的性质（m >= 2）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#B树-VS-二叉搜索树"><span class="nav-number">2.</span> <span class="nav-text">B树 VS 二叉搜索树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#搜索"><span class="nav-number">3.</span> <span class="nav-text">搜索</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加"><span class="nav-number">4.</span> <span class="nav-text">添加</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#上溢（overflow）"><span class="nav-number">4.1.</span> <span class="nav-text">上溢（overflow）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#上溢的解决"><span class="nav-number">4.2.</span> <span class="nav-text">上溢的解决</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#B树"><span class="nav-number">1.</span> <span class="nav-text">B树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#特点"><span class="nav-number">1.1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#m-阶-B-树的性质（m-gt-2）"><span class="nav-number">1.2.</span> <span class="nav-text">m 阶 B 树的性质（m >= 2）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#B树-VS-二叉搜索树"><span class="nav-number">2.</span> <span class="nav-text">B树 VS 二叉搜索树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#搜索"><span class="nav-number">3.</span> <span class="nav-text">搜索</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加"><span class="nav-number">4.</span> <span class="nav-text">添加</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#上溢（overflow）"><span class="nav-number">5.</span> <span class="nav-text">上溢（overflow）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#上溢的解决"><span class="nav-number">5.1.</span> <span class="nav-text">上溢的解决</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">5.2.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#删除"><span class="nav-number">6.</span> <span class="nav-text">删除</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#叶子节点"><span class="nav-number">6.1.</span> <span class="nav-text">叶子节点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非叶子节点"><span class="nav-number">6.2.</span> <span class="nav-text">非叶子节点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结-1"><span class="nav-number">6.3.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#下溢"><span class="nav-number">7.</span> <span class="nav-text">下溢</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#下溢的解决"><span class="nav-number">7.1.</span> <span class="nav-text">下溢的解决</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#元素个数-gt-┌m-2┐"><span class="nav-number">7.1.1.</span> <span class="nav-text">元素个数 >= ┌m/2┐</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#元素个数-┌m-2┐-1"><span class="nav-number">7.1.2.</span> <span class="nav-text">元素个数 == ┌m/2┐-1</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结-2"><span class="nav-number">7.2.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></div>
             
 
           </div>
