@@ -105,7 +105,7 @@
 <meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树25.png">
 <meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树26.png">
 <meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树27.png">
-<meta property="og:updated_time" content="2021-03-01T10:28:49.169Z">
+<meta property="og:updated_time" content="2021-03-01T10:29:54.251Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="B树">
 <meta name="twitter:description" content="B树是一种平衡的多路搜索树，多用于文件系统，数据库的实现。">
@@ -424,7 +424,7 @@
 </ol>
 <p>这个操作可能会导致父节点下溢，依然按照上述方法解决，下溢现象可能会一直向上传播。<br><img src="/2021/02/19/数据结构与算法/B树/B树27.png" alt="B树27.png"></p>
 <h2 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h2><ul>
-<li>最极端的情况是，一直下溢到根节点，是唯一一种可以让 B 树变矮的情况。</li>
+<li>最极端的情况是，一直下溢到根节点。根节点下溢导致根节点消失，与子节点合并成一个新的节点。这种情况是唯一一种可以让 B 树变矮的情况。</li>
 </ul>
 
       
