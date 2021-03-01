@@ -90,11 +90,14 @@
 <meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树10.png">
 <meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树11.png">
 <meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树12.png">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树17.png">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树18.png">
+<meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树19.png">
 <meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树13.png">
 <meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树14.png">
 <meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树15.png">
 <meta property="og:image" content="http://yoursite.com/2021/02/19/数据结构与算法/B树/B树16.png">
-<meta property="og:updated_time" content="2021-03-01T03:44:57.500Z">
+<meta property="og:updated_time" content="2021-03-01T07:34:57.071Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="B树">
 <meta name="twitter:description" content="B树是一种平衡的多路搜索树，多用于文件系统，数据库的实现。">
@@ -369,9 +372,19 @@
 </ol>
 <p>如：搜索<code>52</code><br><img src="/2021/02/19/数据结构与算法/B树/B树07.png" alt="B树07.png"><br>搜索<code>72</code>：<br><img src="/2021/02/19/数据结构与算法/B树/B树07.png" alt="B树07.png"></p>
 <h1 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h1><p><img src="/2021/02/19/数据结构与算法/B树/B树09.png" alt="B树09.png"><br>添加<code>55</code>：<br><img src="/2021/02/19/数据结构与算法/B树/B树10.png" alt="B树10.png"><br>添加<code>95</code>：<br><img src="/2021/02/19/数据结构与算法/B树/B树11.png" alt="B树11.png"></p>
-<h2 id="上溢（overflow）"><a href="#上溢（overflow）" class="headerlink" title="上溢（overflow）"></a>上溢（overflow）</h2><p>假设这是一棵4阶B树，再插入<code>98</code>时，最右下角的叶子节点（<code>90、95、98、100</code>）的元素个数超过限制，这种现象可以称之为：上溢（overflow）。<br>插入<code>98</code>，产生上溢：<br><img src="/2021/02/19/数据结构与算法/B树/B树12.png" alt="B树12.png"><br>解决上溢：<br><img src="/2021/02/19/数据结构与算法/B树/B树13.png" alt="B树13.png"></p>
+<h2 id="上溢（overflow）"><a href="#上溢（overflow）" class="headerlink" title="上溢（overflow）"></a>上溢（overflow）</h2><p>假设这是一棵4阶B树，再插入<code>98</code>时，最右下角的叶子节点（<code>90、95、98、100</code>）的元素个数超过限制，这种现象可以称之为：上溢（overflow）。<br>插入<code>98</code>，产生上溢：<br><img src="/2021/02/19/数据结构与算法/B树/B树12.png" alt="B树12.png"></p>
+<h2 id="上溢的解决"><a href="#上溢的解决" class="headerlink" title="上溢的解决"></a>上溢的解决</h2><p>假设有一个5阶B树，插入了<code>34</code>产生上溢：<br>从图中可以看到，上溢节点的元素个数等于5，即B树的阶数。<br><img src="/2021/02/19/数据结构与算法/B树/B树17.png" alt="B树17.png"><br>上溢节点最中间元素的位置为<code>2</code>，将<code>2</code>位置的元素向上与父节点合并。<br>将 [0, 1] 和 [3, 4] 位置的元素分裂成2个子节点。这2个子节点的元素个数都等于2（必然都不低于最低限制<code>┌m/2┐ - 1</code>）。<br><img src="/2021/02/19/数据结构与算法/B树/B树18.png" alt="B树18.png"><br>分裂完毕后，导致父节点上溢。按照上述方法，将最中间位置的元素向上与父节点合并。最极端的情况是，一直分裂到根节点。<br><img src="/2021/02/19/数据结构与算法/B树/B树19.png" alt="B树19.png"></p>
+<p>小结：</p>
+<ol>
+<li><code>m</code>阶B树上溢节点的元素个数必然等于<code>m</code>。</li>
+<li>假设上溢节点最中间元素的位置为<code>k</code>，将<code>k</code>位置的元素向上与父节点合并。</li>
+<li>将[0,k-1]和[k+1,m-1]位置的元素分裂成2个子节点，这2个子节点的元素个数必然都不会低于最低限制<code>┌m/2┐ - 1</code>。</li>
+<li>一次分裂完毕后，有可能导致父节点上溢，依然按照上述方法解决。最极端的情况，有可能一直分裂到根节点。</li>
+</ol>
+<p>解决在插入<code>98</code>时产生的上溢：<br><img src="/2021/02/19/数据结构与算法/B树/B树13.png" alt="B树13.png"></p>
 <p>插入<code>52</code>：<br><img src="/2021/02/19/数据结构与算法/B树/B树14.png" alt="B树14.png"></p>
-<p>插入<code>54</code>，产生上溢:<br><img src="/2021/02/19/数据结构与算法/B树/B树15.png" alt="B树15.png"><br>解决上溢：<br><img src="/2021/02/19/数据结构与算法/B树/B树16.png" alt="B树16.png"></p>
+<p>插入<code>54</code>，产生上溢:<br><img src="/2021/02/19/数据结构与算法/B树/B树15.png" alt="B树15.png"></p>
+<p>解决上溢：<br><img src="/2021/02/19/数据结构与算法/B树/B树16.png" alt="B树16.png"></p>
 
       
     </div>
@@ -574,7 +587,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#B树"><span class="nav-number">1.</span> <span class="nav-text">B树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#特点"><span class="nav-number">1.1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#m-阶-B-树的性质（m-gt-2）"><span class="nav-number">1.2.</span> <span class="nav-text">m 阶 B 树的性质（m >= 2）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#B树-VS-二叉搜索树"><span class="nav-number">2.</span> <span class="nav-text">B树 VS 二叉搜索树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#搜索"><span class="nav-number">3.</span> <span class="nav-text">搜索</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加"><span class="nav-number">4.</span> <span class="nav-text">添加</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#上溢（overflow）"><span class="nav-number">4.1.</span> <span class="nav-text">上溢（overflow）</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#B树"><span class="nav-number">1.</span> <span class="nav-text">B树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#特点"><span class="nav-number">1.1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#m-阶-B-树的性质（m-gt-2）"><span class="nav-number">1.2.</span> <span class="nav-text">m 阶 B 树的性质（m >= 2）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#B树-VS-二叉搜索树"><span class="nav-number">2.</span> <span class="nav-text">B树 VS 二叉搜索树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#搜索"><span class="nav-number">3.</span> <span class="nav-text">搜索</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加"><span class="nav-number">4.</span> <span class="nav-text">添加</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#上溢（overflow）"><span class="nav-number">4.1.</span> <span class="nav-text">上溢（overflow）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#上溢的解决"><span class="nav-number">4.2.</span> <span class="nav-text">上溢的解决</span></a></li></ol></li></ol></div>
             
 
           </div>
