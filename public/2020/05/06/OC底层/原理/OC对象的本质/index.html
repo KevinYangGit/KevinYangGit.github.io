@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="OC底层原理," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="思考：  一个 NSObject 对象占用多少内存？  创建一个实例对象，至少需要多少内存？实际上分配了多少内存？">
+<meta name="keywords" content="OC底层原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OC对象的本质">
+<meta property="og:url" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/index.html">
+<meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="思考：  一个 NSObject 对象占用多少内存？  创建一个实例对象，至少需要多少内存？实际上分配了多少内存？">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/ObjectiveC_C_C++_汇编语言_机器语言.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/取消编译main_arm64_cpp.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质02.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质03.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质进阶03.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质进阶01.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质进阶02.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质进阶04.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质进阶05.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质进阶06.png">
+<meta property="og:updated_time" content="2020-09-04T07:38:41.010Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OC对象的本质">
+<meta name="twitter:description" content="思考：  一个 NSObject 对象占用多少内存？  创建一个实例对象，至少需要多少内存？实际上分配了多少内存？">
+<meta name="twitter:image" content="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/ObjectiveC_C_C++_汇编语言_机器语言.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/"/>
+
+
+
+
+
+  <title>OC对象的本质 | Kevin's  blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a073c6e38282486853e19b272e9e7c34";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's  blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/06/OC底层/原理/OC对象的本质/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">OC对象的本质</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-06T14:36:30+08:00">
+                2020-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>思考：</p>
+<ul>
+<li>一个 NSObject 对象占用多少内存？ </li>
+<li>创建一个实例对象，至少需要多少内存？实际上分配了多少内存？</li>
+</ul>
+<a id="more"></a>
+<h1 id="Objective-C的本质"><a href="#Objective-C的本质" class="headerlink" title="Objective-C的本质"></a>Objective-C的本质</h1><p>Objective-C 代码的底层实现其实是 C\C++ 代码，Objective-C 的面向对象是基于 C\C++ 的数据结构(结构体)实现的。</p>
+<p><img src="/2020/05/06/OC底层/原理/OC对象的本质/ObjectiveC_C_C++_汇编语言_机器语言.png" alt="ObjectiveC_C_C++_汇编语言_机器语言"></p>
+<h2 id="将-Objective-C-代码转换为-C-C-代码"><a href="#将-Objective-C-代码转换为-C-C-代码" class="headerlink" title="将 Objective-C 代码转换为 C\C++ 代码"></a>将 Objective-C 代码转换为 C\C++ 代码</h2><h3 id="创建一个命令行项目"><a href="#创建一个命令行项目" class="headerlink" title="创建一个命令行项目"></a>创建一个命令行项目</h3><p><img src="/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质.png" alt="OC对象的本质"></p>
+<p>在终端打开 main.m 的位置，输入下面👇的命令生成 main.cpp 文件。因为要生成的代码包括 c/c++，所以使用 main.cpp 文件，main.cpp 文件是 c++ 文件，支持 c/c++。</p>
+<h3 id="生成-main-cpp"><a href="#生成-main-cpp" class="headerlink" title="生成 main.cpp"></a>生成 main.cpp</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> clang -rewrite-objc main.m -o main.cpp</span></div></pre></td></tr></table></figure>
+<p>没有指定平台，默认生成的是多个平台的代码，代码量太大。</p>
+<h3 id="指定生成-iphoneos-平台、arm64-架构的-main-cpp"><a href="#指定生成-iphoneos-平台、arm64-架构的-main-cpp" class="headerlink" title="指定生成 iphoneos 平台、arm64 架构的 main.cpp"></a>指定生成 iphoneos 平台、arm64 架构的 main.cpp</h3><p>指定平台：不同平台支持的代码不一样，如 Windows、mac、iOS。xcrun -sdk iphoneos：指定 iphoneos。<br>指定框架：不同框架支持的代码也不一样，模拟器(i386)、32bit(armv7)、64bit（arm64）。-arch arm64：指定 arm64 架构。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main-arm64.cpp</span></div></pre></td></tr></table></figure></p>
+<p>报错：xcrun: error: SDK “iphoneos” cannot be located<br>解决1：给Xcode命令行工具指定路径👇<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo xcode-select --<span class="keyword">switch</span> <span class="regexp">/Applications/</span>Xcode.app<span class="regexp">/Contents/</span>Developer<span class="regexp">/</span></div></pre></td></tr></table></figure></p>
+<p>（如果需要链接其他框架，使用-framework参数。比如-framework UIKit。(未验证)）<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main<span class="selector-class">.m</span> -o main-arm64<span class="selector-class">.cpp</span> -framework UIKit</div></pre></td></tr></table></figure></p>
+<h3 id="取消-Xcode-对-main-arm64-cpp-的文件编译"><a href="#取消-Xcode-对-main-arm64-cpp-的文件编译" class="headerlink" title="取消 Xcode 对 main-arm64.cpp 的文件编译"></a>取消 Xcode 对 main-arm64.cpp 的文件编译</h3><p>生成的 main-arm64.cpp 文件添加到项目后，运行会报错。main-arm64.cpp 是临时生成的，内部有一个 main 函数，没做适配。 </p>
+<p>解决：删除 Build Phases -&gt; Compile Sources -&gt; main-arm64.cpp<br><img src="/2020/05/06/OC底层/原理/OC对象的本质/取消编译main_arm64_cpp.png" alt="main-arm64"></p>
+<h1 id="NSObject-的底层实现"><a href="#NSObject-的底层实现" class="headerlink" title="NSObject 的底层实现"></a>NSObject 的底层实现</h1><ul>
+<li>思考：一个OC对象在内存中是如何布局的？</li>
+</ul>
+<h2 id="NSObject-在-OC-中的定义："><a href="#NSObject-在-OC-中的定义：" class="headerlink" title="NSObject 在 OC 中的定义："></a>NSObject 在 OC 中的定义：</h2><figure class="highlight monkey"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">@<span class="class"><span class="keyword">interface</span> <span class="title">NSObject</span> &lt;<span class="title">NSObject</span>&gt; &#123;</span></div><div class="line"><span class="meta">#pragma clang diagnostic push</span></div><div class="line"><span class="meta">#pragma clang diagnostic ignored "-Wobjc-interface-ivars"</span></div><div class="line">    <span class="class"><span class="keyword">Class</span> <span class="title">isa</span>  <span class="title">OBJC_ISA_AVAILABILITY</span>;</span></div><div class="line"><span class="meta">#pragma clang diagnostic pop</span></div><div class="line">&#125;</div><div class="line"></div><div class="line">//简化后：</div><div class="line">@<span class="class"><span class="keyword">interface</span> <span class="title">NSObject</span> &#123;</span></div><div class="line">    <span class="class"><span class="keyword">Class</span> <span class="title">isa</span>;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="在-c-中的定义："><a href="#在-c-中的定义：" class="headerlink" title="在 c++ 中的定义："></a>在 c++ 中的定义：</h2><figure class="highlight thrift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">NSObject_IMPL</span> </span>&#123;</div><div class="line">    Class isa; <span class="comment">// 8个字节</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>Class 是指向结构体的指针：typedef struct objc_class *Class。<br>IMPL 是 implementation 的简写。结构体中只有一个成员变量，所以这个结构体在内存中占用的大小就是指针 isa 的大小。</p>
+<p><img src="/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质02.png" alt="OC对象的本质02"></p>
+<h2 id="打印-NSObject-实例对象的成员变量所占用的大小-gt-gt-8"><a href="#打印-NSObject-实例对象的成员变量所占用的大小-gt-gt-8" class="headerlink" title="打印 NSObject 实例对象的成员变量所占用的大小 &gt;&gt; 8"></a>打印 NSObject 实例对象的成员变量所占用的大小 &gt;&gt; 8</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//1.导入头文件</span></div><div class="line"><span class="meta">#import <span class="meta-string">&lt;objc/runtime.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="comment">//2.打印，结果 8</span></div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%zd"</span>, class_getInstanceSize([<span class="built_in">NSObject</span> <span class="keyword">class</span>]));</div></pre></td></tr></table></figure>
+<h2 id="打印-obj-指针所指向内存的大小-gt-gt-16"><a href="#打印-obj-指针所指向内存的大小-gt-gt-16" class="headerlink" title="打印 obj 指针所指向内存的大小 &gt;&gt; 16"></a>打印 obj 指针所指向内存的大小 &gt;&gt; 16</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//1.导入头文件</span></div><div class="line"><span class="meta">#import <span class="meta-string">&lt;malloc/malloc.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="comment">//2.打印，结果 16</span></div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%zd"</span>, malloc_size((__bridge <span class="keyword">const</span> <span class="keyword">void</span> *)obj));</div></pre></td></tr></table></figure>
+<p>__bridge 可以实现 Objective-C 与 C 语言变量 和 Objective-C 与 Core Foundation 对象之间的互相转换。  </p>
+<h2 id="窥视-class-getInstanceSize"><a href="#窥视-class-getInstanceSize" class="headerlink" title="窥视 class_getInstanceSize"></a>窥视 class_getInstanceSize</h2><p>下载 runtime 源码 <a href="https://opensource.apple.com/tarballs/objc4/" target="_blank" rel="external">objc4-781</a>。<br>打开源码搜索 class_getInstanceSize，找到 objc-class.mm 文件中 class_getInstanceSize 的实现代码。<br><figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">size_t class_getInstanceSize(Class <span class="keyword">cls</span>)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span> (!<span class="keyword">cls</span>) <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">cls</span>-&gt;alignedInstanceSize();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Jump to Definition -&gt; alignedInstanceSize：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Class's ivar size rounded up to a pointer-size boundary.</span></div><div class="line"><span class="keyword">uint32_t</span> alignedInstanceSize() <span class="keyword">const</span> &#123;</div><div class="line">    <span class="keyword">return</span> word_align(unalignedInstanceSize());</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>翻译过来就是，class_getInstanceSize 内部根据成员变量的大小和内存对齐原则得到 NSObject 实例对象里成员变量所占用的内存大小。</p>
+<p>👉 内存对齐原则：结构体的大小必须是最大成员大小的倍数。</p>
+<h2 id="窥视-alloc"><a href="#窥视-alloc" class="headerlink" title="窥视 alloc"></a>窥视 alloc</h2><p>alloc 的内部实现是 allocWithZone，在源码中搜索 allocWithZone：<br><figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">id</div><div class="line">_objc_rootAllocWithZone(Class <span class="keyword">cls</span>, malloc_zone_t *zone)</div><div class="line">&#123;</div><div class="line">    id obj;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (fastpath(!zone)) &#123;</div><div class="line">        obj = class_createInstance(<span class="keyword">cls</span>, <span class="number">0</span>); <span class="comment">//参数：类，额外空间0</span></div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        obj = class_createInstanceFromZone(<span class="keyword">cls</span>, <span class="number">0</span>, zone);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (slowpath(!obj)) obj = _objc_callBadAllocHandler(<span class="keyword">cls</span>);</div><div class="line">    <span class="keyword">return</span> obj;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Jump to Definition -&gt; class_createInstance：<br><figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">id</div><div class="line">class_createInstance(Class <span class="keyword">cls</span>, size_t extraBytes)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span> (!<span class="keyword">cls</span>) <span class="keyword">return</span> nil;</div><div class="line">    <span class="keyword">return</span> _class_createInstanceFromZone(<span class="keyword">cls</span>, extraBytes, nil);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Jump to Definition -&gt; _class_createInstanceFromZone：<br><figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//创建 cls 的实例对象</span></div><div class="line">static ALWAYS_INLINE id</div><div class="line">_class_createInstanceFromZone(Class <span class="keyword">cls</span>, size_t extraBytes, void *zone,</div><div class="line">                              int construct_flags = OBJECT_CONSTRUCT_NONE,</div><div class="line">                              <span class="keyword">bool</span> cxxConstruct = true,</div><div class="line">                              size_t *outAllocatedSize = nil)</div><div class="line">&#123;</div><div class="line">    ASSERT(<span class="keyword">cls</span>-&gt;isRealized());</div><div class="line"></div><div class="line">    <span class="comment">// Read class's info bits all at once for performance</span></div><div class="line">    <span class="keyword">bool</span> hasCxxCtor = cxxConstruct &amp;&amp; <span class="keyword">cls</span>-&gt;hasCxxCtor();</div><div class="line">    <span class="keyword">bool</span> hasCxxDtor = <span class="keyword">cls</span>-&gt;hasCxxDtor();</div><div class="line">    <span class="keyword">bool</span> fast = <span class="keyword">cls</span>-&gt;canAllocNonpointer();</div><div class="line">    size_t size;</div><div class="line"></div><div class="line">    size = <span class="keyword">cls</span>-&gt;instanceSize(extraBytes); <span class="comment">//分配内存空间方法👇</span></div><div class="line">    <span class="keyword">if</span> (outAllocatedSize) *outAllocatedSize = size;</div><div class="line"></div><div class="line">    id obj;</div><div class="line">    <span class="keyword">if</span> (zone) &#123;</div><div class="line">        obj = (id)malloc_zone_calloc((malloc_zone_t *)zone, <span class="number">1</span>, size);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        obj = (id)calloc(<span class="number">1</span>, size); <span class="comment">//c语言分配内存的函数，分配空间：size</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (slowpath(!obj)) &#123;</div><div class="line">        <span class="keyword">if</span> (construct_flags &amp; OBJECT_CONSTRUCT_CALL_BADALLOC) &#123;</div><div class="line">            <span class="keyword">return</span> _objc_callBadAllocHandler(<span class="keyword">cls</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> nil;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (!zone &amp;&amp; fast) &#123;</div><div class="line">        obj-&gt;initInstanceIsa(<span class="keyword">cls</span>, hasCxxDtor);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">// Use raw pointer isa on the assumption that they might be</span></div><div class="line">        <span class="comment">// doing something weird with the zone or RR.</span></div><div class="line">        obj-&gt;initIsa(<span class="keyword">cls</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (fastpath(!hasCxxCtor)) &#123;</div><div class="line">        <span class="keyword">return</span> obj;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    construct_flags |= OBJECT_CONSTRUCT_FREE_ONFAILURE;</div><div class="line">    <span class="keyword">return</span> object_cxxConstructFromClass(obj, <span class="keyword">cls</span>, construct_flags);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Jump to Definition -&gt; instanceSize：<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">size_t instanceSize(size_t extraBytes) <span class="keyword">const</span> &#123;</div><div class="line">    <span class="built_in">if</span> (fastpath(cache.hasFastInstanceSize(extraBytes))) &#123;</div><div class="line">        <span class="built_in">return</span> cache.fastInstanceSize(extraBytes);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    size_t <span class="built_in">size</span> = alignedInstanceSize() + extraBytes;</div><div class="line">    <span class="comment">// CF requires all objects be at least 16 bytes.</span></div><div class="line">    <span class="built_in">if</span> (<span class="built_in">size</span> &lt; <span class="number">16</span>) <span class="built_in">size</span> = <span class="number">16</span>; <span class="comment">//至少16个字节</span></div><div class="line">    <span class="built_in">return</span> <span class="built_in">size</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以看到，创建的实例对象的大小最终由 instanceSize 方法实现。内存大小至少16个字节，CoreFoundation 框架内部就是这么硬性规定的。</p>
+<h2 id="小结："><a href="#小结：" class="headerlink" title="小结："></a>小结：</h2><figure class="highlight inform7"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">NSObject *obj = <span class="comment">[<span class="comment">[NSObject alloc]</span> init]</span>;</div></pre></td></tr></table></figure>
+<ul>
+<li>上面👆这句代码实际上是在内存中生成了一个 c 语言定义的结构体，结构体内有一个类型为 Class 的 isa 指针，结构体的大小 8 个字节。Class 是一个指向结构体的指针。</li>
+<li>创建的实例对象的大小至少16个字节.</li>
+</ul>
+<h1 id="查看实例变量的内存的方法"><a href="#查看实例变量的内存的方法" class="headerlink" title="查看实例变量的内存的方法"></a>查看实例变量的内存的方法</h1><h2 id="通过-Xcode-工具查看对象内存"><a href="#通过-Xcode-工具查看对象内存" class="headerlink" title="通过 Xcode 工具查看对象内存"></a>通过 Xcode 工具查看对象内存</h2><p>打开 Debug -&gt; Debug Workflow -&gt; View Memory，在 Address 输入对象的地址。<br><img src="/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质03.png" alt="OC对象的本质03"></p>
+<h2 id="常用-LLDB-指令"><a href="#常用-LLDB-指令" class="headerlink" title="常用 LLDB 指令"></a>常用 LLDB 指令</h2><h3 id="print、p：打印"><a href="#print、p：打印" class="headerlink" title="print、p：打印"></a>print、p：打印</h3><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">(lldb) print obj</div><div class="line">(NSObject *) $<span class="number">0</span> = <span class="number">0x000000010380ef00</span></div><div class="line">(lldb) p obj</div><div class="line">(NSObject *) $<span class="number">1</span> = <span class="number">0x000000010380ef00</span></div></pre></td></tr></table></figure>
+<h3 id="po：打印对象"><a href="#po：打印对象" class="headerlink" title="po：打印对象"></a>po：打印对象</h3><figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">(lldb) <span class="keyword">po</span> obj</div><div class="line">&lt;NSObjec<span class="variable">t:</span> <span class="number">0</span>x10380ef00&gt;</div></pre></td></tr></table></figure>
+<h3 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h3><p>x是16进制，f是浮点，d是10进制</p>
+<h3 id="字节大小"><a href="#字节大小" class="headerlink" title="字节大小"></a>字节大小</h3><p>b：byte 1字节，h：half word 2字节<br>w：word 4字节，g：giant word 8字节</p>
+<h3 id="读取内存"><a href="#读取内存" class="headerlink" title="读取内存"></a>读取内存</h3><ul>
+<li>memory read/数量格式字节数 内存地址</li>
+</ul>
+<p>memory read 内存地址<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">(lldb) memory read <span class="number">0x10380ef00</span></div><div class="line"><span class="number">0x10380ef00</span>: <span class="number">41</span> <span class="number">81</span> <span class="number">8</span>b <span class="number">9</span>a ff ff <span class="number">1</span>d <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>  A...............</div><div class="line"><span class="number">0x10380ef10</span>: e0 ef <span class="number">80</span> <span class="number">03</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">20</span> f2 <span class="number">80</span> <span class="number">03</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>  ........ .......</div></pre></td></tr></table></figure></p>
+<p>x/数量格式字节数 内存地址<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">(lldb) x <span class="number">0x10380ef00</span></div><div class="line"><span class="number">0x10380ef00</span>: <span class="number">41</span> <span class="number">81</span> 8b 9a ff ff <span class="number">1d</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>  A...............</div><div class="line"><span class="number">0x10380ef10</span>: e0 ef <span class="number">80</span> <span class="number">03</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">20</span> f2 <span class="number">80</span> <span class="number">03</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>  ........ .......</div><div class="line">(lldb) x/3xg <span class="number">0x10380ef00</span></div><div class="line"><span class="number">0x10380ef00</span>: <span class="number">0x001dffff9a8b8141</span> <span class="number">0x0000000000000000</span></div><div class="line"><span class="number">0x10380ef10</span>: <span class="number">0x000000010380efe0</span></div><div class="line">(lldb) x/4xg <span class="number">0x10380ef00</span></div><div class="line"><span class="number">0x10380ef00</span>: <span class="number">0x001dffff9a8b8141</span> <span class="number">0x0000000000000000</span></div><div class="line"><span class="number">0x10380ef10</span>: <span class="number">0x000000010380efe0</span> <span class="number">0x000000010380f220</span></div><div class="line">(lldb) x/4xw <span class="number">0x10380ef00</span></div><div class="line"><span class="number">0x10380ef00</span>: <span class="number">0x9a8b8141</span> <span class="number">0x001dffff</span> <span class="number">0x00000000</span> <span class="number">0x00000000</span></div><div class="line">(lldb) x/4<span class="built_in">dw</span> <span class="number">0x10380ef00</span></div><div class="line"><span class="number">0x10380ef00</span>: -<span class="number">1702133439</span></div><div class="line"><span class="number">0x10380ef04</span>: <span class="number">1966079</span></div><div class="line"><span class="number">0x10380ef08</span>: <span class="number">0</span></div><div class="line"><span class="number">0x10380ef0c</span>: <span class="number">0</span></div></pre></td></tr></table></figure></p>
+<p>打印结果中， x/3xg 0x10380ef00 打印的 <code>0x001dffff9a8b8141 0x0000000000000000</code> 部分是属于 obj 的内存。x/4xw 0x10380ef00 打印的 <code>0x9a8b8141 0x001dffff 0x00000000 0x00000000</code> 部分属于 obj 的内存。</p>
+<h3 id="修改内存中的值"><a href="#修改内存中的值" class="headerlink" title="修改内存中的值"></a>修改内存中的值</h3><p>memory  write  内存地址  数值<br>将内存中的第6个字节改成06：<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">(lldb) po obj</div><div class="line">&lt;NSObject: <span class="number">0x10380ef00</span>&gt;</div><div class="line"></div><div class="line">(lldb) memory read <span class="number">0x10380ef00</span></div><div class="line"><span class="number">0x10380ef00</span>: <span class="number">41</span> <span class="number">81</span> <span class="number">8</span>b <span class="number">9</span>a ff ff <span class="number">1</span>d <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>  A...............</div><div class="line"><span class="number">0x10380ef10</span>: e0 ef <span class="number">80</span> <span class="number">03</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">20</span> f2 <span class="number">80</span> <span class="number">03</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>  ........ .......</div><div class="line">(lldb) memory write <span class="number">0x10380ef06</span> <span class="number">6</span></div><div class="line">(lldb) x <span class="number">0x10380ef00</span></div><div class="line"><span class="number">0x10380ef00</span>: <span class="number">41</span> <span class="number">81</span> <span class="number">8</span>b <span class="number">9</span>a ff ff <span class="number">06</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>  A...............</div><div class="line"><span class="number">0x10380ef10</span>: e0 ef <span class="number">80</span> <span class="number">03</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">20</span> f2 <span class="number">80</span> <span class="number">03</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>  ........ .......</div><div class="line">(lldb)</div></pre></td></tr></table></figure></p>
+<p>po obj 获取到对象地址 0x10380ef00，所以第6个字节的地址就是 0x10380ef06。通过 memory write 0x10380ef06 6，将 0x10380ef06 处的字节改为 6。上面👆 x 0x10380ef00 打印出的结果中可以看到，第 6 个字节成功被修改为 06。</p>
+<h1 id="Student-的本质"><a href="#Student-的本质" class="headerlink" title="Student 的本质"></a>Student 的本质</h1><p>定义一个继承 NSObject 的类 Student：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Student</span> : <span class="title">NSObject</span> </span>&#123;</div><div class="line">    <span class="keyword">@public</span></div><div class="line">    <span class="keyword">int</span> _no;</div><div class="line">    <span class="keyword">int</span> _age;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Student</span></span></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<p>创建一个 Student 的实例对象：<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Student *stu = <span class="comment">[<span class="comment">[Student alloc]</span> init]</span>;</div></pre></td></tr></table></figure></p>
+<p>将 OC 代码转换为 C\C++ 代码，并在生成的 C/C++ 代码中找到 Student 的实现：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Student_IMPL</span> &#123;</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">NSObject_IMPL</span> <span class="title">NSObject_IVARS</span>;</span></div><div class="line">    <span class="keyword">int</span> _no;</div><div class="line">    <span class="keyword">int</span> _age;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>因为 NSObject_IMPL 内部只有一个成员变量指针 isa，所以上面👆的代码可以写成：<br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">struct Student_IMPL &#123;</div><div class="line">    Class isa<span class="comment">;</span></div><div class="line">    int _no<span class="comment">;</span></div><div class="line">    int _age<span class="comment">;</span></div><div class="line">&#125;<span class="comment">;</span></div></pre></td></tr></table></figure></p>
+<p><img src="/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质进阶03.png" alt="OC对象的本质进阶01">  </p>
+<p>结构体 Student_IMPL 的成员变量大小是16字节。<br>isa（8字节）+ _no（4字节）+ _age（4字节）= Student_IMPL（16字节）。  </p>
+<p>根据地址也可以看出成员变量的大小：<br><img src="/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质进阶01.png" alt="OC对象的本质进阶01">  </p>
+<p>如图，指针 stu 指向的地址就是 isa 指向的地址（参考理解：数组首元素的地址就是数组的地址）。指针 isa 占8个字节，所以 _no 的地址在 isa 的地址基础上加8个字节。_no 是 Int 类型4字节，所以 _age 的地址在 _no 地址的基础上加4个字节。实例变量内部的成员变量的地址，在堆中依次往后加。</p>
+<p>打开内存图：<br>Debug -&gt; Debug Workflow -&gt; View Memory<br><img src="/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质进阶02.png" alt="OC对象的本质进阶01"><br>因为 iOS 平台是小端模式，所以从内存中读取数据的方式是从高地址开始读取（右→左）。_no 是 0x00000004，_age 是 0x00000005：<br><figure class="highlight dns"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">(lldb) x/<span class="number">4</span>xw <span class="number">0</span>x<span class="number">103a085d0</span></div><div class="line"><span class="number">0</span>x<span class="number">103a085d0</span>: <span class="number">0</span>x<span class="number">000011c9</span> <span class="number">0</span>x<span class="number">001d8001</span> <span class="number">0x00000004</span> <span class="number">0x00000005</span></div></pre></td></tr></table></figure></p>
+<p>通过修改内存中的值的方式来修改 _no，查看内存：<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">(lldb) x <span class="number">0x103a085d0</span></div><div class="line"><span class="number">0x103a085d0</span>: c9 <span class="number">11</span> <span class="number">00</span> <span class="number">00</span> <span class="number">01</span> <span class="number">80</span> <span class="number">1</span>d <span class="number">00</span> <span class="number">04</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">05</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>  ................</div><div class="line"><span class="number">0x103a085e0</span>: b0 <span class="number">86</span> a0 <span class="number">03</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> f0 <span class="number">88</span> a0 <span class="number">03</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>  ................</div></pre></td></tr></table></figure></p>
+<p>_no 的地址（0x103a085d0）向右数8个找到04的地址（0x103a085d8），通过 memory write 将实例对象的第8个字节 04 给为 09，打印 _no = 9。<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">(lldb) memory write <span class="number">0x103a085d8</span> <span class="number">9</span></div><div class="line">(lldb) x <span class="number">0x103a085d0</span></div><div class="line"><span class="number">0x103a085d0</span>: c9 <span class="number">11</span> <span class="number">00</span> <span class="number">00</span> <span class="number">01</span> <span class="number">80</span> <span class="number">1</span>d <span class="number">00</span> <span class="number">09</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">05</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>  ................</div><div class="line"><span class="number">0x103a085e0</span>: b0 <span class="number">86</span> a0 <span class="number">03</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> f0 <span class="number">88</span> a0 <span class="number">03</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>  ................</div><div class="line">(lldb) p stu-&gt;_no</div><div class="line">(int) $<span class="number">3</span> = <span class="number">9</span></div></pre></td></tr></table></figure></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
+<li>iOS 平台是小端模式，所以从内存中读取数据的方式是从高地址开始读取。</li>
+<li>使用 memory write，可以通过修改内存中的值的方式来修改成员变量的值。</li>
+</ul>
+<h1 id="更复杂的继承关系"><a href="#更复杂的继承关系" class="headerlink" title="更复杂的继承关系"></a>更复杂的继承关系</h1><h2 id="定义-Person、Student"><a href="#定义-Person、Student" class="headerlink" title="定义 Person、Student"></a>定义 Person、Student</h2><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@interface</span> <span class="attribute">Person </span>: NSObject</div><div class="line">&#123;</div><div class="line">    <span class="variable">@public</span></div><div class="line">    int _age;</div><div class="line">&#125;</div><div class="line"><span class="variable">@end</span></div><div class="line"></div><div class="line"><span class="variable">@implementation</span> Person</div><div class="line"><span class="variable">@end</span></div><div class="line"></div><div class="line"><span class="variable">@interface</span> <span class="attribute">Student </span>: Person</div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">int</span> <span class="selector-tag">_no</span>;</div><div class="line">&#125;</div><div class="line">@<span class="selector-tag">end</span></div><div class="line"></div><div class="line">@<span class="selector-tag">implementation</span> <span class="selector-tag">Student</span></div><div class="line">@<span class="selector-tag">end</span></div></pre></td></tr></table></figure>
+<p>将 OC 代码转换为 C\C++ 代码，并在生成的 C/C++ 代码中找到 Person、Student 的实现：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Person_IMPL</span> &#123;</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">NSObject_IMPL</span> <span class="title">NSObject_IVARS</span>;</span> <span class="comment">// 8</span></div><div class="line">    <span class="keyword">int</span> _age; <span class="comment">// 4</span></div><div class="line">&#125;; <span class="comment">// 16 内存对齐：结构体的大小必须是最大成员大小的倍数</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Student_IMPL</span> &#123;</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Person_IMPL</span> <span class="title">Person_IVARS</span>;</span> <span class="comment">// 16</span></div><div class="line">    <span class="keyword">int</span> _no; <span class="comment">// 4</span></div><div class="line">&#125;; <span class="comment">// 16</span></div></pre></td></tr></table></figure></p>
+<p>继承关系图解：<br><img src="/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质进阶04.png" alt="OC对象的本质进阶01">  </p>
+<h2 id="Person、Student-的内存大小"><a href="#Person、Student-的内存大小" class="headerlink" title="Person、Student 的内存大小"></a>Person、Student 的内存大小</h2><p>打印 Person、Student 实例变量的大小：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Student *stu = [[Student alloc] init];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"stu - %zd"</span>, class_getInstanceSize([Student <span class="keyword">class</span>])); <span class="comment">//打印结果 16</span></div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"stu - %zd"</span>, malloc_size((__bridge <span class="keyword">const</span> <span class="keyword">void</span> *)stu)); <span class="comment">//打印结果 16</span></div><div class="line"></div><div class="line">Person *person = [[Person alloc] init];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"person - %zd"</span>, class_getInstanceSize([Person <span class="keyword">class</span>])); <span class="comment">//打印结果 16</span></div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"person - %zd"</span>, malloc_size((__bridge <span class="keyword">const</span> <span class="keyword">void</span> *)person)); <span class="comment">//打印结果 16</span></div></pre></td></tr></table></figure></p>
+<p>虽然 Student 比 Person 多了一个成员变量 _no（4字节），但是 Student 和 Person 打印出来的内存大小都是16字节。</p>
+<p>Person、Student 的内存分配图解：<br><img src="/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质进阶05.png" alt="OC对象的本质进阶01">  </p>
+<p>Person 的成员变量的内存之和是12个字节，根据内存对齐的规则，Person 的内存大小必须是内存最大的成员变量 isa（8字节）的倍数，所以分配了16字节的内存给 Person。Student 的成员变量之和是20字节，但是 Person 中有多余的4字节，所以成员变量 _no 的内存被放到了 Person 多余的内存空间里，最终分配给 Student 的内存大小为16字节。  </p>
+<h2 id="property-定义属性的内存分配"><a href="#property-定义属性的内存分配" class="headerlink" title="@property 定义属性的内存分配"></a>@property 定义属性的内存分配</h2><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@interface</span> <span class="attribute">Person </span>: NSObject</div><div class="line">&#123;</div><div class="line">    <span class="variable">@public</span></div><div class="line">    int _age;</div><div class="line">&#125;</div><div class="line"><span class="variable">@property</span> (nonatomic, assign) int height;</div><div class="line"><span class="variable">@end</span></div><div class="line"></div><div class="line"><span class="variable">@implementation</span> Person</div><div class="line"><span class="variable">@end</span></div></pre></td></tr></table></figure>
+<p>将 OC 代码转换为 C\C++ 代码，并在生成的 C/C++ 代码中找到 Person 的实现：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Person_IMPL</span> &#123;</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">NSObject_IMPL</span> <span class="title">NSObject_IVARS</span>;</span> <span class="comment">// 8</span></div><div class="line">    <span class="keyword">int</span> _age; <span class="comment">// 4</span></div><div class="line">    <span class="keyword">int</span> _height; <span class="comment">//4</span></div><div class="line">&#125;; <span class="comment">// 16</span></div></pre></td></tr></table></figure></p>
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><ul>
+<li>子类在分配内存时，如果父类的内存空间有剩余，优先使用父类的内存空间。</li>
+<li>创建出来的实列对象的内存中只存有成员变量，不包含方法。以 Person 为例，因为不同的 Person 实例对象的方法是相同的公用的，所以方法放到类对象的方法列表里，供不同的 Person 实例对象调用。</li>
+</ul>
+<h1 id="窥视-alignedInstanceSize"><a href="#窥视-alignedInstanceSize" class="headerlink" title="窥视 alignedInstanceSize"></a>窥视 alignedInstanceSize</h1><p>class_getInstanceSize 获取内存大小调用的是 alignedInstanceSize：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Class's ivar size rounded up to a pointer-size boundary.</span></div><div class="line"><span class="keyword">uint32_t</span> alignedInstanceSize() <span class="keyword">const</span> &#123;</div><div class="line">    <span class="keyword">return</span> word_align(unalignedInstanceSize());</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>align：对齐。<code>word_align(unalignedInstanceSize())</code>：传入一个未对齐（unaligned）的内存，<code>word_align</code> 方法将其对齐后返回。</p>
+<h1 id="Person-对象的内存分配"><a href="#Person-对象的内存分配" class="headerlink" title="Person 对象的内存分配"></a>Person 对象的内存分配</h1><p>定义 Person<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">@public</span></div><div class="line">    <span class="keyword">int</span> _age;</div><div class="line">    <span class="keyword">int</span> _height;</div><div class="line">    <span class="keyword">int</span> _no;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<p>将 OC 代码转换为 C\C++ 代码，并在生成的 C/C++ 代码中找到 Person 的实现：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Person_IMPL</span> &#123;</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">NSObject_IMPL</span> <span class="title">NSObject_IVARS</span>;</span> <span class="comment">// 8</span></div><div class="line">    <span class="keyword">int</span> _age; <span class="comment">// 4</span></div><div class="line">    <span class="keyword">int</span> _height; <span class="comment">//4</span></div><div class="line">    <span class="keyword">int</span> _no; <span class="comment">//4</span></div><div class="line">&#125;; <span class="comment">// 24</span></div></pre></td></tr></table></figure></p>
+<p>创建 Person 实例变量，打印内存大小：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Person *person = [[Person alloc] init];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"person - %zd"</span>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> Person_IMPL)); <span class="comment">//24</span></div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"person - %zd"</span>, class_getInstanceSize([Person <span class="keyword">class</span>])); <span class="comment">//24</span></div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"person - %zd"</span>, malloc_size((__bridge <span class="keyword">const</span> <span class="keyword">void</span> *)person)); <span class="comment">//32</span></div></pre></td></tr></table></figure></p>
+<p>sizeof() 是运算符，计算类型的大小，是在编译的时候就确定的。</p>
+<p>Person 内的成员变量的从内存图中可以确认，Person 分配的内存是32：<br><img src="/2020/05/06/OC底层/原理/OC对象的本质/OC对象的本质进阶06.png" alt="OC对象的本质进阶01"> </p>
+<h2 id="窥视-class-createInstanceFromZone"><a href="#窥视-class-createInstanceFromZone" class="headerlink" title="窥视 _class_createInstanceFromZone"></a>窥视 _class_createInstanceFromZone</h2><p>alloc -&gt; allocWithZoone -&gt; _objc_rootAllocWithZone -&gt; class_createInstance -&gt; _class_createInstanceFromZone</p>
+<p>_class_createInstanceFromZone 实现：<br><figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//创建 cls 的实例对象</span></div><div class="line">static ALWAYS_INLINE id</div><div class="line">_class_createInstanceFromZone(Class <span class="keyword">cls</span>, size_t extraBytes, void *zone,</div><div class="line">                              int construct_flags = OBJECT_CONSTRUCT_NONE,</div><div class="line">                              <span class="keyword">bool</span> cxxConstruct = true,</div><div class="line">                              size_t *outAllocatedSize = nil)</div><div class="line">&#123;</div><div class="line">    ASSERT(<span class="keyword">cls</span>-&gt;isRealized());</div><div class="line"></div><div class="line">    <span class="comment">// Read class's info bits all at once for performance</span></div><div class="line">    <span class="keyword">bool</span> hasCxxCtor = cxxConstruct &amp;&amp; <span class="keyword">cls</span>-&gt;hasCxxCtor();</div><div class="line">    <span class="keyword">bool</span> hasCxxDtor = <span class="keyword">cls</span>-&gt;hasCxxDtor();</div><div class="line">    <span class="keyword">bool</span> fast = <span class="keyword">cls</span>-&gt;canAllocNonpointer();</div><div class="line">    size_t size;</div><div class="line"></div><div class="line">    size = <span class="keyword">cls</span>-&gt;instanceSize(extraBytes); <span class="comment">//分配空间</span></div><div class="line">    <span class="keyword">if</span> (outAllocatedSize) *outAllocatedSize = size;</div><div class="line"></div><div class="line">    id obj;</div><div class="line">    <span class="keyword">if</span> (zone) &#123;</div><div class="line">        obj = (id)malloc_zone_calloc((malloc_zone_t *)zone, <span class="number">1</span>, size);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        obj = (id)calloc(<span class="number">1</span>, size); <span class="comment">//c语言分配内存的函数，需要分配的内存大小：size</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (slowpath(!obj)) &#123;</div><div class="line">        <span class="keyword">if</span> (construct_flags &amp; OBJECT_CONSTRUCT_CALL_BADALLOC) &#123;</div><div class="line">            <span class="keyword">return</span> _objc_callBadAllocHandler(<span class="keyword">cls</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> nil;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (!zone &amp;&amp; fast) &#123;</div><div class="line">        obj-&gt;initInstanceIsa(<span class="keyword">cls</span>, hasCxxDtor);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">// Use raw pointer isa on the assumption that they might be</span></div><div class="line">        <span class="comment">// doing something weird with the zone or RR.</span></div><div class="line">        obj-&gt;initIsa(<span class="keyword">cls</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (fastpath(!hasCxxCtor)) &#123;</div><div class="line">        <span class="keyword">return</span> obj;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    construct_flags |= OBJECT_CONSTRUCT_FREE_ONFAILURE;</div><div class="line">    <span class="keyword">return</span> object_cxxConstructFromClass(obj, <span class="keyword">cls</span>, construct_flags);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以看出，代码最终是调用 <code>obj = (id)calloc(1, size);</code> 创建的实列对象。而 <code>size = cls-&gt;instanceSize(extraBytes);</code> 是根据成员变量大小计算出来的需要开辟的内存大小。<code>instanceSize(extraBytes)</code> 的参数 extraBytes 是额外空间，来自 <code>_objc_rootAllocWithZone</code>，<code>_objc_rootAllocWithZone</code> 传入的 extraBytes = 0：<br><figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">id</div><div class="line">_objc_rootAllocWithZone(Class <span class="keyword">cls</span>, malloc_zone_t *zone)</div><div class="line">&#123;</div><div class="line">    id obj;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (fastpath(!zone)) &#123;</div><div class="line">        obj = class_createInstance(<span class="keyword">cls</span>, <span class="number">0</span>);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        obj = class_createInstanceFromZone(<span class="keyword">cls</span>, <span class="number">0</span>, zone);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (slowpath(!obj)) obj = _objc_callBadAllocHandler(<span class="keyword">cls</span>);</div><div class="line">    <span class="keyword">return</span> obj;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>排查完 <code>instanceSize(extraBytes)</code> 后，可以确定 <code>class_getInstanceSize()</code> 与 <code>malloc_size()</code> 获取到的内存大小不同的原因来自 calloc。</p>
+<h1 id="窥视-calloc"><a href="#窥视-calloc" class="headerlink" title="窥视 calloc"></a>窥视 calloc</h1><p>calloc 是 c 语言的标准库，需要下载 <a href="https://opensource.apple.com/tarballs/libmalloc/" target="_blank" rel="external">libmalloc</a>（libmalloc-283 文件里没有 malloc.c 文件了，这里下的是 libmalloc-166.200.60.tar.gz）。</p>
+<p>打开 libmalloc 项目找到 malloc.c 文件，再找到 calloc 方法：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> *</div><div class="line"><span class="built_in">calloc</span>(<span class="keyword">size_t</span> num_items, <span class="keyword">size_t</span> size)</div><div class="line">&#123;</div><div class="line">	<span class="keyword">void</span> *retval;</div><div class="line">	retval = malloc_zone_calloc(default_zone, num_items, size);</div><div class="line">	<span class="keyword">if</span> (retval == <span class="literal">NULL</span>) &#123;</div><div class="line">		errno = ENOMEM;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> retval;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Jump to Definition -&gt; malloc_zone_calloc<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">void *</div><div class="line">malloc_zone_calloc(<span class="name">malloc_zone_t</span> *zone, size_t num_items, size_t size)</div><div class="line">&#123;</div><div class="line">	void *ptr<span class="comment">;</span></div><div class="line">	size_t alloc_size<span class="comment">;</span></div><div class="line">	if (<span class="name">malloc_check_start</span> <span class="symbol">&amp;&amp;</span> (<span class="name">malloc_check_counter++</span> &gt;= malloc_check_start)) &#123;</div><div class="line">		internal_check()<span class="comment">;</span></div><div class="line">	&#125;</div><div class="line">	if (<span class="name">os_mul_overflow</span>(<span class="name">num_items</span>, size, <span class="symbol">&amp;alloc_size</span>) || alloc_size &gt; MALLOC_ABSOLUTE_MAX_SIZE)&#123;</div><div class="line">		errno = ENOMEM<span class="comment">;</span></div><div class="line">		return NULL<span class="comment">;</span></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	ptr = zone-&gt;calloc(<span class="name">zone</span>, num_items, size)<span class="comment">;</span></div><div class="line">	</div><div class="line">	if (<span class="name">malloc_logger</span>) &#123;</div><div class="line">		malloc_logger(<span class="name">MALLOC_LOG_TYPE_ALLOCATE</span> | MALLOC_LOG_TYPE_HAS_ZONE | MALLOC_LOG_TYPE_CLEARED, (<span class="name">uintptr_t</span>)zone,</div><div class="line">				(<span class="name">uintptr_t</span>)(<span class="name">num_items</span> * size), 0, (uintptr_t)ptr, 0);</div><div class="line">	&#125;</div><div class="line">	return ptr;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>malloc_zone_calloc</code> 中就是系统分配内存的具体实现。另外，在系统分配内存时有一个 <code>NANO_MAX_SIZE</code>：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> NANO_MAX_SIZE			256 <span class="comment">/* Buckets sized &#123;16, 32, 48, 64, 80, 96, 112, ...&#125; */</span></span></div></pre></td></tr></table></figure></p>
+<p>Buckets sized：iOS 堆空间里内存分为一块一块的内存空间，大小都是16的倍数，最大的内存空间块是256。</p>
+<p><code>malloc_zone_calloc</code> 这里也存在内存对齐原则。前面在生成结构体的时候提到过，根据内存对齐原则，结构体的大小必须是最大成员大小的倍数。而在这里，系统在分配内存时，分配的内存必须是16的倍数。因为 ios 系统为了提升内存分配的速度，固定了需要分配的内存空间块（Buckets sized）。在需要分配内存的时候，会找到最合适的内存空间块们来分配给实例对象。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li><p>一个 NSObject 对象占用多少内存？<br>alloc 方法让系统分配了16个字节给 NSObject 对象（可以通过 malloc_size 函数获取）。<br>NSObject 对象内部只有一个成员变量，即指针 isa，所以只使用了8个字节的空间（64bit环境下，可以通过 class_getInstanceSize 函数获得）。</p>
+</li>
+<li><p>创建一个实例对象，至少需要多少内存？实际上分配了多少内存？</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//至少需要内存大小：</span></div><div class="line"><span class="meta">#import <span class="meta-string">&lt;objc/runtime.h&gt;</span></span></div><div class="line">class_getInstanceSize([<span class="built_in">NSObject</span> <span class="keyword">class</span>]);</div><div class="line"></div><div class="line"><span class="comment">//实际分配内存大小：</span></div><div class="line"><span class="meta">#import <span class="meta-string">&lt;malloc/malloc.h&gt;</span></span></div><div class="line">malloc_size((__bridge <span class="keyword">const</span> <span class="keyword">void</span> *)obj);</div></pre></td></tr></table></figure>
+</li>
+<li><p>内存对齐原则：结构体的大小必须是最大成员大小的倍数，系统分配内存的大小必须是固定的大小（16的倍数）。</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OC底层原理/" rel="tag"># OC底层原理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/14/不二医疗/不二医疗技术支持网址/" rel="next" title="不二医疗技术支持网址">
+                <i class="fa fa-chevron-left"></i> 不二医疗技术支持网址
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/09/OC底层/原理/OC对象的分类/" rel="prev" title="OC对象的分类">
+                OC对象的分类 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/myAvatar.gif"
+              alt="Kevin" />
+          
+            <p class="site-author-name" itemprop="name">Kevin</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KevinYangGit" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yangqioffice@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_YangQI" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.cnblogs.com/mjios" title="M了个J" target="_blank">M了个J</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Objective-C的本质"><span class="nav-number">1.</span> <span class="nav-text">Objective-C的本质</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#将-Objective-C-代码转换为-C-C-代码"><span class="nav-number">1.1.</span> <span class="nav-text">将 Objective-C 代码转换为 C\C++ 代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建一个命令行项目"><span class="nav-number">1.1.1.</span> <span class="nav-text">创建一个命令行项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成-main-cpp"><span class="nav-number">1.1.2.</span> <span class="nav-text">生成 main.cpp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#指定生成-iphoneos-平台、arm64-架构的-main-cpp"><span class="nav-number">1.1.3.</span> <span class="nav-text">指定生成 iphoneos 平台、arm64 架构的 main.cpp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#取消-Xcode-对-main-arm64-cpp-的文件编译"><span class="nav-number">1.1.4.</span> <span class="nav-text">取消 Xcode 对 main-arm64.cpp 的文件编译</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSObject-的底层实现"><span class="nav-number">2.</span> <span class="nav-text">NSObject 的底层实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NSObject-在-OC-中的定义："><span class="nav-number">2.1.</span> <span class="nav-text">NSObject 在 OC 中的定义：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在-c-中的定义："><span class="nav-number">2.2.</span> <span class="nav-text">在 c++ 中的定义：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打印-NSObject-实例对象的成员变量所占用的大小-gt-gt-8"><span class="nav-number">2.3.</span> <span class="nav-text">打印 NSObject 实例对象的成员变量所占用的大小 >> 8</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打印-obj-指针所指向内存的大小-gt-gt-16"><span class="nav-number">2.4.</span> <span class="nav-text">打印 obj 指针所指向内存的大小 >> 16</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#窥视-class-getInstanceSize"><span class="nav-number">2.5.</span> <span class="nav-text">窥视 class_getInstanceSize</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#窥视-alloc"><span class="nav-number">2.6.</span> <span class="nav-text">窥视 alloc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结："><span class="nav-number">2.7.</span> <span class="nav-text">小结：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#查看实例变量的内存的方法"><span class="nav-number">3.</span> <span class="nav-text">查看实例变量的内存的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#通过-Xcode-工具查看对象内存"><span class="nav-number">3.1.</span> <span class="nav-text">通过 Xcode 工具查看对象内存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用-LLDB-指令"><span class="nav-number">3.2.</span> <span class="nav-text">常用 LLDB 指令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#print、p：打印"><span class="nav-number">3.2.1.</span> <span class="nav-text">print、p：打印</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#po：打印对象"><span class="nav-number">3.2.2.</span> <span class="nav-text">po：打印对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#格式"><span class="nav-number">3.2.3.</span> <span class="nav-text">格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字节大小"><span class="nav-number">3.2.4.</span> <span class="nav-text">字节大小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#读取内存"><span class="nav-number">3.2.5.</span> <span class="nav-text">读取内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改内存中的值"><span class="nav-number">3.2.6.</span> <span class="nav-text">修改内存中的值</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Student-的本质"><span class="nav-number">4.</span> <span class="nav-text">Student 的本质</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">4.1.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#更复杂的继承关系"><span class="nav-number">5.</span> <span class="nav-text">更复杂的继承关系</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义-Person、Student"><span class="nav-number">5.1.</span> <span class="nav-text">定义 Person、Student</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Person、Student-的内存大小"><span class="nav-number">5.2.</span> <span class="nav-text">Person、Student 的内存大小</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#property-定义属性的内存分配"><span class="nav-number">5.3.</span> <span class="nav-text">@property 定义属性的内存分配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结-1"><span class="nav-number">5.4.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#窥视-alignedInstanceSize"><span class="nav-number">6.</span> <span class="nav-text">窥视 alignedInstanceSize</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Person-对象的内存分配"><span class="nav-number">7.</span> <span class="nav-text">Person 对象的内存分配</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#窥视-class-createInstanceFromZone"><span class="nav-number">7.1.</span> <span class="nav-text">窥视 _class_createInstanceFromZone</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#窥视-calloc"><span class="nav-number">8.</span> <span class="nav-text">窥视 calloc</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">9.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="/js/src/md5.min.js"></script>
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: '82b6ced795961ee1fcca',
+      clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
+      repo: 'KevinYangGit.github.io',
+      owner: 'KevinYangGit',
+      admin: ['KevinYangGit'],
+      id: md5(location.pathname),
+      distractionFreeMode: 'true'
+    })
+    gitalk.render('gitalk-container')
+  </script>
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
