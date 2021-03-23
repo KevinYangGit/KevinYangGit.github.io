@@ -81,7 +81,7 @@
 <meta property="og:image" content="http://yoursite.com/2021/03/02/Other/微信小程序/微信小程序02.png">
 <meta property="og:image" content="http://yoursite.com/2021/03/02/Other/微信小程序/微信小程序03.png">
 <meta property="og:image" content="http://yoursite.com/2021/03/02/Other/微信小程序/微信小程序04.png">
-<meta property="og:updated_time" content="2021-03-23T08:52:59.341Z">
+<meta property="og:updated_time" content="2021-03-23T08:56:50.096Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="微信小程序">
 <meta name="twitter:description" content="微信官方文档">
@@ -355,34 +355,24 @@
 </ol>
 <h2 id="电影展示栏"><a href="#电影展示栏" class="headerlink" title="电影展示栏"></a>电影展示栏</h2><p><img src="/2021/03/02/Other/微信小程序/微信小程序04.png" alt="微信小程序04.png"></p>
 <h3 id="UI-2"><a href="#UI-2" class="headerlink" title="UI"></a>UI</h3><h4 id="scroll-view"><a href="#scroll-view" class="headerlink" title="scroll-view"></a>scroll-view</h4><figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;<span class="keyword">scroll</span>-<span class="built_in">view</span> class='module-<span class="keyword">scroll</span>-<span class="built_in">view</span>' <span class="keyword">scroll</span>-x=<span class="string">"&#123;&#123;true&#125;&#125;"</span>&gt;</div><div class="line">  <span class="comment">// 内容</span></div><div class="line">&lt;/<span class="keyword">scroll</span>-<span class="built_in">view</span>&gt;</div></pre></td></tr></table></figure>
-<p><code>scroll-x=&quot;true&quot;</code>：这只滚动方向，x轴方向。  </p>
+<p><code>scroll-x=&quot;true&quot;</code>：设置滚动方向，x轴方向。  </p>
 <h4 id="使用自定义组件-itemview"><a href="#使用自定义组件-itemview" class="headerlink" title="使用自定义组件 itemview"></a>使用自定义组件 itemview</h4><figure class="highlight django"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="xml"><span class="tag">&lt;<span class="name">itemview</span> <span class="attr">wx:for</span>=<span class="string">"</span></span></span><span class="template-variable">&#123;&#123;items&#125;&#125;</span><span class="xml"><span class="tag"><span class="string">"</span> <span class="attr">wx:key</span>=<span class="string">"</span></span></span><span class="template-variable">&#123;&#123;item.title&#125;&#125;</span><span class="xml"><span class="tag"><span class="string">"</span> <span class="attr">item</span>=<span class="string">"</span></span></span><span class="template-variable">&#123;&#123;item&#125;&#125;</span><span class="xml"><span class="tag"><span class="string">"</span></span></span></div><div class="line"><span class="xml">      itemurl="/pages/detail/detail?type=</span><span class="template-variable">&#123;&#123;type&#125;&#125;</span><span class="xml">&amp;id=</span><span class="template-variable">&#123;&#123;item.id&#125;&#125;</span><span class="xml">"&gt;<span class="tag">&lt;/<span class="name">itemview</span>&gt;</span></span></div></pre></td></tr></table></figure>
 <p><code>item=&quot;&quot;</code>：设置 item。<br><code>itemurl=&quot;/pages/detail/detail?type=&amp;id=&quot;</code>：设置跳转页面的路径。路径中的 <code>?type=&amp;id=&quot;</code> 是页面间跳转时的数据传递。  </p>
 <p>使用自定义组件的前提是在 .json 文件中导入了组件（<code>usingComponents</code>），如在 indexmodule.json 文件导入 itemview<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"component"</span>: <span class="literal">true</span>,</div><div class="line">  <span class="attr">"usingComponents"</span>: &#123;</div><div class="line">    <span class="attr">"itemview"</span>: <span class="string">"/components/itemview/itemview"</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h3 id="布局-2"><a href="#布局-2" class="headerlink" title="布局"></a>布局</h3><p>indexmodule.wxss 文件：</p>
 <pre><code>/* components/indexmodule/indexmodule.wxss */
 
-/*
- * `padding: 40rpx;`：设置上下、左右边距。
- * `background-color: #fff;`：设置背景色。
- */
 .module-group {
   padding: 40rpx;
   background-color: #fff;
 }
 
-/*
- * `justify-content: space-between;`：子视图靠左右两边对齐。  
- */
 .module-group .module-top {
   font-size: 36rpx;
   display: flex;
   justify-content: space-between;
 }
 
-/* 
- * 设置字体颜色 
- */
 .module-group .module-title {
   color: #494949;
 }
@@ -391,16 +381,14 @@
   color: #41be57;
 }
 
-/*
- * `white-space: nowrap;`：设置 scroll-view 不换行。 
- */
 .module-scroll-view {
   margin-top: 40rpx;
   width: 100%;
   height: 400rpx;
   white-space: nowrap;
 }
-</code></pre>
+</code></pre><p><code>padding: 40rpx;</code>：设置上下、左右边距。<br><code>background-color: #fff;</code>：设置背景色。<br><code>justify-content: space-between;</code>：子视图靠左右两边对齐。<br><code>white-space: nowrap;</code>：设置 scroll-view 不换行。 </p>
+
       
     </div>
     
