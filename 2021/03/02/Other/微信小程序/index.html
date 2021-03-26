@@ -88,7 +88,7 @@
 <meta property="og:image" content="http://yoursite.com/2021/03/02/Other/微信小程序/微信小程序07.png">
 <meta property="og:image" content="http://yoursite.com/2021/03/02/Other/微信小程序/微信小程序09.png">
 <meta property="og:image" content="http://yoursite.com/2021/03/02/Other/微信小程序/微信小程序10.png">
-<meta property="og:updated_time" content="2021-03-26T07:05:27.204Z">
+<meta property="og:updated_time" content="2021-03-26T07:09:48.503Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="微信小程序">
 <meta name="twitter:description" content="微信官方文档">
@@ -454,6 +454,9 @@
 </li>
 <li><p>网络请求</p>
 <figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 发起网络请求</span></div><div class="line"><span class="selector-tag">wx</span><span class="selector-class">.request</span>(&#123;</div><div class="line">  <span class="comment">// 设置请求url</span></div><div class="line">  <span class="attribute">url</span>: url,</div><div class="line">  <span class="comment">// 设置请求参数</span></div><div class="line">  <span class="attribute">data</span>: &#123;</div><div class="line">    <span class="attribute">count</span>: count</div><div class="line">  &#125;,</div><div class="line">  <span class="comment">// 请求成功回调</span></div><div class="line">  <span class="attribute">success</span>: function(res) &#123;</div><div class="line">    console.log(res);</div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+</li>
+<li><p>构造器<br>可以单独创建一个 .js 文件，在文件内部创建构造器。以 <code>globalUrls、ntework</code> 为例，构造器内部可以定义变量、构造方法，这样外部调用者不需要初始化，可以直接使用 <code>globalUrls、ntework</code> 调用构造器内部的变量和方法，同 iOS 里的类方法。</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> globalUrls = &#123;</div><div class="line">    <span class="comment">// 内容</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 </li>
 </ul>
 
