@@ -88,7 +88,7 @@
 <meta property="og:image" content="http://yoursite.com/2021/03/02/Other/微信小程序/微信小程序07.png">
 <meta property="og:image" content="http://yoursite.com/2021/03/02/Other/微信小程序/微信小程序09.png">
 <meta property="og:image" content="http://yoursite.com/2021/03/02/Other/微信小程序/微信小程序10.png">
-<meta property="og:updated_time" content="2021-03-26T06:51:16.606Z">
+<meta property="og:updated_time" content="2021-03-26T07:05:27.204Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="微信小程序">
 <meta name="twitter:description" content="微信官方文档">
@@ -445,10 +445,9 @@
 </li>
 <li><p>事件回调、主动触发<br>组件内通过主动触发回调方法，实现事件传递。以 input 组件位列：</p>
 <figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 组件的方法列表</span></div><div class="line"><span class="comment"> */</span></div><div class="line">methods: &#123;</div><div class="line">  <span class="comment">// 输入框输入回调</span></div><div class="line">  onInputEvent: function(<span class="keyword">event</span>) &#123;</div><div class="line">    <span class="keyword">var</span> <span class="keyword">value</span> = <span class="keyword">event</span>.detail.<span class="keyword">value</span>;</div><div class="line">    <span class="keyword">var</span> detail = &#123;<span class="string">"value"</span>: <span class="keyword">value</span>&#125;;</div><div class="line">    <span class="keyword">var</span> options = &#123;&#125;;</div><div class="line">    <span class="comment">// 回调方法</span></div><div class="line">    <span class="keyword">this</span>.triggerEvent(<span class="string">"searchinput"</span>,detail,options);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ul>
-<li>加载动画<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 显示加载动画</span></div><div class="line"><span class="selector-tag">wx</span><span class="selector-class">.showLoading</span>(&#123;</div><div class="line">  <span class="attribute">title</span>: <span class="string">'正在加载中...'</span>,</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="comment">// 移除加载动画</span></div><div class="line"><span class="selector-tag">wx</span><span class="selector-class">.hideLoading</span>();</div></pre></td></tr></table></figure>
 </li>
-</ul>
+<li><p>加载动画</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 显示加载动画</span></div><div class="line"><span class="selector-tag">wx</span><span class="selector-class">.showLoading</span>(&#123;</div><div class="line">  <span class="attribute">title</span>: <span class="string">'正在加载中...'</span>,</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="comment">// 移除加载动画</span></div><div class="line"><span class="selector-tag">wx</span><span class="selector-class">.hideLoading</span>();</div></pre></td></tr></table></figure>
 </li>
 <li><p>scroll-view 滚动到指定位置</p>
 <figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 滚动到顶部</span></div><div class="line">wx.pageScrollTo(&#123;</div><div class="line"><span class="symbol">  scrollTop:</span> <span class="number">0</span>,</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
