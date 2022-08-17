@@ -71,3 +71,4 @@ deploy:
    type: git
    repository: https://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@github.com/KevinYangGit/KevinYangGit.github.io.git
    branch: master
+   repo: https://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@github.com/KevinYangGit/KevinYangGit.github.io.git

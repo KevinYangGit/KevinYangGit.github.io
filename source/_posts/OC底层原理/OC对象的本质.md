@@ -129,6 +129,7 @@ uint32_t alignedInstanceSize() const {
 
 ## 窥视 alloc
 alloc 的内部实现是 allocWithZone，在源码中搜索 allocWithZone：
+
 ```
 id
 _objc_rootAllocWithZone(Class cls, malloc_zone_t *zone)
@@ -145,7 +146,9 @@ _objc_rootAllocWithZone(Class cls, malloc_zone_t *zone)
     return obj;
 }
 ```
+
 Jump to Definition -> class_createInstance：
+
 ```
 id
 class_createInstance(Class cls, size_t extraBytes)
@@ -154,7 +157,9 @@ class_createInstance(Class cls, size_t extraBytes)
     return _class_createInstanceFromZone(cls, extraBytes, nil);
 }
 ```
+
 Jump to Definition -> _class_createInstanceFromZone：
+
 ```
 //创建 cls 的实例对象
 static ALWAYS_INLINE id
@@ -205,6 +210,7 @@ _class_createInstanceFromZone(Class cls, size_t extraBytes, void *zone,
 ```
 
 Jump to Definition -> instanceSize：
+
 ```
 size_t instanceSize(size_t extraBytes) const {
     if (fastpath(cache.hasFastInstanceSize(extraBytes))) {
@@ -220,9 +226,11 @@ size_t instanceSize(size_t extraBytes) const {
 可以看到，创建的实例对象的大小最终由 instanceSize 方法实现。内存大小至少16个字节，CoreFoundation 框架内部就是这么硬性规定的。
 
 ## 小结：  
+
 ```
 NSObject *obj = [[NSObject alloc] init];
 ```
+
 * 上面👆这句代码实际上是在内存中生成了一个 c 语言定义的结构体，结构体内有一个类型为 Class 的 isa 指针，结构体的大小 8 个字节。Class 是一个指向结构体的指针。
 * 创建的实例对象的大小至少16个字节.
 
@@ -236,6 +244,7 @@ NSObject *obj = [[NSObject alloc] init];
 
 ## 常用 LLDB 指令
 ### print、p：打印
+
 ```
 (lldb) print obj
 (NSObject *) $0 = 0x000000010380ef00
@@ -244,6 +253,7 @@ NSObject *obj = [[NSObject alloc] init];
 ```
 
 ### po：打印对象
+
 ```
 (lldb) po obj
 <NSObject: 0x10380ef00>
@@ -260,6 +270,7 @@ w：word 4字节，g：giant word 8字节
 * memory read/数量格式字节数 内存地址
 
 memory read 内存地址
+
 ```
 (lldb) memory read 0x10380ef00
 0x10380ef00: 41 81 8b 9a ff ff 1d 00 00 00 00 00 00 00 00 00  A...............
@@ -267,6 +278,7 @@ memory read 内存地址
 ```
 
 x/数量格式字节数 内存地址
+
 ```
 (lldb) x 0x10380ef00
 0x10380ef00: 41 81 8b 9a ff ff 1d 00 00 00 00 00 00 00 00 00  A...............
@@ -291,6 +303,7 @@ x/数量格式字节数 内存地址
 ### 修改内存中的值  
 memory  write  内存地址  数值  
 将内存中的第6个字节改成06：
+
 ```
 (lldb) po obj
 <NSObject: 0x10380ef00>
@@ -310,6 +323,7 @@ po obj 获取到对象地址 0x10380ef00，所以第6个字节的地址就是 0x
 
 # Student 的本质
 定义一个继承 NSObject 的类 Student：
+
 ```
 @interface Student : NSObject {
     @public
@@ -323,11 +337,13 @@ po obj 获取到对象地址 0x10380ef00，所以第6个字节的地址就是 0x
 ```
 
 创建一个 Student 的实例对象：
+
 ```
 Student *stu = [[Student alloc] init];
 ```
 
 将 OC 代码转换为 C\C++ 代码，并在生成的 C/C++ 代码中找到 Student 的实现：
+
 ```
 struct Student_IMPL {
     struct NSObject_IMPL NSObject_IVARS;
@@ -337,6 +353,7 @@ struct Student_IMPL {
 ```
 
 因为 NSObject_IMPL 内部只有一个成员变量指针 isa，所以上面👆的代码可以写成：
+
 ```
 struct Student_IMPL {
     Class isa;
@@ -359,12 +376,14 @@ isa（8字节）+ _no（4字节）+ _age（4字节）= Student_IMPL（16字节�
 Debug -> Debug Workflow -> View Memory
 ![OC对象的本质进阶01](OC对象的本质/OC对象的本质进阶02.png)  
 因为 iOS 平台是小端模式，所以从内存中读取数据的方式是从高地址开始读取（右→左）。_no 是 0x00000004，_age 是 0x00000005：
+
 ```
 (lldb) x/4xw 0x103a085d0
 0x103a085d0: 0x000011c9 0x001d8001 0x00000004 0x00000005
 ```
 
 通过修改内存中的值的方式来修改 _no，查看内存：
+
 ```
 (lldb) x 0x103a085d0
 0x103a085d0: c9 11 00 00 01 80 1d 00 04 00 00 00 05 00 00 00  ................
@@ -372,6 +391,7 @@ Debug -> Debug Workflow -> View Memory
 ```
 
 _no 的地址（0x103a085d0）向右数8个找到04的地址（0x103a085d8），通过 memory write 将实例对象的第8个字节 04 给为 09，打印 _no = 9。
+
 ```
 (lldb) memory write 0x103a085d8 9
 (lldb) x 0x103a085d0
@@ -388,6 +408,7 @@ _no 的地址（0x103a085d0）向右数8个找到04的地址（0x103a085d8），
 # 更复杂的继承关系
 
 ## 定义 Person、Student
+
 ```
 @interface Person : NSObject
 {
@@ -410,6 +431,7 @@ _no 的地址（0x103a085d0）向右数8个找到04的地址（0x103a085d8），
 ```
 
 将 OC 代码转换为 C\C++ 代码，并在生成的 C/C++ 代码中找到 Person、Student 的实现：
+
 ```
 struct Person_IMPL {
     struct NSObject_IMPL NSObject_IVARS; // 8
@@ -421,12 +443,14 @@ struct Student_IMPL {
     int _no; // 4
 }; // 16
 ```
+
 继承关系图解：
 ![OC对象的本质进阶01](OC对象的本质/OC对象的本质进阶04.png)  
 
 ## Person、Student 的内存大小
 
 打印 Person、Student 实例变量的大小：  
+
 ```
 Student *stu = [[Student alloc] init];
 NSLog(@"stu - %zd", class_getInstanceSize([Student class])); //打印结果 16
