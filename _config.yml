@@ -70,5 +70,6 @@ theme: next
 deploy:
    type: git
   #  repository: https://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@github.com/KevinYangGit/KevinYangGit.github.io.git
-   repo: https://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@github.com/KevinYangGit/KevinYangGit.github.io.git
+  #  repo: https://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@github.com/KevinYangGit/KevinYangGit.github.io.git
+   repo: git@github.com:KevinYangGit/KevinYangGit.github.io.git
    branch: master
