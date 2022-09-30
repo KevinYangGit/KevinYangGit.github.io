@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="2022打怪," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="keywords" content="2022打怪">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法列表">
+<meta property="og:url" content="http://yoursite.com/2022/09/29/2022打怪/算法列表/index.html">
+<meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2022/09/29/2022打怪/算法列表/20220607_th.jpeg">
+<meta property="og:updated_time" content="2022-09-29T03:19:24.230Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="算法列表">
+<meta name="twitter:image" content="http://yoursite.com/2022/09/29/2022打怪/算法列表/20220607_th.jpeg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/09/29/2022打怪/算法列表/"/>
+
+
+
+
+
+  <title>算法列表 | Kevin's  blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a073c6e38282486853e19b272e9e7c34";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's  blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/29/2022打怪/算法列表/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">算法列表</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-09-29T11:05:18+08:00">
+                2022-09-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="/2022/09/29/2022打怪/算法列表/20220607_th.jpeg" alt="20220607_th"><br><a id="more"></a></p>
+<h1 id="算法列表"><a href="#算法列表" class="headerlink" title="算法列表"></a>算法列表</h1><h2 id="线性结构"><a href="#线性结构" class="headerlink" title="线性结构"></a>线性结构</h2><p><a href="https://leetcode.cn/problems/reverse-linked-list/" target="_blank" rel="external">206. 反转链表</a></p>
+<p><a href="https://leetcode.cn/problems/swap-nodes-in-pairs/" target="_blank" rel="external">24. 两两交换链表中的节点</a></p>
+<p><a href="https://leetcode.cn/problems/reverse-linked-list-ii/" target="_blank" rel="external">92. 反转链表 II</a></p>
+<p><a href="https://leetcode.cn/problems/middle-of-the-linked-list/" target="_blank" rel="external">876. 链表的中间结点</a></p>
+<p><a href="https://leetcode.cn/problems/linked-list-cycle/" target="_blank" rel="external">141. 环形链表</a></p>
+<p><a href="https://leetcode.cn/problems/remove-nth-node-from-end-of-list/" target="_blank" rel="external">19. 删除链表的倒数第 N 个结点</a></p>
+<p><a href="https://leetcode.cn/problems/merge-two-sorted-lists/" target="_blank" rel="external">21. 合并两个有序链表</a></p>
+<p><a href="https://leetcode.cn/problems/add-two-numbers-ii/" target="_blank" rel="external">445. 两数相加 II</a></p>
+<p><a href="https://leetcode.cn/problems/baseball-game/" target="_blank" rel="external">682. 棒球比赛</a></p>
+<h2 id="排序算法"><a href="#排序算法" class="headerlink" title="排序算法"></a>排序算法</h2><p><a href="https://leetcode.cn/problems/sort-array-by-parity/" target="_blank" rel="external">905. 按奇偶排序数组</a></p>
+<p><a href="https://leetcode.cn/problems/sort-colors/" target="_blank" rel="external">75. 颜色分类</a></p>
+<p><a href="https://leetcode.cn/problems/shu-zu-zhong-de-ni-xu-dui-lcof/" target="_blank" rel="external">剑指 Offer 51. 数组中的逆序对</a></p>
+<h2 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h2><p><a href="https://leetcode.cn/problems/path-sum/" target="_blank" rel="external">112. 路径总和</a></p>
+<p><a href="https://leetcode.cn/problems/sum-root-to-leaf-numbers/" target="_blank" rel="external">129. 求根节点到叶节点数字之和</a></p>
+<p><a href="https://leetcode.cn/problems/diameter-of-binary-tree/" target="_blank" rel="external">543. 二叉树的直径</a></p>
+<p><a href="https://leetcode.cn/problems/construct-binary-tree-from-preorder-and-inorder-traversal/" target="_blank" rel="external">105. 从前序与中序遍历序列构造二叉树</a></p>
+<p><a href="https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/" target="_blank" rel="external">236. 二叉树的最近公共祖先</a></p>
+<p><a href="https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-search-tree/" target="_blank" rel="external">235. 二叉搜索树的最近公共祖先</a></p>
+<p><a href="https://leetcode.cn/problems/convert-sorted-array-to-binary-search-tree/" target="_blank" rel="external">108. 将有序数组转换为二叉搜索树</a></p>
+<p><a href="https://leetcode.cn/problems/validate-binary-search-tree/" target="_blank" rel="external">98. 验证二叉搜索树</a></p>
+<h2 id="并查集"><a href="#并查集" class="headerlink" title="并查集"></a>并查集</h2><p><a href="https://leetcode.cn/problems/number-of-islands/" target="_blank" rel="external">200. 岛屿数量</a></p>
+<p><a href="https://leetcode.cn/problems/regions-cut-by-slashes/" target="_blank" rel="external">959. 由斜杠划分区域</a></p>
+<h2 id="树形结构"><a href="#树形结构" class="headerlink" title="树形结构"></a>树形结构</h2><p><a href="https://leetcode.cn/problems/kth-largest-element-in-an-array/" target="_blank" rel="external">215. 数组中的第K个最大元素</a></p>
+<p><a href="https://leetcode.cn/problems/ugly-number-ii/" target="_blank" rel="external">264. 丑数 II</a></p>
+<p><a href="https://leetcode.cn/problems/merge-k-sorted-lists/" target="_blank" rel="external">23. 合并K个升序链表</a></p>
+<p><a href="https://leetcode.cn/problems/range-sum-of-sorted-subarray-sums/" target="_blank" rel="external">1508. 子数组和排序后的区间和</a></p>
+<p><a href="https://leetcode.cn/problems/most-stones-removed-with-same-row-or-column/" target="_blank" rel="external">947. 移除最多的同行或同列石头</a></p>
+<p><a href="https://leetcode.cn/problems/max-area-of-island/" target="_blank" rel="external">695. 岛屿的最大面积</a></p>
+<h2 id="综合练习"><a href="#综合练习" class="headerlink" title="综合练习"></a>综合练习</h2><p><a href="https://leetcode.cn/problems/rotate-list/" target="_blank" rel="external">61. 旋转链表</a></p>
+<p><a href="https://leetcode.cn/problems/reverse-nodes-in-k-group/" target="_blank" rel="external">25. K 个一组翻转链表</a></p>
+<p><a href="https://leetcode.cn/problems/backspace-string-compare/" target="_blank" rel="external">844. 比较含退格的字符串</a></p>
+<p><a href="https://leetcode.cn/problems/zui-xiao-de-kge-shu-lcof/" target="_blank" rel="external">面试题40. 最小的k个数</a></p>
+<p><a href="https://leetcode.cn/problems/invert-binary-tree/" target="_blank" rel="external">226. 翻转二叉树</a></p>
+<p><a href="https://leetcode.cn/problems/symmetric-tree/" target="_blank" rel="external">101. 对称二叉树</a></p>
+<p><a href="https://leetcode.cn/problems/balanced-binary-tree/" target="_blank" rel="external">110. 平衡二叉树</a></p>
+<p><a href="https://leetcode.cn/problems/convert-bst-to-greater-tree/" target="_blank" rel="external">538. 把二叉搜索树转换为累加树</a></p>
+<p><a href="https://leetcode.cn/problems/last-stone-weight/" target="_blank" rel="external">1046. 最后一块石头的重量</a></p>
+<h2 id="面试笔试算法（一）"><a href="#面试笔试算法（一）" class="headerlink" title="面试笔试算法（一）"></a>面试笔试算法（一）</h2><p><a href="http://pe-cn.github.io/1/" target="_blank" rel="external">euler-1.3或5的倍数</a>（时间复杂度）</p>
+<p><a href="http://pe-cn.github.io/2/" target="_blank" rel="external">euler-2.偶斐波那契数</a>（空间复杂度）</p>
+<p><a href="http://pe-cn.github.io/4/" target="_blank" rel="external">euler-4.最大回文乘积</a>（回文数）</p>
+<p><a href="http://pe-cn.github.io/36/" target="_blank" rel="external">euler-36.双进制回文数</a>（n进制回文数）</p>
+<p><a href="http://pe-cn.github.io/8/" target="_blank" rel="external">euler-8.连续数字最大乘积</a>（滑动窗口法）</p>
+<p><a href="http://pe-cn.github.io/11/" target="_blank" rel="external">euler-11.方阵中的最大乘积</a>（方向数组）</p>
+<p><a href="http://pe-cn.github.io/14/" target="_blank" rel="external">euler-14.最长考拉兹序列</a>（记忆化）</p>
+<h2 id="面试笔试算法（二）"><a href="#面试笔试算法（二）" class="headerlink" title="面试笔试算法（二）"></a>面试笔试算法（二）</h2><p><a href="http://pe-cn.github.io/13/" target="_blank" rel="external">euler-13.大和</a>（大整数加法）</p>
+<p><a href="http://oj.haizeix.com/problem/78" target="_blank" rel="external">#78. 大整数加法</a>（大整数加法）</p>
+<p><a href="http://pe-cn.github.io/25/" target="_blank" rel="external">euler-25.1000位斐波那契数</a>（大整数加法）</p>
+<p><a href="http://oj.haizeix.com/problem/471" target="_blank" rel="external">#471. 大整数乘法</a></p>
+<p><a href="http://pe-cn.github.io/15/" target="_blank" rel="external">euler-15.网格路径</a>（动态规划、组合数）</p>
+<p><a href="http://pe-cn.github.io/18/" target="_blank" rel="external">euler-18.最大路径和 I</a>（动态规划）</p>
+<h2 id="双指针【滑动窗口】"><a href="#双指针【滑动窗口】" class="headerlink" title="双指针【滑动窗口】"></a>双指针【滑动窗口】</h2><p><a href="https://leetcode.cn/problems/minimum-size-subarray-sum/" target="_blank" rel="external">209. 长度最小的子数组</a></p>
+<p><a href="https://leetcode.cn/problems/longest-substring-without-repeating-characters/" target="_blank" rel="external">3. 无重复字符的最长子串</a></p>
+<p><a href="https://leetcode.cn/problems/permutation-in-string/" target="_blank" rel="external">567. 字符串的排列</a></p>
+<p><a href="https://leetcode.cn/problems/minimum-window-substring/" target="_blank" rel="external">76. 最小覆盖子串</a></p>
+<p><a href="https://leetcode.cn/problems/subarray-product-less-than-k/" target="_blank" rel="external">713. 乘积小于 K 的子数组</a></p>
+<p><a href="https://leetcode.cn/problems/get-equal-substrings-within-budget/" target="_blank" rel="external">1208. 尽可能使字符串相等</a></p>
+<p><a href="https://leetcode.cn/problems/most-profit-assigning-work/" target="_blank" rel="external">826. 安排工作以达到最大收益</a></p>
+<p><a href="https://leetcode.cn/problems/interval-list-intersections/" target="_blank" rel="external">986. 区间列表的交集</a></p>
+<p><a href="https://leetcode.cn/problems/heaters/" target="_blank" rel="external">475. 供暖器</a></p>
+<h2 id="二分专题（一）"><a href="#二分专题（一）" class="headerlink" title="二分专题（一）"></a>二分专题（一）</h2><p><a href="http://oj.haizeix.com/problem/388" target="_blank" rel="external">#388. 奇怪的刮刮乐</a>（排序+二分查找）</p>
+<p><a href="http://oj.haizeix.com/problem/386" target="_blank" rel="external">#386. 吃瓜群众</a>（排序+二分查找）</p>
+<p><a href="http://oj.haizeix.com/problem/387" target="_blank" rel="external">#387. 吃瓜群众升级版</a>（排序+二分查找）</p>
+<p><a href="http://oj.haizeix.com/problem/390" target="_blank" rel="external">#390. 原木切割</a>（二分答案）</p>
+<p><a href="http://oj.haizeix.com/problem/389" target="_blank" rel="external">#389. 暴躁的程序猿</a>（二分答案）</p>
+<p><a href="http://oj.haizeix.com/problem/393" target="_blank" rel="external">#393. 切绳子</a>（二分答案）</p>
+<p><a href="http://oj.haizeix.com/problem/391" target="_blank" rel="external">#391. 数列分段</a>（二分答案）</p>
+<h2 id="二分专题（二）"><a href="#二分专题（二）" class="headerlink" title="二分专题（二）"></a>二分专题（二）</h2><p><a href="http://oj.haizeix.com/problem/82" target="_blank" rel="external">#82. 伐木</a></p>
+<p><a href="http://oj.haizeix.com/problem/394" target="_blank" rel="external">#394. 跳石头</a></p>
+<p><a href="http://oj.haizeix.com/problem/599" target="_blank" rel="external">#599. 两数之和1</a></p>
+<p><a href="http://oj.haizeix.com/problem/600" target="_blank" rel="external">#600. 杨氏矩阵</a></p>
+<p><a href="http://oj.haizeix.com/problem/485" target="_blank" rel="external">#485. 均分纸牌</a></p>
+<p><a href="http://oj.haizeix.com/problem/504" target="_blank" rel="external">#504. 删数</a></p>
+<p><a href="http://oj.haizeix.com/problem/505" target="_blank" rel="external">#505. 最大整数</a></p>
+<p><a href="http://oj.haizeix.com/problem/519" target="_blank" rel="external">#519. 优雅数</a></p>
+<h2 id="真题"><a href="#真题" class="headerlink" title="真题"></a>真题</h2><h3 id="字节一面"><a href="#字节一面" class="headerlink" title="字节一面"></a>字节一面</h3><ul>
+<li>实现语言：C</li>
+</ul>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> 链表是否有环</span></div><div class="line"><span class="comment">*/</span></div><div class="line">typedef <span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span></span> &#123;</div><div class="line">	int data;</div><div class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span></span> *next;</div><div class="line">&#125; ListNode;</div><div class="line"></div><div class="line"><span class="built_in">bool</span> hasCycle(ListNode *head) &#123;</div><div class="line">	ListNode *fast = head, slow = head;</div><div class="line">	<span class="keyword">while</span> (fast &amp;&amp; fast-&gt;next) &#123;</div><div class="line">		slow = slow-&gt;next;</div><div class="line">		fast = fast-&gt;next-&gt;next;</div><div class="line">		<span class="keyword">if</span> (fast == slow) <span class="keyword">return</span> ture;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="字节二面"><a href="#字节二面" class="headerlink" title="字节二面"></a>字节二面</h3><ul>
+<li>实现语言：OC</li>
+<li>实现方案：递归</li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> 打印 View 的所有子视图的 frame。</span></div><div class="line"><span class="comment">*/</span></div><div class="line">- (<span class="keyword">void</span>)func:(<span class="built_in">UIView</span> *)view &#123;</div><div class="line">	<span class="built_in">NSLog</span>(<span class="string">@"%@"</span>, <span class="built_in">NSStringFromCGRect</span>(view.frame));</div><div class="line">	</div><div class="line">	<span class="keyword">for</span> (<span class="built_in">UIView</span> *subView <span class="keyword">in</span> view.subviews) &#123;</div><div class="line">		[<span class="keyword">self</span> func:subView];</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="滴滴"><a href="#滴滴" class="headerlink" title="滴滴"></a>滴滴</h3><ul>
+<li>实现语言：C  </li>
+<li>实现方案：滑动窗口法</li>
+</ul>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment"> 实现1个函数，找出给定字符串中，最长的连续重复字符串子串。</span></div><div class="line"><span class="comment"> 举例：</span></div><div class="line"><span class="comment"> 给定字符串：</span></div><div class="line"><span class="comment"> abcdedfadasfasfafsssssdfasffwwwdfdswwweewerssss</span></div><div class="line"><span class="comment"> 返回：sssss</span></div><div class="line"><span class="comment"> */</span></div><div class="line">void func(string s) &#123;</div><div class="line">    int n = (int)s.size()<span class="comment">;</span></div><div class="line">    int <span class="keyword">j </span>= <span class="number">0</span>, idx = <span class="number">0</span>, mmax = <span class="number">0</span><span class="comment">;</span></div><div class="line">    for (int i = <span class="number">0</span><span class="comment">; i &lt; n; i++) &#123;</span></div><div class="line">        while (<span class="keyword">j </span>&lt; n &amp;&amp; s[<span class="keyword">j] </span>== s[i]) &#123;</div><div class="line">            <span class="keyword">j++;</span></div><div class="line"><span class="keyword"> </span>       &#125;</div><div class="line">        if (mmax &lt; <span class="keyword">j </span>- i) &#123;</div><div class="line">            mmax = <span class="keyword">j </span>- i<span class="comment">;</span></div><div class="line">            idx = i<span class="comment">;</span></div><div class="line">        &#125;</div><div class="line">        if (<span class="keyword">j </span>&gt; i) i = <span class="keyword">j </span>- <span class="number">1</span><span class="comment">;</span></div><div class="line">    &#125;</div><div class="line">    cout &lt;&lt; s.<span class="keyword">substr(idx, </span>mmax) &lt;&lt; endl<span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="懂车帝一面"><a href="#懂车帝一面" class="headerlink" title="懂车帝一面"></a>懂车帝一面</h3><ul>
+<li>实现语言：C++</li>
+<li>实现方案：层序遍历之逐层遍历</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> 根据二叉树，输出一个数组，要数组的子元素是二叉树中某一层的所有元素的集合。</span></div><div class="line"><span class="comment">*/</span></div><div class="line"><span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt; func(struct TreeNode* root) &#123;</div><div class="line">	<span class="keyword">if</span> (!root) <span class="keyword">return</span> nil;</div><div class="line">	</div><div class="line">	<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt; ans;</div><div class="line">	<span class="built_in">queue</span>&lt;struct TreeNode&gt; que;</div><div class="line">	que.push(root);</div><div class="line"></div><div class="line">	<span class="keyword">while</span> (!que.empty()) &#123;</div><div class="line">		<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; vec;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, I = que.size(); i &lt; I; i++) &#123;</div><div class="line">			<span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span> *<span class="title">root</span> = <span class="title">que</span>.<span class="title">top</span>();</span></div><div class="line">			que.pop();</div><div class="line">			vec.push_back(root-&gt;val);</div><div class="line">			</div><div class="line">			<span class="keyword">if</span> (root-&gt;left) &#123;</div><div class="line">				que.push(root-&gt;left);</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">if</span> (root-&gt;right) &#123;</div><div class="line">				que.push(root-&gt;right);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		ans.push_back(vec);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> ans;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/2022打怪/" rel="tag"># 2022打怪</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/04/14/Other/Math/" rel="next" title="Math">
+                <i class="fa fa-chevron-left"></i> Math
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/myAvatar.gif"
+              alt="Kevin" />
+          
+            <p class="site-author-name" itemprop="name">Kevin</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KevinYangGit" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yangqioffice@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_YangQI" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.cnblogs.com/mjios" title="M了个J" target="_blank">M了个J</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#算法列表"><span class="nav-number">1.</span> <span class="nav-text">算法列表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#线性结构"><span class="nav-number">1.1.</span> <span class="nav-text">线性结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#排序算法"><span class="nav-number">1.2.</span> <span class="nav-text">排序算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉树"><span class="nav-number">1.3.</span> <span class="nav-text">二叉树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并查集"><span class="nav-number">1.4.</span> <span class="nav-text">并查集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#树形结构"><span class="nav-number">1.5.</span> <span class="nav-text">树形结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#综合练习"><span class="nav-number">1.6.</span> <span class="nav-text">综合练习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#面试笔试算法（一）"><span class="nav-number">1.7.</span> <span class="nav-text">面试笔试算法（一）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#面试笔试算法（二）"><span class="nav-number">1.8.</span> <span class="nav-text">面试笔试算法（二）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#双指针【滑动窗口】"><span class="nav-number">1.9.</span> <span class="nav-text">双指针【滑动窗口】</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二分专题（一）"><span class="nav-number">1.10.</span> <span class="nav-text">二分专题（一）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二分专题（二）"><span class="nav-number">1.11.</span> <span class="nav-text">二分专题（二）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#真题"><span class="nav-number">1.12.</span> <span class="nav-text">真题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#字节一面"><span class="nav-number">1.12.1.</span> <span class="nav-text">字节一面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字节二面"><span class="nav-number">1.12.2.</span> <span class="nav-text">字节二面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#滴滴"><span class="nav-number">1.12.3.</span> <span class="nav-text">滴滴</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#懂车帝一面"><span class="nav-number">1.12.4.</span> <span class="nav-text">懂车帝一面</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="/js/src/md5.min.js"></script>
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: '82b6ced795961ee1fcca',
+      clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
+      repo: 'KevinYangGit.github.io',
+      owner: 'KevinYangGit',
+      admin: ['KevinYangGit'],
+      id: md5(location.pathname),
+      distractionFreeMode: 'true'
+    })
+    gitalk.render('gitalk-container')
+  </script>
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
