@@ -249,7 +249,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/29/2022打怪/算法列表/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/30/Swift/基本数据类型/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kevin">
@@ -268,7 +268,721 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2022/09/29/2022打怪/算法列表/" itemprop="url">算法列表</a></h1>
+                <a class="post-title-link" href="/2022/09/30/Swift/基本数据类型/" itemprop="url">基本数据类型</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-09-30T10:51:22+08:00">
+                2022-09-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="常量和变量"><a href="#常量和变量" class="headerlink" title="常量和变量"></a>常量和变量</h1><h2 id="声明常量和变量"><a href="#声明常量和变量" class="headerlink" title="声明常量和变量"></a>声明常量和变量</h2><ul>
+<li><p>使用关键字 <code>let</code> 来声明常量</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> maxNumber = <span class="number">10</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>使用关键字 <code>var</code> 来声明变量</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> currentNumber = <span class="number">0</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>可以在一行中声明多个变量或常量，用逗号分隔</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> x = <span class="number">0.0</span>, y = <span class="number">0.0</span>, z = <span class="number">0.0</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType01.png" alt="BasicDataType01"></p>
+<h2 id="类型标注"><a href="#类型标注" class="headerlink" title="类型标注"></a>类型标注</h2><ul>
+<li><p>在声明一个变量或常量的时候提供类型标注，来明确变量或常量能够储存值的类型</p>
+</li>
+<li><p>添加类型标注的方法是在变量或常量的名字后边加一个冒号，再跟一个空格，最后加上要使用的类型名称</p>
+</li>
+<li><p>可以在一行中定义多个相关的变量为相同的类型，用逗号分隔，只要在最后的变量名字后边加上类型标注</p>
+</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> message: <span class="type">String</span></div><div class="line">message = <span class="string">"hello"</span></div><div class="line"><span class="comment">// message = 10 // 错误</span></div></pre></td></tr></table></figure>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType02.png" alt="BasicDataType02"></p>
+<h2 id="变量和常量命名"><a href="#变量和常量命名" class="headerlink" title="变量和常量命名"></a>变量和常量命名</h2><ul>
+<li><p>常量和变量的名字几乎可以使用任何字符，包括 Unicode 字符</p>
+</li>
+<li><p>常量和变量的名字不能包含白字符、书序符号、箭头、保留的（或者无效的）Unicode 码位、连线和制表符，也不能以数字开头。</p>
+</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> π = <span class="number">3.14159</span></div><div class="line"><span class="keyword">let</span> 你好 = <span class="string">"你好世界"</span></div><div class="line"><span class="keyword">let</span> 🐶🐮 = <span class="string">"dogcow"</span></div></pre></td></tr></table></figure>
+<h2 id="打印常量和变量"><a href="#打印常量和变量" class="headerlink" title="打印常量和变量"></a>打印常量和变量</h2><ul>
+<li><p>print(_:separator:terminator:)</p>
+</li>
+<li><p>字符串插值</p>
+</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> 你好 = <span class="string">"你好世界"</span></div><div class="line"><span class="built_in">print</span>(<span class="string">"欢迎语是<span class="subst">\(你好)</span>"</span>)</div></pre></td></tr></table></figure>
+<h1 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h1><h2 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h2><ul>
+<li><p>Swift 提供了 8，16，32 和 64 位编码的有符号和无符号整数</p>
+</li>
+<li><p>命名方式：例如 8 位无符号整数的类型是 <code>UInt8</code>，32 位有符号整数的类型是 <code>Int32</code></p>
+</li>
+<li><p>通过 <code>min</code> 和 <code>max</code> 属性来访问每个整数类型的最小值和最大值</p>
+</li>
+<li><p>Swift 提供了一个额外的整数类型：<code>Int</code>，它拥有与当前平台的原生字相同的长度</p>
+</li>
+<li><p>同时 Swift 也提供 <code>UInt</code> 类型，来表示平台长度相关的无符号整数</p>
+</li>
+<li><p>建议在用到整数的地方都是用 <code>Int</code></p>
+</li>
+</ul>
+<h2 id="浮点类型"><a href="#浮点类型" class="headerlink" title="浮点类型"></a>浮点类型</h2><ul>
+<li><p>Double：64 位浮点数，至少有 15 位数字的精度</p>
+</li>
+<li><p>Float：32 位浮点数，至少有 6 位数字的精度</p>
+</li>
+<li><p>在两种类型都可以的情况下，推荐使用 Double 类型</p>
+</li>
+</ul>
+<h2 id="数值范围"><a href="#数值范围" class="headerlink" title="数值范围"></a>数值范围</h2><p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType03.png" alt="BasicDataType03"></p>
+<h2 id="Bool"><a href="#Bool" class="headerlink" title="Bool"></a>Bool</h2><ul>
+<li><p>Bool：true 和 false</p>
+</li>
+<li><p>Swift 的类型安全机制会阻止用一个非布尔量的值替换掉 <code>Bool</code></p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType04.png" alt="BasicDataType04"></p>
+<h2 id="类型别名"><a href="#类型别名" class="headerlink" title="类型别名"></a>类型别名</h2><ul>
+<li><p>类型别名是一个为已存在类型定义的一个可选择的名字</p>
+</li>
+<li><p>可以通过关键字 <code>typealias</code> 定义一个类型别名</p>
+</li>
+<li><p>如定义一个在上下文中看起来更合适可具有表达性的名字，来引用一个已存在的类型  </p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typealias</span> <span class="type">AudioSample</span> = <span class="type">UInt8</span></div><div class="line"><span class="keyword">let</span> sample: <span class="type">AudioSample</span> = <span class="number">32</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType05.png" alt="BasicDataType05"></p>
+<h1 id="Tuple"><a href="#Tuple" class="headerlink" title="Tuple"></a>Tuple</h1><ul>
+<li><p>元组把多个值合并成单一的复合型的值</p>
+</li>
+<li><p>元组内的值可以是任何类型，而且可以不必是同一类型</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType06.png" alt="BasicDataType06"></p>
+<h2 id="元素命名"><a href="#元素命名" class="headerlink" title="元素命名"></a>元素命名</h2><ul>
+<li><p>元组中的每个元素可以指定对应的元素名称</p>
+</li>
+<li><p>如果没有指定名称的元素也可以使用下标的方式来引用</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType07.png" alt="BasicDataType07"></p>
+<h2 id="Tuple-修改"><a href="#Tuple-修改" class="headerlink" title="Tuple 修改"></a>Tuple 修改</h2><ul>
+<li><p>用 <code>var</code> 定义的元组就是可变元组，<code>let</code> 定义的就是不可变元组</p>
+</li>
+<li><p>不管是可变还是不可变元组，元组在创建后就不能增加和删除元素</p>
+</li>
+<li><p>可以对可变元组的元素进行修改，但是不能改变其类型</p>
+</li>
+<li><p><code>any</code> 类型可以改为任何类型</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType08.png" alt="BasicDataType08"></p>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType09.png" alt="BasicDataType09"></p>
+<h2 id="Tuple-分解"><a href="#Tuple-分解" class="headerlink" title="Tuple 分解"></a>Tuple 分解</h2><ul>
+<li><p>将一个元组的内容分解成单独的常量或变量</p>
+</li>
+<li><p>如果只需要使用其中的一部分数据，不需要的数据可以用下划线（ <code>_</code> ）代替</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType10.png" alt="BasicDataType10"></p>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType11.png" alt="BasicDataType11"></p>
+<h2 id="作为函数返回值"><a href="#作为函数返回值" class="headerlink" title="作为函数返回值"></a>作为函数返回值</h2><ul>
+<li><p>使用 Tuple 为函数返回多个值</p>
+</li>
+<li><p>返回值的 Tuple 可以在函数的返回类型部分被命名</p>
+</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">writeToFile</span><span class="params">(content: String)</span></span> -&gt; (errorCode: <span class="type">Int</span>, errorMessage: <span class="type">String</span>) &#123;</div><div class="line">    <span class="keyword">return</span> (<span class="number">1</span>, <span class="string">"没有权限"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="Optional"><a href="#Optional" class="headerlink" title="Optional"></a>Optional</h1><h2 id="为什么需要-Optional"><a href="#为什么需要-Optional" class="headerlink" title="为什么需要 Optional"></a>为什么需要 Optional</h2><ul>
+<li><p>Objective-C 里的 <code>nil</code> 是无类型指针</p>
+</li>
+<li><p>Objective-C 里面的数组、字典、集合等不允许放入 <code>nil</code></p>
+</li>
+<li><p>Objective-C 所有对象变量都可以为 <code>nil</code></p>
+</li>
+<li><p>Objective-C 只能用在对象上，而在其他地方又用其他特殊值（例如 <code>NSNotFound</code>）表示指的缺失</p>
+</li>
+</ul>
+<h2 id="Swift-中的-Optional"><a href="#Swift-中的-Optional" class="headerlink" title="Swift 中的 Optional"></a>Swift 中的 Optional</h2><ul>
+<li><p>通过在变量后面加 <code>?</code> 表示：</p>
+<ul>
+<li>这里有一个值，它等于 x</li>
+<li>或者，这里根本没有值</li>
+</ul>
+</li>
+<li><p>可以通过给可选变量赋值一个 <code>nil</code> 来将之设置为没有值</p>
+</li>
+<li><p>在 Swift 中，<code>nil</code> 不是指针，他是值缺失的一种特殊类型，任何类型的可选项都可以设置成 <code>nil</code> 而不仅仅是对象类型</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType12.png" alt="BasicDataType12"></p>
+<h2 id="Optional-if-语句以及强制展开"><a href="#Optional-if-语句以及强制展开" class="headerlink" title="Optional-if 语句以及强制展开"></a>Optional-if 语句以及强制展开</h2><ul>
+<li>可选项是没法直接使用的，需要用 <code>!</code> 展开之后才能使用</li>
+</ul>
+<p>错误演示：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType13.png" alt="BasicDataType13"></p>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType14.png" alt="BasicDataType14"></p>
+<p>正确演示：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType15.png" alt="BasicDataType15"></p>
+<h2 id="Optional-强制展开"><a href="#Optional-强制展开" class="headerlink" title="Optional-强制展开"></a>Optional-强制展开</h2><ul>
+<li>使用 <code>!</code> 来获取一个不存在的可选值会导致运行错误，在使用 <code>!</code> 强制展开之前必须确保可选项中包含一个非 <code>nil</code> 的值。</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType16.png" alt="BasicDataType16"></p>
+<h2 id="Optional-绑定"><a href="#Optional-绑定" class="headerlink" title="Optional-绑定"></a>Optional-绑定</h2><ul>
+<li><p>可以使用可选项绑定来判断可选项是否包含值，如果包含就把值赋给一个临时的常量或者变量</p>
+</li>
+<li><p>可选绑定可以与 <code>if</code> 和 <code>while</code> 的语句使用来检查可选项内部的值，并赋值给一个变量或常量</p>
+</li>
+<li><p>同一个 <code>if</code> 语句中包含多个可选项绑定，用逗号分隔即可。如果任一可选绑定结果是 <code>nil</code> 或者布尔值为 <code>false</code>，那么整个 <code>if</code> 判断会被看做 <code>false</code></p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType17.png" alt="BasicDataType17"></p>
+<h2 id="Optional-隐式展开"><a href="#Optional-隐式展开" class="headerlink" title="Optional-隐式展开"></a>Optional-隐式展开</h2><ul>
+<li><p>有些可选项一旦被设定值之后，就会一直拥有值，在这种情况下，就可以去掉检查的需求，也不必每次访问的时候都进行展开</p>
+</li>
+<li><p>通过在声明的类型后边添加一个叹号（<code>String!</code>）而非问号（<code>String?</code>）来书写隐式展开可选项</p>
+</li>
+<li><p>隐式展开可选项主要被用在 Swift 类的初始化过程中</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType18.png" alt="BasicDataType18"></p>
+<h2 id="Optional-可选链"><a href="#Optional-可选链" class="headerlink" title="Optional-可选链"></a>Optional-可选链</h2><ul>
+<li>可选项后面加问号，如果可选项不为 <code>nil</code>，返回一个可选项结果，否则返回 <code>nil</code></li>
+</ul>
+<p>错误演示：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType19.png" alt="BasicDataType19"></p>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType20.png" alt="BasicDataType20"></p>
+<p>正确演示：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType21.png" alt="BasicDataType21"></p>
+<h1 id="Optional-实现探究"><a href="#Optional-实现探究" class="headerlink" title="Optional-实现探究"></a>Optional-实现探究</h1><ul>
+<li><p>Optional 其实是标准库里的一个 enum 类型</p>
+</li>
+<li><p>Optional 是用标准库实现语言特性的典型</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType22.png" alt="BasicDataType22"></p>
+<ul>
+<li><p>Optional.none 就是 nil</p>
+</li>
+<li><p>Optional.some 则包装了实际的值</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType23.png" alt="BasicDataType23"></p>
+<ul>
+<li><p>泛型属性 unsafelyUnwrapped</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/// The wrapped value of this instance, unwrapped without checking whether</span></div><div class="line"><span class="comment">/// the instance is `nil`.</span></div><div class="line"><span class="comment">///</span></div><div class="line"><span class="comment">/// The `unsafelyUnwrapped` property provides the same value as the forced</span></div><div class="line"><span class="comment">/// unwrap operator (postfix `!`). However, in optimized builds (`-O`), no</span></div><div class="line"><span class="comment">/// check is performed to ensure that the current instance actually has a</span></div><div class="line"><span class="comment">/// value. Accessing this property in the case of a `nil` value is a serious</span></div><div class="line"><span class="comment">/// programming error and could lead to undefined behavior or a runtime</span></div><div class="line"><span class="comment">/// error.</span></div><div class="line"><span class="comment">///</span></div><div class="line"><span class="comment">/// In debug builds (`-Onone`), the `unsafelyUnwrapped` property has the same</span></div><div class="line"><span class="comment">/// behavior as using the postfix `!` operator and triggers a runtime error</span></div><div class="line"><span class="comment">/// if the instance is `nil`.</span></div><div class="line"><span class="comment">///</span></div><div class="line"><span class="comment">/// The `unsafelyUnwrapped` property is recommended over calling the</span></div><div class="line"><span class="comment">/// `unsafeBitCast(_:)` function because the property is more restrictive</span></div><div class="line"><span class="comment">/// and because accessing the property still performs checking in debug</span></div><div class="line"><span class="comment">/// builds.</span></div><div class="line"><span class="comment">///</span></div><div class="line"><span class="comment">/// - Warning: This property trades safety for performance.  Use</span></div><div class="line"><span class="comment">///   `unsafelyUnwrapped` only when you are confident that this instance</span></div><div class="line"><span class="comment">///   will never be equal to `nil` and only after you've tried using the</span></div><div class="line"><span class="comment">///   postfix `!` operator.</span></div><div class="line">@inlinable <span class="keyword">public</span> <span class="keyword">var</span> unsafelyUnwrapped: <span class="type">Wrapped</span> &#123; <span class="keyword">get</span> &#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>理论上可以直接调用 <code>unsafelyUnwrapped</code> 获取可选项的值<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType24.png" alt="BasicDataType24"></p>
+</li>
+</ul>
+<h1 id="字符串-初始化"><a href="#字符串-初始化" class="headerlink" title="字符串-初始化"></a>字符串-初始化</h1><h2 id="初始化空串"><a href="#初始化空串" class="headerlink" title="初始化空串"></a>初始化空串</h2><ul>
+<li><p>字面量</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> emptyString = <span class="string">""</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>初始化器语法</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> anotherEmptyString = <span class="type">String</span>()</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>isEmpty</code> 检查是否为空串</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> emptyString.isEmpty &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"Nothing to see here"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="字面量"><a href="#字面量" class="headerlink" title="字面量"></a>字面量</h2><ul>
+<li><p>字符串字面量是被双引号（<code>&quot;&quot;</code>）包裹的固定顺序文本字符</p>
+</li>
+<li><p>Swift 会为 <code>str</code> 常量推断类型为 <code>String</code></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> str = <span class="string">"some string"</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="多行字面量"><a href="#多行字面量" class="headerlink" title="多行字面量"></a>多行字面量</h2><ul>
+<li><p>多行字符串字面量是用三个双引号引起来的一系列字符</p>
+</li>
+<li><p>多行字符串字面量把所有行包括在引号内，开始和结束默认不会有换行符</p>
+</li>
+<li><p>当代码中在多行字符串字面量里面包含了换行，那个换行符同样会成为字符串里的值。如果想要使用换行符来让代码易读，却不想让换行符成为字符串的值，那就在那些行的末尾使用反斜杠（<code>\</code>）</p>
+</li>
+</ul>
+<p>多行字符串字面量，包含换行：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> string = <span class="string">""</span><span class="string">"</span></div><div class="line"><span class="string">In the Southern Hemisphere,</span></div><div class="line"><span class="string">the end of September means a warm climate and the approaching of summer.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">For this southern right whale off the coast of Argentina,</span></div><div class="line"><span class="string">that means migrating south,</span></div><div class="line"><span class="string">heading to Antarctica to feed.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">The Southern Right Whale is a subspecies of the Right Whale that inhabits the ocean south of the equator,</span></div><div class="line"><span class="string">feeds on krill on the surface of the sea,</span></div><div class="line"><span class="string">and feeds through flocks of krill with their mouths open.</span></div><div class="line"><span class="string">"</span><span class="string">""</span></div><div class="line"></div><div class="line"><span class="built_in">print</span>(string)</div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">In the Southern Hemisphere,</div><div class="line">the <span class="keyword">end</span> <span class="keyword">of</span> September means a warm climate <span class="keyword">and</span> the approaching <span class="keyword">of</span> summer.</div><div class="line"></div><div class="line"><span class="keyword">For</span> this southern <span class="keyword">right</span> whale <span class="keyword">off</span> the coast <span class="keyword">of</span> Argentina,</div><div class="line">that means migrating south,</div><div class="line"><span class="keyword">heading</span> <span class="keyword">to</span> Antarctica <span class="keyword">to</span> feed.</div><div class="line"></div><div class="line">The Southern <span class="keyword">Right</span> Whale <span class="keyword">is</span> a subspecies <span class="keyword">of</span> the <span class="keyword">Right</span> Whale that inhabits the ocean south <span class="keyword">of</span> the equator,</div><div class="line">feeds <span class="keyword">on</span> krill <span class="keyword">on</span> the surface <span class="keyword">of</span> the sea,</div><div class="line"><span class="keyword">and</span> feeds <span class="keyword">through</span> flocks <span class="keyword">of</span> krill <span class="keyword">with</span> their mouths open.</div></pre></td></tr></table></figure></p>
+<p>使用<code>\</code>，使代码更易读：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> string = <span class="string">""</span><span class="string">"</span></div><div class="line"><span class="string">In the Southern Hemisphere,\</span></div><div class="line"><span class="string">the end of September means a warm climate and the approaching of summer.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">For this southern right whale off the coast of Argentina,\</span></div><div class="line"><span class="string">that means migrating south,\</span></div><div class="line"><span class="string">heading to Antarctica to feed.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">The Southern Right Whale is a subspecies of the Right Whale that inhabits the ocean south of the equator,\</span></div><div class="line"><span class="string">feeds on krill on the surface of the sea,\</span></div><div class="line"><span class="string">and feeds through flocks of krill with their mouths open.</span></div><div class="line"><span class="string">"</span><span class="string">""</span></div><div class="line"></div><div class="line"><span class="built_in">print</span>(string)</div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">In the Southern Hemisphere,the <span class="keyword">end</span> <span class="keyword">of</span> September means a warm climate <span class="keyword">and</span> the approaching <span class="keyword">of</span> summer.</div><div class="line"></div><div class="line"><span class="keyword">For</span> this southern <span class="keyword">right</span> whale <span class="keyword">off</span> the coast <span class="keyword">of</span> Argentina,that means migrating south,<span class="keyword">heading</span> <span class="keyword">to</span> Antarctica <span class="keyword">to</span> feed.</div><div class="line"></div><div class="line">The Southern <span class="keyword">Right</span> Whale <span class="keyword">is</span> a subspecies <span class="keyword">of</span> the <span class="keyword">Right</span> Whale that inhabits the ocean south <span class="keyword">of</span> the equator,feeds <span class="keyword">on</span> krill <span class="keyword">on</span> the surface <span class="keyword">of</span> the sea,<span class="keyword">and</span> feeds <span class="keyword">through</span> flocks <span class="keyword">of</span> krill <span class="keyword">with</span> their mouths open.</div></pre></td></tr></table></figure></p>
+<ul>
+<li><p>要让多行字符串字面量起始或结束于换行，就在第一或最后一行写一个空行</p>
+</li>
+<li><p>多行字符串可以缩进已匹配周围的代码。引号前的空格会告诉 Swift 其他行前应该有多少空白是需要忽略的</p>
+</li>
+<li><p>如果你在某行的空格超过了结束的引号，那么这些空格会被包含进字符串</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType25.png" alt="BasicDataType25"></p>
+<p>定义一个字符串，带有代码缩进，在起始和结束换行：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> string = <span class="string">""</span><span class="string">"</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">    In the Southern Hemisphere,\</span></div><div class="line"><span class="string">the end of September means a warm climate and the approaching of summer.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">    For this southern right whale off the coast of Argentina,\</span></div><div class="line"><span class="string">that means migrating south,\</span></div><div class="line"><span class="string">heading to Antarctica to feed.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">The Southern Right Whale is a subspecies of the Right Whale that inhabits the ocean south of the equator,\</span></div><div class="line"><span class="string">feeds on krill on the surface of the sea,\</span></div><div class="line"><span class="string">and feeds through flocks of krill with their mouths open.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">"</span><span class="string">""</span></div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">    In the Southern Hemisphere,the <span class="keyword">end</span> <span class="keyword">of</span> September means a warm climate <span class="keyword">and</span> the approaching <span class="keyword">of</span> summer.</div><div class="line"></div><div class="line">    <span class="keyword">For</span> this southern <span class="keyword">right</span> whale <span class="keyword">off</span> the coast <span class="keyword">of</span> Argentina,that means migrating south,<span class="keyword">heading</span> <span class="keyword">to</span> Antarctica <span class="keyword">to</span> feed.</div><div class="line"></div><div class="line">The Southern <span class="keyword">Right</span> Whale <span class="keyword">is</span> a subspecies <span class="keyword">of</span> the <span class="keyword">Right</span> Whale that inhabits the ocean south <span class="keyword">of</span> the equator,feeds <span class="keyword">on</span> krill <span class="keyword">on</span> the surface <span class="keyword">of</span> the sea,<span class="keyword">and</span> feeds <span class="keyword">through</span> flocks <span class="keyword">of</span> krill <span class="keyword">with</span> their mouths open.</div></pre></td></tr></table></figure></p>
+<h2 id="字符串里的特殊字符"><a href="#字符串里的特殊字符" class="headerlink" title="字符串里的特殊字符"></a>字符串里的特殊字符</h2><ul>
+<li><p>转义特殊字符 <code>\0</code>（空字符），<code>\\</code>（反斜杠），<code>\t</code>（水平制表符），<code>\n</code>（换行符），<code>\r</code>（回车符），<code>\&quot;</code>（双引号）以及<code>\&#39;</code>（单引号）</p>
+</li>
+<li><p>任意的 Unicode 标量，写作 <code>\u{n}</code>，n 是一个 1-8 位的16进制数字，其值是合法 Unicode 值</p>
+</li>
+<li><p>可以在多行字符串字面量中包含双引号（<code>&quot;&quot;</code>）而不需转义，要在多行字符串中包含文本 <code>&quot;&quot;&quot;</code>，转义至少一个双引号</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType26.png" alt="BasicDataType26"></p>
+<h2 id="扩展字符串分隔符（Raw-String）"><a href="#扩展字符串分隔符（Raw-String）" class="headerlink" title="扩展字符串分隔符（Raw String）"></a>扩展字符串分隔符（Raw String）</h2><ul>
+<li><p>在字符串字面量中放置扩展分隔符，使字符串中包含的特殊字符不生效</p>
+</li>
+<li><p>把字符串放在双引号（<code>&quot;&quot;</code>）内并由井号（<code>#</code>）包裹</p>
+</li>
+<li><p>如果字符串里有 <code>&quot;#</code> 则首位需要两个井号 <code>##</code></p>
+</li>
+<li><p>如果需要字符串中某个特殊符号的效果，使用匹配包裹作用的井号数量的井号，并在井号前面写转义符号（<code>\</code>）</p>
+</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> str = #<span class="string">"Line 1\nLine 2 "</span>#</div><div class="line"><span class="keyword">let</span> str1 = #<span class="string">"Line 3\#nLine 4"</span>#</div><div class="line"><span class="keyword">let</span> str2 = ###<span class="string">"Line 5\###nLine 6"</span>###</div><div class="line"><span class="built_in">print</span>(str)</div><div class="line"><span class="built_in">print</span>(str1)</div><div class="line"><span class="built_in">print</span>(str2)</div></pre></td></tr></table></figure>
+<p>打印结果：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Line <span class="number">1</span>\nLine <span class="number">2</span> </div><div class="line">Line <span class="number">3</span></div><div class="line">Line <span class="number">4</span></div><div class="line">Line <span class="number">5</span></div><div class="line">Line <span class="number">6</span></div></pre></td></tr></table></figure></p>
+<h1 id="字符串-操作"><a href="#字符串-操作" class="headerlink" title="字符串-操作"></a>字符串-操作</h1><h2 id="字符串的可变性"><a href="#字符串的可变性" class="headerlink" title="字符串的可变性"></a>字符串的可变性</h2><ul>
+<li><p><code>var</code> 指定的可以修改</p>
+</li>
+<li><p><code>let</code> 指定的不可以修改</p>
+</li>
+<li><p>对比 Objective-C（<code>NSString</code> 和 <code>NSMutableString</code>）</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType27.png" alt="BasicDataType27"></p>
+<h2 id="字符串是值类型"><a href="#字符串是值类型" class="headerlink" title="字符串是值类型"></a>字符串是值类型</h2><ul>
+<li><p><code>String</code> 值在传递给方法或者函数的时候会被复制过去</p>
+</li>
+<li><p>赋值给常量或者变量的时候也是一样</p>
+</li>
+<li><p>Swift 编译器优化了字符串使用的资源，实际上拷贝只会在确实需要的时候才进行</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType28.png" alt="BasicDataType28"></p>
+<h2 id="操作字符"><a href="#操作字符" class="headerlink" title="操作字符"></a>操作字符</h2><ul>
+<li><p>for-in 循环遍历 String 中的每一个独立的 Character</p>
+</li>
+<li><p>Character 类型</p>
+</li>
+<li><p>String 值可以通过传入 Character 数组来构造</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType29.png" alt="BasicDataType29"></p>
+<h2 id="字符串拼接"><a href="#字符串拼接" class="headerlink" title="字符串拼接"></a>字符串拼接</h2><ul>
+<li><p>使用加运算符（<code>+</code>）创建新字符串</p>
+</li>
+<li><p>使用加赋值符号（<code>+=</code>）在已经存在的 String 值末尾追加一个 String 值</p>
+</li>
+<li><p>使用 String 类型的 <code>append()</code> 方法来可以给一个 String 变量的末尾追加 Character 值</p>
+</li>
+</ul>
+<h2 id="字符串插值"><a href="#字符串插值" class="headerlink" title="字符串插值"></a>字符串插值</h2><ul>
+<li><p>字符串插值是一种从混合常量、变量、字面量和表达式的字符串字面量构造新 String 值的方法</p>
+</li>
+<li><p>每一个你插入到字符串字面量的元素都要被一对圆括号包裹，然后使用反斜杠前缀（<code>\(string)</code>）</p>
+</li>
+<li><p>类似于 <code>NSString</code> 的 <code>stringWithFormat:</code> 方法，但是更加简便，更强大</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType30.png" alt="BasicDataType30"></p>
+<ul>
+<li><p>可以在扩展字符串分隔符中创建一个包含在其他情况下会被当作字符串插值的字符</p>
+</li>
+<li><p>要在使用扩展分隔符的字符串中使用字符串插值，在反斜杠后使用匹配首位井号数量的井号</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType31.png" alt="BasicDataType31"></p>
+<h1 id="字符串-访问和修改"><a href="#字符串-访问和修改" class="headerlink" title="字符串-访问和修改"></a>字符串-访问和修改</h1><h2 id="字符串索引"><a href="#字符串索引" class="headerlink" title="字符串索引"></a>字符串索引</h2><ul>
+<li><p>每一个 String 值都有相关的索引类型，<code>String.index</code>，它相当于每个 Character 在字符串中的位置</p>
+</li>
+<li><p><code>startIndex</code> 属性用来访问 String 的第一个 Character 的位置。<code>endIndex</code> 属性就是 String 中最后一个字符后的位置</p>
+</li>
+<li><p><code>endIndex</code> 属性并不是字符串下标脚本的合法实际参数</p>
+</li>
+<li><p>如果 String 为空，则 <code>startIndex</code> 与 <code>endIndex</code> 相等</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType32.png" alt="BasicDataType32"></p>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType33.png" alt="BasicDataType33"></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/// A position of a character or code unit in a string.</span></div><div class="line">@frozen <span class="keyword">public</span> <span class="class"><span class="keyword">struct</span> <span class="title">Index</span> : <span class="title">Sendable</span> </span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li><p>使用 <code>index(before:)</code> 和 <code>index(after:)</code> 方法来访问给定索引的前后</p>
+</li>
+<li><p>要访问给定索引更远的索引，可以使用 <code>index(_:offsetBy:)</code></p>
+</li>
+<li><p>使用 <code>indices</code> 属性来访问字符串中每个字符的索引</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType34.png" alt="BasicDataType34"></p>
+<h2 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h2><ul>
+<li><p>插入字符，使用 <code>insert(_:at:)</code> 方法</p>
+</li>
+<li><p>插入另一个字符串的内容到特定的索引，使用 <code>insert(contentsOf:at:)</code> 方法</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType35.png" alt="BasicDataType35"></p>
+<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><ul>
+<li><p>移除字符，使用 <code>remove(at:)</code> 方法</p>
+</li>
+<li><p>移除一小段特定范围的字符串，使用 <code>removeSubrange(_:)</code> 方法</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType36.png" alt="BasicDataType36"></p>
+<h1 id="字符串-子串和字符串比较"><a href="#字符串-子串和字符串比较" class="headerlink" title="字符串-子串和字符串比较"></a>字符串-子串和字符串比较</h1><h2 id="子字符串"><a href="#子字符串" class="headerlink" title="子字符串"></a>子字符串</h2><ul>
+<li><p>使用下标或者类似 <code>prefix(_:)</code> 的方法得到的子字符串是 <code>Substring</code> 类型</p>
+</li>
+<li><p>Substring 拥有 String 的大部分方法</p>
+</li>
+<li><p>Substring 可以转成 String 类型（<code>String()</code>）</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType37.png" alt="BasicDataType37"></p>
+<ul>
+<li><p>子字符串重用一部分原字符串的内存</p>
+</li>
+<li><p>修改字符串或者子字符串之前都不需要花费拷贝内存的代价</p>
+</li>
+<li><p>String 和 Substring 都遵循 StringProtocol 协议，也就是说它基本上能很方便地兼容所有接受 StringProtocol 值的字符串操作函数</p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType38.png" alt="BasicDataType38"></p>
+<h2 id="字符串比较"><a href="#字符串比较" class="headerlink" title="字符串比较"></a>字符串比较</h2><ul>
+<li><p>字符串和字符相等性（<code>==</code>和<code>!=</code>）</p>
+</li>
+<li><p>前缀相等性 <code>hasPrefix(_:)</code></p>
+</li>
+<li><p>后缀相等性 <code>hasSuffix(_:)</code></p>
+</li>
+</ul>
+<p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType39.png" alt="BasicDataType39"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/29/Swift/Swift简介/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/09/29/Swift/Swift简介/" itemprop="url">Swift简介</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-09-29T14:24:40+08:00">
+                2022-09-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Swift-版本历史"><a href="#Swift-版本历史" class="headerlink" title="Swift 版本历史"></a>Swift 版本历史</h1><p><img src="/2022/09/29/Swift/Swift简介/Swift01.png" alt="Swift01"></p>
+<p>Swift 从2014年至今发布了多个版本，其中有 5 大版本，<a href="https://github.com/apple/swift/releases" target="_blank" rel="external">查看当前版本</a>。而 Objective-C 从80年代至今，只有两个版本。2015年12月 Swift 正式<a href="https://github.com/apple/swift" target="_blank" rel="external">开源</a>。</p>
+<ul>
+<li><p>Swift 2</p>
+<ul>
+<li>Error handling 增强</li>
+<li>guard 语法</li>
+<li>协议支持扩展</li>
+</ul>
+</li>
+<li><p>Swift 3</p>
+<ul>
+<li>新的 GCD 和 Core Graphics</li>
+<li>NS 前缀从老的 Foundation 类型中移除</li>
+<li>内联序列函数 sequence</li>
+<li>新增 filePrivate 和 open 两个权限控制</li>
+<li>移除了诸多弃用的特性，如 <code>++</code>、<code>--</code>运算符等</li>
+</ul>
+</li>
+<li><p>Swift4</p>
+<ul>
+<li>extension 中可以访问 private 的属性</li>
+<li>类型和协议的组合类型</li>
+<li>Associated Type 可以追加 Where 约束语句</li>
+<li>新的 Key Paths 语法</li>
+<li>下标支持泛型</li>
+<li>字符串增强</li>
+</ul>
+</li>
+<li><p>Swift5</p>
+<ul>
+<li>ABI 稳定</li>
+<li>Raw strings</li>
+<li>标准库新增 Result</li>
+<li>定义了与 Python 或 Ruby 等脚本语言互操作的动态可调用类型</li>
+</ul>
+</li>
+</ul>
+<h1 id="Swift-VS-Objective-C"><a href="#Swift-VS-Objective-C" class="headerlink" title="Swift VS Objective-C"></a>Swift VS Objective-C</h1><h2 id="编程范式"><a href="#编程范式" class="headerlink" title="编程范式"></a>编程范式</h2><ul>
+<li>Swift 可以面向协议编程、函数式编程、面向对象编程。</li>
+<li>Objective-C 以面向对象编程为主，当然也可以通过引入 ReactiveCocoa 类库进行函数式编程。</li>
+</ul>
+<h2 id="类型安全"><a href="#类型安全" class="headerlink" title="类型安全"></a>类型安全</h2><ul>
+<li>Swift 是一门类型安全的语言，在代码中要求清楚明确值的类型。Swift 会在代码编译的时候做类型检查，并且把所有不匹配的类型作为一个错误标记出来。如果代码中使用一个字符串 String，在传递一个整型 Int 给它时，编译器就会报错。</li>
+<li>Objective-C 虽然在编译时也会做类型检查，但是只会给出警告提示，并不会报错。比如声明一个 NSString 变量，可以传一个 NSNumber 给它，并且可以将它作为 NSNumber 用。</li>
+</ul>
+<h2 id="值类型增强"><a href="#值类型增强" class="headerlink" title="值类型增强"></a>值类型增强</h2><ul>
+<li>在 Swift 中，struct、enum 和 tuple 都是值类型，并且 Int、Double、Float、String、Array、Dictionary、Set 也都是用结构体实现的，都是值类型。</li>
+<li>Objective-C 中，NSNumber、NSString 以及集合类对象都是指针类型。</li>
+</ul>
+<h2 id="枚举增强"><a href="#枚举增强" class="headerlink" title="枚举增强"></a>枚举增强</h2><ul>
+<li>Swift 的枚举可以使用整型、浮点型、字符串等，还能拥有属性和方法，甚至支持泛型、协议、扩展等等。</li>
+<li>Objective-C 里面的枚举则没有这些功能。</li>
+</ul>
+<h2 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h2><ul>
+<li>Swift 中支持泛型，也支持泛型的类型约束等特性。</li>
+<li>苹果推出了 Swift2.0 版本时，也为 Objective-C 带来了 泛型支持。</li>
+</ul>
+<h2 id="协议和扩展"><a href="#协议和扩展" class="headerlink" title="协议和扩展"></a>协议和扩展</h2><ul>
+<li>Swift 对协议的支持更加丰富，配合扩展（extension）、泛型、关联类型等可以实现面向协议编程，从而大大提高代码的灵活性。同时，Swift 中的 Protocol 还可以用于值类型，如结构体和枚举。</li>
+<li>Objective-C 的协议缺乏强约束，提供的 optional 特性往往成为很多问题的来源，而如果放弃 optional 又会让实现代价过大，每次调用代理方法前，都需要判断代理方法是否实现。</li>
+</ul>
+<h2 id="函数和闭包"><a href="#函数和闭包" class="headerlink" title="函数和闭包"></a>函数和闭包</h2><ul>
+<li>Swift 里函数是一等公民，可以直接定义函数类型变量，可以作为其它函数参数传递，可以作为函数返回值返回。</li>
+<li>Objective-C 里函数是次等公民，需要 selector 封装或者使用 block 才能模拟 Swift 中类似的效果。</li>
+</ul>
+<h1 id="Swift-命令行编译"><a href="#Swift-命令行编译" class="headerlink" title="Swift 命令行编译"></a>Swift 命令行编译</h1><p><img src="/2022/09/29/Swift/Swift简介/Swift02.png" alt="Swift02"></p>
+<h2 id="LLVM"><a href="#LLVM" class="headerlink" title="LLVM"></a>LLVM</h2><p><img src="/2022/09/29/Swift/Swift简介/Swift04.png" alt="Swift04"></p>
+<p>上图是经典的 LLVM 三段式架构，分为前端（Frontend）、优化器（Optimizer）和后端（Backend）。当需要支持新语言时，只需要实现实现前端部分，需要支持新的架构只需要实现后端部分，而前后端的连接枢纽就是 IR（Intermediate Representation），IR 独立于编程语言和机器架构，所以 IR 阶段的优化可以做到抽象而通用。</p>
+<p>LLVM 是架构编译器的框架系统，以 C++ 编写而成，用于优化任意程序语言编写的程序的编译时间（compile-time）、链接时间（link-time）、运行时间（run-time）以及空闲时间（idle-time）。对开发者保持开放，并兼容已有脚本。  </p>
+<p>对于 iOS 系统，Objective-C 语言前端使用 Clang 编译器，而 Swift 语言前端使用 Swiftc 编译器。编译器将代码编译成 IR 中间代码，交给 LLVM 进行优化，接着交给代码生成器生成机器语言，最终生成 .o 机器执行文件。</p>
+<h2 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h2><p><img src="/2022/09/29/Swift/Swift简介/Swift03.png" alt="Swift03"></p>
+<h2 id="Swiftc"><a href="#Swiftc" class="headerlink" title="Swiftc"></a>Swiftc</h2><ol>
+<li><p>编译生成可执行文件</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">swiftc</span> <span class="selector-tag">-o</span> <span class="selector-tag">main</span><span class="selector-class">.out</span> <span class="selector-tag">main</span><span class="selector-class">.swift</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>生成抽象语法树（Swift Abstract Syntax Tree 【AST】）</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">swiftc </span>main.<span class="keyword">swift </span>-dump-ast</div></pre></td></tr></table></figure>
+</li>
+<li><p>生成中间语言（Swift Intermediate Language 【SIL】）</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">swiftc </span>main.<span class="keyword">swift </span>-emit-sil</div></pre></td></tr></table></figure>
+</li>
+<li><p>生成中间表示层语言（LLVM Intermediate Representation 【LLVM IR】）</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">swiftc </span>main.<span class="keyword">swift </span>-emit-ir</div></pre></td></tr></table></figure>
+</li>
+<li><p>生成汇编语言（Assembly Language）</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">swiftc </span>main.<span class="keyword">swift </span>-emit-assembly</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="Swift-REPL"><a href="#Swift-REPL" class="headerlink" title="Swift REPL"></a>Swift REPL</h1><p>Read Eval PrintLoop，简称 REPL。是 Xcode 6.1 引入的另外一种以交互式的方式体验 Swift 的方法。</p>
+<p>进入 REPL：<br><img src="/2022/09/29/Swift/Swift简介/Swift05.png" alt="Swift05"></p>
+<p>运行代码：<br><img src="/2022/09/29/Swift/Swift简介/Swift06.png" alt="Swift06"></p>
+<p>定义函数实现和函数调用：<br><img src="/2022/09/29/Swift/Swift简介/Swift07.png" alt="Swift07"></p>
+<p>ps：在函数实现部分，如果需要换行，使用 <code>Control + enter</code>。大括号需要敲一个，回车后编写完代码，在敲入最后一个。</p>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><ul>
+<li>退出 <code>:quit</code></li>
+<li>帮助 <code>:help</code></li>
+<li>将光标移动到当前行的开始处 <code>Control+A</code></li>
+<li>将光标移动到当前行的结束处 <code>Control+E</code>  </li>
+</ul>
+<p><img src="/2022/09/29/Swift/Swift简介/Swift08.png" alt="Swift08"></p>
+<h1 id="Playground"><a href="#Playground" class="headerlink" title="Playground"></a>Playground</h1><p><img src="/2022/09/29/Swift/Swift简介/Swift09.png" alt="Swift09"></p>
+<p><img src="/2022/09/29/Swift/Swift简介/Swift10.png" alt="Swift10"></p>
+<p><img src="/2022/09/29/Swift/Swift简介/Swift11.png" alt="Swift11"></p>
+<p>参考博文：<br><a href="https://www.jianshu.com/p/ba7b80f181f6" target="_blank" rel="external">Swift：编译流程</a><br><a href="https://www.jianshu.com/p/e917bf0e8a7d" target="_blank" rel="external">Swift编译流程 &amp; Swift类</a><br><a href="https://www.jianshu.com/p/771604d38f0e" target="_blank" rel="external">Swift 编译过程</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/29/2022年打怪/算法列表/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/09/29/2022年打怪/算法列表/" itemprop="url">算法列表</a></h1>
         
 
         <div class="post-meta">
@@ -319,10 +1033,10 @@
 
       
         
-          <p><img src="/2022/09/29/2022打怪/算法列表/20220607_th.jpeg" alt="20220607_th"><br></p>
+          <p><img src="/2022/09/29/2022年打怪/算法列表/20220607_th.jpeg" alt="20220607_th"><br></p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2022/09/29/2022打怪/算法列表/#more" rel="contents">
+            <a class="btn" href="/2022/09/29/2022年打怪/算法列表/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1225,254 +1939,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/30/数据结构与算法/栈/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Kevin">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/myAvatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kevin's  blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/10/30/数据结构与算法/栈/" itemprop="url">栈</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-10-30T11:53:52+08:00">
-                2020-10-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><a href="https://baike.baidu.com/item/%E6%A0%88/12808149?fr=aladdin" target="_blank" rel="external">栈（stack）</a>又名堆栈，它是一种运算受限的线性表。限定仅在表尾进行插入和删除操作的线性表。这一端被称为栈顶，相对地，把另一端称为栈底。向一个栈插入新元素又称作进栈、入栈或压栈，它是把新元素放到栈顶元素的上面，使之成为新的栈顶元素；从一个栈删除元素又称作出栈或退栈，它是把栈顶元素删除掉，使其相邻的元素成为新的栈顶元素。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/10/30/数据结构与算法/栈/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/20/数据结构与算法/链表/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Kevin">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/myAvatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kevin's  blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/10/20/数据结构与算法/链表/" itemprop="url">链表</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-10-20T16:41:50+08:00">
-                2020-10-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><a href="https://baike.baidu.com/item/%E9%93%BE%E8%A1%A8/9794473?fr=aladdin" target="_blank" rel="external">链表</a>是一种物理存储单元上非连续、非顺序的存储结构，数据元素的逻辑顺序是通过链表中的指针链接次序实现的。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/10/20/数据结构与算法/链表/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1526,7 +1992,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
