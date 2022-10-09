@@ -810,114 +810,15 @@
 
       
         
-          
-            <h1 id="Swift-版本历史"><a href="#Swift-版本历史" class="headerlink" title="Swift 版本历史"></a>Swift 版本历史</h1><p><img src="/2022/09/29/Swift/Swift简介/Swift01.png" alt="Swift01"></p>
+          <h1 id="Swift-版本历史"><a href="#Swift-版本历史" class="headerlink" title="Swift 版本历史"></a>Swift 版本历史</h1><p><img src="/2022/09/29/Swift/Swift简介/Swift01.png" alt="Swift01"></p>
 <p>Swift 从2014年至今发布了多个版本，其中有 5 大版本，<a href="https://github.com/apple/swift/releases" target="_blank" rel="external">查看当前版本</a>。而 Objective-C 从80年代至今，只有两个版本。2015年12月 Swift 正式<a href="https://github.com/apple/swift" target="_blank" rel="external">开源</a>。</p>
-<ul>
-<li><p>Swift 2</p>
-<ul>
-<li>Error handling 增强</li>
-<li>guard 语法</li>
-<li>协议支持扩展</li>
-</ul>
-</li>
-<li><p>Swift 3</p>
-<ul>
-<li>新的 GCD 和 Core Graphics</li>
-<li>NS 前缀从老的 Foundation 类型中移除</li>
-<li>内联序列函数 sequence</li>
-<li>新增 filePrivate 和 open 两个权限控制</li>
-<li>移除了诸多弃用的特性，如 <code>++</code>、<code>--</code>运算符等</li>
-</ul>
-</li>
-<li><p>Swift4</p>
-<ul>
-<li>extension 中可以访问 private 的属性</li>
-<li>类型和协议的组合类型</li>
-<li>Associated Type 可以追加 Where 约束语句</li>
-<li>新的 Key Paths 语法</li>
-<li>下标支持泛型</li>
-<li>字符串增强</li>
-</ul>
-</li>
-<li><p>Swift5</p>
-<ul>
-<li>ABI 稳定</li>
-<li>Raw strings</li>
-<li>标准库新增 Result</li>
-<li>定义了与 Python 或 Ruby 等脚本语言互操作的动态可调用类型</li>
-</ul>
-</li>
-</ul>
-<h1 id="Swift-VS-Objective-C"><a href="#Swift-VS-Objective-C" class="headerlink" title="Swift VS Objective-C"></a>Swift VS Objective-C</h1><h2 id="编程范式"><a href="#编程范式" class="headerlink" title="编程范式"></a>编程范式</h2><ul>
-<li>Swift 可以面向协议编程、函数式编程、面向对象编程。</li>
-<li>Objective-C 以面向对象编程为主，当然也可以通过引入 ReactiveCocoa 类库进行函数式编程。</li>
-</ul>
-<h2 id="类型安全"><a href="#类型安全" class="headerlink" title="类型安全"></a>类型安全</h2><ul>
-<li>Swift 是一门类型安全的语言，在代码中要求清楚明确值的类型。Swift 会在代码编译的时候做类型检查，并且把所有不匹配的类型作为一个错误标记出来。如果代码中使用一个字符串 String，在传递一个整型 Int 给它时，编译器就会报错。</li>
-<li>Objective-C 虽然在编译时也会做类型检查，但是只会给出警告提示，并不会报错。比如声明一个 NSString 变量，可以传一个 NSNumber 给它，并且可以将它作为 NSNumber 用。</li>
-</ul>
-<h2 id="值类型增强"><a href="#值类型增强" class="headerlink" title="值类型增强"></a>值类型增强</h2><ul>
-<li>在 Swift 中，struct、enum 和 tuple 都是值类型，并且 Int、Double、Float、String、Array、Dictionary、Set 也都是用结构体实现的，都是值类型。</li>
-<li>Objective-C 中，NSNumber、NSString 以及集合类对象都是指针类型。</li>
-</ul>
-<h2 id="枚举增强"><a href="#枚举增强" class="headerlink" title="枚举增强"></a>枚举增强</h2><ul>
-<li>Swift 的枚举可以使用整型、浮点型、字符串等，还能拥有属性和方法，甚至支持泛型、协议、扩展等等。</li>
-<li>Objective-C 里面的枚举则没有这些功能。</li>
-</ul>
-<h2 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h2><ul>
-<li>Swift 中支持泛型，也支持泛型的类型约束等特性。</li>
-<li>苹果推出了 Swift2.0 版本时，也为 Objective-C 带来了 泛型支持。</li>
-</ul>
-<h2 id="协议和扩展"><a href="#协议和扩展" class="headerlink" title="协议和扩展"></a>协议和扩展</h2><ul>
-<li>Swift 对协议的支持更加丰富，配合扩展（extension）、泛型、关联类型等可以实现面向协议编程，从而大大提高代码的灵活性。同时，Swift 中的 Protocol 还可以用于值类型，如结构体和枚举。</li>
-<li>Objective-C 的协议缺乏强约束，提供的 optional 特性往往成为很多问题的来源，而如果放弃 optional 又会让实现代价过大，每次调用代理方法前，都需要判断代理方法是否实现。</li>
-</ul>
-<h2 id="函数和闭包"><a href="#函数和闭包" class="headerlink" title="函数和闭包"></a>函数和闭包</h2><ul>
-<li>Swift 里函数是一等公民，可以直接定义函数类型变量，可以作为其它函数参数传递，可以作为函数返回值返回。</li>
-<li>Objective-C 里函数是次等公民，需要 selector 封装或者使用 block 才能模拟 Swift 中类似的效果。</li>
-</ul>
-<h1 id="Swift-命令行编译"><a href="#Swift-命令行编译" class="headerlink" title="Swift 命令行编译"></a>Swift 命令行编译</h1><p><img src="/2022/09/29/Swift/Swift简介/Swift02.png" alt="Swift02"></p>
-<h2 id="LLVM"><a href="#LLVM" class="headerlink" title="LLVM"></a>LLVM</h2><p><img src="/2022/09/29/Swift/Swift简介/Swift04.png" alt="Swift04"></p>
-<p>上图是经典的 LLVM 三段式架构，分为前端（Frontend）、优化器（Optimizer）和后端（Backend）。当需要支持新语言时，只需要实现实现前端部分，需要支持新的架构只需要实现后端部分，而前后端的连接枢纽就是 IR（Intermediate Representation），IR 独立于编程语言和机器架构，所以 IR 阶段的优化可以做到抽象而通用。</p>
-<p>LLVM 是架构编译器的框架系统，以 C++ 编写而成，用于优化任意程序语言编写的程序的编译时间（compile-time）、链接时间（link-time）、运行时间（run-time）以及空闲时间（idle-time）。对开发者保持开放，并兼容已有脚本。  </p>
-<p>对于 iOS 系统，Objective-C 语言前端使用 Clang 编译器，而 Swift 语言前端使用 Swiftc 编译器。编译器将代码编译成 IR 中间代码，交给 LLVM 进行优化，接着交给代码生成器生成机器语言，最终生成 .o 机器执行文件。</p>
-<h2 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h2><p><img src="/2022/09/29/Swift/Swift简介/Swift03.png" alt="Swift03"></p>
-<h2 id="Swiftc"><a href="#Swiftc" class="headerlink" title="Swiftc"></a>Swiftc</h2><ol>
-<li><p>编译生成可执行文件</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">swiftc</span> <span class="selector-tag">-o</span> <span class="selector-tag">main</span><span class="selector-class">.out</span> <span class="selector-tag">main</span><span class="selector-class">.swift</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>生成抽象语法树（Swift Abstract Syntax Tree 【AST】）</p>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">swiftc </span>main.<span class="keyword">swift </span>-dump-ast</div></pre></td></tr></table></figure>
-</li>
-<li><p>生成中间语言（Swift Intermediate Language 【SIL】）</p>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">swiftc </span>main.<span class="keyword">swift </span>-emit-sil</div></pre></td></tr></table></figure>
-</li>
-<li><p>生成中间表示层语言（LLVM Intermediate Representation 【LLVM IR】）</p>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">swiftc </span>main.<span class="keyword">swift </span>-emit-ir</div></pre></td></tr></table></figure>
-</li>
-<li><p>生成汇编语言（Assembly Language）</p>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">swiftc </span>main.<span class="keyword">swift </span>-emit-assembly</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<h1 id="Swift-REPL"><a href="#Swift-REPL" class="headerlink" title="Swift REPL"></a>Swift REPL</h1><p>Read Eval PrintLoop，简称 REPL。是 Xcode 6.1 引入的另外一种以交互式的方式体验 Swift 的方法。</p>
-<p>进入 REPL：<br><img src="/2022/09/29/Swift/Swift简介/Swift05.png" alt="Swift05"></p>
-<p>运行代码：<br><img src="/2022/09/29/Swift/Swift简介/Swift06.png" alt="Swift06"></p>
-<p>定义函数实现和函数调用：<br><img src="/2022/09/29/Swift/Swift简介/Swift07.png" alt="Swift07"></p>
-<p>ps：在函数实现部分，如果需要换行，使用 <code>Control + enter</code>。大括号需要敲一个，回车后编写完代码，在敲入最后一个。</p>
-<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><ul>
-<li>退出 <code>:quit</code></li>
-<li>帮助 <code>:help</code></li>
-<li>将光标移动到当前行的开始处 <code>Control+A</code></li>
-<li>将光标移动到当前行的结束处 <code>Control+E</code>  </li>
-</ul>
-<p><img src="/2022/09/29/Swift/Swift简介/Swift08.png" alt="Swift08"></p>
-<h1 id="Playground"><a href="#Playground" class="headerlink" title="Playground"></a>Playground</h1><p><img src="/2022/09/29/Swift/Swift简介/Swift09.png" alt="Swift09"></p>
-<p><img src="/2022/09/29/Swift/Swift简介/Swift10.png" alt="Swift10"></p>
-<p><img src="/2022/09/29/Swift/Swift简介/Swift11.png" alt="Swift11"></p>
-<p>参考博文：<br><a href="https://www.jianshu.com/p/ba7b80f181f6" target="_blank" rel="external">Swift：编译流程</a><br><a href="https://www.jianshu.com/p/e917bf0e8a7d" target="_blank" rel="external">Swift编译流程 &amp; Swift类</a><br><a href="https://www.jianshu.com/p/771604d38f0e" target="_blank" rel="external">Swift 编译过程</a></p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2022/09/29/Swift/Swift简介/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
