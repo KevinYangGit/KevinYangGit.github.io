@@ -10,6 +10,8 @@ tags: Swift
 
 Swift 从2014年至今发布了多个版本，其中有 5 大版本，[查看当前版本](https://github.com/apple/swift/releases)。而 Objective-C 从80年代至今，只有两个版本。2015年12月 Swift 正式[开源](https://github.com/apple/swift)。
 
+<!-- more -->
+
 * Swift 2
 
   * Error handling 增强
@@ -147,9 +149,11 @@ ps：在函数实现部分，如果需要换行，使用 `Control + enter`。大
 
 # Playground
 
+![Swift09](Swift简介/Swift09.png)
 
+![Swift10](Swift简介/Swift10.png)
 
-
+![Swift11](Swift简介/Swift11.png)
 
 
 参考博文：  
