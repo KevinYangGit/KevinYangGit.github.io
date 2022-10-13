@@ -94,7 +94,7 @@
 <meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/06.png">
 <meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/07.png">
 <meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/08.png">
-<meta property="og:updated_time" content="2022-10-13T08:36:01.099Z">
+<meta property="og:updated_time" content="2022-10-13T08:39:25.681Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Apple官方文档阅读指南">
 <meta name="twitter:description" content="Documentation Documentation Technologies Documentation Archive Opensource Srource Opensource tarballs Opensource Github Of Apple Swift Book Develop">
@@ -467,10 +467,8 @@
 <p>首先值得注意的是，结果也是分类的，分为 <strong>Reference、System Guides、Tools Guides、Sample Code</strong> 这四类。类别很利于我们快速找到我们需要的信息。前面已经介绍过类别，跟那个基本一致，参照即可。</p>
 <p>另外需要注意的是，搜索框下面的选项，首先是 <strong>Hits Must</strong>（什么样的结果才会命中），包含了三项：</p>
 <ol>
-<li><p><strong>contain search term</strong> — 这是最常见的就是结果包含搜索词</p>
-</li>
-<li><p><strong>start with search term</strong> — 由搜索词开始</p>
-</li>
+<li><strong>contain search term</strong> — 这是最常见的就是结果包含搜索词</li>
+<li><strong>start with search term</strong> — 由搜索词开始</li>
 <li><strong>match search term</strong> — 必须完全匹配搜索词</li>
 </ol>
 <p>然后是 <strong>Languages</strong>（语言选项），包含 Javascript、C++、Java、Objective-C、C 语言。</p>
@@ -479,10 +477,8 @@
 <p><img src="/2022/10/13/Other/Apple官方文档阅读指南/29.png" alt="29"></p>
 <p>值得注意的是，标题下面这几样：</p>
 <ol>
-<li><p><strong>Inherits from</strong> — 继承关系，继承自</p>
-</li>
-<li><p><strong>Conforms to</strong> — 遵循什么协议</p>
-</li>
+<li><strong>Inherits from</strong> — 继承关系，继承自</li>
+<li><strong>Conforms to</strong> — 遵循什么协议</li>
 <li><strong>Framework</strong> — 属于什么框架</li>
 <li><strong>Availability</strong> — 从什么iOS版本开始支持</li>
 <li><strong>Declared in</strong> — 头文件</li>
@@ -524,30 +520,31 @@
 </li>
 <li><strong>Archive 基本都是专题文章</strong>（Programming Guide），比如 Runtime 会描述运行时机制、消息传递、类型编码等；而 <strong>Documentation 基本都是类和方法的说明</strong>（API Reference），比如 Runtime 会说明有哪些运行时相关的方法函数，开发者可以调用的方法，Archive 的代码示例中用到的方法。</li>
 </ol>
-<h2 id="开源代码"><a href="#开源代码" class="headerlink" title="开源代码"></a>开源代码</h2><ol>
+<h2 id="开源代码"><a href="#开源代码" class="headerlink" title="开源代码"></a>开源代码</h2><ul>
 <li><a href="https://opensource.apple.com/source/" target="_blank" rel="external">https://opensource.apple.com/source/</a>：在线查看源码，比如查找 <code>objc4</code> 可以找到 runtime 源码。</li>
-</ol>
+</ul>
 <p>搜索 <code>objc4</code>：<br><img src="/2022/10/13/Other/Apple官方文档阅读指南/05.png" alt="05"></p>
 <p>进入目录 <code>objc4</code>：<br><img src="/2022/10/13/Other/Apple官方文档阅读指南/06.png" alt="06"></p>
-<ol>
-<li><a href="https://opensource.apple.com/tarballs" target="_blank" rel="external">https://opensource.apple.com/tarballs</a>：源码压缩包，可下载。</li>
+<ul>
+<li><p><a href="https://opensource.apple.com/tarballs" target="_blank" rel="external">https://opensource.apple.com/tarballs</a>：源码压缩包，可下载。</p>
+</li>
 <li><p><a href="https://opensource.apple.com" target="_blank" rel="external">https://opensource.apple.com</a>：可以按操作系统和版本号导航开源代码，例如Release-&gt;macOS-&gt;11.0-&gt;11.2，打开页面中的“objc4-818.2”，Runtime的源码在macOS而不是iOS。</p>
 </li>
 <li><p><a href="https://github.com/apple" target="_blank" rel="external">https://github.com/apple</a>：比如darwin-xnu。</p>
 </li>
 <li><p><a href="https://developer.apple.com/opensource/" target="_blank" rel="external">https://developer.apple.com/opensource/</a></p>
 </li>
-</ol>
-<h2 id="Xcode-中的文档"><a href="#Xcode-中的文档" class="headerlink" title="Xcode 中的文档"></a>Xcode 中的文档</h2><ol>
+</ul>
+<h2 id="Xcode-中的文档"><a href="#Xcode-中的文档" class="headerlink" title="Xcode 中的文档"></a>Xcode 中的文档</h2><ul>
 <li><strong>Developer Documentation</strong>（是离线版的 Documentation，内容基本一样），可以利用左边的导航视图找到所需框架，也可以点击搜索框搜索。</li>
-</ol>
+</ul>
 <p><img src="/2022/10/13/Other/Apple官方文档阅读指南/07.png" alt="07"></p>
-<ol>
+<ul>
 <li><p><a href="https://docs.swift.org/swift-book/" target="_blank" rel="external">Swift Programing Language Book</a></p>
 </li>
 <li><p>Xcode使用“<strong>Control+Command+鼠标点击</strong>”一个类名，跳到类头文件中，查看文件中方法和属性的注释（和官方文档 Documentation 中的说明差不多且包含各个参数说明，而类头文件对整个类的注释说明不够详细，看 Documentation 更能知道这个类的作用）。</p>
 </li>
-</ol>
+</ul>
 <h2 id="Develop"><a href="#Develop" class="headerlink" title="Develop"></a>Develop</h2><p><a href="https://developer.apple.com/develop/" target="_blank" rel="external">https://developer.apple.com/develop/</a>：最下方的 Media and Web 的“Audio”、“AVFoundation”、“HTTP Live Streaming”有这些开发文档的链接；点击最上方的“Documentation”可以跳到文档搜索中心。</p>
 <p><img src="/2022/10/13/Other/Apple官方文档阅读指南/08.png" alt="08"></p>
 
