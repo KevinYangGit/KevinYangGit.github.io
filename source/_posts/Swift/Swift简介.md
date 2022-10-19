@@ -4,13 +4,17 @@ date: 2022-09-29 14:24:40
 tags: Swift
 ---
 
+[Swift 当前版本](https://github.com/apple/swift/releases)
+
+[Swift 源码](https://github.com/apple/swift)
+
+<!-- more -->
+
 # Swift 版本历史
 
 ![Swift01](Swift简介/Swift01.png)
 
 Swift 从2014年至今发布了多个版本，其中有 5 大版本，[查看当前版本](https://github.com/apple/swift/releases)。而 Objective-C 从80年代至今，只有两个版本。2015年12月 Swift 正式[开源](https://github.com/apple/swift)。
-
-<!-- more -->
 
 * Swift 2
 
