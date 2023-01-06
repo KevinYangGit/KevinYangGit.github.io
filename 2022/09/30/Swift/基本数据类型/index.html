@@ -116,7 +116,7 @@
 <meta property="og:image" content="http://yoursite.com/2022/09/30/Swift/基本数据类型/BasicDataType37.png">
 <meta property="og:image" content="http://yoursite.com/2022/09/30/Swift/基本数据类型/BasicDataType38.png">
 <meta property="og:image" content="http://yoursite.com/2022/09/30/Swift/基本数据类型/BasicDataType39.png">
-<meta property="og:updated_time" content="2022-10-12T01:36:06.114Z">
+<meta property="og:updated_time" content="2023-01-06T02:16:57.138Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基本数据类型">
 <meta name="twitter:description" content="常量和变量  基本数据类型  Tuple  Optional  字符串">
@@ -361,57 +361,61 @@
 
       
         <ul>
-<li><p>常量和变量</p>
+<li><p><a href="#常量和变量">常量和变量</a></p>
 </li>
-<li><p>基本数据类型</p>
+<li><p><a href="#基本数据类型">基本数据类型</a></p>
 </li>
-<li><p>Tuple</p>
+<li><p><a href="#tuple">Tuple</a></p>
 </li>
-<li><p>Optional</p>
+<li><p><a href="#optional">Optional</a></p>
 </li>
-<li><p>字符串</p>
+<li><p><a href="#字符串">字符串</a></p>
 </li>
 </ul>
 <a id="more"></a>
-<h1 id="常量和变量"><a href="#常量和变量" class="headerlink" title="常量和变量"></a>常量和变量</h1><h2 id="声明常量和变量"><a href="#声明常量和变量" class="headerlink" title="声明常量和变量"></a>声明常量和变量</h2><ul>
-<li><p>使用关键字 <code>let</code> 来声明常量</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> maxNumber = <span class="number">10</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>使用关键字 <code>var</code> 来声明变量</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> currentNumber = <span class="number">0</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>可以在一行中声明多个变量或常量，用逗号分隔</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> x = <span class="number">0.0</span>, y = <span class="number">0.0</span>, z = <span class="number">0.0</span></div></pre></td></tr></table></figure>
-</li>
+<h2 id="常量和变量"><a href="#常量和变量" class="headerlink" title="常量和变量"></a>常量和变量</h2><h3 id="声明常量和变量"><a href="#声明常量和变量" class="headerlink" title="声明常量和变量"></a>声明常量和变量</h3><ul>
+<li>使用关键字 <code>let</code> 来声明常量</li>
 </ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> maxNumber = <span class="number">10</span></div></pre></td></tr></table></figure>
+<ul>
+<li>使用关键字 <code>var</code> 来声明变量</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> currentNumber = <span class="number">0</span></div></pre></td></tr></table></figure>
+<ul>
+<li>可以在一行中声明多个变量或常量，用逗号分隔</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> x = <span class="number">0.0</span>, y = <span class="number">0.0</span>, z = <span class="number">0.0</span></div></pre></td></tr></table></figure>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType01.png" alt="BasicDataType01"></p>
-<h2 id="类型标注"><a href="#类型标注" class="headerlink" title="类型标注"></a>类型标注</h2><ul>
+<h3 id="类型标注"><a href="#类型标注" class="headerlink" title="类型标注"></a>类型标注</h3><p>声明变量或常量的同时，指定其类型。</p>
+<ul>
 <li><p>在声明一个变量或常量的时候提供类型标注，来明确变量或常量能够储存值的类型</p>
 </li>
 <li><p>添加类型标注的方法是在变量或常量的名字后边加一个冒号，再跟一个空格，最后加上要使用的类型名称</p>
-<figure class="highlight delphi"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> <span class="keyword">name</span>: <span class="keyword">String</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>可以在一行中定义多个相关的变量为相同的类型，用逗号分隔，只要在最后的变量名字后边加上类型标注</p>
-<figure class="highlight gcode"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var <span class="symbol">name1</span>, <span class="symbol">name2</span>, <span class="symbol">name3</span>: Stri<span class="symbol">ng</span></div></pre></td></tr></table></figure>
 </li>
 </ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> name: <span class="type">String</span></div></pre></td></tr></table></figure>
+<ul>
+<li>可以在一行中定义多个变量为相同的类型，用逗号分隔，只要在最后的变量名字后边加上类型标注</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> name1, name2, name3: <span class="type">String</span></div></pre></td></tr></table></figure>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType02.png" alt="BasicDataType02"></p>
-<h2 id="变量和常量命名"><a href="#变量和常量命名" class="headerlink" title="变量和常量命名"></a>变量和常量命名</h2><ul>
+<h3 id="变量和常量命名"><a href="#变量和常量命名" class="headerlink" title="变量和常量命名"></a>变量和常量命名</h3><ul>
 <li><p>常量和变量的名字几乎可以使用任何字符，包括 Unicode 字符</p>
 </li>
 <li><p>常量和变量的名字不能包含空白字符、数学符号、箭头、保留的（或者无效的）Unicode 码位、连线和制表符。虽然数字几乎可以使用在名字的任何位置，但是不能以数字开头。</p>
 </li>
 </ul>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> π = <span class="number">3.14159</span></div><div class="line"><span class="keyword">let</span> 你好 = <span class="string">"你好世界"</span></div><div class="line"><span class="keyword">let</span> 🐶🐮 = <span class="string">"dogcow"</span></div></pre></td></tr></table></figure>
-<h2 id="打印常量和变量"><a href="#打印常量和变量" class="headerlink" title="打印常量和变量"></a>打印常量和变量</h2><ul>
+<h3 id="打印常量和变量"><a href="#打印常量和变量" class="headerlink" title="打印常量和变量"></a>打印常量和变量</h3><ul>
 <li><p><code>print(_:separator:terminator:)</code></p>
 </li>
 <li><p>字符串插值 <code>\()</code></p>
 </li>
 </ul>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> 你好 = <span class="string">"你好世界"</span></div><div class="line"><span class="built_in">print</span>(<span class="string">"欢迎语是<span class="subst">\(你好)</span>"</span>)</div></pre></td></tr></table></figure>
-<p>打印结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">欢迎语是你好世界</div></pre></td></tr></table></figure></p>
-<h1 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h1><h2 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h2><ul>
+<p>打印结果：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">欢迎语是你好世界</div></pre></td></tr></table></figure>
+<h2 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h2><h3 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h3><ul>
 <li><p>Swift 提供了 8，16，32 和 64 位编码的有符号和无符号整数</p>
 </li>
 <li><p>命名方式：例如 8 位无符号整数的类型是 <code>UInt8</code>，32 位有符号整数的类型是 <code>Int32</code></p>
@@ -425,7 +429,7 @@
 <li><p>建议在用到整数的地方都是用 <code>Int</code></p>
 </li>
 </ul>
-<h2 id="浮点类型"><a href="#浮点类型" class="headerlink" title="浮点类型"></a>浮点类型</h2><ul>
+<h3 id="浮点类型"><a href="#浮点类型" class="headerlink" title="浮点类型"></a>浮点类型</h3><ul>
 <li><p><code>Double</code>：64 位浮点数，至少有 15 位数字的精度</p>
 </li>
 <li><p><code>Float</code>：32 位浮点数，至少有 6 位数字的精度</p>
@@ -433,37 +437,37 @@
 <li><p>在两种类型都可以的情况下，推荐使用 <code>Double</code> 类型</p>
 </li>
 </ul>
-<h2 id="数值范围"><a href="#数值范围" class="headerlink" title="数值范围"></a>数值范围</h2><p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType03.png" alt="BasicDataType03"></p>
-<h2 id="Bool"><a href="#Bool" class="headerlink" title="Bool"></a>Bool</h2><ul>
+<h3 id="数值范围"><a href="#数值范围" class="headerlink" title="数值范围"></a>数值范围</h3><p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType03.png" alt="BasicDataType03"></p>
+<h3 id="Bool"><a href="#Bool" class="headerlink" title="Bool"></a>Bool</h3><ul>
 <li><p><code>Bool</code>：<code>true</code> 和 <code>false</code></p>
 </li>
 <li><p>Swift 的类型安全机制会阻止用一个非布尔量的值替换掉 <code>Bool</code></p>
 </li>
 </ul>
 <p>如下图，不可以直接判断一个变量，而是需要写成判断的方式（<code>i == 1</code>）<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType04.png" alt="BasicDataType04"></p>
-<h2 id="类型别名"><a href="#类型别名" class="headerlink" title="类型别名"></a>类型别名</h2><ul>
+<h3 id="类型别名"><a href="#类型别名" class="headerlink" title="类型别名"></a>类型别名</h3><ul>
 <li><p>类型别名：为已存在类型定义一个可选择的名字</p>
 </li>
 <li><p>可以通过关键字 <code>typealias</code> 定义一个类型别名</p>
 </li>
 <li><p>如为一个已存在的类型，定义一个在上下文中看起来更合适更具有表达性的名字，来引用这个已存在的类型  </p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typealias</span> <span class="type">AudioSample</span> = <span class="type">UInt8</span></div><div class="line"><span class="keyword">let</span> sample: <span class="type">AudioSample</span> = <span class="number">32</span></div></pre></td></tr></table></figure>
 </li>
 </ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typealias</span> <span class="type">AudioSample</span> = <span class="type">UInt8</span></div><div class="line"><span class="keyword">let</span> sample: <span class="type">AudioSample</span> = <span class="number">32</span></div></pre></td></tr></table></figure>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType05.png" alt="BasicDataType05"></p>
-<h1 id="Tuple"><a href="#Tuple" class="headerlink" title="Tuple"></a>Tuple</h1><ul>
+<h2 id="Tuple"><a href="#Tuple" class="headerlink" title="Tuple"></a>Tuple</h2><ul>
 <li><p>元组实现了把多个值合并成一个复合型的值</p>
 </li>
 <li><p>元组内的值可以是任何类型，而且可以不必是同一类型</p>
 </li>
 </ul>
-<h2 id="元素命名"><a href="#元素命名" class="headerlink" title="元素命名"></a>元素命名</h2><ul>
+<h3 id="元素命名"><a href="#元素命名" class="headerlink" title="元素命名"></a>元素命名</h3><ul>
 <li><p>元组中的每一个元素可以指定对应的元素名称<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType07.png" alt="BasicDataType07"></p>
 </li>
 <li><p>如果没有指定名称的元素也可以使用下标的方式来引用<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType06.png" alt="BasicDataType06"></p>
 </li>
 </ul>
-<h2 id="Tuple-修改"><a href="#Tuple-修改" class="headerlink" title="Tuple 修改"></a>Tuple 修改</h2><ul>
+<h3 id="Tuple-修改"><a href="#Tuple-修改" class="headerlink" title="Tuple 修改"></a>Tuple 修改</h3><ul>
 <li><p>用 <code>var</code> 定义的元组就是可变元组，<code>let</code> 定义的就是不可变元组</p>
 </li>
 <li><p>不管是可变还是不可变元组，元组在创建后就不能增加和删除元素</p>
@@ -475,7 +479,7 @@
 </ul>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType08.png" alt="BasicDataType08"></p>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType09.png" alt="BasicDataType09"></p>
-<h2 id="Tuple-分解"><a href="#Tuple-分解" class="headerlink" title="Tuple 分解"></a>Tuple 分解</h2><ul>
+<h3 id="Tuple-分解"><a href="#Tuple-分解" class="headerlink" title="Tuple 分解"></a>Tuple 分解</h3><ul>
 <li><p>将一个元组的内容分解成单独的常量或变量</p>
 </li>
 <li><p>如果只需要使用其中的一部分数据，不需要的数据可以用下划线（ <code>_</code> ）代替</p>
@@ -483,14 +487,14 @@
 </ul>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType10.png" alt="BasicDataType10"></p>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType11.png" alt="BasicDataType11"></p>
-<h2 id="作为函数返回值"><a href="#作为函数返回值" class="headerlink" title="作为函数返回值"></a>作为函数返回值</h2><ul>
+<h3 id="作为函数返回值"><a href="#作为函数返回值" class="headerlink" title="作为函数返回值"></a>作为函数返回值</h3><ul>
 <li><p>使用 Tuple 为函数返回多个值</p>
 </li>
 <li><p>返回值的 Tuple 可以在函数的返回类型部分被命名</p>
 </li>
 </ul>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">writeToFile</span><span class="params">(content: String)</span></span> -&gt; (errorCode: <span class="type">Int</span>, errorMessage: <span class="type">String</span>) &#123;</div><div class="line">    <span class="keyword">return</span> (<span class="number">1</span>, <span class="string">"没有权限"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="Optional"><a href="#Optional" class="headerlink" title="Optional"></a>Optional</h1><h2 id="为什么需要-Optional"><a href="#为什么需要-Optional" class="headerlink" title="为什么需要 Optional"></a>为什么需要 Optional</h2><ul>
+<h2 id="Optional"><a href="#Optional" class="headerlink" title="Optional"></a>Optional</h2><h3 id="为什么需要-Optional"><a href="#为什么需要-Optional" class="headerlink" title="为什么需要 Optional"></a>为什么需要 Optional</h3><ul>
 <li><p>Objective-C 里的 <code>nil</code> 是无类型指针</p>
 </li>
 <li><p>Objective-C 里面的数组、字典、集合等不允许放入 <code>nil</code></p>
@@ -500,7 +504,7 @@
 <li><p>Objective-C 中 <code>nil</code> 只能用在对象上，而在其他地方又用其他特殊值（例如 <code>NSNotFound</code>）表示指的缺失</p>
 </li>
 </ul>
-<h2 id="Swift-中的-Optional"><a href="#Swift-中的-Optional" class="headerlink" title="Swift 中的 Optional"></a>Swift 中的 Optional</h2><ul>
+<h3 id="Swift-中的-Optional"><a href="#Swift-中的-Optional" class="headerlink" title="Swift 中的 Optional"></a>Swift 中的 Optional</h3><ul>
 <li><p>通过在<strong>变量</strong>后面加 <code>?</code> 表示：<br>这里有一个值，它等于 x<br>或者<br>这里根本没有值  </p>
 </li>
 <li><p>可以通过给<strong>可选变量</strong>赋值一个 <code>nil</code> 来将之设置为没有值</p>
@@ -509,17 +513,17 @@
 </li>
 </ul>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType12.png" alt="BasicDataType12"></p>
-<h2 id="Optional-if-语句以及强制展开"><a href="#Optional-if-语句以及强制展开" class="headerlink" title="Optional-if 语句以及强制展开"></a>Optional-if 语句以及强制展开</h2><ul>
+<h3 id="Optional-if-语句以及强制展开"><a href="#Optional-if-语句以及强制展开" class="headerlink" title="Optional-if 语句以及强制展开"></a>Optional-if 语句以及强制展开</h3><ul>
 <li>可选项是没法直接使用的，需要用 <code>!</code> 展开之后才能使用</li>
 </ul>
 <p>错误演示：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType13.png" alt="BasicDataType13"></p>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType14.png" alt="BasicDataType14"></p>
 <p>正确演示：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType15.png" alt="BasicDataType15"></p>
-<h2 id="Optional-强制展开"><a href="#Optional-强制展开" class="headerlink" title="Optional-强制展开"></a>Optional-强制展开</h2><ul>
+<h3 id="Optional-强制展开"><a href="#Optional-强制展开" class="headerlink" title="Optional-强制展开"></a>Optional-强制展开</h3><ul>
 <li>使用 <code>!</code> 来获取一个不存在的可选值会导致运行错误，在使用 <code>!</code> 强制展开之前必须确保可选项中包含一个非 <code>nil</code> 的值。</li>
 </ul>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType16.png" alt="BasicDataType16"></p>
-<h2 id="Optional-绑定"><a href="#Optional-绑定" class="headerlink" title="Optional-绑定"></a>Optional-绑定</h2><ul>
+<h3 id="Optional-绑定"><a href="#Optional-绑定" class="headerlink" title="Optional-绑定"></a>Optional-绑定</h3><ul>
 <li><p>可以使用可选项绑定来判断可选项是否包含值，如果包含就把值赋给一个临时的常量或者变量</p>
 </li>
 <li><p>可选绑定可以与 <code>if</code> 和 <code>while</code> 语句配合使用来检查可选项内部的值，并赋值给一个变量或常量</p>
@@ -528,7 +532,7 @@
 </li>
 </ul>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType17.png" alt="BasicDataType17"></p>
-<h2 id="Optional-隐式展开"><a href="#Optional-隐式展开" class="headerlink" title="Optional-隐式展开"></a>Optional-隐式展开</h2><ul>
+<h3 id="Optional-隐式展开"><a href="#Optional-隐式展开" class="headerlink" title="Optional-隐式展开"></a>Optional-隐式展开</h3><ul>
 <li><p>有些可选项一旦被设定值之后，就会一直拥有值，在这种情况下，就可以去掉检查的需求，也不必每次访问的时候都进行展开</p>
 </li>
 <li><p>通过在声明的类型后边添加一个叹号（<code>String!</code>）而非问号（<code>String?</code>）来书写隐式展开可选项</p>
@@ -537,13 +541,13 @@
 </li>
 </ul>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType18.png" alt="BasicDataType18"></p>
-<h2 id="Optional-可选链"><a href="#Optional-可选链" class="headerlink" title="Optional-可选链"></a>Optional-可选链</h2><ul>
+<h3 id="Optional-可选链"><a href="#Optional-可选链" class="headerlink" title="Optional-可选链"></a>Optional-可选链</h3><ul>
 <li>可选项后面加问号，如果可选项不为 <code>nil</code>，返回一个可选项结果，否则返回 <code>nil</code></li>
 </ul>
 <p>错误演示：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType19.png" alt="BasicDataType19"></p>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType20.png" alt="BasicDataType20"></p>
 <p>正确演示：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType21.png" alt="BasicDataType21"></p>
-<h1 id="Optional-实现探究"><a href="#Optional-实现探究" class="headerlink" title="Optional-实现探究"></a>Optional-实现探究</h1><ul>
+<h2 id="Optional-实现探究"><a href="#Optional-实现探究" class="headerlink" title="Optional-实现探究"></a>Optional-实现探究</h2><ul>
 <li><p>Optional 其实是标准库里的一个 enum 类型</p>
 </li>
 <li><p>Optional 是用标准库实现语言特性的典型</p>
@@ -558,31 +562,32 @@
 </ul>
 <p>使用 <code>Optional&lt;String&gt;</code> 代替 <code>?</code> 定义可选值变量：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType23.png" alt="BasicDataType23"></p>
 <ul>
-<li><p>泛型属性 <code>unsafelyUnwrapped</code></p>
+<li>泛型属性 <code>unsafelyUnwrapped</code></li>
+</ul>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/// The wrapped value of this instance, unwrapped without checking whether</span></div><div class="line"><span class="comment">/// the instance is `nil`.</span></div><div class="line"><span class="comment">///</span></div><div class="line"><span class="comment">/// The `unsafelyUnwrapped` property provides the same value as the forced</span></div><div class="line"><span class="comment">/// unwrap operator (postfix `!`). However, in optimized builds (`-O`), no</span></div><div class="line"><span class="comment">/// check is performed to ensure that the current instance actually has a</span></div><div class="line"><span class="comment">/// value. Accessing this property in the case of a `nil` value is a serious</span></div><div class="line"><span class="comment">/// programming error and could lead to undefined behavior or a runtime</span></div><div class="line"><span class="comment">/// error.</span></div><div class="line"><span class="comment">///</span></div><div class="line"><span class="comment">/// In debug builds (`-Onone`), the `unsafelyUnwrapped` property has the same</span></div><div class="line"><span class="comment">/// behavior as using the postfix `!` operator and triggers a runtime error</span></div><div class="line"><span class="comment">/// if the instance is `nil`.</span></div><div class="line"><span class="comment">///</span></div><div class="line"><span class="comment">/// The `unsafelyUnwrapped` property is recommended over calling the</span></div><div class="line"><span class="comment">/// `unsafeBitCast(_:)` function because the property is more restrictive</span></div><div class="line"><span class="comment">/// and because accessing the property still performs checking in debug</span></div><div class="line"><span class="comment">/// builds.</span></div><div class="line"><span class="comment">///</span></div><div class="line"><span class="comment">/// - Warning: This property trades safety for performance.  Use</span></div><div class="line"><span class="comment">///   `unsafelyUnwrapped` only when you are confident that this instance</span></div><div class="line"><span class="comment">///   will never be equal to `nil` and only after you've tried using the</span></div><div class="line"><span class="comment">///   postfix `!` operator.</span></div><div class="line">@inlinable <span class="keyword">public</span> <span class="keyword">var</span> unsafelyUnwrapped: <span class="type">Wrapped</span> &#123; <span class="keyword">get</span> &#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>理论上可以直接调用 <code>unsafelyUnwrapped</code> 获取可选项的值（<code>!</code>）<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType24.png" alt="BasicDataType24"></p>
-</li>
+<ul>
+<li>理论上可以直接调用 <code>unsafelyUnwrapped</code> 获取可选项的值（<code>!</code>）<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType24.png" alt="BasicDataType24"></li>
 </ul>
-<h1 id="字符串-初始化"><a href="#字符串-初始化" class="headerlink" title="字符串-初始化"></a>字符串-初始化</h1><h2 id="初始化空串"><a href="#初始化空串" class="headerlink" title="初始化空串"></a>初始化空串</h2><ul>
-<li><p>字面量</p>
+<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><h3 id="初始化空串"><a href="#初始化空串" class="headerlink" title="初始化空串"></a>初始化空串</h3><ul>
+<li>字面量</li>
+</ul>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> emptyString = <span class="string">""</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>初始化器语法</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> anotherEmptyString = <span class="type">String</span>()</div></pre></td></tr></table></figure>
-</li>
-<li><p><code>isEmpty</code> 检查是否为空串</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> emptyString.isEmpty &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"Nothing to see here"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
+<ul>
+<li>初始化器语法</li>
 </ul>
-<h2 id="字面量"><a href="#字面量" class="headerlink" title="字面量"></a>字面量</h2><ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> anotherEmptyString = <span class="type">String</span>()</div></pre></td></tr></table></figure>
+<ul>
+<li><code>isEmpty</code> 检查是否为空串</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> emptyString.isEmpty &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"Nothing to see here"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="字面量"><a href="#字面量" class="headerlink" title="字面量"></a>字面量</h3><ul>
 <li><p>字符串字面量是被双引号（<code>&quot;&quot;</code>）包裹的固定顺序文本字符</p>
 </li>
 <li><p>Swift 会为 <code>str</code> 常量推断类型为 <code>String</code> 👇</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> str = <span class="string">"some string"</span></div></pre></td></tr></table></figure>
 </li>
 </ul>
-<h2 id="多行字面量"><a href="#多行字面量" class="headerlink" title="多行字面量"></a>多行字面量</h2><ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> str = <span class="string">"some string"</span></div></pre></td></tr></table></figure>
+<h3 id="多行字面量"><a href="#多行字面量" class="headerlink" title="多行字面量"></a>多行字面量</h3><ul>
 <li><p>多行字符串字面量是用三个双引号引起来的一系列字符</p>
 </li>
 <li><p>多行字符串字面量把所有行包括在引号内，开始和结束默认不会有换行符</p>
@@ -590,13 +595,16 @@
 <li><p>当代码中在多行字符串字面量里面包含了换行，那个换行符同样会成为字符串里的值。</p>
 </li>
 </ul>
-<p>多行字符串字面量，包含换行：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> string = <span class="string">""</span><span class="string">"</span></div><div class="line"><span class="string">In the Southern Hemisphere,</span></div><div class="line"><span class="string">the end of September means a warm climate and the approaching of summer.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">For this southern right whale off the coast of Argentina,</span></div><div class="line"><span class="string">that means migrating south,</span></div><div class="line"><span class="string">heading to Antarctica to feed.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">The Southern Right Whale is a subspecies of the Right Whale that inhabits the ocean south of the equator,</span></div><div class="line"><span class="string">feeds on krill on the surface of the sea,</span></div><div class="line"><span class="string">and feeds through flocks of krill with their mouths open.</span></div><div class="line"><span class="string">"</span><span class="string">""</span></div><div class="line"></div><div class="line"><span class="built_in">print</span>(string)</div></pre></td></tr></table></figure></p>
-<p>打印结果：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">In the Southern Hemisphere,</div><div class="line">the <span class="keyword">end</span> <span class="keyword">of</span> September means a warm climate <span class="keyword">and</span> the approaching <span class="keyword">of</span> summer.</div><div class="line"></div><div class="line"><span class="keyword">For</span> this southern <span class="keyword">right</span> whale <span class="keyword">off</span> the coast <span class="keyword">of</span> Argentina,</div><div class="line">that means migrating south,</div><div class="line"><span class="keyword">heading</span> <span class="keyword">to</span> Antarctica <span class="keyword">to</span> feed.</div><div class="line"></div><div class="line">The Southern <span class="keyword">Right</span> Whale <span class="keyword">is</span> a subspecies <span class="keyword">of</span> the <span class="keyword">Right</span> Whale that inhabits the ocean south <span class="keyword">of</span> the equator,</div><div class="line">feeds <span class="keyword">on</span> krill <span class="keyword">on</span> the surface <span class="keyword">of</span> the sea,</div><div class="line"><span class="keyword">and</span> feeds <span class="keyword">through</span> flocks <span class="keyword">of</span> krill <span class="keyword">with</span> their mouths open.</div></pre></td></tr></table></figure></p>
-<ul>
-<li>如果想要使用换行符来让代码易读，却不想让换行符成为字符串的值，那就在那些行的末尾使用反斜杠（<code>\</code>）  <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> string = <span class="string">""</span><span class="string">"</span></div><div class="line"><span class="string">In the Southern Hemisphere,\</span></div><div class="line"><span class="string">the end of September means a warm climate and the approaching of summer.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">For this southern right whale off the coast of Argentina,\</span></div><div class="line"><span class="string">that means migrating south,\</span></div><div class="line"><span class="string">heading to Antarctica to feed.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">The Southern Right Whale is a subspecies of the Right Whale that inhabits the ocean south of the equator,\</span></div><div class="line"><span class="string">feeds on krill on the surface of the sea,\</span></div><div class="line"><span class="string">and feeds through flocks of krill with their mouths open.</span></div><div class="line"><span class="string">"</span><span class="string">""</span></div><div class="line"></div><div class="line"><span class="built_in">print</span>(string)</div></pre></td></tr></table></figure>
-</li>
+<h3 id="多行字面量包含换行"><a href="#多行字面量包含换行" class="headerlink" title="多行字面量包含换行"></a>多行字面量包含换行</h3><p>多行字符串字面量，包含换行：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> string = <span class="string">""</span><span class="string">"</span></div><div class="line"><span class="string">In the Southern Hemisphere,</span></div><div class="line"><span class="string">the end of September means a warm climate and the approaching of summer.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">For this southern right whale off the coast of Argentina,</span></div><div class="line"><span class="string">that means migrating south,</span></div><div class="line"><span class="string">heading to Antarctica to feed.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">The Southern Right Whale is a subspecies of the Right Whale that inhabits the ocean south of the equator,</span></div><div class="line"><span class="string">feeds on krill on the surface of the sea,</span></div><div class="line"><span class="string">and feeds through flocks of krill with their mouths open.</span></div><div class="line"><span class="string">"</span><span class="string">""</span></div><div class="line"></div><div class="line"><span class="built_in">print</span>(string)</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="type">In</span> the <span class="type">Southern</span> <span class="type">Hemisphere</span>,</div><div class="line">the end of <span class="type">September</span> means a warm climate and the approaching of summer.</div><div class="line"></div><div class="line"><span class="type">For</span> this southern <span class="keyword">right</span> whale off the coast of <span class="type">Argentina</span>,</div><div class="line">that means migrating south,</div><div class="line">heading to <span class="type">Antarctica</span> to feed.</div><div class="line"></div><div class="line"><span class="type">The</span> <span class="type">Southern</span> <span class="type">Right</span> <span class="type">Whale</span> <span class="keyword">is</span> a subspecies of the <span class="type">Right</span> <span class="type">Whale</span> that inhabits the ocean south of the equator,</div><div class="line">feeds on krill on the surface of the sea,</div><div class="line">and feeds through flocks of krill with their mouths <span class="keyword">open</span>.</div></pre></td></tr></table></figure>
+<h3 id="多行字面量不包含换行"><a href="#多行字面量不包含换行" class="headerlink" title="多行字面量不包含换行"></a>多行字面量不包含换行</h3><ul>
+<li>如果想要使用换行符来让代码易读，却不想让换行符成为字符串的值，那就在那些行的末尾使用反斜杠（<code>\</code>）  </li>
 </ul>
-<p>打印结果：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">In the Southern Hemisphere,the <span class="keyword">end</span> <span class="keyword">of</span> September means a warm climate <span class="keyword">and</span> the approaching <span class="keyword">of</span> summer.</div><div class="line"></div><div class="line"><span class="keyword">For</span> this southern <span class="keyword">right</span> whale <span class="keyword">off</span> the coast <span class="keyword">of</span> Argentina,that means migrating south,<span class="keyword">heading</span> <span class="keyword">to</span> Antarctica <span class="keyword">to</span> feed.</div><div class="line"></div><div class="line">The Southern <span class="keyword">Right</span> Whale <span class="keyword">is</span> a subspecies <span class="keyword">of</span> the <span class="keyword">Right</span> Whale that inhabits the ocean south <span class="keyword">of</span> the equator,feeds <span class="keyword">on</span> krill <span class="keyword">on</span> the surface <span class="keyword">of</span> the sea,<span class="keyword">and</span> feeds <span class="keyword">through</span> flocks <span class="keyword">of</span> krill <span class="keyword">with</span> their mouths open.</div></pre></td></tr></table></figure></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> string = <span class="string">""</span><span class="string">"</span></div><div class="line"><span class="string">In the Southern Hemisphere,\</span></div><div class="line"><span class="string">the end of September means a warm climate and the approaching of summer.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">For this southern right whale off the coast of Argentina,\</span></div><div class="line"><span class="string">that means migrating south,\</span></div><div class="line"><span class="string">heading to Antarctica to feed.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">The Southern Right Whale is a subspecies of the Right Whale that inhabits the ocean south of the equator,\</span></div><div class="line"><span class="string">feeds on krill on the surface of the sea,\</span></div><div class="line"><span class="string">and feeds through flocks of krill with their mouths open.</span></div><div class="line"><span class="string">"</span><span class="string">""</span></div><div class="line"></div><div class="line"><span class="built_in">print</span>(string)</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="type">In</span> the <span class="type">Southern</span> <span class="type">Hemisphere</span>,the end of <span class="type">September</span> means a warm climate and the approaching of summer.</div><div class="line"></div><div class="line"><span class="type">For</span> this southern <span class="keyword">right</span> whale off the coast of <span class="type">Argentina</span>,that means migrating south,heading to <span class="type">Antarctica</span> to feed.</div><div class="line"></div><div class="line"><span class="type">The</span> <span class="type">Southern</span> <span class="type">Right</span> <span class="type">Whale</span> <span class="keyword">is</span> a subspecies of the <span class="type">Right</span> <span class="type">Whale</span> that inhabits the ocean south of the equator,feeds on krill on the surface of the sea,and feeds through flocks of krill with their mouths <span class="keyword">open</span>.</div></pre></td></tr></table></figure>
 <ul>
 <li><p>要让多行字符串字面量起始或结束于换行，就在第一或最后一行写一个空行</p>
 </li>
@@ -606,9 +614,11 @@
 </li>
 </ul>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType25.png" alt="BasicDataType25"></p>
-<p>定义一个字符串，带有代码缩进，在起始和结束换行：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> string = <span class="string">""</span><span class="string">"</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">    In the Southern Hemisphere,\</span></div><div class="line"><span class="string">the end of September means a warm climate and the approaching of summer.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">    For this southern right whale off the coast of Argentina,\</span></div><div class="line"><span class="string">that means migrating south,\</span></div><div class="line"><span class="string">heading to Antarctica to feed.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">The Southern Right Whale is a subspecies of the Right Whale that inhabits the ocean south of the equator,\</span></div><div class="line"><span class="string">feeds on krill on the surface of the sea,\</span></div><div class="line"><span class="string">and feeds through flocks of krill with their mouths open.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">"</span><span class="string">""</span></div></pre></td></tr></table></figure></p>
-<p>打印结果：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">    In the Southern Hemisphere,the <span class="keyword">end</span> <span class="keyword">of</span> September means a warm climate <span class="keyword">and</span> the approaching <span class="keyword">of</span> summer.</div><div class="line"></div><div class="line">    <span class="keyword">For</span> this southern <span class="keyword">right</span> whale <span class="keyword">off</span> the coast <span class="keyword">of</span> Argentina,that means migrating south,<span class="keyword">heading</span> <span class="keyword">to</span> Antarctica <span class="keyword">to</span> feed.</div><div class="line"></div><div class="line">The Southern <span class="keyword">Right</span> Whale <span class="keyword">is</span> a subspecies <span class="keyword">of</span> the <span class="keyword">Right</span> Whale that inhabits the ocean south <span class="keyword">of</span> the equator,feeds <span class="keyword">on</span> krill <span class="keyword">on</span> the surface <span class="keyword">of</span> the sea,<span class="keyword">and</span> feeds <span class="keyword">through</span> flocks <span class="keyword">of</span> krill <span class="keyword">with</span> their mouths open.</div></pre></td></tr></table></figure></p>
-<h2 id="字符串里的特殊字符"><a href="#字符串里的特殊字符" class="headerlink" title="字符串里的特殊字符"></a>字符串里的特殊字符</h2><ul>
+<h3 id="多行字面量包含代码缩进"><a href="#多行字面量包含代码缩进" class="headerlink" title="多行字面量包含代码缩进"></a>多行字面量包含代码缩进</h3><p>定义一个字符串，带有代码缩进，在起始和结束换行：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> string = <span class="string">""</span><span class="string">"</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">    In the Southern Hemisphere,\</span></div><div class="line"><span class="string">the end of September means a warm climate and the approaching of summer.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">    For this southern right whale off the coast of Argentina,\</span></div><div class="line"><span class="string">that means migrating south,\</span></div><div class="line"><span class="string">heading to Antarctica to feed.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">The Southern Right Whale is a subspecies of the Right Whale that inhabits the ocean south of the equator,\</span></div><div class="line"><span class="string">feeds on krill on the surface of the sea,\</span></div><div class="line"><span class="string">and feeds through flocks of krill with their mouths open.</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">"</span><span class="string">""</span></div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">    <span class="type">In</span> the <span class="type">Southern</span> <span class="type">Hemisphere</span>,the end of <span class="type">September</span> means a warm climate and the approaching of summer.</div><div class="line"></div><div class="line">    <span class="type">For</span> this southern <span class="keyword">right</span> whale off the coast of <span class="type">Argentina</span>,that means migrating south,heading to <span class="type">Antarctica</span> to feed.</div><div class="line"></div><div class="line"><span class="type">The</span> <span class="type">Southern</span> <span class="type">Right</span> <span class="type">Whale</span> <span class="keyword">is</span> a subspecies of the <span class="type">Right</span> <span class="type">Whale</span> that inhabits the ocean south of the equator,feeds on krill on the surface of the sea,and feeds through flocks of krill with their mouths <span class="keyword">open</span>.</div></pre></td></tr></table></figure>
+<h3 id="字符串里的特殊字符"><a href="#字符串里的特殊字符" class="headerlink" title="字符串里的特殊字符"></a>字符串里的特殊字符</h3><ul>
 <li><p>转义特殊字符 <code>\0</code>（空字符），<code>\\</code>（反斜杠），<code>\t</code>（水平制表符），<code>\n</code>（换行符），<code>\r</code>（回车符），<code>\&quot;</code>（双引号）以及<code>\&#39;</code>（单引号）</p>
 </li>
 <li><p>任意的 Unicode 标量，写作 <code>\u{n}</code>，n 是一个 1-8 位的16进制数字，其值是合法 Unicode 值</p>
@@ -616,10 +626,11 @@
 <li><p>在多行字符串字面量中包含双引号 <code>&quot;</code> 不需转义，要在多行字符串中包含文本 <code>&quot;&quot;&quot;</code>，转义至少一个双引号</p>
 </li>
 </ul>
-<figure class="highlight ceylon"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> string = <span class="string">"""</span></div><div class="line"><span class="string">""</span></div><div class="line"><span class="string">""\"</span></div><div class="line"><span class="string">"""</span></div><div class="line">print(string)</div></pre></td></tr></table></figure>
-<p>打印结果：<br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="string">""</span></div><div class="line"><span class="string">"""</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> string = <span class="string">""</span><span class="string">"</span></div><div class="line"><span class="string">"</span><span class="string">"</span></div><div class="line"><span class="string">"</span><span class="string">"\"</span></div><div class="line"><span class="string">"</span><span class="string">""</span></div><div class="line"><span class="built_in">print</span>(string)</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="string">""</span></div><div class="line"><span class="string">""</span><span class="string">"</span></div></pre></td></tr></table></figure>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType26.png" alt="BasicDataType26"></p>
-<h2 id="扩展字符串分隔符（Raw-String）"><a href="#扩展字符串分隔符（Raw-String）" class="headerlink" title="扩展字符串分隔符（Raw String）"></a>扩展字符串分隔符（Raw String）</h2><ul>
+<h3 id="扩展字符串分隔符（Raw-String）"><a href="#扩展字符串分隔符（Raw-String）" class="headerlink" title="扩展字符串分隔符（Raw String）"></a>扩展字符串分隔符（Raw String）</h3><ul>
 <li><p>在字符串字面量中放置扩展分隔符，使字符串中包含的特殊字符不生效，可以把字符串放在双引号（<code>&quot;</code>）内并由井号（<code>#</code>）包裹</p>
 </li>
 <li><p>如果字符串里有 <code>#</code> 则首尾需要两个井号 <code>##</code></p>
@@ -628,8 +639,9 @@
 </li>
 </ul>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> str = #<span class="string">"Line 1\nLine 2 "</span>#</div><div class="line"><span class="keyword">let</span> str1 = #<span class="string">"Line 3\#nLine 4"</span>#</div><div class="line"><span class="keyword">let</span> str2 = ###<span class="string">"Line 5\###nLine 6"</span>###</div><div class="line"><span class="built_in">print</span>(str)</div><div class="line"><span class="built_in">print</span>(str1)</div><div class="line"><span class="built_in">print</span>(str2)</div></pre></td></tr></table></figure>
-<p>打印结果：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Line <span class="number">1</span>\nLine <span class="number">2</span> </div><div class="line">Line <span class="number">3</span></div><div class="line">Line <span class="number">4</span></div><div class="line">Line <span class="number">5</span></div><div class="line">Line <span class="number">6</span></div></pre></td></tr></table></figure></p>
-<h1 id="字符串-操作"><a href="#字符串-操作" class="headerlink" title="字符串-操作"></a>字符串-操作</h1><h2 id="字符串的可变性"><a href="#字符串的可变性" class="headerlink" title="字符串的可变性"></a>字符串的可变性</h2><ul>
+<p>打印结果：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="type">Line</span> <span class="number">1</span>\nLine <span class="number">2</span> </div><div class="line"><span class="type">Line</span> <span class="number">3</span></div><div class="line"><span class="type">Line</span> <span class="number">4</span></div><div class="line"><span class="type">Line</span> <span class="number">5</span></div><div class="line"><span class="type">Line</span> <span class="number">6</span></div></pre></td></tr></table></figure>
+<h2 id="字符串-操作"><a href="#字符串-操作" class="headerlink" title="字符串-操作"></a>字符串-操作</h2><h3 id="字符串的可变性"><a href="#字符串的可变性" class="headerlink" title="字符串的可变性"></a>字符串的可变性</h3><ul>
 <li><p><code>var</code> 指定的可以修改</p>
 </li>
 <li><p><code>let</code> 指定的不可以修改</p>
@@ -638,7 +650,7 @@
 </li>
 </ul>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType27.png" alt="BasicDataType27"></p>
-<h2 id="字符串是值类型"><a href="#字符串是值类型" class="headerlink" title="字符串是值类型"></a>字符串是值类型</h2><ul>
+<h3 id="字符串是值类型"><a href="#字符串是值类型" class="headerlink" title="字符串是值类型"></a>字符串是值类型</h3><ul>
 <li><p><code>String</code> 值在传递给方法或者函数的时候会被复制过去</p>
 </li>
 <li><p>赋值给常量或者变量的时候也是一样</p>
@@ -647,7 +659,7 @@
 </li>
 </ul>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType28.png" alt="BasicDataType28"></p>
-<h2 id="操作字符"><a href="#操作字符" class="headerlink" title="操作字符"></a>操作字符</h2><ul>
+<h3 id="操作字符"><a href="#操作字符" class="headerlink" title="操作字符"></a>操作字符</h3><ul>
 <li><p>for-in 循环遍历 String 中的每一个独立的 Character</p>
 </li>
 <li><p>Character 类型</p>
@@ -656,18 +668,19 @@
 </li>
 </ul>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType29.png" alt="BasicDataType29"></p>
-<h2 id="字符串拼接"><a href="#字符串拼接" class="headerlink" title="字符串拼接"></a>字符串拼接</h2><ul>
-<li><p>使用加运算符（<code>+</code>）创建新字符串</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> string = <span class="string">"1"</span> + <span class="string">"2"</span></div><div class="line"><span class="built_in">print</span>(string) <span class="comment">// 12</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>使用加赋值符号（<code>+=</code>）在已经存在的 String 值末尾追加一个 String 值</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> string = <span class="string">"1"</span> + <span class="string">"2"</span></div><div class="line">string += <span class="string">"3"</span></div><div class="line"><span class="built_in">print</span>(string) <span class="comment">// 123</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>使用 String 类型的 <code>append()</code> 方法来可以给一个 String 变量的末尾追加 Character 值</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> string = <span class="string">"1"</span> + <span class="string">"2"</span></div><div class="line">string.append(contentsOf: <span class="string">"3"</span>)</div><div class="line"><span class="built_in">print</span>(string) <span class="comment">// 123</span></div></pre></td></tr></table></figure>
-</li>
+<h3 id="字符串拼接"><a href="#字符串拼接" class="headerlink" title="字符串拼接"></a>字符串拼接</h3><ul>
+<li>使用加运算符（<code>+</code>）创建新字符串</li>
 </ul>
-<h2 id="字符串插值"><a href="#字符串插值" class="headerlink" title="字符串插值"></a>字符串插值</h2><ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> string = <span class="string">"1"</span> + <span class="string">"2"</span></div><div class="line"><span class="built_in">print</span>(string) <span class="comment">// 12</span></div></pre></td></tr></table></figure>
+<ul>
+<li>使用加赋值符号（<code>+=</code>）在已经存在的 String 值末尾追加一个 String 值</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> string = <span class="string">"1"</span> + <span class="string">"2"</span></div><div class="line">string += <span class="string">"3"</span></div><div class="line"><span class="built_in">print</span>(string) <span class="comment">// 123</span></div></pre></td></tr></table></figure>
+<ul>
+<li>使用 String 类型的 <code>append()</code> 方法来可以给一个 String 变量的末尾追加 Character 值</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> string = <span class="string">"1"</span> + <span class="string">"2"</span></div><div class="line">string.append(contentsOf: <span class="string">"3"</span>)</div><div class="line"><span class="built_in">print</span>(string) <span class="comment">// 123</span></div></pre></td></tr></table></figure>
+<h3 id="字符串插值"><a href="#字符串插值" class="headerlink" title="字符串插值"></a>字符串插值</h3><ul>
 <li><p>字符串插值是一种从混合常量、变量、字面量和表达式的字符串字面量构造新 String 值的方法</p>
 </li>
 <li><p>每一个你插入到字符串字面量的元素都要被一对圆括号包裹，然后使用反斜杠前缀（<code>\()</code>）</p>
@@ -683,8 +696,8 @@
 </li>
 </ul>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType31.png" alt="BasicDataType31"></p>
-<h1 id="字符串-访问和修改"><a href="#字符串-访问和修改" class="headerlink" title="字符串-访问和修改"></a>字符串-访问和修改</h1><h2 id="字符串索引"><a href="#字符串索引" class="headerlink" title="字符串索引"></a>字符串索引</h2><ul>
-<li><p>每一个 String 值都有相关的索引类型，<code>String.index</code>，它相当于每个 Character 在字符串中的位置</p>
+<h2 id="字符串-访问和修改"><a href="#字符串-访问和修改" class="headerlink" title="字符串-访问和修改"></a>字符串-访问和修改</h2><h3 id="字符串索引"><a href="#字符串索引" class="headerlink" title="字符串索引"></a>字符串索引</h3><ul>
+<li><p>每一个 String 值都有相关的索引类型 - <code>String.index</code>，它相当于每个 Character 在字符串中的位置</p>
 </li>
 <li><p><code>startIndex</code> 属性用来访问 String 的第一个 Character 的位置。<code>endIndex</code> 属性就是 String 中最后一个字符后的位置</p>
 </li>
@@ -694,7 +707,8 @@
 </li>
 </ul>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType32.png" alt="BasicDataType32"></p>
-<p><code>Index</code> 是一个结构体，并不能像数组那样，使用数字访问对应下标下的字符：<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/// A position of a character or code unit in a string.</span></div><div class="line">@frozen <span class="keyword">public</span> <span class="class"><span class="keyword">struct</span> <span class="title">Index</span> : <span class="title">Sendable</span> </span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>Index</code> 是一个结构体，并不能像数组那样，使用数字访问对应下标下的字符：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/// A position of a character or code unit in a string.</span></div><div class="line">@frozen <span class="keyword">public</span> <span class="class"><span class="keyword">struct</span> <span class="title">Index</span> : <span class="title">Sendable</span> </span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType33.png" alt="BasicDataType33"></p>
 <ul>
 <li><p>使用 <code>index(before:)</code> 和 <code>index(after:)</code> 方法来访问给定索引的前后</p>
@@ -705,21 +719,21 @@
 </li>
 </ul>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType34.png" alt="BasicDataType34"></p>
-<h2 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h2><ul>
+<h3 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h3><ul>
 <li><p>插入字符，使用 <code>insert(_:at:)</code> 方法</p>
 </li>
 <li><p>插入另一个字符串的内容到特定的索引，使用 <code>insert(contentsOf:at:)</code> 方法</p>
 </li>
 </ul>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType35.png" alt="BasicDataType35"></p>
-<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><ul>
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><ul>
 <li><p>移除字符，使用 <code>remove(at:)</code> 方法</p>
 </li>
 <li><p>移除一小段特定范围的字符串，使用 <code>removeSubrange(_:)</code> 方法</p>
 </li>
 </ul>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType36.png" alt="BasicDataType36"></p>
-<h1 id="字符串-子串和字符串比较"><a href="#字符串-子串和字符串比较" class="headerlink" title="字符串-子串和字符串比较"></a>字符串-子串和字符串比较</h1><h2 id="子字符串"><a href="#子字符串" class="headerlink" title="子字符串"></a>子字符串</h2><ul>
+<h2 id="字符串-子串和字符串比较"><a href="#字符串-子串和字符串比较" class="headerlink" title="字符串-子串和字符串比较"></a>字符串-子串和字符串比较</h2><h3 id="子字符串"><a href="#子字符串" class="headerlink" title="子字符串"></a>子字符串</h3><ul>
 <li><p>使用下标或者类似 <code>prefix(_:)</code> 的方法得到的子字符串是 <code>Substring</code> 类型</p>
 </li>
 <li><p>Substring 拥有 String 的大部分方法</p>
@@ -737,12 +751,12 @@
 </li>
 </ul>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType38.png" alt="BasicDataType38"></p>
-<h2 id="字符串比较"><a href="#字符串比较" class="headerlink" title="字符串比较"></a>字符串比较</h2><ul>
-<li><p>字符串和字符相等性（<code>==</code>和<code>!=</code>）</p>
+<h3 id="字符串比较"><a href="#字符串比较" class="headerlink" title="字符串比较"></a>字符串比较</h3><ul>
+<li><p>字符串和字符相等性：<code>==</code>和<code>!=</code></p>
 </li>
-<li><p>前缀相等性 <code>hasPrefix(_:)</code></p>
+<li><p>前缀相等性：<code>hasPrefix(_:)</code></p>
 </li>
-<li><p>后缀相等性 <code>hasSuffix(_:)</code></p>
+<li><p>后缀相等性：<code>hasSuffix(_:)</code></p>
 </li>
 </ul>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType39.png" alt="BasicDataType39"></p>
@@ -952,7 +966,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#常量和变量"><span class="nav-number">1.</span> <span class="nav-text">常量和变量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#声明常量和变量"><span class="nav-number">1.1.</span> <span class="nav-text">声明常量和变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类型标注"><span class="nav-number">1.2.</span> <span class="nav-text">类型标注</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量和常量命名"><span class="nav-number">1.3.</span> <span class="nav-text">变量和常量命名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打印常量和变量"><span class="nav-number">1.4.</span> <span class="nav-text">打印常量和变量</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本数据类型"><span class="nav-number">2.</span> <span class="nav-text">基本数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#整数"><span class="nav-number">2.1.</span> <span class="nav-text">整数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#浮点类型"><span class="nav-number">2.2.</span> <span class="nav-text">浮点类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数值范围"><span class="nav-number">2.3.</span> <span class="nav-text">数值范围</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bool"><span class="nav-number">2.4.</span> <span class="nav-text">Bool</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类型别名"><span class="nav-number">2.5.</span> <span class="nav-text">类型别名</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Tuple"><span class="nav-number">3.</span> <span class="nav-text">Tuple</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#元素命名"><span class="nav-number">3.1.</span> <span class="nav-text">元素命名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tuple-修改"><span class="nav-number">3.2.</span> <span class="nav-text">Tuple 修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tuple-分解"><span class="nav-number">3.3.</span> <span class="nav-text">Tuple 分解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#作为函数返回值"><span class="nav-number">3.4.</span> <span class="nav-text">作为函数返回值</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Optional"><span class="nav-number">4.</span> <span class="nav-text">Optional</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么需要-Optional"><span class="nav-number">4.1.</span> <span class="nav-text">为什么需要 Optional</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Swift-中的-Optional"><span class="nav-number">4.2.</span> <span class="nav-text">Swift 中的 Optional</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Optional-if-语句以及强制展开"><span class="nav-number">4.3.</span> <span class="nav-text">Optional-if 语句以及强制展开</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Optional-强制展开"><span class="nav-number">4.4.</span> <span class="nav-text">Optional-强制展开</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Optional-绑定"><span class="nav-number">4.5.</span> <span class="nav-text">Optional-绑定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Optional-隐式展开"><span class="nav-number">4.6.</span> <span class="nav-text">Optional-隐式展开</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Optional-可选链"><span class="nav-number">4.7.</span> <span class="nav-text">Optional-可选链</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Optional-实现探究"><span class="nav-number">5.</span> <span class="nav-text">Optional-实现探究</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符串-初始化"><span class="nav-number">6.</span> <span class="nav-text">字符串-初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化空串"><span class="nav-number">6.1.</span> <span class="nav-text">初始化空串</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字面量"><span class="nav-number">6.2.</span> <span class="nav-text">字面量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多行字面量"><span class="nav-number">6.3.</span> <span class="nav-text">多行字面量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串里的特殊字符"><span class="nav-number">6.4.</span> <span class="nav-text">字符串里的特殊字符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展字符串分隔符（Raw-String）"><span class="nav-number">6.5.</span> <span class="nav-text">扩展字符串分隔符（Raw String）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符串-操作"><span class="nav-number">7.</span> <span class="nav-text">字符串-操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串的可变性"><span class="nav-number">7.1.</span> <span class="nav-text">字符串的可变性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串是值类型"><span class="nav-number">7.2.</span> <span class="nav-text">字符串是值类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#操作字符"><span class="nav-number">7.3.</span> <span class="nav-text">操作字符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串拼接"><span class="nav-number">7.4.</span> <span class="nav-text">字符串拼接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串插值"><span class="nav-number">7.5.</span> <span class="nav-text">字符串插值</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符串-访问和修改"><span class="nav-number">8.</span> <span class="nav-text">字符串-访问和修改</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串索引"><span class="nav-number">8.1.</span> <span class="nav-text">字符串索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插入"><span class="nav-number">8.2.</span> <span class="nav-text">插入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除"><span class="nav-number">8.3.</span> <span class="nav-text">删除</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符串-子串和字符串比较"><span class="nav-number">9.</span> <span class="nav-text">字符串-子串和字符串比较</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#子字符串"><span class="nav-number">9.1.</span> <span class="nav-text">子字符串</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串比较"><span class="nav-number">9.2.</span> <span class="nav-text">字符串比较</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#常量和变量"><span class="nav-number">1.</span> <span class="nav-text">常量和变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#声明常量和变量"><span class="nav-number">1.1.</span> <span class="nav-text">声明常量和变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类型标注"><span class="nav-number">1.2.</span> <span class="nav-text">类型标注</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#变量和常量命名"><span class="nav-number">1.3.</span> <span class="nav-text">变量和常量命名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#打印常量和变量"><span class="nav-number">1.4.</span> <span class="nav-text">打印常量和变量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本数据类型"><span class="nav-number">2.</span> <span class="nav-text">基本数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#整数"><span class="nav-number">2.1.</span> <span class="nav-text">整数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浮点类型"><span class="nav-number">2.2.</span> <span class="nav-text">浮点类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数值范围"><span class="nav-number">2.3.</span> <span class="nav-text">数值范围</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bool"><span class="nav-number">2.4.</span> <span class="nav-text">Bool</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类型别名"><span class="nav-number">2.5.</span> <span class="nav-text">类型别名</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tuple"><span class="nav-number">3.</span> <span class="nav-text">Tuple</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#元素命名"><span class="nav-number">3.1.</span> <span class="nav-text">元素命名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tuple-修改"><span class="nav-number">3.2.</span> <span class="nav-text">Tuple 修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tuple-分解"><span class="nav-number">3.3.</span> <span class="nav-text">Tuple 分解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#作为函数返回值"><span class="nav-number">3.4.</span> <span class="nav-text">作为函数返回值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Optional"><span class="nav-number">4.</span> <span class="nav-text">Optional</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么需要-Optional"><span class="nav-number">4.1.</span> <span class="nav-text">为什么需要 Optional</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Swift-中的-Optional"><span class="nav-number">4.2.</span> <span class="nav-text">Swift 中的 Optional</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Optional-if-语句以及强制展开"><span class="nav-number">4.3.</span> <span class="nav-text">Optional-if 语句以及强制展开</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Optional-强制展开"><span class="nav-number">4.4.</span> <span class="nav-text">Optional-强制展开</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Optional-绑定"><span class="nav-number">4.5.</span> <span class="nav-text">Optional-绑定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Optional-隐式展开"><span class="nav-number">4.6.</span> <span class="nav-text">Optional-隐式展开</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Optional-可选链"><span class="nav-number">4.7.</span> <span class="nav-text">Optional-可选链</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Optional-实现探究"><span class="nav-number">5.</span> <span class="nav-text">Optional-实现探究</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串"><span class="nav-number">6.</span> <span class="nav-text">字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化空串"><span class="nav-number">6.1.</span> <span class="nav-text">初始化空串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字面量"><span class="nav-number">6.2.</span> <span class="nav-text">字面量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多行字面量"><span class="nav-number">6.3.</span> <span class="nav-text">多行字面量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多行字面量包含换行"><span class="nav-number">6.4.</span> <span class="nav-text">多行字面量包含换行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多行字面量不包含换行"><span class="nav-number">6.5.</span> <span class="nav-text">多行字面量不包含换行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多行字面量包含代码缩进"><span class="nav-number">6.6.</span> <span class="nav-text">多行字面量包含代码缩进</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串里的特殊字符"><span class="nav-number">6.7.</span> <span class="nav-text">字符串里的特殊字符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展字符串分隔符（Raw-String）"><span class="nav-number">6.8.</span> <span class="nav-text">扩展字符串分隔符（Raw String）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串-操作"><span class="nav-number">7.</span> <span class="nav-text">字符串-操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串的可变性"><span class="nav-number">7.1.</span> <span class="nav-text">字符串的可变性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串是值类型"><span class="nav-number">7.2.</span> <span class="nav-text">字符串是值类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#操作字符"><span class="nav-number">7.3.</span> <span class="nav-text">操作字符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串拼接"><span class="nav-number">7.4.</span> <span class="nav-text">字符串拼接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串插值"><span class="nav-number">7.5.</span> <span class="nav-text">字符串插值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串-访问和修改"><span class="nav-number">8.</span> <span class="nav-text">字符串-访问和修改</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串索引"><span class="nav-number">8.1.</span> <span class="nav-text">字符串索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#插入"><span class="nav-number">8.2.</span> <span class="nav-text">插入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除"><span class="nav-number">8.3.</span> <span class="nav-text">删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串-子串和字符串比较"><span class="nav-number">9.</span> <span class="nav-text">字符串-子串和字符串比较</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#子字符串"><span class="nav-number">9.1.</span> <span class="nav-text">子字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串比较"><span class="nav-number">9.2.</span> <span class="nav-text">字符串比较</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -975,7 +989,7 @@
         <div class="copyright" >
   
   &copy;  2016 &mdash; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
