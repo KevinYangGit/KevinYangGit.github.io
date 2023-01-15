@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Swift," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="循环控制 switch guard 模式和模式匹配">
+<meta name="keywords" content="Swift">
+<meta property="og:type" content="article">
+<meta property="og:title" content="流程控制">
+<meta property="og:url" content="http://yoursite.com/2023/01/14/Swift/流程控制/index.html">
+<meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="循环控制 switch guard 模式和模式匹配">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2023/01/14/Swift/流程控制/01.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/14/Swift/流程控制/02.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/14/Swift/流程控制/03.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/14/Swift/流程控制/04.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/14/Swift/流程控制/05.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/14/Swift/流程控制/06.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/14/Swift/流程控制/07.png">
+<meta property="og:updated_time" content="2023-01-15T03:03:31.788Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="流程控制">
+<meta name="twitter:description" content="循环控制 switch guard 模式和模式匹配">
+<meta name="twitter:image" content="http://yoursite.com/2023/01/14/Swift/流程控制/01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2023/01/14/Swift/流程控制/"/>
+
+
+
+
+
+  <title>流程控制 | Kevin's  blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a073c6e38282486853e19b272e9e7c34";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's  blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/01/14/Swift/流程控制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">流程控制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-01-14T10:50:15+08:00">
+                2023-01-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li><a href="#循环控制">循环控制</a></li>
+<li><a href="#switch">switch</a></li>
+<li><a href="#guard">guard</a></li>
+<li><a href="#模式和模式匹配">模式和模式匹配</a></li>
+</ul>
+<a id="more"></a>
+<h2 id="循环控制"><a href="#循环控制" class="headerlink" title="循环控制"></a>循环控制</h2><h3 id="for-in-循环"><a href="#for-in-循环" class="headerlink" title="for-in 循环"></a>for-in 循环</h3><p>使用 for-in 循环来遍历序列，比如一个范围的数字：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>...<span class="number">5</span> &#123;</div><div class="line">    <span class="built_in">print</span>(i)</div><div class="line">&#125;</div><div class="line"><span class="comment">// 0</span></div><div class="line"><span class="comment">// 1</span></div><div class="line"><span class="comment">// 2</span></div><div class="line"><span class="comment">// 3</span></div><div class="line"><span class="comment">// 4</span></div><div class="line"><span class="comment">// 5</span></div></pre></td></tr></table></figure>
+<p>遍历字符串中的字符：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> <span class="built_in">c</span> <span class="keyword">in</span> <span class="string">"Hello,World"</span> &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="built_in">c</span>)</div><div class="line">&#125;</div><div class="line"><span class="type">H</span></div><div class="line"><span class="comment">// e</span></div><div class="line"><span class="comment">// l</span></div><div class="line"><span class="comment">// l</span></div><div class="line"><span class="comment">// o</span></div><div class="line"><span class="comment">// ,</span></div><div class="line"><span class="comment">// W</span></div><div class="line"><span class="comment">// o</span></div><div class="line"><span class="comment">// r</span></div><div class="line"><span class="comment">// l</span></div></pre></td></tr></table></figure>
+<p>遍历数组中的元素：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> names = [<span class="string">"zhangsan"</span>, <span class="string">"lisi"</span>, <span class="string">"wangwu"</span>, <span class="string">"zhaoliu"</span>]</div><div class="line"><span class="keyword">for</span> name <span class="keyword">in</span> names &#123;</div><div class="line">    <span class="built_in">print</span>(name)</div><div class="line">&#125;</div><div class="line"><span class="comment">// zhangsan</span></div><div class="line"><span class="comment">// lisi</span></div><div class="line"><span class="comment">// wangwu</span></div><div class="line"><span class="comment">// zhaoliu</span></div></pre></td></tr></table></figure>
+<h4 id="for-in-遍历字典"><a href="#for-in-遍历字典" class="headerlink" title="for-in 遍历字典"></a>for-in 遍历字典</h4><p>字典在 for-in 遍历时，每一个元素都是一个元组 <code>(key, value)</code>。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> numberLegs = [<span class="string">"spider"</span>: <span class="number">8</span>, <span class="string">"ant"</span>: <span class="number">6</span>, <span class="string">"cat"</span>: <span class="number">4</span>]</div><div class="line"><span class="keyword">for</span> t <span class="keyword">in</span> numberLegs &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"<span class="subst">\(t.<span class="number">0</span>)</span> has <span class="subst">\(t.<span class="number">1</span>)</span> legs"</span>)</div><div class="line">&#125;</div><div class="line"><span class="comment">//spider has 8 legs</span></div><div class="line"><span class="comment">//cat has 4 legs</span></div><div class="line"><span class="comment">//ant has 6 legs</span></div></pre></td></tr></table></figure>
+<p>可以在 for-in 循环体中，使用显示命名常量来分解元组成员：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> numberLegs = [<span class="string">"spider"</span>: <span class="number">8</span>, <span class="string">"ant"</span>: <span class="number">6</span>, <span class="string">"cat"</span>: <span class="number">4</span>]</div><div class="line"><span class="keyword">for</span> (animalName, legCount) <span class="keyword">in</span> numberLegs &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"<span class="subst">\(animalName)</span> has <span class="subst">\(legCount)</span> legs"</span>)</div><div class="line">&#125;</div><div class="line"><span class="comment">// ant has 6 legs</span></div><div class="line"><span class="comment">// cat has 4 legs</span></div><div class="line"><span class="comment">// spider has 8 legs</span></div></pre></td></tr></table></figure>
+<p>在不需要遍历到的每一个值时，可以使用下划线 <code>_</code> 取代遍历名以忽略值：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> base = <span class="number">3</span></div><div class="line"><span class="keyword">let</span> power = <span class="number">5</span></div><div class="line"><span class="keyword">var</span> answer = <span class="number">1</span></div><div class="line"><span class="keyword">for</span> <span class="number">_</span> <span class="keyword">in</span> <span class="number">1</span>...power &#123;</div><div class="line">    answer *= base</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">print</span>(<span class="string">"<span class="subst">\(base)</span> to the power of <span class="subst">\(power)</span> is <span class="subst">\(answer)</span>"</span>)</div><div class="line"><span class="comment">// Prints "3 to the power of 5 is 243"</span></div></pre></td></tr></table></figure>
+<h4 id="for-in-分段区间"><a href="#for-in-分段区间" class="headerlink" title="for-in 分段区间"></a>for-in 分段区间</h4><p>使用 <code>stride()</code> 函数来跳过不想要的标记。</p>
+<ul>
+<li><code>stride(from:to:by:)</code>：开区间</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> minuteInterval = <span class="number">5</span></div><div class="line"><span class="keyword">for</span> tickMark <span class="keyword">in</span> <span class="built_in">stride</span>(from: <span class="number">0</span>, to: <span class="number">50</span>, by: minuteInterval) &#123;</div><div class="line">    <span class="built_in">print</span>(tickMark)</div><div class="line">&#125;</div><div class="line"><span class="comment">// 0</span></div><div class="line"><span class="comment">// 5</span></div><div class="line"><span class="comment">// 10</span></div><div class="line"><span class="comment">// 15</span></div><div class="line"><span class="comment">// 20</span></div><div class="line"><span class="comment">// 25</span></div><div class="line"><span class="comment">// 30</span></div><div class="line"><span class="comment">// 35</span></div><div class="line"><span class="comment">// 40</span></div><div class="line"><span class="comment">// 45</span></div></pre></td></tr></table></figure>
+<ul>
+<li><code>stride(from:through:by:)</code>：闭区间</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> minuteInterval = <span class="number">5</span></div><div class="line"><span class="keyword">for</span> tickMark <span class="keyword">in</span> <span class="built_in">stride</span>(from: <span class="number">0</span>, through: <span class="number">50</span>, by: minuteInterval) &#123;</div><div class="line">    <span class="built_in">print</span>(tickMark)</div><div class="line">&#125;</div><div class="line"><span class="comment">// 0</span></div><div class="line"><span class="comment">// 5</span></div><div class="line"><span class="comment">// 10</span></div><div class="line"><span class="comment">// 15</span></div><div class="line"><span class="comment">// 20</span></div><div class="line"><span class="comment">// 25</span></div><div class="line"><span class="comment">// 30</span></div><div class="line"><span class="comment">// 35</span></div><div class="line"><span class="comment">// 40</span></div><div class="line"><span class="comment">// 45</span></div><div class="line"><span class="comment">// 50</span></div></pre></td></tr></table></figure>
+<h3 id="while-循环"><a href="#while-循环" class="headerlink" title="while 循环"></a>while 循环</h3><p>Swift 中的 repeat-while 循环。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> <span class="built_in">count</span> = <span class="number">0</span></div><div class="line"><span class="keyword">repeat</span> &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="built_in">count</span>)</div><div class="line">    <span class="built_in">count</span> += <span class="number">1</span></div><div class="line">&#125; <span class="keyword">while</span> <span class="built_in">count</span> &lt; <span class="number">5</span></div><div class="line"></div><div class="line"><span class="comment">// 0</span></div><div class="line"><span class="comment">// 1</span></div><div class="line"><span class="comment">// 2</span></div><div class="line"><span class="comment">// 3</span></div><div class="line"><span class="comment">// 4</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>OC 中的 while 循环和 do-while 循环：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">&gt; int <span class="built_in">count</span> = <span class="number">0</span>;</div><div class="line">&gt; <span class="keyword">while</span> (<span class="built_in">count</span> &lt; <span class="number">5</span>) &#123;</div><div class="line">&gt;    <span class="type">NSLog</span>(@<span class="string">"%d"</span>, <span class="built_in">count</span>);</div><div class="line">&gt;    <span class="built_in">count</span> += <span class="number">1</span>;</div><div class="line">&gt;&#125;</div><div class="line">&gt;</div><div class="line">&gt;<span class="comment">// 0</span></div><div class="line">&gt;<span class="comment">// 1</span></div><div class="line">&gt;<span class="comment">// 2</span></div><div class="line">&gt;<span class="comment">// 3</span></div><div class="line">&gt;<span class="comment">// 4</span></div><div class="line">&gt;</div><div class="line">&gt; int <span class="built_in">count</span> = <span class="number">0</span>;</div><div class="line">&gt; <span class="keyword">do</span> &#123;</div><div class="line">&gt;     <span class="type">NSLog</span>(@<span class="string">"%d"</span>, <span class="built_in">count</span>);</div><div class="line">&gt;     <span class="built_in">count</span> += <span class="number">1</span>;</div><div class="line">&gt; &#125; <span class="keyword">while</span> (<span class="built_in">count</span> &lt; <span class="number">5</span>);</div><div class="line">&gt; </div><div class="line">&gt; <span class="comment">// 0</span></div><div class="line">&gt; <span class="comment">// 1</span></div><div class="line">&gt; <span class="comment">// 2</span></div><div class="line">&gt; <span class="comment">// 3</span></div><div class="line">&gt; <span class="comment">// 4</span></div><div class="line">&gt;</div></pre></td></tr></table></figure>
+</blockquote>
+<h2 id="switch"><a href="#switch" class="headerlink" title="switch"></a>switch</h2><p>switch 语句会将一个值与多个可能的模式匹配，然后基于第一个成功匹配的模式来执行合适的代码块。</p>
+<p>switch 语句一定得是全面的，在给定类型里，每一个值都要被考虑到，并且匹配到一个对应的 switch case 里。如果无法提供一个 switch case 所有可能的值，则可以用关键字 default 标记，即默认匹配所有未明确的值。default 关键字必须在所有 case 的最后。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> someCharacter: <span class="type">Character</span> = <span class="string">"z"</span></div><div class="line"><span class="keyword">switch</span> someCharacter &#123;</div><div class="line"><span class="keyword">case</span> <span class="string">"a"</span>:</div><div class="line">    <span class="built_in">print</span>(<span class="string">"The first letter of the alphabet"</span>)</div><div class="line"><span class="keyword">case</span> <span class="string">"z"</span>:</div><div class="line">    <span class="built_in">print</span>(<span class="string">"The last letter of the alphabet"</span>)</div><div class="line"><span class="keyword">default</span>:</div><div class="line">    <span class="built_in">print</span>(<span class="string">"Some other character"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Prints "The last letter of the alphabet"</span></div></pre></td></tr></table></figure>
+<p>如果没有 default 关键字，则会报错：<br><img src="/2023/01/14/Swift/流程控制/01.png" alt="01"></p>
+<blockquote>
+<p>Objective-C 中的 switch 语句如果不全面，仍然可以运行<br><img src="/2023/01/14/Swift/流程控制/02.png" alt="02"></p>
+</blockquote>
+<h3 id="没有隐式贯穿"><a href="#没有隐式贯穿" class="headerlink" title="没有隐式贯穿"></a>没有隐式贯穿</h3><p>相比 C 和 Objective-C 里的 switch 语句来说，Swift 里的 switch 语句不会默认从匹配 case 的末尾贯穿到下一个 case 里。相反，整个 switch 语句会在匹配到第一个 switch 的 case 执行完毕之后退出，不再需要显式的 break 语句。</p>
+<blockquote>
+<p>C 和 Objective-C 里的 switch 的隐式贯穿：<br><img src="/2023/01/14/Swift/流程控制/03.png" alt="03"></p>
+</blockquote>
+<p>因为 Swift 的 switch 语句没有隐式贯穿，所以每一个 case 的函数体必须包含至少一个可执行的语句。</p>
+<p><img src="/2023/01/14/Swift/流程控制/04.png" alt="04"></p>
+<p>因为 Swift 的 switch 语句没有隐式贯穿，所以想要实现匹配多个值的情况，可以用逗号分隔，并且可以写成多行。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> someCharacter: <span class="type">Character</span> = <span class="string">"z"</span></div><div class="line"><span class="keyword">switch</span> someCharacter &#123;</div><div class="line"><span class="keyword">case</span> <span class="string">"a"</span>, <span class="string">"A"</span>, <span class="string">"B"</span>,</div><div class="line">     <span class="string">"C"</span>, <span class="string">"D"</span>:</div><div class="line">    <span class="built_in">print</span>(<span class="string">"The first letter of the alphabet"</span>)</div><div class="line"><span class="keyword">case</span> <span class="string">"z"</span>, <span class="string">"Z"</span>:</div><div class="line">    <span class="built_in">print</span>(<span class="string">"The last letter of the alphabet"</span>)</div><div class="line"><span class="keyword">default</span>:</div><div class="line">    <span class="built_in">print</span>(<span class="string">"Some other character"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Prints "The last letter of the alphabet"</span></div></pre></td></tr></table></figure>
+<h3 id="区间匹配"><a href="#区间匹配" class="headerlink" title="区间匹配"></a>区间匹配</h3><p>switch 的 case 的值可以在一个区间中匹配。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> approximateCount = <span class="number">62</span></div><div class="line"><span class="keyword">let</span> countedThings = <span class="string">"moons orbiting Saturn"</span></div><div class="line"><span class="keyword">var</span> naturalCount: <span class="type">String</span></div><div class="line"></div><div class="line"><span class="keyword">switch</span> approximateCount &#123;</div><div class="line"><span class="keyword">case</span> <span class="number">0</span>:</div><div class="line">    naturalCount = <span class="string">"no"</span></div><div class="line"><span class="keyword">case</span> <span class="number">1</span>..&lt;<span class="number">5</span>:</div><div class="line">    naturalCount = <span class="string">"a few"</span></div><div class="line"><span class="keyword">case</span> <span class="number">5</span>..&lt;<span class="number">12</span>:</div><div class="line">    naturalCount = <span class="string">"several"</span></div><div class="line"><span class="keyword">case</span> <span class="number">12</span>..&lt;<span class="number">100</span>:</div><div class="line">    naturalCount = <span class="string">"dozens of"</span></div><div class="line"><span class="keyword">case</span> <span class="number">100</span>..&lt;<span class="number">1000</span>:</div><div class="line">    naturalCount = <span class="string">"hundreds of"</span></div><div class="line"><span class="keyword">default</span>:</div><div class="line">    naturalCount = <span class="string">"many"</span></div><div class="line">&#125;</div><div class="line"><span class="built_in">print</span>(<span class="string">"There are <span class="subst">\(naturalCount)</span> <span class="subst">\(countedThings)</span>."</span>)</div><div class="line"></div><div class="line"><span class="comment">// Prints "There are dozens of moons orbiting Saturn."</span></div></pre></td></tr></table></figure>
+<h3 id="元组匹配"><a href="#元组匹配" class="headerlink" title="元组匹配"></a>元组匹配</h3><p>可以使用元组来在一个 switch 语句中测试多个值，使用下划线 <code>_</code> 来表明匹配所有可能的值。</p>
+<p>匹配在 (-2, 2) 组成的盒子内的点：</p>
+<p><img src="/2023/01/14/Swift/流程控制/05.png" alt="05"></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> somePoint = (<span class="number">1</span>, <span class="number">1</span>)</div><div class="line"><span class="keyword">switch</span> somePoint &#123;</div><div class="line"><span class="keyword">case</span> (<span class="number">0</span>, <span class="number">0</span>):</div><div class="line">    <span class="built_in">print</span>(<span class="string">"(0, 0) is at the origin"</span>)</div><div class="line"><span class="keyword">case</span> (<span class="number">_</span>, <span class="number">0</span>):</div><div class="line">    <span class="built_in">print</span>(<span class="string">"(<span class="subst">\(somePoint.<span class="number">0</span>)</span>, 0) is on the x-axis"</span>)</div><div class="line"><span class="keyword">case</span> (<span class="number">0</span>, <span class="number">_</span>):</div><div class="line">    <span class="built_in">print</span>(<span class="string">"(0, <span class="subst">\(somePoint.<span class="number">1</span>)</span>) is on the y-axis"</span>)</div><div class="line"><span class="keyword">case</span> (-<span class="number">2</span>...<span class="number">2</span>, -<span class="number">2</span>...<span class="number">2</span>):</div><div class="line">    <span class="built_in">print</span>(<span class="string">"(<span class="subst">\(somePoint.<span class="number">0</span>)</span>, <span class="subst">\(somePoint.<span class="number">1</span>)</span>) is inside the box"</span>)</div><div class="line"><span class="keyword">default</span>:</div><div class="line">    <span class="built_in">print</span>(<span class="string">"(<span class="subst">\(somePoint.<span class="number">0</span>)</span>, <span class="subst">\(somePoint.<span class="number">1</span>)</span>) is outside of the box"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Prints "(1, 1) is inside the box"</span></div></pre></td></tr></table></figure>
+<h3 id="值绑定"><a href="#值绑定" class="headerlink" title="值绑定"></a>值绑定</h3><p>switch 的 case 可以将匹配到的值临时绑定为一个常量或者变量，来给 case 的函数体使用。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> anotherPoint = (<span class="number">2</span>, <span class="number">0</span>)</div><div class="line"><span class="keyword">switch</span> anotherPoint &#123;</div><div class="line"><span class="keyword">case</span> (<span class="keyword">let</span> x, <span class="number">0</span>):</div><div class="line">    <span class="built_in">print</span>(<span class="string">"on the x-axis with an x value of <span class="subst">\(x)</span>"</span>)</div><div class="line"><span class="keyword">case</span> (<span class="number">0</span>, <span class="keyword">let</span> y):</div><div class="line">    <span class="built_in">print</span>(<span class="string">"ont the y-axis with a y value of <span class="subst">\(y)</span>"</span>)</div><div class="line"><span class="keyword">case</span> <span class="keyword">let</span> (x, y):</div><div class="line">    <span class="built_in">print</span>(<span class="string">"somewhere else at (<span class="subst">\(x)</span>, <span class="subst">\(y)</span>"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Prints "on the x-axis with an x value of 2"</span></div></pre></td></tr></table></figure>
+<p>如果使用 <code>var</code> 关键字，临时的变量就会以合适的值来创建并初始化。这个变量的任何改变都只会在 case 的函数体内有效。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> anotherPoint = (<span class="number">2</span>, <span class="number">0</span>)</div><div class="line"><span class="keyword">switch</span> anotherPoint &#123;</div><div class="line"><span class="keyword">case</span> (<span class="keyword">var</span> x, <span class="number">0</span>):</div><div class="line">    x += <span class="number">2</span></div><div class="line">    <span class="built_in">print</span>(<span class="string">"on the x-axis with an x value of <span class="subst">\(x)</span>"</span>)</div><div class="line"><span class="keyword">case</span> (<span class="number">0</span>, <span class="keyword">var</span> y):</div><div class="line">    <span class="built_in">print</span>(<span class="string">"on the y-axis with a y value of <span class="subst">\(y)</span>"</span>)</div><div class="line"><span class="keyword">case</span> <span class="keyword">var</span> (x, y):</div><div class="line">    <span class="built_in">print</span>(<span class="string">"somewhere else at (<span class="subst">\(x)</span>, <span class="subst">\(y)</span>)"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">print</span>(anotherPoint)</div><div class="line"></div><div class="line"><span class="comment">// on the x-axis with an x value of 4</span></div><div class="line"><span class="comment">// (2, 0)</span></div></pre></td></tr></table></figure>
+<h3 id="where-字句"><a href="#where-字句" class="headerlink" title="where 字句"></a>where 字句</h3><p>switch case 可以使用 <code>where</code> 分句来检查是否符合特定的约束。</p>
+<p>匹配在两条直线上的点：<br><img src="/2023/01/14/Swift/流程控制/06.png" alt="06"></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> yetAnotherPoint = (<span class="number">1</span>, -<span class="number">1</span>)</div><div class="line"><span class="keyword">switch</span> yetAnotherPoint &#123;</div><div class="line"><span class="keyword">case</span> <span class="keyword">let</span> (x, y) <span class="keyword">where</span> x == y:</div><div class="line">    <span class="built_in">print</span>(<span class="string">"(<span class="subst">\(x)</span>, <span class="subst">\(y)</span>) is on the line x == y"</span>)</div><div class="line"><span class="keyword">case</span> <span class="keyword">let</span> (x, y) <span class="keyword">where</span> x == -y:</div><div class="line">    <span class="built_in">print</span>(<span class="string">"(<span class="subst">\(x)</span>, <span class="subst">\(y)</span>) is on the line x == -y"</span>)</div><div class="line"><span class="keyword">case</span> <span class="keyword">let</span> (x, y):</div><div class="line">    <span class="built_in">print</span>(<span class="string">"(<span class="subst">\(x)</span>, <span class="subst">\(y)</span>) is just some arbitrary point"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Prints "(1, -1) is on the line x == -y"</span></div></pre></td></tr></table></figure>
+<h3 id="复合匹配"><a href="#复合匹配" class="headerlink" title="复合匹配"></a>复合匹配</h3><p>多种情形共享同一个函数体的多个情况可以在 case 后写多个模式来复合，在每个模式之间用逗号分隔。如果任何一个模式匹配了，那么这个情况都会被认为是匹配的。如果模式太长，可以把它们写成多行。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> someCharacter: <span class="type">Character</span> = <span class="string">"e"</span></div><div class="line"><span class="keyword">switch</span> someCharacter &#123;</div><div class="line"><span class="keyword">case</span> <span class="string">"a"</span>, <span class="string">"e"</span>, <span class="string">"i"</span>, <span class="string">"o"</span>, <span class="string">"u"</span>:</div><div class="line">    <span class="built_in">print</span>(<span class="string">"<span class="subst">\(someCharacter)</span> is a vowel"</span>)</div><div class="line"><span class="keyword">case</span> <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="string">"d"</span>, <span class="string">"f"</span>, <span class="string">"g"</span>, <span class="string">"h"</span>, <span class="string">"j"</span>, <span class="string">"k"</span>, <span class="string">"l"</span>, <span class="string">"m"</span>,</div><div class="line">     <span class="string">"n"</span>, <span class="string">"p"</span>, <span class="string">"q"</span>, <span class="string">"r"</span>, <span class="string">"s"</span>, <span class="string">"t"</span>, <span class="string">"v"</span>, <span class="string">"w"</span>, <span class="string">"x"</span>, <span class="string">"y"</span>, <span class="string">"z"</span>:</div><div class="line">    <span class="built_in">print</span>(<span class="string">"<span class="subst">\(someCharacter)</span> is a consonant"</span>)</div><div class="line"><span class="keyword">default</span>:</div><div class="line">    <span class="built_in">print</span>(<span class="string">"<span class="subst">\(someCharacter)</span> is not a vowel or a consonant"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Prints "e is a vowel"</span></div></pre></td></tr></table></figure>
+<h4 id="复合匹配-值绑定"><a href="#复合匹配-值绑定" class="headerlink" title="复合匹配 - 值绑定"></a>复合匹配 - 值绑定</h4><p>复合匹配同样可以包含值绑定。所有复合匹配的模式都必须包含<strong>相同的值绑定集合</strong>，并且复合情况中的每一个绑定都得<strong>有相同的类型格式</strong>。这才能确保无论复合匹配的哪部分命中了，在函数体中的代码都能访问到绑定的值，并且值的类型也都相同。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> stillAnotherPoint = (<span class="number">9</span>, <span class="number">0</span>)</div><div class="line"><span class="keyword">switch</span> stillAnotherPoint &#123;</div><div class="line"><span class="keyword">case</span> (<span class="keyword">let</span> <span class="built_in">distance</span>, <span class="number">0</span>), (<span class="number">0</span>, <span class="keyword">let</span> <span class="built_in">distance</span>):</div><div class="line">    <span class="built_in">print</span>(<span class="string">"On an axis, <span class="subst">\(<span class="built_in">distance</span>)</span> from the origin"</span>)</div><div class="line"><span class="keyword">default</span>:</div><div class="line">    <span class="built_in">print</span>(<span class="string">"Not on an axis"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Prints "On an axis, 9 from the origin"</span></div></pre></td></tr></table></figure>
+<h3 id="控制转移"><a href="#控制转移" class="headerlink" title="控制转移"></a>控制转移</h3><h4 id="continue"><a href="#continue" class="headerlink" title="continue"></a>continue</h4><p><code>continue</code> 语句表示让循环停止当前遍历，开始下一次遍历。并不是离开整个循环。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>...<span class="number">5</span> &#123;</div><div class="line">    <span class="keyword">if</span> i == <span class="number">3</span> &#123;</div><div class="line">        <span class="keyword">continue</span></div><div class="line">    &#125;</div><div class="line">    <span class="built_in">print</span>(i)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 0</span></div><div class="line"><span class="comment">// 1</span></div><div class="line"><span class="comment">// 2</span></div><div class="line"><span class="comment">// 4</span></div><div class="line"><span class="comment">// 5</span></div></pre></td></tr></table></figure>
+<h4 id="break"><a href="#break" class="headerlink" title="break"></a>break</h4><p>break 语句会立即结束整个控制流语句。在需要提前结束 switch 或者其它循环语句时，可以使用 break。</p>
+<p>break 会立即结束整个循环的执行，并且转移控制到循环结束花括号（<code>}</code>）后的第一行代码上。<strong>结束整个循环</strong>，表示当前遍历循环里的其它代码都不会被执行，并且余下的遍历循环也不会开始了。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>...<span class="number">5</span> &#123;</div><div class="line">    <span class="keyword">if</span> i == <span class="number">3</span> &#123;</div><div class="line">        <span class="keyword">break</span></div><div class="line">    &#125;</div><div class="line">    <span class="built_in">print</span>(i)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 0</span></div><div class="line"><span class="comment">// 1</span></div><div class="line"><span class="comment">// 2</span></div></pre></td></tr></table></figure>
+<p>在 switch 语句里使用 break 时，switch 语句会立即结束执行，并且转移控制到 switch 语句结束花括号（<code>}</code>）之后的第一行代码上。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> string = <span class="string">"break"</span></div><div class="line"><span class="keyword">switch</span> string &#123;</div><div class="line"><span class="keyword">case</span> <span class="string">"break"</span>:</div><div class="line">    <span class="built_in">print</span>(<span class="string">"Before break"</span>)</div><div class="line">    <span class="keyword">break</span></div><div class="line">    <span class="built_in">print</span>(<span class="string">"After break"</span>)</div><div class="line"><span class="keyword">default</span>:</div><div class="line">    <span class="built_in">print</span>(<span class="string">"Nothing"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Prints "Before break"</span></div></pre></td></tr></table></figure>
+<h4 id="fallthrough"><a href="#fallthrough" class="headerlink" title="fallthrough"></a>fallthrough</h4><p>Swift 的 switch 语句不支持隐私贯穿，可以通过关键字 <code>fallthrough</code> 显式实现贯穿行为。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> integerToDescribe = <span class="number">5</span></div><div class="line"><span class="keyword">var</span> description = <span class="string">"The number <span class="subst">\(integerToDescribe)</span> is"</span></div><div class="line"><span class="keyword">switch</span> integerToDescribe &#123;</div><div class="line"><span class="keyword">case</span> <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">11</span>, <span class="number">13</span>, <span class="number">17</span>, <span class="number">19</span>:</div><div class="line">    description += <span class="string">" a prime number, and also"</span></div><div class="line">    <span class="keyword">fallthrough</span></div><div class="line"><span class="keyword">default</span>:</div><div class="line">    description += <span class="string">" an integer."</span></div><div class="line">&#125;</div><div class="line"><span class="built_in">print</span>(description)</div><div class="line"></div><div class="line"><span class="comment">// Prints "The number 5 is a prime number, and also an integer."</span></div></pre></td></tr></table></figure>
+<h4 id="语句标签"><a href="#语句标签" class="headerlink" title="语句标签"></a>语句标签</h4><p>可以使用语句标签给循环语句或者条件语句做标记。在一个条件语句中，可以使用语句标签配合 <code>break</code> 语句来结束被标记的语句。在循环语句中，你可以使用语句标签来配合 <code>break</code> 或者 <code>continue</code> 语句来结束或者继续执行被标记的语句。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> number = <span class="number">10</span></div><div class="line">whileLoop : <span class="keyword">while</span> number &gt; <span class="number">0</span> &#123;</div><div class="line">    <span class="keyword">switch</span> number &#123;</div><div class="line">    <span class="keyword">case</span> <span class="number">9</span>:</div><div class="line">        <span class="built_in">print</span>(<span class="string">"9"</span>)</div><div class="line">    <span class="keyword">case</span> <span class="number">10</span>:</div><div class="line">        <span class="keyword">var</span> sum = <span class="number">0</span></div><div class="line">        <span class="keyword">for</span> index <span class="keyword">in</span> <span class="number">0</span>...<span class="number">10</span> &#123;</div><div class="line">            sum += index</div><div class="line">            <span class="keyword">if</span> index == <span class="number">9</span> &#123;</div><div class="line">                <span class="built_in">print</span>(sum)</div><div class="line">                <span class="keyword">break</span> whileLoop</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    <span class="keyword">default</span>:</div><div class="line">        <span class="keyword">break</span></div><div class="line">    &#125;</div><div class="line">    number = -<span class="number">1</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Prints 45</span></div></pre></td></tr></table></figure>
+<h2 id="guard"><a href="#guard" class="headerlink" title="guard"></a>guard</h2><p>guard 语句，类似于 if 语句，基于布尔值表达式来执行语句。使用 guard 语句来要求一个条件必须是真才能执行 guard 之后的语句。与 if 语句不同，guard 语句总是有一个 else 分句——else 分句里的代码会在条件不为真的时候执行</p>
+<p><img src="/2023/01/14/Swift/流程控制/07.png" alt="07"></p>
+<p>在编写条件语句的时候，左边的代码间距应该是一个“黄金”或者“快了”的大道。不要嵌套 if 语句，多个 return 语句可能是更好的，这样可以避免圈复杂度（Cyclomatic Complexity），并且让代码更加容易阅读。因为重要部分没有嵌套在分支上，可以很清楚的找到相关代码。</p>
+<p>推荐写法：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (void)someMethod &#123;</div><div class="line">    <span class="keyword">if</span> (![someOther boolValue]) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//Do something important</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>不推荐写法：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (void)someMethod &#123;</div><div class="line">    <span class="keyword">if</span> ([someOther boolValue]) &#123;</div><div class="line">        <span class="comment">//Do something important</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>或者：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">- (void)someMethod &#123;</div><div class="line">    <span class="keyword">if</span> (![someOther boolValue]) </div><div class="line">        <span class="keyword">return</span>;</div><div class="line"></div><div class="line">    <span class="comment">//Do something important</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>或者：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (void)someMethod &#123;</div><div class="line">    <span class="keyword">if</span> (![someOther boolValue]) <span class="keyword">return</span>;</div><div class="line"></div><div class="line">    <span class="comment">//Do something important</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>推荐阅读：<br><a href="https://github.com/objc-zen/objc-zen-book" target="_blank" rel="external">https://github.com/objc-zen/objc-zen-book</a><br><a href="https://docs.swift.org/swift-book/LanguageGuide/ControlFlow.html" target="_blank" rel="external">https://docs.swift.org/swift-book/LanguageGuide/ControlFlow.html</a></p>
+<h3 id="验证-ip-地址的格式是否正确"><a href="#验证-ip-地址的格式是否正确" class="headerlink" title="验证 ip 地址的格式是否正确"></a>验证 ip 地址的格式是否正确</h3><p>使用 if 语句</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">isIPAddress</span><span class="params">(ipAddr: String)</span></span> -&gt; (<span class="type">Int</span>, <span class="type">String</span>) &#123;</div><div class="line">    <span class="keyword">let</span> compoments = ipAddr.<span class="built_in">split</span>(separator: <span class="string">"."</span>)</div><div class="line">    <span class="keyword">if</span> compoments.<span class="built_in">count</span> == <span class="number">4</span> &#123;</div><div class="line">        <span class="keyword">if</span> <span class="keyword">let</span> first = <span class="type">Int</span>(compoments[<span class="number">0</span>]), first &gt;= <span class="number">0</span> &amp;&amp; first &lt; <span class="number">256</span> &#123;</div><div class="line">            <span class="keyword">if</span> <span class="keyword">let</span> second = <span class="type">Int</span>(compoments[<span class="number">1</span>]), second &gt;= <span class="number">0</span> &amp;&amp; second &lt; <span class="number">256</span> &#123;</div><div class="line">                <span class="keyword">if</span> <span class="keyword">let</span> third = <span class="type">Int</span>(compoments[<span class="number">2</span>]), third &gt;= <span class="number">0</span> &amp;&amp; third &lt; <span class="number">256</span> &#123;</div><div class="line">                    <span class="keyword">if</span> <span class="keyword">let</span> fourth = <span class="type">Int</span>(compoments[<span class="number">3</span>]), fourth &gt;= <span class="number">0</span> &amp;&amp; fourth &lt; <span class="number">256</span> &#123;</div><div class="line">                        <span class="keyword">return</span> (<span class="number">0</span>, <span class="string">""</span>)</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        <span class="keyword">return</span> (<span class="number">4</span>, <span class="string">"第四个数不对"</span>)</div><div class="line">                    &#125;</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    <span class="keyword">return</span> (<span class="number">3</span>, <span class="string">"第三个数不对"</span>)</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">return</span> (<span class="number">2</span>, <span class="string">"第二个数不对"</span>)</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> (<span class="number">1</span>, <span class="string">"第一个数不对"</span>)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> (<span class="number">100</span>, <span class="string">"ip只能有四部分"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">print</span>(isIPAddress(ipAddr: <span class="string">"192.122.111.-1"</span>))</div><div class="line"></div><div class="line"><span class="comment">// Prints "(4, "第四个数不对")"</span></div></pre></td></tr></table></figure>
+<p>使用 guard 语句</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">isIPAddress</span><span class="params">(ipAddr: String)</span></span> -&gt; (<span class="type">Int</span>, <span class="type">String</span>) &#123;</div><div class="line">    <span class="keyword">let</span> compoments = ipAddr.<span class="built_in">split</span>(separator: <span class="string">"."</span>)</div><div class="line">    </div><div class="line">    <span class="keyword">guard</span> compoments.<span class="built_in">count</span> == <span class="number">4</span> <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">return</span> (<span class="number">100</span>, <span class="string">"ip只能有四部分"</span>)</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> first = <span class="type">Int</span>(compoments[<span class="number">0</span>]), first &gt;= <span class="number">0</span> &amp;&amp; first &lt; <span class="number">256</span> <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">return</span> (<span class="number">1</span>, <span class="string">"第一个数不对"</span>)</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> second = <span class="type">Int</span>(compoments[<span class="number">1</span>]), second &gt;= <span class="number">0</span> &amp;&amp; second &lt; <span class="number">256</span> <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">return</span> (<span class="number">2</span>, <span class="string">"第二个数不对"</span>)</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> third = <span class="type">Int</span>(compoments[<span class="number">2</span>]), third &gt;= <span class="number">0</span> &amp;&amp; third &lt; <span class="number">256</span> <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">return</span> (<span class="number">3</span>, <span class="string">"第三个数不对"</span>)</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> fourth = <span class="type">Int</span>(compoments[<span class="number">3</span>]), fourth &gt;= <span class="number">0</span> &amp;&amp; fourth &lt; <span class="number">256</span> <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">return</span> (<span class="number">4</span>, <span class="string">"第四个数不对"</span>)</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> (<span class="number">0</span>, <span class="string">""</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">print</span>(isIPAddress(ipAddr: <span class="string">"192.118.222.300"</span>))</div><div class="line"></div><div class="line"><span class="comment">// Prints "(4, "第四个数不对")"</span></div></pre></td></tr></table></figure>
+<h3 id="检查-API-可用性"><a href="#检查-API-可用性" class="headerlink" title="检查 API 可用性"></a>检查 API 可用性</h3><p>Swift 拥有内置的 API 可用性的检查功能，能够确保使用不可用的 API。</p>
+<p>可以在 if 或者 guard 语句中使用一个可用性条件来有条件地执行代码。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> #available(iOS <span class="number">10</span>, macOS <span class="number">10.12</span>, *) &#123;</div><div class="line">    <span class="comment">// 在iOS上使用iOS 10 API，在macOS上使用macOS 10.12 API</span></div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="comment">// 回到早期的iOS和macOS API</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="模式和模式匹配"><a href="#模式和模式匹配" class="headerlink" title="模式和模式匹配"></a>模式和模式匹配</h2><h3 id="模式"><a href="#模式" class="headerlink" title="模式"></a>模式</h3><h3 id="模式分类"><a href="#模式分类" class="headerlink" title="模式分类"></a>模式分类</h3><h4 id="通配符模式（Wildcard-Pattern）"><a href="#通配符模式（Wildcard-Pattern）" class="headerlink" title="通配符模式（Wildcard Pattern）"></a>通配符模式（Wildcard Pattern）</h4><h4 id="标识符模式（Identifier-Pattern）"><a href="#标识符模式（Identifier-Pattern）" class="headerlink" title="标识符模式（Identifier Pattern）"></a>标识符模式（Identifier Pattern）</h4><h4 id="值绑定模式（Value-Binding-Pattern）"><a href="#值绑定模式（Value-Binding-Pattern）" class="headerlink" title="值绑定模式（Value-Binding Pattern）"></a>值绑定模式（Value-Binding Pattern）</h4><h4 id="元组模式（Tuple-Pattern）"><a href="#元组模式（Tuple-Pattern）" class="headerlink" title="元组模式（Tuple Pattern）"></a>元组模式（Tuple Pattern）</h4><h4 id="枚举用例模式（Enumeration-Case-Pattern）"><a href="#枚举用例模式（Enumeration-Case-Pattern）" class="headerlink" title="枚举用例模式（Enumeration Case Pattern）"></a>枚举用例模式（Enumeration Case Pattern）</h4><h4 id="可选项目模式（Optional-Pattern）"><a href="#可选项目模式（Optional-Pattern）" class="headerlink" title="可选项目模式（Optional Pattern）"></a>可选项目模式（Optional Pattern）</h4><h4 id="类型转换模式（Type-Casting-Pattern）"><a href="#类型转换模式（Type-Casting-Pattern）" class="headerlink" title="类型转换模式（Type-Casting Pattern）"></a>类型转换模式（Type-Casting Pattern）</h4><h4 id="表达式模式（Expression-Pattern）"><a href="#表达式模式（Expression-Pattern）" class="headerlink" title="表达式模式（Expression Pattern）"></a>表达式模式（Expression Pattern）</h4>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Swift/" rel="tag"># Swift</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/10/19/OC/iOS横竖屏/" rel="next" title="iOS横竖屏">
+                <i class="fa fa-chevron-left"></i> iOS横竖屏
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/myAvatar.gif"
+              alt="Kevin" />
+          
+            <p class="site-author-name" itemprop="name">Kevin</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KevinYangGit" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yangqioffice@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_YangQI" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.cnblogs.com/mjios" title="M了个J" target="_blank">M了个J</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#循环控制"><span class="nav-number">1.</span> <span class="nav-text">循环控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#for-in-循环"><span class="nav-number">1.1.</span> <span class="nav-text">for-in 循环</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#for-in-遍历字典"><span class="nav-number">1.1.1.</span> <span class="nav-text">for-in 遍历字典</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#for-in-分段区间"><span class="nav-number">1.1.2.</span> <span class="nav-text">for-in 分段区间</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#while-循环"><span class="nav-number">1.2.</span> <span class="nav-text">while 循环</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#switch"><span class="nav-number">2.</span> <span class="nav-text">switch</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#没有隐式贯穿"><span class="nav-number">2.1.</span> <span class="nav-text">没有隐式贯穿</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#区间匹配"><span class="nav-number">2.2.</span> <span class="nav-text">区间匹配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#元组匹配"><span class="nav-number">2.3.</span> <span class="nav-text">元组匹配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#值绑定"><span class="nav-number">2.4.</span> <span class="nav-text">值绑定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#where-字句"><span class="nav-number">2.5.</span> <span class="nav-text">where 字句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复合匹配"><span class="nav-number">2.6.</span> <span class="nav-text">复合匹配</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#复合匹配-值绑定"><span class="nav-number">2.6.1.</span> <span class="nav-text">复合匹配 - 值绑定</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制转移"><span class="nav-number">2.7.</span> <span class="nav-text">控制转移</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#continue"><span class="nav-number">2.7.1.</span> <span class="nav-text">continue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#break"><span class="nav-number">2.7.2.</span> <span class="nav-text">break</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fallthrough"><span class="nav-number">2.7.3.</span> <span class="nav-text">fallthrough</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#语句标签"><span class="nav-number">2.7.4.</span> <span class="nav-text">语句标签</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#guard"><span class="nav-number">3.</span> <span class="nav-text">guard</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#验证-ip-地址的格式是否正确"><span class="nav-number">3.1.</span> <span class="nav-text">验证 ip 地址的格式是否正确</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#检查-API-可用性"><span class="nav-number">3.2.</span> <span class="nav-text">检查 API 可用性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模式和模式匹配"><span class="nav-number">4.</span> <span class="nav-text">模式和模式匹配</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#模式"><span class="nav-number">4.1.</span> <span class="nav-text">模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模式分类"><span class="nav-number">4.2.</span> <span class="nav-text">模式分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#通配符模式（Wildcard-Pattern）"><span class="nav-number">4.2.1.</span> <span class="nav-text">通配符模式（Wildcard Pattern）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标识符模式（Identifier-Pattern）"><span class="nav-number">4.2.2.</span> <span class="nav-text">标识符模式（Identifier Pattern）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#值绑定模式（Value-Binding-Pattern）"><span class="nav-number">4.2.3.</span> <span class="nav-text">值绑定模式（Value-Binding Pattern）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#元组模式（Tuple-Pattern）"><span class="nav-number">4.2.4.</span> <span class="nav-text">元组模式（Tuple Pattern）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#枚举用例模式（Enumeration-Case-Pattern）"><span class="nav-number">4.2.5.</span> <span class="nav-text">枚举用例模式（Enumeration Case Pattern）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#可选项目模式（Optional-Pattern）"><span class="nav-number">4.2.6.</span> <span class="nav-text">可选项目模式（Optional Pattern）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类型转换模式（Type-Casting-Pattern）"><span class="nav-number">4.2.7.</span> <span class="nav-text">类型转换模式（Type-Casting Pattern）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#表达式模式（Expression-Pattern）"><span class="nav-number">4.2.8.</span> <span class="nav-text">表达式模式（Expression Pattern）</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="/js/src/md5.min.js"></script>
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: '82b6ced795961ee1fcca',
+      clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
+      repo: 'KevinYangGit.github.io',
+      owner: 'KevinYangGit',
+      admin: ['KevinYangGit'],
+      id: md5(location.pathname),
+      distractionFreeMode: 'true'
+    })
+    gitalk.render('gitalk-container')
+  </script>
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

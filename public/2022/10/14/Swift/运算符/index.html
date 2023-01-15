@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Swift," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="溢出运算符 合并空值运算符 区间运算符 位运算符 位运算符经典算法 运算符的优先升级和结核性 运算符方法 自定义运算符">
+<meta name="keywords" content="Swift">
+<meta property="og:type" content="article">
+<meta property="og:title" content="运算符">
+<meta property="og:url" content="http://yoursite.com/2022/10/14/Swift/运算符/index.html">
+<meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="溢出运算符 合并空值运算符 区间运算符 位运算符 位运算符经典算法 运算符的优先升级和结核性 运算符方法 自定义运算符">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/01.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/02.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/03.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/04.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/05.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/06.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/07.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/08.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/09.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/10.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/11.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/12.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/13.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/14.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/15.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/16.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/17.png">
+<meta property="og:updated_time" content="2023-01-15T03:03:31.789Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="运算符">
+<meta name="twitter:description" content="溢出运算符 合并空值运算符 区间运算符 位运算符 位运算符经典算法 运算符的优先升级和结核性 运算符方法 自定义运算符">
+<meta name="twitter:image" content="http://yoursite.com/2022/10/14/Swift/运算符/01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/10/14/Swift/运算符/"/>
+
+
+
+
+
+  <title>运算符 | Kevin's  blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a073c6e38282486853e19b272e9e7c34";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's  blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/10/14/Swift/运算符/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">运算符</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-10-14T10:19:27+08:00">
+                2022-10-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li><a href="#溢出运算符">溢出运算符</a></li>
+<li><a href="#合并空值运算符">合并空值运算符</a></li>
+<li><a href="#区间运算符">区间运算符</a></li>
+<li><a href="#位运算符">位运算符</a></li>
+<li><a href="#位运算符经典算法">位运算符经典算法</a></li>
+<li><a href="#运算符的优先升级和结核性">运算符的优先升级和结核性</a></li>
+<li><a href="#运算符方法">运算符方法</a></li>
+<li><a href="#自定义运算符">自定义运算符</a></li>
+</ul>
+<a id="more"></a>
+<h2 id="赋值和算术运算符"><a href="#赋值和算术运算符" class="headerlink" title="赋值和算术运算符"></a>赋值和算术运算符</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
+<li><p>一元运算符，对一个目标进行操作。一元前缀运算符：<code>!b</code>，一元后缀运算符：<code>b!</code>。</p>
+</li>
+<li><p>二元运算符，对两个目标进行操作。如<code>a + b</code>，同时因为它们出现在两个目标之间，所以是中缀运算符。</p>
+</li>
+<li><p>三元运算符，对三个目标进行操作。Swift 语言仅有一个三元运算符，即三元条件运算符 <code>a ? b : c</code>。</p>
+</li>
+</ul>
+<p>Swift 支持 C 中大多数的标准运算符，同时也增加了一些能力，用来排除常见代码错误：</p>
+<ol>
+<li>赋值符号（<code>=</code>）不会返回值，以防止它和等于符号（<code>==</code>）产生误用。</li>
+<li>算数符号（<code>+</code>，<code>-</code>，<code>*</code>，<code>/</code>，<code>%</code>等）可以检测并阻止值溢出，如存储类型放入大于允许范围的数字。</li>
+</ol>
+<h3 id="赋值运算符"><a href="#赋值运算符" class="headerlink" title="赋值运算符"></a>赋值运算符</h3><ul>
+<li><code>=</code>：赋值运算符，将一个值赋值给另外一个值。如果赋值符号右侧是拥有多个值的元组，则元组的元素将会一次性拆分成常量和变量。</li>
+</ul>
+<h4 id="赋值运算符不会返回值"><a href="#赋值运算符不会返回值" class="headerlink" title="赋值运算符不会返回值"></a>赋值运算符不会返回值</h4><p>在 OC 中，赋值运算符在赋值成功后会返回 <code>true</code>：</p>
+<p><img src="/2022/10/14/Swift/运算符/01.png" alt="01"></p>
+<p>而 Swift 的赋值符号自身不会返回值：</p>
+<p><img src="/2022/10/14/Swift/运算符/02.png" alt="02"></p>
+<h3 id="算术运算符"><a href="#算术运算符" class="headerlink" title="算术运算符"></a>算术运算符</h3><h4 id="标准运算符"><a href="#标准运算符" class="headerlink" title="标准运算符"></a>标准运算符</h4><p><code>+</code>、<code>-</code>、<code>*</code>、<code>/</code> 是标准算术运算符。</p>
+<p>加法运算符也支持 String 的拼接：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> str = str1 + str2</div></pre></td></tr></table></figure>
+<ul>
+<li>Swift 算术运算符默认不允许值溢出</li>
+</ul>
+<h4 id="余数运算符"><a href="#余数运算符" class="headerlink" title="余数运算符"></a>余数运算符</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> <span class="built_in">c</span> = a % b</div></pre></td></tr></table></figure>
+<p>余数：指整数除法中被除数<strong>未被除尽部分</strong>，且余数的取值范围为0到除数之间（不包括除数）的整数。<br><img src="/2022/10/14/Swift/运算符/03.png" alt="03"></p>
+<p>除数为负数时，也是用同样的方法进行计算：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> <span class="built_in">c</span> = -<span class="number">4</span> % <span class="number">3</span></div><div class="line"><span class="built_in">print</span>(<span class="built_in">c</span>)</div><div class="line"><span class="comment">// Prints -1</span></div></pre></td></tr></table></figure>
+<p>被除数为负数时，负号会被忽略：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> <span class="built_in">c</span> = <span class="number">4</span> % -<span class="number">3</span></div><div class="line"><span class="built_in">print</span>(<span class="built_in">c</span>)</div><div class="line"><span class="comment">// Prints 1</span></div></pre></td></tr></table></figure>
+<h4 id="一元"><a href="#一元" class="headerlink" title="一元"></a>一元</h4><ul>
+<li>一元减号运算符（<code>-</code>）：直接放置在操作的值前边。数字值的正负号可以用前缀 <code>-</code> 来切换。</li>
+<li>一元加号运算符（<code>+</code>）：直接返回操作的值，不会对其进行任何的修改。</li>
+</ul>
+<h2 id="溢出运算符"><a href="#溢出运算符" class="headerlink" title="溢出运算符"></a>溢出运算符</h2><p>向一个整数赋值超过它容量的值时，Swift 会报错，而不是生成一个无效的数。</p>
+<ul>
+<li><code>&amp;+</code> 溢出加法</li>
+<li><code>&amp;-</code> 溢出减法</li>
+<li><code>&amp;*</code> 溢出乘法</li>
+</ul>
+<h3 id="值溢出"><a href="#值溢出" class="headerlink" title="值溢出"></a>值溢出</h3><p>无符号整型数值和有符号整型数值都可以向上溢出或向下溢出。</p>
+<p>当发生上溢时，它们会从数值所能容纳的<strong>最大数变成最小数</strong>。</p>
+<p>当发生下溢时，它们会从数值所能容纳的<strong>最小数变成最大数</strong>。</p>
+<p>无符号整型数值，向上溢出：<br><img src="/2022/10/14/Swift/运算符/04.png" alt="04"></p>
+<p>无符号整型数值，向下溢出：<br><img src="/2022/10/14/Swift/运算符/05.png" alt="05"></p>
+<p>有符号整型数值，向下溢出：<br><img src="/2022/10/14/Swift/运算符/06.png" alt="06"></p>
+<p>Swift 算术运算符默认不允许值溢出：<br><img src="/2022/10/14/Swift/运算符/07.png" alt="07"></p>
+<p>可以使用<strong>溢出加法<code>&amp;+</code></strong>：<br><img src="/2022/10/14/Swift/运算符/08.png" alt="08"></p>
+<h2 id="合并空值运算符"><a href="#合并空值运算符" class="headerlink" title="合并空值运算符"></a>合并空值运算符</h2><p>如果 a 有值则返回 a，不会再判断 b；如果 a 没有值（<code>nil</code>），则返回默认值 b：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> <span class="built_in">c</span> = a ?? b</div></pre></td></tr></table></figure>
+<p>其中，a 必须是一个可选类型，b  必须与 a 的储存类型相同。</p>
+<p>合并空值运算符就是三元运算符，是三元运算符作用到 Optional 上的缩写版：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 合并空值运算符</span></div><div class="line"><span class="keyword">let</span> <span class="built_in">c</span> = a ?? b</div><div class="line"></div><div class="line"><span class="comment">// 三元运算符</span></div><div class="line"><span class="keyword">let</span> <span class="built_in">c</span> = a != <span class="literal">nil</span> ? a! : b</div></pre></td></tr></table></figure>
+<h3 id="应用效果对比"><a href="#应用效果对比" class="headerlink" title="应用效果对比"></a>应用效果对比</h3><p>1、使用强制解包，有崩溃风险，如果 num1 或 num2 为 nil 会崩：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">addTowNumber</span><span class="params">(num1: Int?, num2: Int?)</span></span> -&gt; <span class="type">Int</span> &#123;</div><div class="line">    <span class="keyword">return</span> num1! + num2!</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>2、使用 if 判断，代码量比较多：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">addTowNumber</span><span class="params">(num1: Int?, num2: Int?)</span></span> -&gt; <span class="type">Int</span> &#123;</div><div class="line">    <span class="keyword">if</span> num1 != <span class="literal">nil</span> &amp;&amp; num2 != <span class="literal">nil</span> &#123;</div><div class="line">        <span class="keyword">return</span> num1! + num2!</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>3、使用合并控制运算符 <code>??</code></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">addTowNumber</span><span class="params">(num1: Int?, num2: Int?)</span></span> -&gt; <span class="type">Int</span> &#123;</div><div class="line">    <span class="keyword">return</span> (num1 ?? <span class="number">0</span>) + (num2 ?? <span class="number">0</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="区间运算符"><a href="#区间运算符" class="headerlink" title="区间运算符"></a>区间运算符</h2><h3 id="闭区间运算符"><a href="#闭区间运算符" class="headerlink" title="闭区间运算符"></a>闭区间运算符</h3><p><code>a...b</code>：闭区间运算符，定义了从 a 到 b 的一组范围，<strong>包含 a 和 b</strong>。a 的值不能大于 b。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> index <span class="keyword">in</span> <span class="number">1</span>...<span class="number">5</span> &#123;</div><div class="line">    <span class="built_in">print</span>(index)</div><div class="line">&#125;</div><div class="line"><span class="comment">// 1</span></div><div class="line"><span class="comment">// 2</span></div><div class="line"><span class="comment">// 3</span></div><div class="line"><span class="comment">// 4</span></div><div class="line"><span class="comment">// 5</span></div></pre></td></tr></table></figure>
+<h3 id="半开区间运算符"><a href="#半开区间运算符" class="headerlink" title="半开区间运算符"></a>半开区间运算符</h3><p><code>a..&lt;b</code>：半开区间运算符，定义了从 a 到 b 的一组范围，<strong>包含 a 不包含 b</strong>。a 不能大于 b，如果 a 与 b 相等，则返回空。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> index <span class="keyword">in</span> <span class="number">1</span>..&lt;<span class="number">5</span> &#123;</div><div class="line">    <span class="built_in">print</span>(index)</div><div class="line">&#125;</div><div class="line"><span class="comment">// 1</span></div><div class="line"><span class="comment">// 2</span></div><div class="line"><span class="comment">// 3</span></div><div class="line"><span class="comment">// 4</span></div></pre></td></tr></table></figure>
+<h3 id="单侧区间"><a href="#单侧区间" class="headerlink" title="单侧区间"></a>单侧区间</h3><p>单侧区间是闭区间的另外一种形式，让区间<strong>朝一个方向尽可能的远</strong>。</p>
+<ul>
+<li><code>a...</code>：区间左边大于等于 a。</li>
+<li><code>...b</code>：区间右边小于等于 b。</li>
+</ul>
+<p>半开区间运算符也有单侧形式：</p>
+<ul>
+<li><code>..&lt;b</code>：区间右边小于b。</li>
+</ul>
+<p>举例1：从索引2到数组最后一个元素</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> names = [<span class="string">"zhangsan"</span>, <span class="string">"lisi"</span>, <span class="string">"wangwu"</span>, <span class="string">"zhaoliu"</span>]</div><div class="line"><span class="keyword">for</span> name <span class="keyword">in</span> names[<span class="number">2</span>...] &#123;</div><div class="line">    <span class="built_in">print</span>(name)</div><div class="line">&#125;</div><div class="line"><span class="comment">// wangwu</span></div><div class="line"><span class="comment">// zhaoliu</span></div></pre></td></tr></table></figure>
+<p>举例2：从数组第一个元素开始到索引2：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> names = [<span class="string">"zhangsan"</span>, <span class="string">"lisi"</span>, <span class="string">"wangwu"</span>, <span class="string">"zhaoliu"</span>]</div><div class="line"><span class="keyword">for</span> name <span class="keyword">in</span> names[...<span class="number">2</span>] &#123;</div><div class="line">    <span class="built_in">print</span>(name)</div><div class="line">&#125;</div><div class="line"><span class="comment">// zhangsan</span></div><div class="line"><span class="comment">// lisi</span></div><div class="line"><span class="comment">// wangwu</span></div></pre></td></tr></table></figure>
+<p>举例3：从数组第一个元素开始到索引2前一个元素：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> names = [<span class="string">"zhangsan"</span>, <span class="string">"lisi"</span>, <span class="string">"wangwu"</span>, <span class="string">"zhaoliu"</span>]</div><div class="line"><span class="keyword">for</span> name <span class="keyword">in</span> names[..&lt;<span class="number">2</span>] &#123;</div><div class="line">    <span class="built_in">print</span>(name)</div><div class="line">&#125;</div><div class="line"><span class="comment">// zhangsan</span></div><div class="line"><span class="comment">// lisi</span></div></pre></td></tr></table></figure>
+<p>举例4：单侧区间不仅用于下标，还可以在上下文中使用</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> range = ...<span class="number">5</span></div><div class="line"><span class="built_in">print</span>(range.<span class="built_in">contains</span>(<span class="number">7</span>))</div><div class="line"><span class="built_in">print</span>(range.<span class="built_in">contains</span>(<span class="number">4</span>))</div><div class="line"><span class="built_in">print</span>(range.<span class="built_in">contains</span>(-<span class="number">1</span>))</div><div class="line"><span class="comment">// false</span></div><div class="line"><span class="comment">// true</span></div><div class="line"><span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h3 id="字符串索引区间"><a href="#字符串索引区间" class="headerlink" title="字符串索引区间"></a>字符串索引区间</h3><p>区间运算符在字符串中的应用：删除指定范围的字符</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> welcome = <span class="string">"hello,world"</span></div><div class="line"><span class="keyword">let</span> range = welcome.index(welcome.endIndex, offsetBy: -<span class="number">6</span>) ..&lt; welcome.endIndex</div><div class="line">welcome.removeSubrange(range)</div><div class="line"><span class="built_in">print</span>(welcome)</div><div class="line"><span class="comment">// Prints "hello"</span></div></pre></td></tr></table></figure>
+<h3 id="倒序索引"><a href="#倒序索引" class="headerlink" title="倒序索引"></a>倒序索引</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> welcome = <span class="string">"hello,world"</span></div><div class="line"><span class="keyword">let</span> reversedWelcome = <span class="type">String</span>(welcome.reversed())</div><div class="line"><span class="built_in">print</span>(reversedWelcome)</div><div class="line"><span class="comment">// Prints "dlrow,olleh"</span></div></pre></td></tr></table></figure>
+<h3 id="Comparable-区间"><a href="#Comparable-区间" class="headerlink" title="Comparable 区间"></a>Comparable 区间</h3><p>区间运算符作用在 Comparable 类型上，返回闭区间和半闭区间。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> welcome = <span class="string">"Hello"</span></div><div class="line"><span class="keyword">let</span> interval = <span class="string">"a"</span>...<span class="string">"z"</span></div><div class="line"><span class="keyword">for</span> <span class="built_in">c</span> <span class="keyword">in</span> welcome &#123;</div><div class="line">    <span class="keyword">if</span> !interval.<span class="built_in">contains</span>(<span class="type">String</span>(<span class="built_in">c</span>)) &#123;</div><div class="line">        <span class="built_in">print</span>(<span class="string">"<span class="subst">\(<span class="built_in">c</span>)</span>不是小写字母"</span>)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// Prints "H不是小写字母"</span></div></pre></td></tr></table></figure>
+<h2 id="位运算符"><a href="#位运算符" class="headerlink" title="位运算符"></a>位运算符</h2><h3 id="位取反运算符"><a href="#位取反运算符" class="headerlink" title="位取反运算符"></a>位取反运算符</h3><ul>
+<li><code>~</code> 位取反运算符，是对所有位的数字进行取反操作。</li>
+</ul>
+<p><img src="/2022/10/14/Swift/运算符/09.png" alt="09"></p>
+<h3 id="位与运算符"><a href="#位与运算符" class="headerlink" title="位与运算符"></a>位与运算符</h3><ul>
+<li><code>&amp;</code> 位与运算符，可以对两个数的比特位进行比较，返回一个新的数，当<strong>两个比特位都是 1</strong> 时返回 1。</li>
+</ul>
+<p><img src="/2022/10/14/Swift/运算符/10.png" alt="10"></p>
+<h3 id="位或运算符"><a href="#位或运算符" class="headerlink" title="位或运算符"></a>位或运算符</h3><ul>
+<li><code>|</code> 位或运算符，可以对两个数的比特位进行比较，返回一个新的数，当<strong>两个比特位任意一个为 1</strong> 时返回 1。</li>
+</ul>
+<p><img src="/2022/10/14/Swift/运算符/11.png" alt="11"></p>
+<h3 id="位异或运算符"><a href="#位异或运算符" class="headerlink" title="位异或运算符"></a>位异或运算符</h3><ul>
+<li><code>^</code> 为异或运算符，或者叫“互斥或”，可以对两个数的比特位进行比较，返回一个新的数，当<strong>两个比特位不相同</strong> 时返回 1。</li>
+</ul>
+<p><img src="/2022/10/14/Swift/运算符/12.png" alt="12"></p>
+<h3 id="位左移和右移运算符"><a href="#位左移和右移运算符" class="headerlink" title="位左移和右移运算符"></a>位左移和右移运算符</h3><ul>
+<li><code>&lt;&lt;</code> 位左移运算符，可以把所有位数的数字向左移动一个确定的位数。</li>
+<li><code>&gt;&gt;</code> 位右移运算符，可以把所有位数的数字向右移动一个确定的位数。</li>
+</ul>
+<p>位左移和位右移具有将整数乘以或除以二的效果。将一个数左移一位相当于把这个数翻倍，将一个数右移一位相当于把这个数减半。</p>
+<h3 id="无符号整数的移位操作"><a href="#无符号整数的移位操作" class="headerlink" title="无符号整数的移位操作"></a>无符号整数的移位操作</h3><p>实现过程：</p>
+<ol>
+<li>已经存在的比特位按指定的位数进行左移和右移；</li>
+<li>任何移动超出整型存储边界的位都会被丢弃；</li>
+<li>用 0 来填充向左或向右移动后产生的空白位。</li>
+</ol>
+<p><img src="/2022/10/14/Swift/运算符/13.png" alt="13"></p>
+<h3 id="有符号整数的移位操作"><a href="#有符号整数的移位操作" class="headerlink" title="有符号整数的移位操作"></a>有符号整数的移位操作</h3><p>符号位：有符号整数用第一位表示正数还是负数。符号位为 0 表示正数，1 表示负数。</p>
+<p>数值位：除第一位外其余的位，存储了实际的值。</p>
+<p>有符号正整数和无符号数的存储方式是一样的，都是从 0 开始算起。</p>
+<p><img src="/2022/10/14/Swift/运算符/14.png" alt="14"></p>
+<p>但是负数的存储方式略有不同，它存储的是 2 的 n 次方减去它的绝对值，这里的 n 为数值位的位数。</p>
+<p><img src="/2022/10/14/Swift/运算符/15.png" alt="15"></p>
+<p>-4 的存储位 128 - 4 = 124。</p>
+<h3 id="补码表示的优点"><a href="#补码表示的优点" class="headerlink" title="补码表示的优点"></a>补码表示的优点</h3><p>对于算式 <code>-4 + -1</code>，先将两个数的全部八个比特位相加（包括符号位），再将计算结果中超出的部分丢弃。</p>
+<p><img src="/2022/10/14/Swift/运算符/16.png" alt="16"></p>
+<p>-4 的存储位 <code>2^8 - 4</code>，-1 的存储位 <code>2^8 - 1</code>，-5 的存储位 <code>2^8 - 5</code>。<br><code>-4 + -1 = 2^8 - 4 + 2^8 - 1</code>，将计算结果中超出的部分丢弃（去掉一个2^8）。<br>即 <code>-4 + -1 = 2^8 - 4 - 1 = 2^8 - 5</code>，等于 -5。</p>
+<p>使用二进制补码可以使负数的位左移和右移操作，得到跟正数同样的效果，即每向左移一位就将自身的数值乘以 2，每向右移一位就将自身的数值除以 2。</p>
+<p>要达到此目的，对有符号整数的右移有一个额外的规则：当对正整数进行位右移操作时，遵循与无符号整数相同的规则，但是对于移位产生的空白位使用符号位进行填充，而不是 0。</p>
+<p><img src="/2022/10/14/Swift/运算符/17.png" alt="17"></p>
+<h3 id="位运算符经典算法"><a href="#位运算符经典算法" class="headerlink" title="位运算符经典算法"></a>位运算符经典算法</h3><h4 id="两个数字交换"><a href="#两个数字交换" class="headerlink" title="两个数字交换"></a>两个数字交换</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="number">10</span></div><div class="line"><span class="keyword">var</span> b = <span class="number">8</span></div><div class="line">a = a ^ b</div><div class="line">b = a ^ b</div><div class="line">a = a ^ b</div><div class="line"><span class="built_in">print</span>(a)</div><div class="line"><span class="built_in">print</span>(b)</div><div class="line"><span class="comment">// 8</span></div><div class="line"><span class="comment">// 10</span></div></pre></td></tr></table></figure>
+<h4 id="求无符号整数二进制中1的个数"><a href="#求无符号整数二进制中1的个数" class="headerlink" title="求无符号整数二进制中1的个数"></a>求无符号整数二进制中1的个数</h4><ul>
+<li>给定一个无符号整型（UInt）变量，求其二进制表示中 “1” 的个数，要求算法的执行效率尽可能的高。</li>
+</ul>
+<blockquote>
+<p>思路：看一个八位整数 10 100 001，先判断最后一位是否为 1，而“与”操作可以达到目的。可以把这个八位的数字与 00 000 001 进行“与”操作。如果结果为1，则表示当前八位数的最后一位为1，否则为0。怎么判断第二位呢？向右移位，在延续前面的判断即可。</p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">countOfOnes</span><span class="params">(num: UInt)</span></span> -&gt; <span class="type">UInt</span> &#123;</div><div class="line">    <span class="keyword">var</span> <span class="built_in">count</span>: <span class="type">UInt</span> = <span class="number">0</span></div><div class="line">    <span class="keyword">var</span> temp = num</div><div class="line">    <span class="keyword">while</span> temp != <span class="number">0</span> &#123;</div><div class="line">        <span class="built_in">count</span> += temp &amp; <span class="number">1</span></div><div class="line">        temp = temp &gt;&gt; <span class="number">1</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">count</span></div><div class="line">&#125;</div><div class="line"><span class="built_in">print</span>(countOfOnes(num: <span class="number">4</span>))</div><div class="line"><span class="built_in">print</span>(countOfOnes(num: <span class="number">5</span>))</div><div class="line"><span class="comment">// Prints 1</span></div><div class="line"><span class="comment">// Prints 2</span></div></pre></td></tr></table></figure>
+<p>思考：如果整数的二进制中有较多的 0，那么我们每一次右移一位做判断会很浪费，怎么改进呢？有没有办法让算法的复杂度只与“1”的个数有关？</p>
+<blockquote>
+<p>思路：为了简化这个问题，先考虑只有高位有“1”的情况。例如：11 000 000，如何跳过前面低位的 6 个 0，而直接判断第七位的 1？我们可以设计 11 000 000 和 10 111 111（也就是 11 000 000 - 1）做“与”操作，消去最低位的 1。如果得到的结果为 0，说明已经找到（消去）里面最后一个 1。如果不为 0，那么说明消去了最低位的 1，但是二进制中还有其它的 1，计数器加一继续上面的操作。</p>
+<p>计数器 count = 0</p>
+<p>步骤一：整数不为0，说明二进制里肯定有 1，count = 1</p>
+<p>11 000 000 &amp; 10 111 111 = 10 000 000（消去第七位的 1）。</p>
+<p>步骤二：结果不为0，说明二进制里还有 1，count = 2</p>
+<p>10 000 000 &amp; 01 111 111 = 0（消去第八位的 1）。</p>
+<p>步骤三：结果为0，终止，返回 count 为 2。</p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">countOfOnes</span><span class="params">(num: UInt)</span></span> -&gt; <span class="type">UInt</span> &#123;</div><div class="line">    <span class="keyword">var</span> <span class="built_in">count</span>: <span class="type">UInt</span> = <span class="number">0</span></div><div class="line">    <span class="keyword">var</span> temp = num</div><div class="line">    <span class="keyword">while</span> temp != <span class="number">0</span> &#123;</div><div class="line">        <span class="built_in">count</span> += <span class="number">1</span></div><div class="line">        temp = temp &amp; (temp - <span class="number">1</span>)</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">count</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">print</span>(countOfOnes(num: <span class="number">4</span>))</div><div class="line"><span class="built_in">print</span>(countOfOnes(num: <span class="number">5</span>))</div><div class="line"><span class="comment">// Prints 1</span></div><div class="line"><span class="comment">// Prints 2</span></div></pre></td></tr></table></figure>
+<h4 id="如何判断一个整数为2的整数次幂"><a href="#如何判断一个整数为2的整数次幂" class="headerlink" title="如何判断一个整数为2的整数次幂"></a>如何判断一个整数为2的整数次幂</h4><ul>
+<li>给定一个无符号整型（UInt）变量，判断是否为 2 的整数次幂。</li>
+</ul>
+<blockquote>
+<p>思路：<strong>一个整数如果是 2 的整数次方，那么它的二进制表示中有且只有一位是 1，其它所有位都是 0</strong>。根据前面的分析，把这个整数减去 1 后再和它自己做“与”运算，这个整数中唯一的 1 就变成 0 了，也就是得到的结尾为 0。</p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">isPowerOfTwo</span><span class="params">(num: UInt)</span></span> -&gt; <span class="type">Bool</span> &#123;</div><div class="line">    <span class="keyword">return</span> (num &amp; (num - <span class="number">1</span>)) == <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">print</span>(isPowerOfTwo(num: <span class="number">4</span>))</div><div class="line"><span class="built_in">print</span>(isPowerOfTwo(num: <span class="number">5</span>))</div><div class="line"><span class="comment">// Prints true</span></div><div class="line"><span class="comment">// Prints false</span></div></pre></td></tr></table></figure>
+<h4 id="缺失的数字"><a href="#缺失的数字" class="headerlink" title="缺失的数字"></a>缺失的数字</h4><ul>
+<li>很多成对出现的正整数保存在磁盘文件中，注意成对的数字不一定是相邻的，如 2，3，4，3，4，2……，由于意外有一个数字消失了，如何尽快找到是哪个数字消失了？</li>
+</ul>
+<blockquote>
+<p>思路：考虑“异或”操作的定义，当两个操作数的对应位不同时，该数的对应位就为 1。也就是说如果是 <strong>相等的两个数“异或”，得到的结果为 0，而 0 与任何数字“异或”，得到的是那个数字本身</strong>。所以可以将所的数字做“异或”操作，因为只有一个数字消失，那么其它两两出现的数字“异或”后为 0，0与仅有的一个数字做“异或”，就得到了消失的数字是哪个。</p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">findLostNum</span><span class="params">(nums: [UInt])</span></span> -&gt; <span class="type">UInt</span> &#123;</div><div class="line">    <span class="keyword">var</span> lostNum: <span class="type">UInt</span> = <span class="number">0</span></div><div class="line">    <span class="keyword">for</span> num <span class="keyword">in</span> nums &#123;</div><div class="line">        lostNum = lostNum ^ num</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> lostNum</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">print</span>(findLostNum(nums: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]))</div><div class="line"><span class="comment">// Prints 4</span></div></pre></td></tr></table></figure>
+<h4 id="缺失的数字2"><a href="#缺失的数字2" class="headerlink" title="缺失的数字2"></a>缺失的数字2</h4><ul>
+<li>很多成对出现的正整数保存在磁盘文件中，注意成对的数字不一定是相邻的，如 2，3，4，3，4，2……，如果有两个数字意外丢失了（丢失的不是相等的数字），该如何找到丢失的两个数字？</li>
+</ul>
+<blockquote>
+<p>思路：设题目中这两个只出现 1 次的数字分别为 A 和 B，如果能将 A，B 分开到两个数组中，那显然符合“异或”解法的关键点了。因此这个题目的关键点就是将 A，B 分开到二个数组中。由于 A，B 肯定是不相等的，因此在二进制上必定有一位是不同的。根据这一位是 0 还是 1 可以将 A 和 B 分开到 A组 和 B组。而这个数组中其它数字要么属于 A 组，要么就属于 B 组。再对 A组 和 B组 分别执行“异或”解法就可以得到 A，B 了。而要判断 A，B 在哪一位上不相同，只要根据 “A异或B” 的结果就可以知道了，这个结果在二进制上为 1 的位都说明 A，B 在这一位上是不相同的。</p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">findTwoLostNums</span><span class="params">(nums: [UInt])</span></span> -&gt; (<span class="type">UInt</span>, <span class="type">UInt</span>) &#123;</div><div class="line">    <span class="keyword">var</span> lostNum1: <span class="type">UInt</span> = <span class="number">0</span></div><div class="line">    <span class="keyword">var</span> lostNum2: <span class="type">UInt</span> = <span class="number">0</span></div><div class="line">    <span class="keyword">var</span> temp: <span class="type">UInt</span> = <span class="number">0</span></div><div class="line">    <span class="comment">//计算两个数的异或结果</span></div><div class="line">    <span class="keyword">for</span> num <span class="keyword">in</span> nums &#123;</div><div class="line">        temp = temp ^ num</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//找到第一个不为1的位</span></div><div class="line">    <span class="keyword">var</span> flag: <span class="type">UInt</span> = <span class="number">1</span>;</div><div class="line">    <span class="keyword">while</span> ((flag &amp; temp) == <span class="number">0</span>) &#123;</div><div class="line">        flag = flag &lt;&lt; <span class="number">1</span></div><div class="line">    &#125;</div><div class="line">    <span class="comment">//找两个丢失的数字</span></div><div class="line">    <span class="keyword">for</span> num <span class="keyword">in</span> nums &#123;</div><div class="line">        <span class="keyword">if</span> (num &amp; flag == <span class="number">0</span>) &#123;</div><div class="line">            lostNum1 = lostNum1 ^ num</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            lostNum2 = lostNum2 ^ num</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> (lostNum1, lostNum2)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">print</span>(findTwoLostNums(nums: [<span class="number">1</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">4</span>]))</div><div class="line"><span class="comment">// Prints (4, 3)</span></div></pre></td></tr></table></figure>
+<h4 id="缺失的数字3"><a href="#缺失的数字3" class="headerlink" title="缺失的数字3"></a>缺失的数字3</h4><ul>
+<li>数组中，只有一个数出现一次，剩下的都出现三次，找出出现一次的数字。</li>
+</ul>
+<blockquote>
+<p>思路：考虑到三次异或后还是数字本身，所以不能像例2那样使用异或。根据<strong>位运算</strong>的思想，出现三次的数字每个比特位也出现了三次，如果将出现的次数相加的话，每一个比特位都可以被3整除。只出现一次的数字的每一个比特位出现的次数都是1，不能被3整除。</p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">findLostNum</span><span class="params">(nums: [UInt])</span></span> -&gt; <span class="type">UInt</span> &#123;</div><div class="line">    <span class="comment">// 长度为32的数组</span></div><div class="line">    <span class="keyword">var</span> bitSum = [<span class="type">UInt</span>](repeating: <span class="number">0</span>, <span class="built_in">count</span>: <span class="number">32</span>)</div><div class="line">    <span class="comment">// 遍历二进制表示的32个比特位</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">32</span> &#123;</div><div class="line">        <span class="keyword">var</span> sum: <span class="type">UInt</span> = <span class="number">0</span></div><div class="line">        <span class="comment">// 遍历数组，判断每个数的二进制表示，在第 i 位是否为1</span></div><div class="line">        <span class="keyword">for</span> num <span class="keyword">in</span> nums &#123;</div><div class="line">            sum += (num &gt;&gt; i &amp; <span class="number">1</span>)</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 保存所有数在第 i 位的总和</span></div><div class="line">        bitSum[i] = sum</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">var</span> res: <span class="type">UInt</span> = <span class="number">0</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">32</span> &#123;</div><div class="line">        <span class="comment">// 不能被3整除的比特位，表示只出现一次的那个数字在这个二进制位上为1</span></div><div class="line">        <span class="keyword">if</span> (bitSum[i]%<span class="number">3</span> != <span class="number">0</span>) &#123;</div><div class="line">            <span class="comment">// 将res的第i位置为1</span></div><div class="line">            res += <span class="number">1</span>&lt;&lt;i</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> res</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">print</span>(findLostNum(nums: [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]))</div><div class="line"><span class="comment">// Prints 4</span></div></pre></td></tr></table></figure>
+<h2 id="运算符的优先升级和结核性"><a href="#运算符的优先升级和结核性" class="headerlink" title="运算符的优先升级和结核性"></a>运算符的优先升级和结核性</h2><p>运算符的优先级使得一些运算符优先于其他运算符，高优先级的运算符会先被计算。</p>
+<p>结合性定义了具有相同优先级的运算符是如何结合（或关联）的——与左边结合为一组，还是与右边结合为一组。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> <span class="built_in">c</span> = <span class="number">2</span> + <span class="number">3</span> % <span class="number">4</span> * <span class="number">5</span></div><div class="line"><span class="built_in">print</span>(<span class="built_in">c</span>)</div><div class="line"><span class="comment">// Prints 17</span></div></pre></td></tr></table></figure>
+<p><code>2 + 3 % 4 * 5</code> 等价于 <code>2 + ((3 % 4) * 5)</code>。</p>
+<h3 id="运算符优先级-显示括号"><a href="#运算符优先级-显示括号" class="headerlink" title="运算符优先级 - 显示括号"></a>运算符优先级 - 显示括号</h3><p>Swift 语言中逻辑运算符 <code>&amp;&amp;</code> 和 <code>||</code> 是做相关的，意味着多个逻辑运算符组合的表达式会首先计算最左边的子表达式。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> lockA = <span class="literal">true</span>, lockB = <span class="literal">false</span>, lockC = <span class="literal">false</span>, lockD = <span class="literal">false</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> (lockA &amp;&amp; lockB || lockC || lockD) &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"Welcome!"</span>)</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"ACCESS DENIED"</span>)</div><div class="line">&#125;</div><div class="line"><span class="comment">// Prints "ACCESS DENIED"</span></div></pre></td></tr></table></figure>
+<p>等价于</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> ((lockA &amp;&amp; lockB) || lockC || lockD) &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"Welcome!"</span>)</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"ACCESS DENIED"</span>)</div><div class="line">&#125;</div><div class="line"><span class="comment">// Prints "ACCESS DENIED"</span></div></pre></td></tr></table></figure>
+<h2 id="运算符重载"><a href="#运算符重载" class="headerlink" title="运算符重载"></a>运算符重载</h2><p>类和结构体可以为现有的运算符提供自定义的实现，称为运算符重载。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">var</span> x = <span class="number">0.0</span>, y = <span class="number">0.0</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> + <span class="params">(<span class="keyword">left</span>: Vector2D, <span class="keyword">right</span>: Vector2D)</span></span> -&gt; <span class="type">Vector2D</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="type">Vector2D</span>(x: <span class="keyword">left</span>.x + <span class="keyword">right</span>.x, y: <span class="keyword">left</span>.y + <span class="keyword">right</span>.y)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">let</span> vector = <span class="type">Vector2D</span>(x: <span class="number">3.0</span>, y: <span class="number">1.0</span>)</div><div class="line"><span class="keyword">let</span> anotherVector = <span class="type">Vector2D</span>(x: <span class="number">2.0</span>, y: <span class="number">4.0</span>)</div><div class="line"><span class="keyword">let</span> combinedCector = vector + anotherVector</div><div class="line"><span class="built_in">print</span>(combinedCector)</div><div class="line"><span class="comment">// prints Vector2D(x: 5.0, y: 5.0)</span></div></pre></td></tr></table></figure>
+<h3 id="一元运算符重载"><a href="#一元运算符重载" class="headerlink" title="一元运算符重载"></a>一元运算符重载</h3><p>类与结构体也能提供标准一元运算符的实现。要实现前缀或者后缀运算符，需要在声明运算符函数的时候在 func 关键字之前指定 prefix 或者 postfix 限定符。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">var</span> x = <span class="number">0.0</span>, y = <span class="number">0.0</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">prefix</span> <span class="function"><span class="keyword">func</span> - <span class="params">(vector: Vector2D)</span></span> -&gt; <span class="type">Vector2D</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="type">Vector2D</span>(x: -vector.x, y: -vector.y)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">let</span> positive = <span class="type">Vector2D</span>(x: <span class="number">3.0</span>, y: <span class="number">4.0</span>)</div><div class="line"><span class="keyword">let</span> negative = -positive</div><div class="line"><span class="keyword">let</span> alsoPositive = -negative</div><div class="line"></div><div class="line"><span class="built_in">print</span>(negative)</div><div class="line"><span class="built_in">print</span>(alsoPositive)</div><div class="line"><span class="comment">// prints Vector2D(x: -3.0, y: -4.0)</span></div><div class="line"><span class="comment">// prints Vector2D(x: 3.0, y: 4.0)</span></div></pre></td></tr></table></figure>
+<h3 id="组合赋值运算符重载"><a href="#组合赋值运算符重载" class="headerlink" title="组合赋值运算符重载"></a>组合赋值运算符重载</h3><p>组合赋值运算符将赋值运算符（<code>=</code>）与其它运算符进行结合。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">var</span> x = <span class="number">0.0</span>, y = <span class="number">0.0</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> + <span class="params">(<span class="keyword">left</span>: Vector2D, <span class="keyword">right</span>: Vector2D)</span></span> -&gt; <span class="type">Vector2D</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="type">Vector2D</span>(x: <span class="keyword">left</span>.x + <span class="keyword">right</span>.x, y: <span class="keyword">left</span>.y + <span class="keyword">right</span>.y)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="comment">// 把 left 设置成 inout 类型</span></div><div class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> += <span class="params">(<span class="keyword">left</span>: <span class="keyword">inout</span> Vector2D, <span class="keyword">right</span>: Vector2D)</span></span> &#123;</div><div class="line">        <span class="keyword">left</span> = <span class="keyword">left</span> + <span class="keyword">right</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> original = <span class="type">Vector2D</span>(x: <span class="number">1.0</span>, y: <span class="number">2.0</span>)</div><div class="line"><span class="keyword">let</span> vectorToAdd = <span class="type">Vector2D</span>(x: <span class="number">3.0</span>, y: <span class="number">4.0</span>)</div><div class="line">original += vectorToAdd</div><div class="line"></div><div class="line"><span class="built_in">print</span>(original)</div><div class="line"><span class="comment">// Prints Vector2D(x: 4.0, y: 6.0)</span></div></pre></td></tr></table></figure>
+<p>因为 <code>left</code> 的值会在运算符函数内直接被修改，所以需要把 <code>left</code> 设置成 <code>inout</code> 类型。</p>
+<h3 id="等价运算符重载"><a href="#等价运算符重载" class="headerlink" title="等价运算符重载"></a>等价运算符重载</h3><p>自定义类和结构体不接收等价运算符的默认实现，也就是所谓的“等于”运算符（<code>==</code>）和“不等于”运算符（<code>!=</code>）。要使用等价运算符，需要提供一个“等于”运算符（类似中缀运算符<code>+</code>），并且遵循标准库 Equaltable 协议。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Vector3D</span>: <span class="title">Equatable</span> </span>&#123;</div><div class="line">    <span class="keyword">var</span> x = <span class="number">0.0</span>, y = <span class="number">0.0</span>, z = <span class="number">0.0</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">let</span> vector01 = <span class="type">Vector3D</span>(x: <span class="number">2.0</span>, y: <span class="number">3.0</span>, z: <span class="number">4.0</span>)</div><div class="line"><span class="keyword">let</span> vector02 = <span class="type">Vector3D</span>(x: <span class="number">2.0</span>, y: <span class="number">3.0</span>, z: <span class="number">4.0</span>)</div><div class="line"><span class="keyword">if</span> vector01 == vector02 &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"vector01 == vector02"</span>)</div><div class="line">&#125;</div><div class="line"><span class="comment">// Prints "vector01 == vector02"</span></div></pre></td></tr></table></figure>
+<p>swift 为一下自定义类型提供等价运算符合成实现：</p>
+<ul>
+<li>只拥有遵循 Equaltable 协议存储属性的结构体</li>
+<li>只拥有遵循 Equaltable 协议关联类型的枚举</li>
+<li>没有关联类型的枚举</li>
+</ul>
+<h2 id="自定义运算符"><a href="#自定义运算符" class="headerlink" title="自定义运算符"></a>自定义运算符</h2><p>除了实现标准运算符，在 Swift 中还可以声明和实现自定义运算符。自定义的运算符如果想在全局作用域内，可以使用 <code>operator</code> 关键字进行声明，同时还要指定 <code>prefix</code>、<code>infix</code> 或者 <code>postfix</code> 限定符。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 全局作用域</span></div><div class="line"><span class="keyword">prefix</span> <span class="keyword">operator</span> +++</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">var</span> x = <span class="number">0.0</span>, y = <span class="number">0.0</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> + <span class="params">(<span class="keyword">left</span>: Vector2D, <span class="keyword">right</span>: Vector2D)</span></span> -&gt; <span class="type">Vector2D</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="type">Vector2D</span>(x: <span class="keyword">left</span>.x + <span class="keyword">right</span>.x, y: <span class="keyword">left</span>.y + <span class="keyword">right</span>.y)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> += <span class="params">(<span class="keyword">left</span>: <span class="keyword">inout</span> Vector2D, <span class="keyword">right</span>: Vector2D)</span></span> &#123;</div><div class="line">        <span class="keyword">left</span> = <span class="keyword">left</span> + <span class="keyword">right</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 自定义前缀翻倍运算符</span></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">prefix</span> <span class="function"><span class="keyword">func</span> +++ <span class="params">(vector: <span class="keyword">inout</span> Vector2D)</span></span> -&gt; <span class="type">Vector2D</span> &#123;</div><div class="line">        vector += vector</div><div class="line">        <span class="keyword">return</span> vector</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> toBeDoubled = <span class="type">Vector2D</span>(x: <span class="number">1.0</span>, y: <span class="number">4.0</span>)</div><div class="line"><span class="keyword">let</span> afterDoubling = +++toBeDoubled</div><div class="line"></div><div class="line"><span class="built_in">print</span>(afterDoubling)</div><div class="line"><span class="comment">// Prints Vector2D(x: 2.0, y: 8.0)</span></div></pre></td></tr></table></figure>
+<h3 id="自定义中缀运算符的优先级和结合性"><a href="#自定义中缀运算符的优先级和结合性" class="headerlink" title="自定义中缀运算符的优先级和结合性"></a>自定义中缀运算符的优先级和结合性</h3><p>自定义的中缀（<code>infix</code>）运算符也可以指定优先级和结合性，每一个自定义的中缀运算符都属于一个优先级组，优先级组制定了自定义中缀运算符和其他中缀运算符的关系。</p>
+<ul>
+<li><code>AdditionPrecedence</code> 加法运算优先级组</li>
+<li><code>MultiplicationPrecedence</code> 乘法运算优先级组</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 自定义优先级组</span></div><div class="line">precedencegroup <span class="type">MyPrecedence</span> &#123;</div><div class="line">    <span class="comment">// 设置优先级组的计算方向为从左侧开始</span></div><div class="line">    <span class="keyword">associativity</span>: <span class="keyword">left</span></div><div class="line">    <span class="comment">// 设置优先级小于加法运算优先级组</span></div><div class="line">    lowerThan: <span class="type">AdditionPrecedence</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>自定义中缀运算符 <code>+-</code></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">var</span> x = <span class="number">0.0</span>, y = <span class="number">0.0</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 自定义运算符 +- 属于加法运算符组</span></div><div class="line"><span class="keyword">infix</span> <span class="keyword">operator</span> +-: <span class="type">AdditionPrecedence</span></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> +- <span class="params">(<span class="keyword">left</span>: Vector2D, <span class="keyword">right</span>: Vector2D)</span></span> -&gt; <span class="type">Vector2D</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="type">Vector2D</span>(x: <span class="keyword">left</span>.x + <span class="keyword">right</span>.x, y: <span class="keyword">left</span>.y - <span class="keyword">right</span>.y)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 自定义运算符 *^ 属于乘法运算符组</span></div><div class="line"><span class="keyword">infix</span> <span class="keyword">operator</span> *^: <span class="type">MultiplicationPrecedence</span></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> *^ <span class="params">(<span class="keyword">left</span>: Vector2D, <span class="keyword">right</span>: Vector2D)</span></span> -&gt; <span class="type">Vector2D</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="type">Vector2D</span>(x: <span class="keyword">left</span>.x * <span class="keyword">right</span>.x, y: <span class="keyword">left</span>.y * <span class="keyword">left</span>.y + <span class="keyword">right</span>.y + <span class="keyword">right</span>.y)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">let</span> firstVector = <span class="type">Vector2D</span>(x: <span class="number">1.0</span>, y: <span class="number">2.0</span>)</div><div class="line"><span class="keyword">let</span> secondVector = <span class="type">Vector2D</span>(x: <span class="number">3.0</span>, y: <span class="number">7.0</span>)</div><div class="line"><span class="keyword">let</span> plusMinusVector = firstVector +- secondVector</div><div class="line"><span class="keyword">let</span> thirdVector = <span class="type">Vector2D</span>(x: <span class="number">2.0</span>, y: <span class="number">2.0</span>)</div><div class="line"><span class="keyword">let</span> resFirstVector = firstVector +- secondVector *^ thirdVector</div><div class="line"><span class="keyword">let</span> resSecondVector = (firstVector +- secondVector) *^ thirdVector</div><div class="line"><span class="built_in">print</span>(resFirstVector)</div><div class="line"><span class="built_in">print</span>(resSecondVector)</div><div class="line"><span class="comment">// Prints Vector2D(x: 7.0, y: -51.0)</span></div><div class="line"><span class="comment">// Prints Vector2D(x: 8.0, y: 29.0)</span></div></pre></td></tr></table></figure>
+<p>自定义运算符 <code>+-</code> 属于加法运算符组，自定义运算符 *^ 属于乘法运算符组。因为乘法运算的优先级大于加法运算，所以运算符组 <code>+-</code> 的优先级小于运算符组 <code>\*^</code> ，即 <code>\*^</code> 先于 <code>+-</code> 运算：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">var</span> x = <span class="number">0.0</span>, y = <span class="number">0.0</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 自定义运算符 +- 属于加法运算符组</span></div><div class="line"><span class="keyword">infix</span> <span class="keyword">operator</span> +-: <span class="type">AdditionPrecedence</span></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> +- <span class="params">(<span class="keyword">left</span>: Vector2D, <span class="keyword">right</span>: Vector2D)</span></span> -&gt; <span class="type">Vector2D</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="type">Vector2D</span>(x: <span class="keyword">left</span>.x + <span class="keyword">right</span>.x, y: <span class="keyword">left</span>.y - <span class="keyword">right</span>.y)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">infix</span> <span class="keyword">operator</span></div><div class="line"><span class="comment">// 自定义运算符 *^ 属于乘法运算符组</span></div><div class="line">precedencegroup <span class="type">MyPrecedence</span> &#123;</div><div class="line">    <span class="comment">// 设置优先级组的计算方向为从左侧开始</span></div><div class="line">    <span class="keyword">associativity</span>: <span class="keyword">left</span></div><div class="line">    <span class="comment">// 设置优先级小于加法运算优先级组</span></div><div class="line">    lowerThan: <span class="type">AdditionPrecedence</span></div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> *^ <span class="params">(<span class="keyword">left</span>: Vector2D, <span class="keyword">right</span>: Vector2D)</span></span> -&gt; <span class="type">Vector2D</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="type">Vector2D</span>(x: <span class="keyword">left</span>.x * <span class="keyword">right</span>.x, y: <span class="keyword">left</span>.y * <span class="keyword">left</span>.y + <span class="keyword">right</span>.y + <span class="keyword">right</span>.y)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">let</span> firstVector = <span class="type">Vector2D</span>(x: <span class="number">1.0</span>, y: <span class="number">2.0</span>)</div><div class="line"><span class="keyword">let</span> secondVector = <span class="type">Vector2D</span>(x: <span class="number">3.0</span>, y: <span class="number">7.0</span>)</div><div class="line"><span class="keyword">let</span> plusMinusVector = firstVector +- secondVector</div><div class="line"><span class="keyword">let</span> thirdVector = <span class="type">Vector2D</span>(x: <span class="number">2.0</span>, y: <span class="number">2.0</span>)</div><div class="line"><span class="keyword">let</span> resFirstVector = firstVector +- secondVector *^ thirdVector</div><div class="line"><span class="keyword">let</span> resSecondVector = (firstVector +- secondVector) *^ thirdVector</div><div class="line"><span class="built_in">print</span>(resFirstVector)</div><div class="line"><span class="built_in">print</span>(resSecondVector)</div><div class="line"><span class="comment">// Prints Vector2D(x: 7.0, y: -51.0)</span></div><div class="line"><span class="comment">// Prints Vector2D(x: 8.0, y: 29.0)</span></div></pre></td></tr></table></figure>
+<p>自定义运算符组 <code>MyPrecedence</code>，设置优先级低于加法运算组。即 <code>*^</code> 和 <code>+-</code> 的执行顺序按从左至右的顺序：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">var</span> x = <span class="number">0.0</span>, y = <span class="number">0.0</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">infix</span> <span class="keyword">operator</span> +-: <span class="type">AdditionPrecedence</span></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> +- <span class="params">(<span class="keyword">left</span>: Vector2D, <span class="keyword">right</span>: Vector2D)</span></span> -&gt; <span class="type">Vector2D</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="type">Vector2D</span>(x: <span class="keyword">left</span>.x + <span class="keyword">right</span>.x, y: <span class="keyword">left</span>.y - <span class="keyword">right</span>.y)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//infix operator *^: MultiplicationPrecedence</span></div><div class="line"><span class="keyword">infix</span> <span class="keyword">operator</span> *^: <span class="type">MyPrecedence</span></div><div class="line">precedencegroup <span class="type">MyPrecedence</span> &#123;</div><div class="line">    <span class="keyword">associativity</span>: <span class="keyword">left</span></div><div class="line">    lowerThan: <span class="type">AdditionPrecedence</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Vector2D</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> *^ <span class="params">(<span class="keyword">left</span>: Vector2D, <span class="keyword">right</span>: Vector2D)</span></span> -&gt; <span class="type">Vector2D</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="type">Vector2D</span>(x: <span class="keyword">left</span>.x * <span class="keyword">right</span>.x, y: <span class="keyword">left</span>.y * <span class="keyword">left</span>.y + <span class="keyword">right</span>.y + <span class="keyword">right</span>.y)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">let</span> firstVector = <span class="type">Vector2D</span>(x: <span class="number">1.0</span>, y: <span class="number">2.0</span>)</div><div class="line"><span class="keyword">let</span> secondVector = <span class="type">Vector2D</span>(x: <span class="number">3.0</span>, y: <span class="number">7.0</span>)</div><div class="line"><span class="keyword">let</span> plusMinusVector = firstVector +- secondVector</div><div class="line"><span class="keyword">let</span> thirdVector = <span class="type">Vector2D</span>(x: <span class="number">2.0</span>, y: <span class="number">2.0</span>)</div><div class="line"><span class="keyword">let</span> resFirstVector = firstVector +- secondVector *^ thirdVector</div><div class="line"><span class="keyword">let</span> resSecondVector = (firstVector +- secondVector) *^ thirdVector</div><div class="line"><span class="built_in">print</span>(resFirstVector)</div><div class="line"><span class="built_in">print</span>(resSecondVector)</div><div class="line"><span class="comment">// Prints Vector2D(x: 8.0, y: 29.0)</span></div><div class="line"><span class="comment">// Prints Vector2D(x: 8.0, y: 29.0)</span></div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Swift/" rel="tag"># Swift</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/10/13/Other/Apple官方文档阅读指南/" rel="next" title="Apple官方文档阅读指南">
+                <i class="fa fa-chevron-left"></i> Apple官方文档阅读指南
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/10/19/Other/诗和远方/" rel="prev" title="诗和远方">
+                诗和远方 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/myAvatar.gif"
+              alt="Kevin" />
+          
+            <p class="site-author-name" itemprop="name">Kevin</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KevinYangGit" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yangqioffice@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_YangQI" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.cnblogs.com/mjios" title="M了个J" target="_blank">M了个J</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#赋值和算术运算符"><span class="nav-number">1.</span> <span class="nav-text">赋值和算术运算符</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本概念"><span class="nav-number">1.1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#赋值运算符"><span class="nav-number">1.2.</span> <span class="nav-text">赋值运算符</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#赋值运算符不会返回值"><span class="nav-number">1.2.1.</span> <span class="nav-text">赋值运算符不会返回值</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#算术运算符"><span class="nav-number">1.3.</span> <span class="nav-text">算术运算符</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#标准运算符"><span class="nav-number">1.3.1.</span> <span class="nav-text">标准运算符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#余数运算符"><span class="nav-number">1.3.2.</span> <span class="nav-text">余数运算符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一元"><span class="nav-number">1.3.3.</span> <span class="nav-text">一元</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#溢出运算符"><span class="nav-number">2.</span> <span class="nav-text">溢出运算符</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#值溢出"><span class="nav-number">2.1.</span> <span class="nav-text">值溢出</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#合并空值运算符"><span class="nav-number">3.</span> <span class="nav-text">合并空值运算符</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#应用效果对比"><span class="nav-number">3.1.</span> <span class="nav-text">应用效果对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#区间运算符"><span class="nav-number">4.</span> <span class="nav-text">区间运算符</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#闭区间运算符"><span class="nav-number">4.1.</span> <span class="nav-text">闭区间运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#半开区间运算符"><span class="nav-number">4.2.</span> <span class="nav-text">半开区间运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单侧区间"><span class="nav-number">4.3.</span> <span class="nav-text">单侧区间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串索引区间"><span class="nav-number">4.4.</span> <span class="nav-text">字符串索引区间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#倒序索引"><span class="nav-number">4.5.</span> <span class="nav-text">倒序索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Comparable-区间"><span class="nav-number">4.6.</span> <span class="nav-text">Comparable 区间</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#位运算符"><span class="nav-number">5.</span> <span class="nav-text">位运算符</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#位取反运算符"><span class="nav-number">5.1.</span> <span class="nav-text">位取反运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#位与运算符"><span class="nav-number">5.2.</span> <span class="nav-text">位与运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#位或运算符"><span class="nav-number">5.3.</span> <span class="nav-text">位或运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#位异或运算符"><span class="nav-number">5.4.</span> <span class="nav-text">位异或运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#位左移和右移运算符"><span class="nav-number">5.5.</span> <span class="nav-text">位左移和右移运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无符号整数的移位操作"><span class="nav-number">5.6.</span> <span class="nav-text">无符号整数的移位操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#有符号整数的移位操作"><span class="nav-number">5.7.</span> <span class="nav-text">有符号整数的移位操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#补码表示的优点"><span class="nav-number">5.8.</span> <span class="nav-text">补码表示的优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#位运算符经典算法"><span class="nav-number">5.9.</span> <span class="nav-text">位运算符经典算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#两个数字交换"><span class="nav-number">5.9.1.</span> <span class="nav-text">两个数字交换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#求无符号整数二进制中1的个数"><span class="nav-number">5.9.2.</span> <span class="nav-text">求无符号整数二进制中1的个数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何判断一个整数为2的整数次幂"><span class="nav-number">5.9.3.</span> <span class="nav-text">如何判断一个整数为2的整数次幂</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缺失的数字"><span class="nav-number">5.9.4.</span> <span class="nav-text">缺失的数字</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缺失的数字2"><span class="nav-number">5.9.5.</span> <span class="nav-text">缺失的数字2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缺失的数字3"><span class="nav-number">5.9.6.</span> <span class="nav-text">缺失的数字3</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运算符的优先升级和结核性"><span class="nav-number">6.</span> <span class="nav-text">运算符的优先升级和结核性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#运算符优先级-显示括号"><span class="nav-number">6.1.</span> <span class="nav-text">运算符优先级 - 显示括号</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运算符重载"><span class="nav-number">7.</span> <span class="nav-text">运算符重载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一元运算符重载"><span class="nav-number">7.1.</span> <span class="nav-text">一元运算符重载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组合赋值运算符重载"><span class="nav-number">7.2.</span> <span class="nav-text">组合赋值运算符重载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#等价运算符重载"><span class="nav-number">7.3.</span> <span class="nav-text">等价运算符重载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义运算符"><span class="nav-number">8.</span> <span class="nav-text">自定义运算符</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义中缀运算符的优先级和结合性"><span class="nav-number">8.1.</span> <span class="nav-text">自定义中缀运算符的优先级和结合性</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="/js/src/md5.min.js"></script>
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: '82b6ced795961ee1fcca',
+      clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
+      repo: 'KevinYangGit.github.io',
+      owner: 'KevinYangGit',
+      admin: ['KevinYangGit'],
+      id: md5(location.pathname),
+      distractionFreeMode: 'true'
+    })
+    gitalk.render('gitalk-container')
+  </script>
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
