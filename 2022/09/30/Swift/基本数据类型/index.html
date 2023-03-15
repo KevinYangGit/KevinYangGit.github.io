@@ -115,7 +115,7 @@
 <meta property="og:image" content="http://yoursite.com/2022/09/30/Swift/基本数据类型/BasicDataType37.png">
 <meta property="og:image" content="http://yoursite.com/2022/09/30/Swift/基本数据类型/BasicDataType38.png">
 <meta property="og:image" content="http://yoursite.com/2022/09/30/Swift/基本数据类型/BasicDataType39.png">
-<meta property="og:updated_time" content="2023-01-15T08:52:29.730Z">
+<meta property="og:updated_time" content="2023-02-03T01:28:18.689Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基本数据类型">
 <meta name="twitter:description" content="常量和变量  基本数据类型  Tuple  Optional  字符串">
@@ -453,13 +453,9 @@
 <p>泛型属性 <code>unsafelyUnwrapped</code> 就是符号<code>!</code>：</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/// The wrapped value of this instance, unwrapped without checking whether</span></div><div class="line"><span class="comment">/// the instance is `nil`.</span></div><div class="line"><span class="comment">///</span></div><div class="line"><span class="comment">/// The `unsafelyUnwrapped` property provides the same value as the forced</span></div><div class="line"><span class="comment">/// unwrap operator (postfix `!`). However, in optimized builds (`-O`), no</span></div><div class="line"><span class="comment">/// check is performed to ensure that the current instance actually has a</span></div><div class="line"><span class="comment">/// value. Accessing this property in the case of a `nil` value is a serious</span></div><div class="line"><span class="comment">/// programming error and could lead to undefined behavior or a runtime</span></div><div class="line"><span class="comment">/// error.</span></div><div class="line"><span class="comment">///</span></div><div class="line"><span class="comment">/// In debug builds (`-Onone`), the `unsafelyUnwrapped` property has the same</span></div><div class="line"><span class="comment">/// behavior as using the postfix `!` operator and triggers a runtime error</span></div><div class="line"><span class="comment">/// if the instance is `nil`.</span></div><div class="line"><span class="comment">///</span></div><div class="line"><span class="comment">/// The `unsafelyUnwrapped` property is recommended over calling the</span></div><div class="line"><span class="comment">/// `unsafeBitCast(_:)` function because the property is more restrictive</span></div><div class="line"><span class="comment">/// and because accessing the property still performs checking in debug</span></div><div class="line"><span class="comment">/// builds.</span></div><div class="line"><span class="comment">///</span></div><div class="line"><span class="comment">/// - Warning: This property trades safety for performance.  Use</span></div><div class="line"><span class="comment">///   `unsafelyUnwrapped` only when you are confident that this instance</span></div><div class="line"><span class="comment">///   will never be equal to `nil` and only after you've tried using the</span></div><div class="line"><span class="comment">///   postfix `!` operator.</span></div><div class="line">@inlinable <span class="keyword">public</span> <span class="keyword">var</span> unsafelyUnwrapped: <span class="type">Wrapped</span> &#123; <span class="keyword">get</span> &#125;</div></pre></td></tr></table></figure>
 <p>理论上可以直接调用 <code>unsafelyUnwrapped</code> 获取可选项的值（<code>!</code>）<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType24.png" alt="BasicDataType24"></p>
-<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><h3 id="初始化空串"><a href="#初始化空串" class="headerlink" title="初始化空串"></a>初始化空串</h3><ol>
-<li>字面量</li>
-</ol>
+<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><h3 id="初始化空串"><a href="#初始化空串" class="headerlink" title="初始化空串"></a>初始化空串</h3><p>1、字面量</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> emptyString = <span class="string">""</span></div></pre></td></tr></table></figure>
-<ol>
-<li>初始化器语法</li>
-</ol>
+<p>2、初始化器语法</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> anotherEmptyString = <span class="type">String</span>()</div></pre></td></tr></table></figure>
 <p><code>isEmpty</code> 检查是否为空串</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> emptyString.isEmpty &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"Nothing to see here"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -520,17 +516,11 @@
 <h4 id="字符串是值类型"><a href="#字符串是值类型" class="headerlink" title="字符串是值类型"></a>字符串是值类型</h4><p><code>String</code> 值在传递给方法或者函数的时候会被复制过去，赋值给常量或者变量的时候也是一样。</p>
 <p>Swift 编译器优化了字符串使用的资源，实际上拷贝只会在确实需要的时候才进行。<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType28.png" alt="BasicDataType28"></p>
 <h4 id="操作字符"><a href="#操作字符" class="headerlink" title="操作字符"></a>操作字符</h4><p>for-in 循环遍历 String 中的每一个独立的 Character，String 值可以通过传入 Character 数组来构造。<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType29.png" alt="BasicDataType29"></p>
-<h4 id="字符串拼接"><a href="#字符串拼接" class="headerlink" title="字符串拼接"></a>字符串拼接</h4><ol>
-<li>使用加运算符 <code>+</code> 创建新字符串</li>
-</ol>
+<h4 id="字符串拼接"><a href="#字符串拼接" class="headerlink" title="字符串拼接"></a>字符串拼接</h4><p>1、使用加运算符 <code>+</code> 创建新字符串</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> string = <span class="string">"1"</span> + <span class="string">"2"</span></div><div class="line"><span class="built_in">print</span>(string) <span class="comment">// 12</span></div></pre></td></tr></table></figure>
-<ol>
-<li>使用加赋值符号 <code>+=</code> 在已经存在的 String 值末尾追加一个 String 值</li>
-</ol>
+<p>2、使用加赋值符号 <code>+=</code> 在已经存在的 String 值末尾追加一个 String 值</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> string = <span class="string">"1"</span> + <span class="string">"2"</span></div><div class="line">string += <span class="string">"3"</span></div><div class="line"><span class="built_in">print</span>(string) <span class="comment">// 123</span></div></pre></td></tr></table></figure>
-<ol>
-<li>使用 String 类型的 <code>append()</code> 方法来可以给一个 String 变量的末尾追加 Character 值</li>
-</ol>
+<p>3、使用 String 类型的 <code>append()</code> 方法来可以给一个 String 变量的末尾追加 Character 值</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> string = <span class="string">"1"</span> + <span class="string">"2"</span></div><div class="line">string.append(contentsOf: <span class="string">"3"</span>)</div><div class="line"><span class="built_in">print</span>(string) <span class="comment">// 123</span></div></pre></td></tr></table></figure>
 <h4 id="字符串插值"><a href="#字符串插值" class="headerlink" title="字符串插值"></a>字符串插值</h4><p>字符串插值是一种从混合常量、变量、字面量和表达式的字符串字面量构造新 String 值的方法。</p>
 <p>使用方法：每一个插入到字符串字面量的元素都要被一对圆括号包裹，然后使用反斜杠前缀</p>
@@ -708,7 +698,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-count">44</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
