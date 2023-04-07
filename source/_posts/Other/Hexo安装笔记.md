@@ -9,7 +9,7 @@ tags: Other
 ## 部署命令行
 
 ```
-hexo clean && hexo g && hexo d  
+hexo clean && hexo g && hexo d
 ```
 
 ## 写作

@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Swift," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="数组 Set 字典">
+<meta name="keywords" content="Swift">
+<meta property="og:type" content="article">
+<meta property="og:title" content="集合类">
+<meta property="og:url" content="http://yoursite.com/2023/01/15/Swift/集合类/index.html">
+<meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="数组 Set 字典">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/01.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/02.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/03.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/04.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/05.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/06.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/07.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/09.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/10.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/11.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/12.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/13.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/14.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/15.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/16.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/17.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/18.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/19.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/20.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/21.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/22.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/23.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/24.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/25.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/26.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/27.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/28.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/29.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/30.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/31.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/32.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/33.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/34.png">
+<meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/35.png">
+<meta property="og:updated_time" content="2023-03-15T06:55:59.856Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="集合类">
+<meta name="twitter:description" content="数组 Set 字典">
+<meta name="twitter:image" content="http://yoursite.com/2023/01/15/Swift/集合类/01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2023/01/15/Swift/集合类/"/>
+
+
+
+
+
+  <title>集合类 | Kevin's  blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a073c6e38282486853e19b272e9e7c34";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's  blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/01/15/Swift/集合类/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">集合类</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-01-15T17:11:07+08:00">
+                2023-01-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li><a href="#数组">数组</a></li>
+<li><a href="#set">Set</a></li>
+<li><a href="#字典">字典</a></li>
+</ul>
+<a id="more"></a>
+<h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><h3 id="创建数组"><a href="#创建数组" class="headerlink" title="创建数组"></a>创建数组</h3><h4 id="数组字面量"><a href="#数组字面量" class="headerlink" title="数组字面量"></a>数组字面量</h4><p>1、字面量创建：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> array = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</div></pre></td></tr></table></figure>
+<blockquote>
+<p>数组字面量写法：一系列的值，用逗号分隔，用方括号括起来。</p>
+</blockquote>
+<p>2、字面量创建空数组：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array:[<span class="type">Int</span>] = []</div><div class="line"><span class="keyword">var</span> array:[<span class="type">String</span>] = []</div></pre></td></tr></table></figure>
+<blockquote>
+<p>⚠️注意：<strong>创建空数组必须携带类型信息</strong>，否则编译不通过。<br><img src="/2023/01/15/Swift/集合类/01.png" alt="01"></p>
+</blockquote>
+<p>3、如果内容已经提供了类型信息，则可以通过空数组字面量来创建一个空数组：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 因为内容提供了类型信息 [Int]</span></div><div class="line"><span class="keyword">var</span> array = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</div><div class="line"><span class="built_in">print</span>(array)</div><div class="line"><span class="comment">// 所以可以通过空数组字面量来创建一个空数组</span></div><div class="line">array = []</div><div class="line"><span class="built_in">print</span>(array)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>提供类型信息的情况包括：</p>
+<ol>
+<li>作为函数的实际参数；</li>
+<li>已经分类了的变量或常量；</li>
+</ol>
+</blockquote>
+<h4 id="初始化器"><a href="#初始化器" class="headerlink" title="初始化器"></a>初始化器</h4><p>使用初始化器有两种方式：</p>
+<p>1、<code>[类型]()</code></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="type">String</span>]()</div></pre></td></tr></table></figure>
+<p>2、<code>Array&lt;类型&gt;()</code></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = <span class="type">Array</span>&lt;<span class="type">String</span>&gt;()</div></pre></td></tr></table></figure>
+<h4 id="初始化器参数"><a href="#初始化器参数" class="headerlink" title="初始化器参数"></a>初始化器参数</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> fiveZs = <span class="type">Array</span>(repeating: <span class="string">"Z"</span>, <span class="built_in">count</span>: <span class="number">5</span>)</div><div class="line"><span class="built_in">print</span>(fiveZs)</div><div class="line"><span class="comment">// Prints ["Z", "Z", "Z", "Z", "Z"]</span></div></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> fiveYs = <span class="type">Array</span>(arrayLiteral: <span class="string">"Y"</span>, <span class="string">"Y"</span>, <span class="string">"Y"</span>, <span class="string">"Y"</span>, <span class="string">"Y"</span>)</div><div class="line"><span class="built_in">print</span>(fiveYs)</div><div class="line"><span class="comment">// Prints ["Y", "Y", "Y", "Y", "Y"]</span></div></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> numbers = [<span class="type">Int</span>](<span class="number">0</span>...<span class="number">7</span>)</div><div class="line"><span class="built_in">print</span>(numbers)</div><div class="line"><span class="comment">// Prints [0, 1, 2, 3, 4, 5, 6, 7]</span></div></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> persons = [<span class="string">"zhangsan"</span>:<span class="number">27</span>, <span class="string">"lisi"</span>:<span class="number">28</span>, <span class="string">"wangwu"</span>:<span class="number">29</span>]</div><div class="line"><span class="keyword">let</span> names = [<span class="type">String</span>](persons.keys)</div><div class="line"><span class="built_in">print</span>(names)</div><div class="line"><span class="comment">// Prints ["zhangsan", "wangwu", "lisi"]</span></div></pre></td></tr></table></figure>
+<h3 id="数组遍历与索引"><a href="#数组遍历与索引" class="headerlink" title="数组遍历与索引"></a>数组遍历与索引</h3><h4 id="For-In"><a href="#For-In" class="headerlink" title="For-In"></a>For-In</h4><p>1、遍历</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> numbers = [<span class="type">Int</span>](<span class="number">0</span>...<span class="number">7</span>)</div><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> numbers &#123;</div><div class="line">    <span class="built_in">print</span>(num)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="number">0</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">7</span></div></pre></td></tr></table></figure>
+<p>2、使用 break 跳出循环。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> numbers = [<span class="type">Int</span>](<span class="number">0</span>...<span class="number">7</span>)</div><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> numbers &#123;</div><div class="line">    <span class="keyword">if</span> (num == <span class="number">3</span>) &#123;</div><div class="line">        <span class="keyword">break</span></div><div class="line">    &#125;</div><div class="line">    <span class="built_in">print</span>(num)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果中只有<code>0、1、2</code>：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="number">0</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">2</span></div></pre></td></tr></table></figure>
+<p>3、使用 continue 跳过循环。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> numbers = [<span class="type">Int</span>](<span class="number">0</span>...<span class="number">7</span>)</div><div class="line"><span class="keyword">for</span> num <span class="keyword">in</span> numbers &#123;</div><div class="line">    <span class="keyword">if</span> (num == <span class="number">3</span>) &#123;</div><div class="line">        <span class="keyword">continue</span></div><div class="line">    &#125;</div><div class="line">    <span class="built_in">print</span>(num)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果中没有3：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="number">0</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">7</span></div></pre></td></tr></table></figure>
+<h4 id="forEach"><a href="#forEach" class="headerlink" title="forEach"></a>forEach</h4><p>1、遍历。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> numbers = [<span class="type">Int</span>](<span class="number">0</span>...<span class="number">7</span>)</div><div class="line">numbers.forEach &#123; (num) <span class="keyword">in</span></div><div class="line">    <span class="built_in">print</span>(num)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="number">0</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">7</span></div></pre></td></tr></table></figure>
+<p>2、无法使用 break 或 continue 跳出或者跳过循环。</p>
+<p><img src="/2023/01/15/Swift/集合类/02.png" alt="02"></p>
+<p>3、使用 return 只能退出当前一次循环的执行体，效果等同于 For-in 中使用 continue。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> numbers = [<span class="type">Int</span>](<span class="number">0</span>...<span class="number">7</span>)</div><div class="line">numbers.forEach &#123; (num) <span class="keyword">in</span></div><div class="line">    <span class="keyword">if</span> num == <span class="number">3</span> &#123;</div><div class="line">        <span class="keyword">return</span></div><div class="line">    &#125;</div><div class="line">    <span class="built_in">print</span>(num)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果中没有3：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="number">0</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">7</span></div></pre></td></tr></table></figure>
+<h4 id="enumerated"><a href="#enumerated" class="headerlink" title="enumerated"></a>enumerated</h4><p>可以实现同时得到索引和值。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> numbers = [<span class="type">Int</span>](<span class="number">2</span>...<span class="number">7</span>)</div><div class="line"><span class="keyword">for</span> (index, num) <span class="keyword">in</span> numbers.enumerated() &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"the index is: <span class="subst">\(index)</span>"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">the index is: <span class="number">0</span></div><div class="line">the index is: <span class="number">1</span></div><div class="line">the index is: <span class="number">2</span></div><div class="line">the index is: <span class="number">3</span></div><div class="line">the index is: <span class="number">4</span></div><div class="line">the index is: <span class="number">5</span></div></pre></td></tr></table></figure>
+<p>想要同时得到索引和值，必须使用 <code>enumerated()</code>，否则会报错。</p>
+<p><img src="/2023/01/15/Swift/集合类/03.png" alt="03"></p>
+<h4 id="Iterator"><a href="#Iterator" class="headerlink" title="Iterator"></a>Iterator</h4><p><code>Iterator</code>：迭代器。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> numbers = [<span class="type">Int</span>](<span class="number">2</span>...<span class="number">7</span>)</div><div class="line"><span class="keyword">var</span> numIterator = numbers.makeIterator()</div><div class="line"><span class="keyword">while</span> <span class="keyword">let</span> num = numIterator.next() &#123;</div><div class="line">    <span class="built_in">print</span>(num)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="number">2</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">7</span></div></pre></td></tr></table></figure>
+<h4 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h4><p><code>startIndex</code>：返回第一个元素的位置，对于数组来说，永远都是0。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> numbers = [<span class="number">1</span>]</div><div class="line"><span class="built_in">print</span>(numbers.startIndex)</div><div class="line"><span class="comment">// Prints 0</span></div></pre></td></tr></table></figure>
+<p><code>endIndex</code>：返回最后一个元素 <strong>索引值+1</strong> 的位置，对于数组来说，<strong>等同于<code>count</code></strong>。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> numbers = [<span class="number">1</span>]</div><div class="line"><span class="built_in">print</span>(numbers.endIndex)</div><div class="line"><span class="built_in">print</span>(numbers.<span class="built_in">count</span>)</div><div class="line"><span class="comment">// 1</span></div><div class="line"><span class="comment">// 1</span></div></pre></td></tr></table></figure>
+<p>对于空数组，<code>startIndex</code> 等于 <code>endIndex</code>。</p>
+<ul>
+<li><code>indices</code>：获取数组的索引区间。</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> numbers = [<span class="type">Int</span>](<span class="number">2</span>...<span class="number">7</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> numbers.<span class="built_in">indices</span> &#123;</div><div class="line">    <span class="built_in">print</span>(numbers[i])</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="number">2</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">7</span></div></pre></td></tr></table></figure>
+<h3 id="数组的查找操作"><a href="#数组的查找操作" class="headerlink" title="数组的查找操作"></a>数组的查找操作</h3><h4 id="判断是否包含指定元素"><a href="#判断是否包含指定元素" class="headerlink" title="判断是否包含指定元素"></a>判断是否包含指定元素</h4><p><code>contains(_:)</code>：判断数组是否包含给定元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> numbers = [<span class="type">Int</span>](<span class="number">0</span>...<span class="number">7</span>)</div><div class="line"><span class="keyword">if</span> numbers.<span class="built_in">contains</span>(<span class="number">3</span>) &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"numbers contains 3"</span>)</div><div class="line">&#125;</div><div class="line"><span class="comment">// Prints "numbers contains 3"</span></div></pre></td></tr></table></figure>
+<p><code>contains(where:)</code>：判断数组是否包含符合给定条件的元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> numbers.<span class="built_in">contains</span>(<span class="keyword">where</span>: &#123; $<span class="number">0</span> &gt; <span class="number">7</span> &#125;) &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"num &gt; 7"</span>)</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"num &lt; 7"</span>)</div><div class="line">&#125;</div><div class="line"><span class="comment">// Prints "num &lt; 7"</span></div></pre></td></tr></table></figure>
+<h4 id="判断所有元素符合某个条件"><a href="#判断所有元素符合某个条件" class="headerlink" title="判断所有元素符合某个条件"></a>判断所有元素符合某个条件</h4><p><code>allSatisfy(_:)</code>：判断数组的每一个元素都符合给定的条件。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">45</span>, <span class="number">30</span>, <span class="number">98</span>, <span class="number">101</span>, <span class="number">30</span>, <span class="number">4</span>]</div><div class="line"><span class="built_in">print</span>(array.allSatisfy(&#123; $<span class="number">0</span> &gt; <span class="number">10</span> &#125;))</div><div class="line"><span class="built_in">print</span>(array.allSatisfy(&#123; $<span class="number">0</span> &gt;= <span class="number">4</span> &#125;))</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">false</div><div class="line">true</div></pre></td></tr></table></figure>
+<h4 id="查找元素"><a href="#查找元素" class="headerlink" title="查找元素"></a>查找元素</h4><p><code>first</code>：返回数组第一个元素，如果数组为空，返回 nil。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">45</span>, <span class="number">30</span>, <span class="number">98</span>, <span class="number">101</span>, <span class="number">30</span>, <span class="number">4</span>]</div><div class="line"><span class="built_in">print</span>(array.first)</div><div class="line"><span class="comment">// Prints Optional(10)</span></div></pre></td></tr></table></figure>
+<p><code>last</code>：返回数组最后一个元素，如果数组为空，返回 nil。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">45</span>, <span class="number">30</span>, <span class="number">98</span>, <span class="number">101</span>, <span class="number">30</span>, <span class="number">4</span>]</div><div class="line"><span class="built_in">print</span>(array.last)</div><div class="line"><span class="comment">// Prints Optional(4)</span></div></pre></td></tr></table></figure>
+<p><code>first(where:)</code>：返回数组第一个符合给定条件的元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">45</span>, <span class="number">30</span>, <span class="number">98</span>, <span class="number">101</span>, <span class="number">30</span>, <span class="number">4</span>]</div><div class="line"><span class="built_in">print</span>(array.first(<span class="keyword">where</span>: &#123; $<span class="number">0</span> &gt; <span class="number">25</span> &#125;))</div><div class="line"><span class="comment">// Prints Optional(45)</span></div></pre></td></tr></table></figure>
+<p><code>last(where)</code>：返回数组最后一个符合给定条件的元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">45</span>, <span class="number">30</span>, <span class="number">98</span>, <span class="number">101</span>, <span class="number">30</span>, <span class="number">4</span>]</div><div class="line"><span class="built_in">print</span>(array.last(<span class="keyword">where</span>: &#123; $<span class="number">0</span> &gt; <span class="number">25</span> &#125;))</div><div class="line"><span class="comment">// Prints Optional(30)</span></div></pre></td></tr></table></figure>
+<h4 id="查找索引"><a href="#查找索引" class="headerlink" title="查找索引"></a>查找索引</h4><p><code>firstIndex(of:)</code>：返回给定元素在数组中出现的第一个位置。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">45</span>, <span class="number">30</span>, <span class="number">98</span>, <span class="number">101</span>, <span class="number">30</span>, <span class="number">4</span>]</div><div class="line"><span class="built_in">print</span>(array.firstIndex(of: <span class="number">30</span>))</div><div class="line"><span class="comment">// Prints Optional(3)</span></div></pre></td></tr></table></figure>
+<p><code>lastIndex(of:)</code>：返回给定元素在数组中出现的最后一个位置。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">45</span>, <span class="number">30</span>, <span class="number">98</span>, <span class="number">101</span>, <span class="number">30</span>, <span class="number">4</span>]</div><div class="line"><span class="built_in">print</span>(array.lastIndex(of: <span class="number">20</span>))</div><div class="line"><span class="comment">// Prints Optional(1)</span></div></pre></td></tr></table></figure>
+<p><code>firstIndex(where:)</code>：返回符合条件的第一个元素的位置。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">45</span>, <span class="number">30</span>, <span class="number">98</span>, <span class="number">101</span>, <span class="number">30</span>, <span class="number">4</span>]</div><div class="line"><span class="built_in">print</span>(array.firstIndex(<span class="keyword">where</span>: &#123; $<span class="number">0</span> &gt; <span class="number">25</span> &#125;))</div><div class="line"><span class="comment">// Prints Optional(2)</span></div></pre></td></tr></table></figure>
+<p><code>lastIndex(where:)</code>：返回符合条件的最后一个元素的位置。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">45</span>, <span class="number">30</span>, <span class="number">98</span>, <span class="number">101</span>, <span class="number">30</span>, <span class="number">4</span>]</div><div class="line"><span class="built_in">print</span>(array.lastIndex(<span class="keyword">where</span>: &#123; $<span class="number">0</span> &gt; <span class="number">25</span> &#125;))</div><div class="line"><span class="comment">// Prints Optional(6)</span></div></pre></td></tr></table></figure>
+<h4 id="查找最大最小元素"><a href="#查找最大最小元素" class="headerlink" title="查找最大最小元素"></a>查找最大最小元素</h4><p><code>min()</code>：返回数组中最小的元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">45</span>, <span class="number">30</span>, <span class="number">98</span>, <span class="number">101</span>, <span class="number">30</span>, <span class="number">4</span>]</div><div class="line"><span class="built_in">print</span>(array.<span class="built_in">min</span>())</div><div class="line"><span class="comment">// Prints Optional(4)</span></div></pre></td></tr></table></figure>
+<p><code>max()</code>：返回数组中最大的元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">45</span>, <span class="number">30</span>, <span class="number">98</span>, <span class="number">101</span>, <span class="number">30</span>, <span class="number">4</span>]</div><div class="line"><span class="built_in">print</span>(array.<span class="built_in">max</span>())</div><div class="line"><span class="comment">// Prints Optional(101)</span></div></pre></td></tr></table></figure>
+<p><code>min(by:)</code>：利用给定的方式比较元素并返回数组中最小的元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [(<span class="number">45</span>, <span class="string">"error1"</span>), (<span class="number">23</span>, <span class="string">"error2"</span>), (<span class="number">30</span>, <span class="string">"error3"</span>)]</div><div class="line"><span class="comment">// 系统方法</span></div><div class="line"><span class="built_in">print</span>(array.<span class="built_in">min</span>(by: &#123; a, b <span class="keyword">in</span></div><div class="line">    a.<span class="number">0</span> &lt; b.<span class="number">0</span></div><div class="line">&#125;))</div><div class="line"><span class="comment">// Prints Optional((23, "error2"))</span></div><div class="line"></div><div class="line"><span class="comment">// 尾随闭包方式</span></div><div class="line"><span class="built_in">print</span>(array.<span class="built_in">min</span> &#123; a, b <span class="keyword">in</span> a.<span class="number">0</span> &lt; b.<span class="number">0</span> &#125;)</div><div class="line"><span class="comment">// Prints Optional((23, "error2"))</span></div></pre></td></tr></table></figure>
+<p><code>max(by:)</code>：利用给定的方式比较元素并返回数组中最大的元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [(<span class="number">45</span>, <span class="string">"error1"</span>), (<span class="number">23</span>, <span class="string">"error2"</span>), (<span class="number">30</span>, <span class="string">"error3"</span>)]</div><div class="line"><span class="built_in">print</span>(array.<span class="built_in">max</span> &#123; a, b <span class="keyword">in</span> a.<span class="number">0</span> &lt; b.<span class="number">0</span> &#125;)</div><div class="line"><span class="comment">// Prints Optional((45, "error1"))</span></div></pre></td></tr></table></figure>
+<h3 id="数组添加和删除"><a href="#数组添加和删除" class="headerlink" title="数组添加和删除"></a>数组添加和删除</h3><h4 id="在末尾添加"><a href="#在末尾添加" class="headerlink" title="在末尾添加"></a>在末尾添加</h4><p><code>append(_:)</code>：在末尾添加一个元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> numbers = [<span class="type">Int</span>](<span class="number">2</span>...<span class="number">7</span>)</div><div class="line">numbers.append(<span class="number">100</span>)</div><div class="line"><span class="built_in">print</span>(numbers)</div><div class="line"><span class="comment">// Prints [2, 3, 4, 5, 6, 7, 100]</span></div></pre></td></tr></table></figure>
+<p><code>append(contentsOf:)</code>：在末尾添加多个元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> numbers = [<span class="type">Int</span>](<span class="number">2</span>...<span class="number">7</span>)</div><div class="line">numbers.append(contentsOf: <span class="number">100</span>...<span class="number">105</span>)</div><div class="line"><span class="built_in">print</span>(numbers)</div><div class="line"><span class="comment">// Prints [2, 3, 4, 5, 6, 7, 100, 101, 102, 103, 104, 105]</span></div></pre></td></tr></table></figure>
+<h4 id="在任意位置插入"><a href="#在任意位置插入" class="headerlink" title="在任意位置插入"></a>在任意位置插入</h4><p><code>insert(_:at:)</code>：在指定位置插入一个元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> numbers = [<span class="type">Int</span>](<span class="number">2</span>...<span class="number">7</span>)</div><div class="line">numbers.insert(-<span class="number">1</span>, at: <span class="number">0</span>)</div><div class="line"><span class="built_in">print</span>(numbers)</div><div class="line"><span class="comment">// Prints [-1, 2, 3, 4, 5, 6, 7]</span></div></pre></td></tr></table></figure>
+<p><code>insert(contentOf:at:)</code>：在指定位置插入多个元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> numbers = [<span class="type">Int</span>](<span class="number">2</span>...<span class="number">7</span>)</div><div class="line">numbers.insert(contentsOf: -<span class="number">2</span>...<span class="number">0</span>, at: <span class="number">0</span>)</div><div class="line"><span class="built_in">print</span>(numbers)</div><div class="line"><span class="comment">// Prints [-2, -1, 0, 2, 3, 4, 5, 6, 7]</span></div></pre></td></tr></table></figure>
+<h4 id="字符串也是集合"><a href="#字符串也是集合" class="headerlink" title="字符串也是集合"></a>字符串也是集合</h4><p>字符串也是集合（Collection），Element（元素）是字符（Character）类型。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> chars: [<span class="type">Character</span>] = [<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>]</div><div class="line">chars.insert(contentsOf: <span class="string">"hello"</span>, at: <span class="number">0</span>)</div><div class="line"><span class="built_in">print</span>(chars)</div><div class="line"><span class="comment">// Prints ["h", "e", "l", "l", "o", "a", "b", "c"]</span></div></pre></td></tr></table></figure>
+<h4 id="移除单个元素"><a href="#移除单个元素" class="headerlink" title="移除单个元素"></a>移除单个元素</h4><p><code>remove(at:)</code>：移除并返回指定位置的一个元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> chars: [<span class="type">Character</span>] = [<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="string">"d"</span>]</div><div class="line"><span class="keyword">let</span> removedChar = chars.remove(at: <span class="number">1</span>)</div><div class="line"><span class="built_in">print</span>(removedChar)</div><div class="line"><span class="built_in">print</span>(chars)</div><div class="line"><span class="comment">// b</span></div><div class="line"><span class="comment">// ["a", "c", "d"]</span></div></pre></td></tr></table></figure>
+<p><code>removeFirst()</code>：移除并返回数组的第一个元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> chars: [<span class="type">Character</span>] = [<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="string">"d"</span>]</div><div class="line"><span class="keyword">let</span> removedChar = chars.removeFirst()</div><div class="line"><span class="built_in">print</span>(removedChar)</div><div class="line"><span class="built_in">print</span>(chars)</div><div class="line"><span class="comment">// a</span></div><div class="line"><span class="comment">// ["b", "c", "d"]</span></div></pre></td></tr></table></figure>
+<p><code>removeLast()</code>：移除并返回数组的最后一个元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> chars: [<span class="type">Character</span>] = [<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="string">"d"</span>]</div><div class="line"><span class="keyword">let</span> removedChar = chars.removeLast()</div><div class="line"><span class="built_in">print</span>(removedChar)</div><div class="line"><span class="built_in">print</span>(chars)</div><div class="line"><span class="comment">// d</span></div><div class="line"><span class="comment">// ["a", "b", "c"]</span></div></pre></td></tr></table></figure>
+<p><code>popLast</code>：移除并返回数组的最后一个元素（<code>Optional</code>），如果数组为空返回<code>nil</code>。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> chars: [<span class="type">Character</span>] = [<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="string">"d"</span>]</div><div class="line"><span class="keyword">let</span> removedChar = chars.popLast()</div><div class="line"><span class="built_in">print</span>(removedChar)</div><div class="line"><span class="built_in">print</span>(chars)</div><div class="line"><span class="comment">// Optional("d")</span></div><div class="line"><span class="comment">// ["a", "b", "c"]</span></div></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> chars: [<span class="type">Character</span>] = []</div><div class="line"><span class="keyword">let</span> removedChar = chars.popLast()</div><div class="line"><span class="built_in">print</span>(removedChar)</div><div class="line"><span class="comment">// Prints nil</span></div></pre></td></tr></table></figure>
+<h4 id="移除多个元素"><a href="#移除多个元素" class="headerlink" title="移除多个元素"></a>移除多个元素</h4><p><code>removeFirst(:)</code>：移除数组前面多个元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> chars: [<span class="type">Character</span>] = [<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="string">"d"</span>]</div><div class="line">chars.removeFirst(<span class="number">2</span>)</div><div class="line"><span class="built_in">print</span>(chars)</div><div class="line"><span class="comment">// Prints ["c", "d"]</span></div></pre></td></tr></table></figure>
+<p><code>removeLast(:)</code>：移除数组后面多个元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">chars.removeLast(<span class="number">2</span>)</div><div class="line"><span class="built_in">print</span>(chars)</div><div class="line"><span class="comment">// Prints ["a", "b"]</span></div></pre></td></tr></table></figure>
+<p><code>removeSubrange(_:)</code>：移除数组中给定范围的元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">chars.removeSubrange(<span class="number">1</span>...<span class="number">2</span>)</div><div class="line"><span class="built_in">print</span>(chars)</div><div class="line"><span class="comment">// Prints ["a", "d"]</span></div></pre></td></tr></table></figure>
+<p><code>removeAll()</code>：移除数组所有元素，数组容量置为0。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">chars.removeAll()</div><div class="line"><span class="built_in">print</span>(chars)</div><div class="line"><span class="built_in">print</span>(chars.capacity)</div><div class="line"><span class="comment">// []</span></div><div class="line"><span class="comment">// 0</span></div></pre></td></tr></table></figure>
+<p><code>removeAll(keepingCapacity:)</code>：移除数组所有元素，保留数组容量。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">chars.removeAll(keepingCapacity: <span class="literal">true</span>)</div><div class="line"><span class="built_in">print</span>(chars)</div><div class="line"><span class="built_in">print</span>(chars.capacity)</div><div class="line"><span class="comment">// []</span></div><div class="line"><span class="comment">// 4</span></div></pre></td></tr></table></figure>
+<h3 id="ArraySlice"><a href="#ArraySlice" class="headerlink" title="ArraySlice"></a>ArraySlice</h3><p>ArraySlice 是数组或者其它 ArraySlice 的一段连续切片，<strong>和原数组共享内存</strong>。当要改变 ArraySlice 的时候，ArraySlice 会 copy 出来，形成单独内存。</p>
+<p>ArraySlice 拥有和 Array 基本完全类似的方法。</p>
+<h4 id="通过-Drop-得到-ArraySlice"><a href="#通过-Drop-得到-ArraySlice" class="headerlink" title="通过 Drop 得到 ArraySlice"></a>通过 Drop 得到 ArraySlice</h4><p><code>dropFirst(:)</code>：“移除”原数组前面指定个数的元素<strong>得到一个 ArraySlice</strong>。</p>
+<p>移除前面指定个数的元素，每次操作得到一个新的 ArraySlice：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> array = [<span class="number">5</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">46</span>, <span class="number">99</span>]  <span class="comment">// [5, 2, 10, 1, 0, 100, 46, 99]</span></div><div class="line">array.<span class="built_in">dropFirst</span>()                          <span class="comment">// [2, 10, 1, 0, 100, 46, 99]</span></div><div class="line">array.<span class="built_in">dropFirst</span>(<span class="number">3</span>)                         <span class="comment">// [1, 0, 100, 46, 99]</span></div></pre></td></tr></table></figure>
+<p>移除后面指定个数的元素，每次操作得到一个新的 ArraySlice：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> array = [<span class="number">5</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">46</span>, <span class="number">99</span>]  <span class="comment">// [5, 2, 10, 1, 0, 100, 46, 99]</span></div><div class="line">array.<span class="built_in">dropLast</span>()                           <span class="comment">// [5, 2, 10, 1, 0, 100, 46]</span></div><div class="line">array.<span class="built_in">dropLast</span>(<span class="number">3</span>)                          <span class="comment">// [5, 2, 10, 1, 0]</span></div></pre></td></tr></table></figure>
+<h4 id="通过-prefix-得到-ArraySlice"><a href="#通过-prefix-得到-ArraySlice" class="headerlink" title="通过 prefix 得到 ArraySlice"></a>通过 prefix 得到 ArraySlice</h4><p><code>prefix()</code>：获取数组前面指定个数的袁术组成 ArraySlice。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> array = [<span class="number">5</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">46</span>, <span class="number">99</span>]  <span class="comment">// [5, 2, 10, 1, 0, 100, 46, 99]</span></div><div class="line">array.<span class="keyword">prefix</span>(<span class="number">4</span>)                            <span class="comment">// [5, 2, 10, 1]</span></div></pre></td></tr></table></figure>
+<p><code>prefix(upTo:)</code>：获取数组到指定位置（不包含指定位置）前面的元素组成 ArraySlice。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> array = [<span class="number">5</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">46</span>, <span class="number">99</span>]  <span class="comment">// [5, 2, 10, 1, 0, 100, 46, 99]</span></div><div class="line">array.<span class="keyword">prefix</span>(upTo: <span class="number">4</span>)                      <span class="comment">// [5, 2, 10, 1]</span></div></pre></td></tr></table></figure>
+<p><code>prefix(through:)</code>：获取数组到指定位置（包含指定位置）前面的元素组成 ArraySlice。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> array = [<span class="number">5</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">46</span>, <span class="number">99</span>]  <span class="comment">// [5, 2, 10, 1, 0, 100, 46, 99]</span></div><div class="line">array.<span class="keyword">prefix</span>(through: <span class="number">4</span>)                   <span class="comment">// [5, 2, 10, 1, 0]</span></div></pre></td></tr></table></figure>
+<p><code>prefix(while:)</code>：获取数组前面符合条件的元素（到第一个不符合条件的元素截止）组成的 ArraySlice。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> array = [<span class="number">5</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">46</span>, <span class="number">99</span>]  <span class="comment">// [5, 2, 10, 1, 0, 100, 46, 99]</span></div><div class="line">array.<span class="keyword">prefix</span>(<span class="keyword">while</span>: &#123; $<span class="number">0</span> &lt; <span class="number">10</span> &#125;)           <span class="comment">// [5, 2]</span></div><div class="line">array.<span class="keyword">prefix</span> &#123; $<span class="number">0</span> &lt; <span class="number">10</span> &#125;                   <span class="comment">// [5, 2]</span></div></pre></td></tr></table></figure>
+<h4 id="通过-suffix-得到-ArraySlice"><a href="#通过-suffix-得到-ArraySlice" class="headerlink" title="通过 suffix 得到 ArraySlice"></a>通过 suffix 得到 ArraySlice</h4><p><code>suffix()</code>：获取数组后面指定个数的元素组成的 ArraySlice。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> array = [<span class="number">5</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">46</span>, <span class="number">99</span>]</div><div class="line">array.suffix(<span class="number">3</span>)  <span class="comment">// [100, 46, 99]</span></div></pre></td></tr></table></figure>
+<p><code>suffix(from:)</code>：获取数组从指定位置到结尾（包含指定位置）的元素组成的 ArraySlice。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> array = [<span class="number">5</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">46</span>, <span class="number">99</span>]</div><div class="line">array.suffix(from: <span class="number">5</span>)  <span class="comment">// [100, 46, 99]</span></div></pre></td></tr></table></figure>
+<h4 id="通过-Range-得到-ArraySlice"><a href="#通过-Range-得到-ArraySlice" class="headerlink" title="通过 Range 得到 ArraySlice"></a>通过 Range 得到 ArraySlice</h4><p>可以通过对数组下标指定 Range 获取 ArraySlice，可以使用闭区间、半开半闭区间、单侧区间截取数组获得 ArraySlice，也可以用<code>...</code>来获取整个数组组成的 ArraySlice。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> array = [<span class="number">5</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">46</span>, <span class="number">99</span>]  <span class="comment">// [5, 2, 10, 1, 0, 100, 46, 99]</span></div><div class="line">array[...<span class="number">2</span>]                                <span class="comment">// [5, 2, 10]</span></div><div class="line">array[..&lt;<span class="number">2</span>]                                <span class="comment">// [5, 2]</span></div><div class="line">array[<span class="number">3</span>...<span class="number">5</span>]                               <span class="comment">// [1, 0, 100]</span></div><div class="line">array[<span class="number">3</span>..&lt;<span class="number">5</span>]                               <span class="comment">// [1, 0]</span></div><div class="line">array[<span class="number">6</span>...]                                <span class="comment">// [46, 99]</span></div><div class="line">array[...]                                 <span class="comment">// [5, 2, 10, 1, 0, 100, 46, 99]</span></div></pre></td></tr></table></figure>
+<h4 id="ArraySlice-转为-Array"><a href="#ArraySlice-转为-Array" class="headerlink" title="ArraySlice 转为 Array"></a>ArraySlice 转为 Array</h4><p>ArraySlice 无法直接复制给一个 Array 的常量或变量，需要使用 <code>Array(slice)</code> 方法转成 Array 类型。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="number">5</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">46</span>, <span class="number">99</span>]  <span class="comment">// [5, 2, 10, 1, 0, 100, 46, 99]</span></div><div class="line"><span class="keyword">let</span> slice = array[<span class="number">3</span>...<span class="number">5</span>]                   <span class="comment">// [1, 0, 100]</span></div><div class="line">array = <span class="type">Array</span>(slice)                       <span class="comment">// [1, 0, 100]</span></div></pre></td></tr></table></figure>
+<p><img src="/2023/01/15/Swift/集合类/04.png" alt="04"></p>
+<h4 id="ArraySlice-和原-Array-相互独立"><a href="#ArraySlice-和原-Array-相互独立" class="headerlink" title="ArraySlice 和原 Array 相互独立"></a>ArraySlice 和原 Array 相互独立</h4><p><code>ArraySlice</code> 和原 <code>Array</code> 是相互独立的，它们添加删除元素不会影响对方。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="number">10</span>, <span class="number">46</span>, <span class="number">99</span>]      <span class="comment">// [10, 46, 99]</span></div><div class="line"><span class="keyword">var</span> slice = array.<span class="built_in">dropLast</span>()  <span class="comment">// [10, 46]</span></div><div class="line"></div><div class="line">array.append(<span class="number">333</span>)             <span class="comment">// [10, 46, 99, 333]</span></div><div class="line">slice.append(<span class="number">555</span>)             <span class="comment">// [10, 46, 555]</span></div></pre></td></tr></table></figure>
+<h3 id="重排操作"><a href="#重排操作" class="headerlink" title="重排操作"></a>重排操作</h3><h4 id="数组元素的随机化"><a href="#数组元素的随机化" class="headerlink" title="数组元素的随机化"></a>数组元素的随机化</h4><p><code>shuffle()</code>：在原数组上将数组元素打乱，只能作用在数组<strong>变量</strong>上。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="type">Int</span>](<span class="number">1</span>...<span class="number">8</span>)  <span class="comment">// [1, 2, 3, 4, 5, 6, 7, 8]</span></div><div class="line">array.shuffle()           <span class="comment">// [8, 2, 3, 5, 6, 1, 7, 4]</span></div></pre></td></tr></table></figure>
+<p><code>shuffled()</code>：返回原数组的随机化<strong>数组</strong>，可以作用在数组<strong>变量和常量</strong>上。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> array = [<span class="type">Int</span>](<span class="number">1</span>...<span class="number">8</span>)       <span class="comment">// [1, 2, 3, 4, 5, 6, 7, 8]</span></div><div class="line"><span class="keyword">var</span> array2 = array.shuffled()  <span class="comment">// [4, 8, 1, 7, 3, 2, 6, 5]</span></div></pre></td></tr></table></figure>
+<h4 id="数组的逆序"><a href="#数组的逆序" class="headerlink" title="数组的逆序"></a>数组的逆序</h4><p><code>reverse()</code>：在原数组上将数组逆序，只能作用在数组<strong>变量</strong>上。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="type">Int</span>](<span class="number">1</span>...<span class="number">8</span>)  <span class="comment">// [1, 2, 3, 4, 5, 6, 7, 8]</span></div><div class="line">array.<span class="built_in">reverse</span>()           <span class="comment">// [8, 7, 6, 5, 4, 3, 2, 1]</span></div></pre></td></tr></table></figure>
+<p><code>reversed()</code>：返回原数组的逆序“<strong>集合表示</strong>”，可以作用在数组变量和常量上，该方法<strong>不会分配新内存空间</strong>。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> array1 = [<span class="type">Int</span>](<span class="number">1</span>...<span class="number">8</span>)       <span class="comment">// [1, 2, 3, 4, 5, 6, 7, 8]</span></div><div class="line"><span class="keyword">var</span> array2 = array1.reversed()  <span class="comment">// ReversedCollection&lt;Array&lt;Int&gt;&gt;</span></div><div class="line"><span class="built_in">print</span>(array2)                   <span class="comment">// ReversedCollection&lt;Array&lt;Int&gt;&gt;(_base: [1, 2, 3, 4, 5, 6, 7, 8])</span></div></pre></td></tr></table></figure>
+<h4 id="数组的分组"><a href="#数组的分组" class="headerlink" title="数组的分组"></a>数组的分组</h4><p><code>partition(by belongsInSecondPartition: (Element) throws -&gt; Bool) rethrows -&gt; Int</code>：将数组以某个条件分组，数组前半部分都是不符合条件的元素，数组后半部分都是符合条件的元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">45</span>, <span class="number">30</span>, <span class="number">98</span>, <span class="number">101</span>, <span class="number">30</span>, <span class="number">4</span>]         <span class="comment">// [10, 20, 45, 30, 98, 101, 30, 4]</span></div><div class="line"><span class="keyword">let</span> index = array.<span class="built_in">partition</span> &#123; (element) -&gt; <span class="type">Bool</span> <span class="keyword">in</span>   <span class="comment">// 5</span></div><div class="line">    element &gt; <span class="number">30</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">let</span> partition1 = array[..&lt;index]                     <span class="comment">// [10, 20, 4, 30, 30]</span></div><div class="line"><span class="keyword">let</span> partition2 = array[index...]                     <span class="comment">// [101, 98, 45]</span></div></pre></td></tr></table></figure>
+<h4 id="数组的排序"><a href="#数组的排序" class="headerlink" title="数组的排序"></a>数组的排序</h4><p><code>sort</code>：在原数组上将元素排序，只能作用于数组<strong>变量</strong>。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">45</span>, <span class="number">30</span>, <span class="number">98</span>, <span class="number">101</span>, <span class="number">30</span>, <span class="number">4</span>]  <span class="comment">// [10, 20, 45, 30, 98, 101, 30, 4]</span></div><div class="line">array.<span class="built_in">sort</span>()                                  <span class="comment">// [4, 10, 20, 30, 30, 45, 98, 101]</span></div></pre></td></tr></table></figure>
+<p><code>sorted()</code>：返回原数组的排序结果<strong>数组</strong>，可以作用在数组<strong>变量和常量</strong>上。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> array = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">45</span>, <span class="number">30</span>, <span class="number">98</span>, <span class="number">101</span>, <span class="number">30</span>, <span class="number">4</span>]</div><div class="line"><span class="keyword">let</span> array2 = array.sorted()</div></pre></td></tr></table></figure>
+<h4 id="交换数组两个元素"><a href="#交换数组两个元素" class="headerlink" title="交换数组两个元素"></a>交换数组两个元素</h4><p><code>swapAt(_ i: Int, _ j: Int)</code>：交换指定位置的两个元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">45</span>, <span class="number">30</span>, <span class="number">98</span>, <span class="number">101</span>, <span class="number">30</span>, <span class="number">4</span>]        <span class="comment">// [10, 20, 45, 30, 98, 101, 30, 4]</span></div><div class="line">array.swapAt(array.startIndex, array.endIndex - <span class="number">1</span>)  <span class="comment">// [4, 20, 45, 30, 98, 101, 30, 10]</span></div></pre></td></tr></table></figure>
+<h3 id="拼接操作"><a href="#拼接操作" class="headerlink" title="拼接操作"></a>拼接操作</h3><h4 id="字符串数组拼接"><a href="#字符串数组拼接" class="headerlink" title="字符串数组拼接"></a>字符串数组拼接</h4><p><code>joined()</code>：拼接字符串数组里的所有元素为一个字符串。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="string">"hello"</span>, <span class="string">"world"</span>]        <span class="comment">// ["hello", "world"]</span></div><div class="line"><span class="built_in">print</span>(array.joined())                 <span class="comment">// "helloworld\n"</span></div></pre></td></tr></table></figure>
+<p><code>joined(separator)</code>：以给定的分隔符拼接字符串数组里的所有元素为一个字符串。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="string">"hello"</span>, <span class="string">"world"</span>]        <span class="comment">// ["hello", "world"]</span></div><div class="line"><span class="built_in">print</span>(array.joined(separator: <span class="string">", "</span>))  <span class="comment">// "hello, world\n"</span></div></pre></td></tr></table></figure>
+<h4 id="元素为-Sequence-数组的拼接"><a href="#元素为-Sequence-数组的拼接" class="headerlink" title="元素为 Sequence 数组的拼接"></a>元素为 Sequence 数组的拼接</h4><p><code>joined()</code>：拼接数组里的所有元素为一个更大的 Sequence。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> ranges = [<span class="number">0</span>..&lt;<span class="number">3</span>, <span class="number">8</span>..&lt;<span class="number">10</span>, <span class="number">15</span>..&lt;<span class="number">17</span>]  <span class="comment">// [&#123;lowerBound 0, upperBound 3&#125;, &#123;lowerBound 8, upperBound 10&#125;, &#123;lowerBound 15, upperBound 17&#125;]</span></div><div class="line"><span class="keyword">for</span> range <span class="keyword">in</span> ranges &#123;</div><div class="line">    <span class="built_in">print</span>(range)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">print</span>(<span class="string">""</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> ranges.joined() &#123;</div><div class="line">    <span class="built_in">print</span>(i)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="number">0.</span>.&lt;<span class="number">3</span></div><div class="line"><span class="number">8.</span>.&lt;<span class="number">10</span></div><div class="line"><span class="number">15.</span>.&lt;<span class="number">17</span></div><div class="line"></div><div class="line"><span class="number">0</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">15</span></div><div class="line"><span class="number">16</span></div></pre></td></tr></table></figure>
+<p><code>joined(separator:)</code>：以给定的分隔符拼接数组里的所有元素为一个更大的Sequence。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> nestedNumbers = [[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>], [<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>]]</div><div class="line"><span class="keyword">let</span> joined = nestedNumbers.joined(separator: [-<span class="number">1</span>, -<span class="number">2</span>])</div><div class="line"><span class="built_in">print</span>(<span class="type">Array</span>(joined))  <span class="comment">// "[1, 2, 3, -1, -2, 4, 5, 6, -1, -2, 7, 8, 9]\n"</span></div></pre></td></tr></table></figure>
+<h3 id="探秘数组"><a href="#探秘数组" class="headerlink" title="探秘数组"></a>探秘数组</h3><p>阅读源码：</p>
+<ol>
+<li>先看顶层设计，再看底层源码是怎么符合顶层设计的。</li>
+<li>从关键的调用链开始，找到关键方法，再看关键方法底层又调用到了哪些方法。</li>
+</ol>
+<h4 id="数组的协议结构"><a href="#数组的协议结构" class="headerlink" title="数组的协议结构"></a>数组的协议结构</h4><p><img src="/2023/01/15/Swift/集合类/05.png" alt="05"></p>
+<h4 id="顶层设计"><a href="#顶层设计" class="headerlink" title="顶层设计"></a>顶层设计</h4><h5 id="Sequence"><a href="#Sequence" class="headerlink" title="Sequence"></a>Sequence</h5><p>一个序列（sequence）代表的是一系列具有相同类型的值，可以对这些值进行迭代。</p>
+<p><img src="/2023/01/15/Swift/集合类/06.png" alt="06"></p>
+<h5 id="IteratorProtocol"><a href="#IteratorProtocol" class="headerlink" title="IteratorProtocol"></a>IteratorProtocol</h5><p>迭代器：Sequence 通过创建一个迭代器来提供对元素的访问。迭代器每次产生一个序列的值，并且当遍历序列时对遍历状态进行管理。</p>
+<p>如：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">IteratorProtocol</span> </span>&#123;</div><div class="line">    associatedtype <span class="type">Element</span></div><div class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">next</span><span class="params">()</span></span> -&gt; <span class="type">Element</span>?</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>next()</code> 返回序列的下一个元素。当序列被耗尽时，<code>next()</code> 应该返回 nil。</p>
+<h5 id="定义自己的-Sequence"><a href="#定义自己的-Sequence" class="headerlink" title="定义自己的 Sequence"></a>定义自己的 Sequence</h5><p>实现斐波那契数列：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">FibsIterator</span>: <span class="title">IteratorProtocol</span> </span>&#123;</div><div class="line">    <span class="keyword">let</span> number: <span class="type">Int</span></div><div class="line">    <span class="keyword">var</span> index: <span class="type">Int</span> = <span class="number">0</span></div><div class="line">    </div><div class="line">    <span class="keyword">init</span>(<span class="number">_</span> number: <span class="type">Int</span>) &#123;</div><div class="line">        <span class="keyword">self</span>.number = number</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">var</span> state = (<span class="number">0</span>, <span class="number">1</span>)</div><div class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">next</span><span class="params">()</span></span> -&gt; <span class="type">Int</span>? &#123;</div><div class="line">        <span class="keyword">if</span> index &gt;= number &#123;</div><div class="line">            <span class="keyword">return</span> <span class="literal">nil</span></div><div class="line">        &#125;</div><div class="line">        index += <span class="number">1</span></div><div class="line">        </div><div class="line">        <span class="keyword">let</span> fibNumber = state.<span class="number">0</span></div><div class="line">        <span class="comment">// 后一个数等于前两个数之和</span></div><div class="line">        state = (state.<span class="number">1</span>, state.<span class="number">0</span> + state.<span class="number">1</span>)</div><div class="line">        <span class="keyword">return</span> fibNumber</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">typealias</span> <span class="type">Element</span> = <span class="type">Int</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">FibsSequence</span>: <span class="title">Sequence</span> </span>&#123;</div><div class="line">    <span class="keyword">let</span> number: <span class="type">Int</span></div><div class="line">    <span class="keyword">init</span>(<span class="number">_</span> number: <span class="type">Int</span>) &#123;</div><div class="line">        <span class="keyword">self</span>.number = number</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">typealias</span> <span class="type">Iterator</span> = <span class="type">FibsIterator</span></div><div class="line">    <span class="function"><span class="keyword">func</span> <span class="title">makeIterator</span><span class="params">()</span></span> -&gt; <span class="type">FibsSequence</span>.<span class="type">Iterator</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="type">FibsIterator</span>(number)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">let</span> fibs = <span class="type">FibsSequence</span>(<span class="number">10</span>)</div><div class="line"></div><div class="line"><span class="keyword">for</span> fib <span class="keyword">in</span> fibs &#123;</div><div class="line">    <span class="built_in">print</span>(fib)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="number">0</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">13</span></div><div class="line"><span class="number">21</span></div><div class="line"><span class="number">34</span></div></pre></td></tr></table></figure>
+<p><code>IteratorProtocol</code> 是迭代器协议，继承协议同时实现协议要求的方法，就拥有了迭代器的能力。<code>Sequence</code> 是序列协议，继承协议同时实现协议要求的方法，就拥有了序列的能力。</p>
+<p><code>mutating</code> 表示方法内部可以对全局变量进行修改。</p>
+<h5 id="Collection"><a href="#Collection" class="headerlink" title="Collection"></a>Collection</h5><p>一个集合（Collection）是满足下面条件的序列（Sequence）：</p>
+<ol>
+<li>稳定的 Sequence， 能够被多次遍历且保持一致；</li>
+<li>除了线性遍历以外，集合中的元素也可以通过下标索引的方式被获取到；</li>
+<li>和 Sequence 不同，Collection 类型不能是无限的。</li>
+</ol>
+<p><img src="/2023/01/15/Swift/集合类/07.png" alt="07"></p>
+<h4 id="Array-源码"><a href="#Array-源码" class="headerlink" title="Array 源码"></a>Array 源码</h4><p>Array 的本质是一个 Sequence。</p>
+<p>Array 的迭代器实现基于数组的下标操作，数组的小标操作基于 <code>buffer.getElement()</code> 方法，<code>buffer.getElement()</code> 方法基于 <code>UnsafeMutablePointer</code> 的小标操作。</p>
+<h4 id="Array-的迭代器"><a href="#Array-的迭代器" class="headerlink" title="Array 的迭代器"></a>Array 的迭代器</h4><p>左侧是 Array 的迭代器的底层实现，<code>next()</code> 方法负责返回数组的下一个元素，超出数组容量则返回空。获取数组内部元素的方式是<strong>下标访问</strong>。</p>
+<p>右侧是 Array 的迭代器的创建，传入的是 <code>self</code>，也就是说左面的 element 是右面传入的 Collection。</p>
+<p><img src="/2023/01/15/Swift/集合类/09.png" alt="09"></p>
+<h4 id="Array-的下标访问"><a href="#Array-的下标访问" class="headerlink" title="Array 的下标访问"></a>Array 的下标访问</h4><p>下图是下标访问的代码实现，核心方法是 <code>_getElement()</code> 方法。下标方法的调用链是 <code>subscrip(index:)</code>→<code>_getElement()</code>→<code>_buffer.getElement()</code>。</p>
+<p><img src="/2023/01/15/Swift/集合类/10.png" alt="10"></p>
+<h4 id="Array-的-buffer"><a href="#Array-的-buffer" class="headerlink" title="Array 的 buffer"></a>Array 的 buffer</h4><p><code>_Buffer</code> 的实现区分 Objc 和 Swift 两个版本，Swift 版本是 <code>_ContiguousArrayBuffer</code>。</p>
+<p><img src="/2023/01/15/Swift/集合类/11.png" alt="11"></p>
+<p><code>storageAddr</code> 是通过 <code>UnsafeMutablePointer</code> 方法生成的一个地址，后续会对<code>_storageAddr</code>进行加法操作。</p>
+<h5 id="ContiguousArrayBuffer"><a href="#ContiguousArrayBuffer" class="headerlink" title="_ContiguousArrayBuffer"></a>_ContiguousArrayBuffer</h5><p><img src="/2023/01/15/Swift/集合类/12.png" alt="12"></p>
+<p><code>_ContiguousArrayBuffer</code> 中 <code>getElement()</code> 方法的实现：</p>
+<ol>
+<li>首先判断了是否越界；</li>
+<li>通过下表访问，返回 <code>firstElementAddress[i]</code> 中第 <code>i</code> 个元素。<code>firstElementAddress</code> 方法中是基于 c/c++ 的指针操作。</li>
+</ol>
+<h5 id="ContiguousArrayBuffer-的-getElement"><a href="#ContiguousArrayBuffer-的-getElement" class="headerlink" title="_ContiguousArrayBuffer 的 getElement"></a>_ContiguousArrayBuffer 的 getElement</h5><p><img src="/2023/01/15/Swift/集合类/13.png" alt="13"></p>
+<h5 id="UnsafeMutablePointer-的下标操作"><a href="#UnsafeMutablePointer-的下标操作" class="headerlink" title="UnsafeMutablePointer 的下标操作"></a>UnsafeMutablePointer 的下标操作</h5><p><code>UnsafeMutablePointer</code> 是 Array 的迭代器实现中真正的指针操作实现，基于 c/c++ 实现。</p>
+<p><img src="/2023/01/15/Swift/集合类/14.png" alt="14"></p>
+<p>至此，数组迭代器的底层代码实现已经完成。数组的 <code>Iterator</code> 实际上是 <code>IndexingIterator</code>。因为 <code>IndexingIterator</code> 方法传入的参数是 self，所以 <code>next()</code> 方法实际是对 self（数组）的下标进行操作。而数组的下标操作又会转化成 ArrayBuffer 的下标操作。</p>
+<p>在阅读数组源码的过程中，主要包括两个步骤：</p>
+<ol>
+<li>先看顶层设计，包括 Sequence、IteratorProtocol、Collection。</li>
+<li>从关键的调用链开始，从 Iterator 的 <code>next()</code> 方法切入。 <code>subscrip(index:)</code>→<code>_getElement()</code>→<code>_buffer.getElement()</code>。</li>
+</ol>
+<h4 id="问题：endIndex-vs-count"><a href="#问题：endIndex-vs-count" class="headerlink" title="问题：endIndex vs count"></a>问题：endIndex vs count</h4><ul>
+<li>endIdex 是 Self.index 类型。</li>
+<li>count 是 Int 类型。</li>
+</ul>
+<p><img src="/2023/01/15/Swift/集合类/15.png" alt="15"></p>
+<h5 id="探索-索引"><a href="#探索-索引" class="headerlink" title="探索-索引"></a>探索-索引</h5><p>官方文档指出，所有实现 Collection 协议类，必须提供 startIndex 和 endIndex 两个属性，并且读取这两个属性的时间复杂度是 O(1) 的。因为在读取一个前向或双向的 Collection 的 count 属性时，需要遍历整个 Collection 的所有元素，所以其复杂度是 O(n) 的。</p>
+<p>即：</p>
+<p>对于一个随机存储的数组，获取 count 的时间复杂度是 O(1) 的。</p>
+<p>对于一个链表实现的数组，获取 count 的时间复杂度是 O(n) 的，startIndex 和 endIndex 属性获取是 O(1) 的。在遍历一个链表数组时，如果使用 startIndex 或 endIndex 遍历，会比使用 count 遍历更加便捷。</p>
+<p><img src="/2023/01/15/Swift/集合类/16.png" alt="16"></p>
+<p>左侧是 String 的 endIndex 和 count 的实现。endIndex 返回的是 _guits.endIndex()，是 O(1) 复杂度的。count 返回的是从 startIndex 到 endIndex 的计算结果，复杂度是非 O(1) 的。</p>
+<p>右侧是 Array 的 endIndex 和 count 的实现。两者的实现是一样的。</p>
+<p><img src="/2023/01/15/Swift/集合类/17.png" alt="17"></p>
+<h5 id="探索"><a href="#探索" class="headerlink" title="探索"></a>探索</h5><ul>
+<li><p>阅读 <code>removeFirst</code> 方法的源码，得出 <code>removeFirst</code> 的复杂度。</p>
+</li>
+<li><p>阅读 <code>sort</code> 方法的源码，了解 Array 的排序方法。</p>
+</li>
+</ul>
+<h4 id="实现栈和队列"><a href="#实现栈和队列" class="headerlink" title="实现栈和队列"></a>实现栈和队列</h4><h4 id="Stack"><a href="#Stack" class="headerlink" title="Stack"></a>Stack</h4><p>栈（Stack）是一种 <strong>后入先出（Last in First Out）</strong> 的数据结构，仅限定在栈顶进行插入或者删除操作。栈结构的实现应用主要有数制转换、括号匹配、表达式求值等等。</p>
+<p><img src="/2023/01/15/Swift/集合类/18.png" alt="18"></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Stack</span> &lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">var</span> elements = [<span class="type">T</span>]()</div><div class="line">    </div><div class="line">    <span class="keyword">var</span> <span class="built_in">count</span>: <span class="type">Int</span> &#123;</div><div class="line">        <span class="keyword">return</span> elements.<span class="built_in">count</span></div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">var</span> isEmpty: <span class="type">Bool</span> &#123;</div><div class="line">        <span class="keyword">return</span> elements.isEmpty</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">var</span> peek: <span class="type">T</span>? &#123;</div><div class="line">        <span class="keyword">return</span> elements.last</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">push</span><span class="params">(<span class="number">_</span> element: T)</span></span> &#123;</div><div class="line">        elements.append(element)</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">pop</span><span class="params">()</span></span> -&gt; <span class="type">T</span>? &#123;</div><div class="line">        <span class="keyword">return</span> elements.popLast()</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> stack = <span class="type">Stack</span>&lt;<span class="type">Int</span>&gt;()</div><div class="line">stack.push(<span class="number">1</span>)</div><div class="line">stack.push(<span class="number">3</span>)</div><div class="line">stack.push(<span class="number">8</span>)</div><div class="line"><span class="built_in">print</span>(stack.pop() ?? <span class="number">0</span>)  <span class="comment">// "8"</span></div><div class="line"><span class="built_in">print</span>(stack.<span class="built_in">count</span>)       <span class="comment">// "2"</span></div></pre></td></tr></table></figure>
+<h4 id="Queue"><a href="#Queue" class="headerlink" title="Queue"></a>Queue</h4><p>队列在生活中非常常见。排队等位吃饭、在火车站卖票、通过高速路口等，这些生活中的现象很好的描述了队列的特点：先进先出（FIFO，first in first out），排在最前面的先出来，后面来的只能排在最后面。</p>
+<p><img src="/2023/01/15/Swift/集合类/19.png" alt="19"></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Queue</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">var</span> elements : [<span class="type">T</span>] = []</div><div class="line">    </div><div class="line">    <span class="keyword">var</span> <span class="built_in">count</span>: <span class="type">Int</span> &#123;</div><div class="line">        <span class="keyword">return</span> elements.<span class="built_in">count</span></div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">var</span> isEmpty: <span class="type">Bool</span> &#123;</div><div class="line">        <span class="keyword">return</span> elements.isEmpty</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">var</span> peek: <span class="type">T</span>? &#123;</div><div class="line">        <span class="keyword">return</span> elements.first</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">enqueue</span><span class="params">(<span class="number">_</span> element: T)</span></span> &#123;</div><div class="line">        elements.append(element)</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">dequeue</span><span class="params">()</span></span> -&gt; <span class="type">T</span>? &#123;</div><div class="line">        <span class="keyword">return</span> isEmpty ? <span class="literal">nil</span> : elements.removeFirst();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> queue = <span class="type">Queue</span>&lt;<span class="type">Int</span>&gt;()</div><div class="line">queue.enqueue(<span class="number">1</span>)</div><div class="line">queue.enqueue(<span class="number">3</span>)</div><div class="line">queue.enqueue(<span class="number">8</span>)</div><div class="line"><span class="built_in">print</span>(queue.dequeue() ?? <span class="number">0</span>)  <span class="comment">// "1"</span></div><div class="line"><span class="built_in">print</span>(queue.<span class="built_in">count</span>)           <span class="comment">// "2"</span></div></pre></td></tr></table></figure>
+<h4 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h4><p>尝试改造 Stack 和 Queue 的代码让实现 Sequence 协议，支持 For-in 循环。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">QueueIterator</span>&lt;<span class="title">T</span>&gt;: <span class="title">IteratorProtocol</span> </span>&#123;</div><div class="line">    <span class="keyword">let</span> elements: [<span class="type">T</span>]</div><div class="line">    <span class="keyword">var</span> index: <span class="type">Int</span> = <span class="number">0</span></div><div class="line">    </div><div class="line">    <span class="keyword">init</span>(<span class="number">_</span> elements: [<span class="type">T</span>]) &#123;</div><div class="line">        <span class="keyword">self</span>.elements = elements</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">next</span><span class="params">()</span></span> -&gt; <span class="type">T</span>? &#123;</div><div class="line">        <span class="keyword">if</span> index &gt;= elements.<span class="built_in">count</span> &#123;</div><div class="line">            <span class="keyword">return</span> <span class="literal">nil</span></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">let</span> element: <span class="type">T</span> = elements[index];</div><div class="line">        index += <span class="number">1</span></div><div class="line">        <span class="keyword">return</span> element</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">typealias</span> <span class="type">Element</span> = <span class="type">T</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Queue</span>&lt;<span class="title">T</span>&gt; : <span class="title">Sequence</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">var</span> elements : [<span class="type">T</span>] = []</div><div class="line">        </div><div class="line">    <span class="keyword">var</span> <span class="built_in">count</span>: <span class="type">Int</span> &#123;</div><div class="line">        <span class="keyword">return</span> elements.<span class="built_in">count</span></div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">var</span> isEmpty: <span class="type">Bool</span> &#123;</div><div class="line">        <span class="keyword">return</span> elements.isEmpty</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">var</span> peek: <span class="type">T</span>? &#123;</div><div class="line">        <span class="keyword">return</span> elements.first</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">enqueue</span><span class="params">(<span class="number">_</span> element: T)</span></span> &#123;</div><div class="line">        elements.append(element)</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">dequeue</span><span class="params">()</span></span> -&gt; <span class="type">T</span>? &#123;</div><div class="line">        <span class="keyword">return</span> isEmpty ? <span class="literal">nil</span> : elements.removeFirst();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">typealias</span> <span class="type">Iterator</span> = <span class="type">QueueIterator</span></div><div class="line">    <span class="function"><span class="keyword">func</span> <span class="title">makeIterator</span><span class="params">()</span></span> -&gt; <span class="type">Queue</span>.<span class="type">Iterator</span>&lt;<span class="type">T</span>&gt; &#123;</div><div class="line">        <span class="keyword">return</span> <span class="type">QueueIterator</span>(elements)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> queue = <span class="type">Queue</span>&lt;<span class="type">Int</span>&gt;()</div><div class="line">queue.enqueue(<span class="number">1</span>)</div><div class="line">queue.enqueue(<span class="number">3</span>)</div><div class="line">queue.enqueue(<span class="number">8</span>)</div><div class="line"></div><div class="line"><span class="keyword">for</span> element <span class="keyword">in</span> queue &#123;</div><div class="line">    <span class="built_in">print</span>(element)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="number">1</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">8</span></div></pre></td></tr></table></figure>
+<p>总结：实现 Sequence 协议，需要实现 Sequence 创建迭代器的方法 <code>makeIterator()</code>，迭代器则负责实现 <code>next()</code> 方法序列的下一个元素，从而实现对序列的遍历。</p>
+<h2 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h2><p>Set（集合）是指具有某种特定性质的具体的或抽象的对象汇总而成的集体。其中，构成 Set 的这些对象则称为该 Set 的元素。</p>
+<p>集合的三个特性</p>
+<ol>
+<li>确定性：给定一个集合，任给一个元素，该元素或者属于或者不属于该集合，二者必居其一。</li>
+<li>互斥性：一个集合中，任何两个元素都认为是不相同的，即<strong>每个元素只出现一次</strong>。</li>
+<li>无序性：一个集合中，每个元素的地位都是相同的，<strong>元素之间是无序的</strong>。</li>
+</ol>
+<p>Swift 的集合类型写做 <code>Set&lt;Element&gt;</code>，这里的 Element 是 Set 要储存的类型。不同于数组，集合没有等价的简写。</p>
+<h3 id="创建-Set"><a href="#创建-Set" class="headerlink" title="创建 Set"></a>创建 Set</h3><p>1、使用<strong>初始化器</strong>语法来创建一个确定类型的空 Set：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> letters = <span class="type">Set</span>&lt;<span class="type">Character</span>&gt;()</div><div class="line">letters.insert(<span class="string">"c"</span>)</div><div class="line"><span class="built_in">print</span>(letters)</div></pre></td></tr></table></figure>
+<p>2、使用<strong>数组字面量</strong>创建 Set：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> course: <span class="type">Set</span>&lt;<span class="type">String</span>&gt; = [<span class="string">"Math"</span>, <span class="string">"English"</span>, <span class="string">"History"</span>]</div><div class="line">course.insert(<span class="string">"History"</span>)</div><div class="line"><span class="built_in">print</span>(course)</div></pre></td></tr></table></figure>
+<h3 id="Set-类型的哈希值"><a href="#Set-类型的哈希值" class="headerlink" title="Set 类型的哈希值"></a>Set 类型的哈希值</h3><p>为了能让类型储存在 Set 中，它必须是可哈希的——就是说类型必须提供计算它自身哈希值的方法。</p>
+<p>所有 Swift 的基础类型，比如 <code>String</code>，<code>Int</code>，<code>Double</code> 和 <code>Bool</code> 默认都是可哈希的，并且可以用于 Set 或者 DIctionary 的键。</p>
+<p>报错信息：Person 没有实现 Hashable 协议。</p>
+<p><img src="/2023/01/15/Swift/集合类/20.png" alt="20"></p>
+<p>让 Person 实现 Hashable 协议：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Person</span> </span>&#123;</div><div class="line">    <span class="keyword">var</span> name: <span class="type">String</span></div><div class="line">    <span class="keyword">var</span> age: <span class="type">Int</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Person</span>: <span class="title">Hashable</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">func</span> <span class="title">hash</span><span class="params">(into hasher: <span class="keyword">inout</span> Hasher)</span></span> &#123;</div><div class="line">        hasher.combine(name)</div><div class="line">        hasher.combine(age)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> <span class="type">PersonSet</span> = <span class="type">Set</span>&lt;<span class="type">Person</span>&gt;()</div><div class="line"><span class="type">PersonSet</span>.insert(<span class="type">Person</span>(name: <span class="string">"zhangsan"</span>, age: <span class="number">28</span>))</div><div class="line"><span class="comment">// Prints '[__lldb_expr_28.Person(name: "zhangsan", age: 28)]'</span></div></pre></td></tr></table></figure>
+<h3 id="访问和修改-Set"><a href="#访问和修改-Set" class="headerlink" title="访问和修改 Set"></a>访问和修改 Set</h3><h4 id="遍历-Set"><a href="#遍历-Set" class="headerlink" title="遍历 Set"></a>遍历 Set</h4><p>可以使用 <code>For-In</code> 遍历 Set。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> courses: <span class="type">Set</span> = [<span class="string">"Math"</span>, <span class="string">"English"</span>, <span class="string">"History"</span>]</div><div class="line"><span class="keyword">for</span> course <span class="keyword">in</span> courses &#123;</div><div class="line">    <span class="built_in">print</span>(course)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">History</div><div class="line"><span class="built_in">Math</span></div><div class="line">English</div></pre></td></tr></table></figure>
+<p>因为 Set 是无序的，如果需要顺序遍历 Set，可以使用 <code>sorted()</code> 方法进行排序。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> course <span class="keyword">in</span> courses.sorted() &#123;</div><div class="line">    <span class="built_in">print</span>(course)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">English</div><div class="line">History</div><div class="line"><span class="built_in">Math</span></div></pre></td></tr></table></figure>
+<h4 id="访问-Set"><a href="#访问-Set" class="headerlink" title="访问 Set"></a>访问 Set</h4><p>使用 <code>count</code> 获取 Set 里元素个数。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> <span class="keyword">set</span>: <span class="type">Set</span>&lt;<span class="type">Character</span>&gt; = [<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>]</div><div class="line"><span class="built_in">print</span>(<span class="keyword">set</span>.<span class="built_in">count</span>)</div><div class="line"><span class="comment">//Prints '3'</span></div></pre></td></tr></table></figure>
+<p>使用 <code>isEmpty</code> 判断 Set 是否为空。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> <span class="keyword">set</span>: <span class="type">Set</span>&lt;<span class="type">Character</span>&gt; = [<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>]</div><div class="line"><span class="built_in">print</span>(<span class="keyword">set</span>.isEmpty)</div><div class="line"><span class="comment">// 'false'</span></div></pre></td></tr></table></figure>
+<h4 id="添加元素"><a href="#添加元素" class="headerlink" title="添加元素"></a>添加元素</h4><p><code>insert(_:)</code>：添加一个元素到 Set。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Person</span> </span>&#123;</div><div class="line">    <span class="keyword">var</span> name: <span class="type">String</span></div><div class="line">    <span class="keyword">var</span> age: <span class="type">Int</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Person</span>: <span class="title">Hashable</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">func</span> <span class="title">hash</span><span class="params">(into hasher: <span class="keyword">inout</span> Hasher)</span></span> &#123;</div><div class="line">        hasher.combine(name)</div><div class="line">        hasher.combine(age)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> personSet = <span class="type">Set</span>&lt;<span class="type">Person</span>&gt;()</div><div class="line">personSet.insert(<span class="type">Person</span>(name: <span class="string">"zhangsan"</span>, age: <span class="number">28</span>))  <span class="comment">// '[__lldb_expr_28.Person(name: "zhangsan", age: 28)]'</span></div></pre></td></tr></table></figure>
+<p><code>update(with:)</code>：如果已经有相等的元素，替换为新元素。如果 Set 中没有，则插入。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Person</span> </span>&#123;</div><div class="line">    <span class="keyword">var</span> name: <span class="type">String</span></div><div class="line">    <span class="keyword">var</span> age: <span class="type">Int</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Person</span>: <span class="title">Hashable</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">func</span> <span class="title">hash</span><span class="params">(into hasher: <span class="keyword">inout</span> Hasher)</span></span> &#123;</div><div class="line">        hasher.combine(name)</div><div class="line">        hasher.combine(age)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Person</span>: <span class="title">Equatable</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> == <span class="params">(lhs: Person, rhs: Person)</span></span> -&gt; <span class="type">Bool</span> &#123;</div><div class="line">        <span class="keyword">return</span> lhs.name == rhs.name</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> personSet : <span class="type">Set</span> = [<span class="type">Person</span>(name: <span class="string">"zhangsan"</span>, age: <span class="number">28</span>)]</div><div class="line">personSet.update(with: <span class="type">Person</span>(name: <span class="string">"wangwu"</span>, age: <span class="number">18</span>))    <span class="comment">// '[__lldb_expr_44.Person(name: "zhangsan", age: 28), __lldb_expr_44.Person(name: "wangwu", age: 18)]'</span></div><div class="line">personSet.update(with: <span class="type">Person</span>(name: <span class="string">"zhangsan"</span>, age: <span class="number">18</span>))  <span class="comment">// '[__lldb_expr_44.Person(name: "zhangsan", age: 18), __lldb_expr_44.Person(name: "wangwu", age: 18)]'</span></div></pre></td></tr></table></figure>
+<p>在使用 <code>update(with:)</code> 方法时，需要保证集合内的元素实现了 <code>Equatable</code> 协议，用来判断两个元素是否相等。</p>
+<h4 id="移除元素"><a href="#移除元素" class="headerlink" title="移除元素"></a>移除元素</h4><p><code>filter(_:)</code>：返回一个新的 Set，新 Set 的元素是原始 Set 符合条件的元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Person</span> </span>&#123;</div><div class="line">    <span class="keyword">var</span> name: <span class="type">String</span></div><div class="line">    <span class="keyword">var</span> age: <span class="type">Int</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Person</span>: <span class="title">Hashable</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">func</span> <span class="title">hash</span><span class="params">(into hasher: <span class="keyword">inout</span> Hasher)</span></span> &#123;</div><div class="line">        hasher.combine(name)</div><div class="line">        hasher.combine(age)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Person</span>: <span class="title">Equatable</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> == <span class="params">(lhs: Person, rhs: Person)</span></span> -&gt; <span class="type">Bool</span> &#123;</div><div class="line">        <span class="keyword">return</span> lhs.name == rhs.name</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> personSet : <span class="type">Set</span> = [<span class="type">Person</span>(name: <span class="string">"zhangsan"</span>, age: <span class="number">28</span>), <span class="type">Person</span>(name: <span class="string">"wangwu"</span>, age: <span class="number">18</span>)]</div><div class="line"><span class="built_in">print</span>(personSet.<span class="built_in">filter</span>&#123; $<span class="number">0</span>.age &gt; <span class="number">20</span> &#125;)  <span class="comment">// '[__lldb_expr_59.Person(name: "zhangsan", age: 28)]'</span></div><div class="line"><span class="built_in">print</span>(personSet)                        <span class="comment">// '[__lldb_expr_59.Person(name: "wangwu", age: 18), __lldb_expr_59.Person(name: "zhangsan", age: 28)]'</span></div></pre></td></tr></table></figure>
+<p><code>remove(_:)</code>：从 Set 当中移除一个元素，如果元素是 Set 的成员就移除它，并且返回移除的值。如果集合没有这个成员就返回 nil。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Person</span> </span>&#123;</div><div class="line">    <span class="keyword">var</span> name: <span class="type">String</span></div><div class="line">    <span class="keyword">var</span> age: <span class="type">Int</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Person</span>: <span class="title">Hashable</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">func</span> <span class="title">hash</span><span class="params">(into hasher: <span class="keyword">inout</span> Hasher)</span></span> &#123;</div><div class="line">        hasher.combine(name)</div><div class="line">        hasher.combine(age)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Person</span>: <span class="title">Equatable</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> == <span class="params">(lhs: Person, rhs: Person)</span></span> -&gt; <span class="type">Bool</span> &#123;</div><div class="line">        <span class="keyword">return</span> lhs.name == rhs.name</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> personSet : <span class="type">Set</span> = [<span class="type">Person</span>(name: <span class="string">"zhangsan"</span>, age: <span class="number">28</span>), <span class="type">Person</span>(name: <span class="string">"wangwu"</span>, age: <span class="number">18</span>)]</div><div class="line">personSet.remove(<span class="type">Person</span>(name: <span class="string">"zhangsan"</span>, age: <span class="number">33</span>))</div><div class="line"><span class="built_in">print</span>(personSet)</div><div class="line"><span class="comment">// Prints '[__lldb_expr_67.Person(name: "wangwu", age: 18)]'</span></div></pre></td></tr></table></figure>
+<p><code>removeAll()</code>：移除所有元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> personSet : <span class="type">Set</span> = [<span class="type">Person</span>(name: <span class="string">"zhangsan"</span>, age: <span class="number">28</span>), <span class="type">Person</span>(name: <span class="string">"wangwu"</span>, age: <span class="number">18</span>)]</div><div class="line">personSet.removeAll()</div><div class="line"><span class="built_in">print</span>(personSet)</div><div class="line"><span class="comment">// Prints '[]'</span></div></pre></td></tr></table></figure>
+<p><code>removeFirst()</code>：移除 Set 的第一个元素，因为 Set 是无序的，所以第一个元素并不是放入的第一个元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> personSet : <span class="type">Set</span> = [<span class="type">Person</span>(name: <span class="string">"zhangsan"</span>, age: <span class="number">28</span>), <span class="type">Person</span>(name: <span class="string">"wangwu"</span>, age: <span class="number">18</span>)]</div><div class="line">personSet.removeFirst()</div><div class="line"><span class="built_in">print</span>(personSet)</div><div class="line"><span class="comment">// Prints '[__lldb_expr_71.Person(name: "zhangsan", age: 28)]'</span></div></pre></td></tr></table></figure>
+<h3 id="基本-Set-操作"><a href="#基本-Set-操作" class="headerlink" title="基本 Set 操作"></a>基本 Set 操作</h3><p><img src="/2023/01/15/Swift/集合类/21.png" alt="21"></p>
+<p><code>intersection(_:)</code>：交集，由属于 A 且属于 B 的相同元素组成的集合，记作 A∩B（或 B∩A）。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> set1: <span class="type">Set</span>&lt;<span class="type">Character</span>&gt; = [<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>]</div><div class="line"><span class="keyword">let</span> set2: <span class="type">Set</span>&lt;<span class="type">Character</span>&gt; = [<span class="string">"B"</span>, <span class="string">"E"</span>, <span class="string">"F"</span>, <span class="string">"G"</span>]</div><div class="line"><span class="built_in">print</span>(set1.intersection(set2))</div><div class="line"><span class="comment">// Prints '["B"]'</span></div></pre></td></tr></table></figure>
+<p><code>union(_:)</code>：并集，由属于 A 或者属于 B 的所有元素组成的集合，记作 A∪B（或 B∪A）。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> set1: <span class="type">Set</span>&lt;<span class="type">Character</span>&gt; = [<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>]</div><div class="line"><span class="keyword">let</span> set2: <span class="type">Set</span>&lt;<span class="type">Character</span>&gt; = [<span class="string">"B"</span>, <span class="string">"E"</span>, <span class="string">"F"</span>, <span class="string">"G"</span>]</div><div class="line"><span class="built_in">print</span>(set1.union(set2))</div><div class="line"><span class="comment">// Prints '["F", "G", "C", "A", "E", "B"]'</span></div></pre></td></tr></table></figure>
+<p><code>symmetricDifference(_:)</code>：对称差集，集合 A 与集合 B 的对称差集定义为集合 A 与集合 B 中所有不属于 A∩B 的元素的集合。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> set1: <span class="type">Set</span>&lt;<span class="type">Character</span>&gt; = [<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>]</div><div class="line"><span class="keyword">let</span> set2: <span class="type">Set</span>&lt;<span class="type">Character</span>&gt; = [<span class="string">"B"</span>, <span class="string">"E"</span>, <span class="string">"F"</span>, <span class="string">"G"</span>]</div><div class="line"><span class="built_in">print</span>(set1.symmetricDifference(set2))</div><div class="line"><span class="comment">// Prints '["G", "C", "A", "E", "F"]'</span></div></pre></td></tr></table></figure>
+<p><code>subtracting(_:)</code>：相对补集，由属于 A 而不属于 B 的元素组成的集合，称为 B 关于 A 的相对补集，记作 A-B 或 A\B。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> set1: <span class="type">Set</span>&lt;<span class="type">Character</span>&gt; = [<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>]</div><div class="line"><span class="keyword">let</span> set2: <span class="type">Set</span>&lt;<span class="type">Character</span>&gt; = [<span class="string">"B"</span>, <span class="string">"E"</span>, <span class="string">"F"</span>, <span class="string">"G"</span>]</div><div class="line"><span class="built_in">print</span>(set1.subtracting(set2))</div><div class="line"><span class="comment">// Prints '["C", "A"]'</span></div></pre></td></tr></table></figure>
+<h4 id="Set-判断方法"><a href="#Set-判断方法" class="headerlink" title="Set 判断方法"></a>Set 判断方法</h4><p><code>isSubset(of:)</code>：判断是否是另一个 Set 或者 Sequence 的子集。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> smallSet: <span class="type">Set</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</div><div class="line"><span class="keyword">let</span> bigSet: <span class="type">Set</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</div><div class="line"><span class="built_in">print</span>(smallSet.isSubset(of: bigSet))</div><div class="line"><span class="comment">// Prints 'true'</span></div></pre></td></tr></table></figure>
+<p><code>isSuperset(of:)</code>：判断是否是另一个 Set 或者 Sequence 的超集。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> smallSet: <span class="type">Set</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</div><div class="line"><span class="keyword">let</span> bigSet: <span class="type">Set</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</div><div class="line"><span class="built_in">print</span>(bigSet.isSuperset(of: smallSet))</div><div class="line"><span class="comment">// Prints 'true'</span></div></pre></td></tr></table></figure>
+<p><code>isStrictSubset(of:)</code> ：判断是否是另一个 Set 的<strong>子集</strong>，但是又不等于另一个 Set。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> smallSet: <span class="type">Set</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</div><div class="line"><span class="keyword">let</span> bigSet: <span class="type">Set</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</div><div class="line"><span class="built_in">print</span>(smallSet.isStrictSubset(of: bigSet))</div><div class="line"><span class="comment">// Prints 'true'</span></div></pre></td></tr></table></figure>
+<p><code>isStrictSuperset(of:)</code>：判断是否是另一个 Set 的<strong>超集</strong>，但是又不等于另一个 Set。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> smallSet: <span class="type">Set</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</div><div class="line"><span class="keyword">let</span> bigSet: <span class="type">Set</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</div><div class="line"><span class="built_in">print</span>(bigSet.isStrictSuperset(of: smallSet))</div><div class="line"><span class="comment">// Prints 'true'</span></div></pre></td></tr></table></figure>
+<p><code>isDisjoint(with:)</code>：判断两个 Set 是否不相交，如果不相交返回 <code>true</code>，如果相交返回 <code>false</code>。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> smallSet: <span class="type">Set</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</div><div class="line"><span class="keyword">let</span> bigSet: <span class="type">Set</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</div><div class="line"><span class="built_in">print</span>(smallSet.isDisjoint(with: bigSet))</div><div class="line"><span class="comment">// Prints 'false'</span></div></pre></td></tr></table></figure>
+<h3 id="Set-练习"><a href="#Set-练习" class="headerlink" title="Set-练习"></a>Set-练习</h3><ul>
+<li>给定一个集合，返回这个集合所有的子集。</li>
+</ul>
+<h4 id="思路1-位"><a href="#思路1-位" class="headerlink" title="思路1-位"></a>思路1-位</h4><p>解这道题的思想本质上就是元素选与不选的问题，于是就可以想到用二进制来代表选与不选的情况。“1”代表这个元素已经选择，而“0”代表这个元素没有选择。假如三个元素 A B C，那么 101 就代表 B 没有选择，所以 101 代表的子集为 AC。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">getSubsetsOfSet</span>&lt;T&gt;<span class="params">(<span class="number">_</span> set1: Set&lt;T&gt;)</span></span> -&gt; <span class="type">Array</span>&lt;<span class="type">Set</span>&lt;<span class="type">T</span>&gt;&gt; &#123;</div><div class="line">    <span class="comment">// 子集有 2^n 个</span></div><div class="line">    <span class="keyword">let</span> <span class="built_in">count</span> = <span class="number">1</span> &lt;&lt; set1.<span class="built_in">count</span></div><div class="line">    <span class="comment">// 使用数组，方便使用下标</span></div><div class="line">    <span class="keyword">let</span> elements = <span class="type">Array</span>(set1)</div><div class="line">    <span class="keyword">var</span> subsets = <span class="type">Array</span>&lt;<span class="type">Set</span>&lt;<span class="type">T</span>&gt;&gt;()</div><div class="line">    <span class="comment">// 遍历 2^n 个子集对应的下标</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="built_in">count</span> &#123;</div><div class="line">        <span class="keyword">var</span> subSet = <span class="type">Set</span>&lt;<span class="type">T</span>&gt;()</div><div class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="number">0</span>..&lt;set1.<span class="built_in">count</span> &#123;</div><div class="line">            <span class="comment">// 当子集的下标对应的二进制位为1时，放入子集中</span></div><div class="line">            <span class="keyword">if</span> ((i &gt;&gt; j) &amp; <span class="number">1</span>) == <span class="number">1</span> &#123;</div><div class="line">                subSet.insert(elements[j])</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        subsets.append(subSet)</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> subsets</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">let</span> set1: <span class="type">Set</span> = [<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>]</div><div class="line"><span class="keyword">let</span> subSets = getSubsetsOfSet(set1)</div><div class="line"><span class="keyword">for</span> subset <span class="keyword">in</span> subSets &#123;</div><div class="line">    <span class="built_in">print</span>(subset)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[]</div><div class="line">[<span class="string">"A"</span>]</div><div class="line">[<span class="string">"B"</span>]</div><div class="line">[<span class="string">"A"</span>, <span class="string">"B"</span>]</div><div class="line">[<span class="string">"C"</span>]</div><div class="line">[<span class="string">"A"</span>, <span class="string">"C"</span>]</div><div class="line">[<span class="string">"B"</span>, <span class="string">"C"</span>]</div><div class="line">[<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>]</div></pre></td></tr></table></figure>
+<p>打印结果解析：</p>
+<p>第0个子集，二进制 000，没有元素<br>第1个子集，二进制 001，有一个元素 A<br>第2个子集，二进制 010，有一个元素 B<br>第3个子集，二进制 011，有两个元素 A B<br>第4个子集，二进制 100，有一个元素 C<br>第5个子集，二进制 101，有两个元素 A C<br>第6个子集，二进制 110，有两个元素 A B<br>第7个子集，二进制 111，有三个元素 A B C</p>
+<p>使用这种方式有一个注意项，因为二进制的最大长度是64，所有 count 不能超过64位。</p>
+<h4 id="思路2-递归"><a href="#思路2-递归" class="headerlink" title="思路2-递归"></a>思路2-递归</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">getSubsetsOfSet</span>&lt;T&gt;<span class="params">(<span class="number">_</span> originSet: Set&lt;T&gt;)</span></span> -&gt; <span class="type">Array</span>&lt;<span class="type">Set</span>&lt;<span class="type">T</span>&gt;&gt; &#123;</div><div class="line">    <span class="keyword">let</span> elements = <span class="type">Array</span>(originSet)</div><div class="line">    <span class="keyword">return</span> getSubsetsOfSet2(elements, elements.<span class="built_in">count</span> - <span class="number">1</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">getSubsetsOfSet2</span>&lt;T&gt;<span class="params">(<span class="number">_</span> elements: Array&lt;T&gt;, <span class="number">_</span> index: Int)</span></span> -&gt; <span class="type">Array</span>&lt;<span class="type">Set</span>&lt;<span class="type">T</span>&gt;&gt; &#123;</div><div class="line">    <span class="keyword">var</span> subSets = <span class="type">Array</span>&lt;<span class="type">Set</span>&lt;<span class="type">T</span>&gt;&gt;()</div><div class="line">    <span class="keyword">if</span> index == <span class="number">0</span> &#123;</div><div class="line">        <span class="comment">// 空集</span></div><div class="line">        subSets.append(<span class="type">Set</span>&lt;<span class="type">T</span>&gt;())</div><div class="line">        <span class="comment">// 只有一个元素</span></div><div class="line">        <span class="keyword">var</span> subSet = <span class="type">Set</span>&lt;<span class="type">T</span>&gt;()</div><div class="line">        subSet.insert(elements[index])</div><div class="line">        subSets.append(subSet)</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        subSets = getSubsetsOfSet2(elements, index - <span class="number">1</span>)</div><div class="line">        <span class="keyword">for</span> subSet <span class="keyword">in</span> subSets &#123;</div><div class="line">            <span class="comment">// 根据 subSet 生成新的 currentSubSet，向 currentSubSet 中加入新的元素</span></div><div class="line">            <span class="keyword">var</span> currentSubSet = subSet</div><div class="line">            currentSubSet.insert(elements[index])</div><div class="line">            subSets.append(currentSubSet)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> subSets</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">let</span> originSet: <span class="type">Set</span> = [<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>]</div><div class="line"><span class="keyword">let</span> subSets = getSubsetsOfSet(originSet)</div><div class="line"><span class="keyword">for</span> subSet <span class="keyword">in</span> subSets &#123;</div><div class="line">    <span class="built_in">print</span>(subSet)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[]</div><div class="line">[<span class="string">"A"</span>]</div><div class="line">[<span class="string">"B"</span>]</div><div class="line">[<span class="string">"A"</span>, <span class="string">"B"</span>]</div><div class="line">[<span class="string">"C"</span>]</div><div class="line">[<span class="string">"C"</span>, <span class="string">"A"</span>]</div><div class="line">[<span class="string">"B"</span>, <span class="string">"C"</span>]</div><div class="line">[<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>]</div></pre></td></tr></table></figure>
+<p>index == 0，一个元素，生成两个子集，<code>[] [&quot;A&quot;]</code><br>index == 1，两个元素，生成四个子集，<code>[] [&quot;A&quot;]</code> <code>[&quot;B&quot;] [&quot;A&quot;, &quot;B&quot;]</code><br>index == 2，三个元素，生成八个子集，<code>[] [&quot;A&quot;]</code> <code>[&quot;B&quot;] [&quot;A&quot;, &quot;B&quot;]</code> <code>[&quot;C&quot;] [&quot;A&quot;, &quot;C&quot;] [&quot;B&quot;, &quot;C&quot;] [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;]</code></p>
+<h3 id="Set-实现探秘"><a href="#Set-实现探秘" class="headerlink" title="Set 实现探秘"></a>Set 实现探秘</h3><ol>
+<li>先看顶层设计，再看底层源码实现。</li>
+<li>从关键方法开始，沿着调用链阅读。</li>
+</ol>
+<p>主要包括两个部分：</p>
+<ol>
+<li>使用 HashTable 存放 bucket。</li>
+<li>使用 elements 存放 元素。</li>
+</ol>
+<p>线性探测的开放寻址法：</p>
+<p><img src="/2023/01/15/Swift/集合类/22.png" alt="22"></p>
+<p>左侧是 keys，右侧是 buckets。</p>
+<p>John Smith 通过计算找到 bucket，因为 bucket 没有被占用，所以可以直接进行存储。<br>Sam Doe 通过计算得找到 bucket，因为 bucket 被占用，寻找下一个 bucket01，因为 bucket01 没有被占用，所以可以使用 bucket01 进行存储。</p>
+<h4 id="从-Set-的-insert-说起"><a href="#从-Set-的-insert-说起" class="headerlink" title="从 Set 的 insert 说起"></a>从 Set 的 insert 说起</h4><p><img src="/2023/01/15/Swift/集合类/23.png" alt="23"></p>
+<p>这是 <code>inser()</code> 的关键代码，用到的核心方法是 <code>find()</code> 和 <code>insertNew()</code>。</p>
+<h4 id="NativeSet-的-find-方法"><a href="#NativeSet-的-find-方法" class="headerlink" title="_NativeSet 的 find 方法"></a>_NativeSet 的 find 方法</h4><p><code>find()</code>：查找桶（Bucket），找到后直接使用并返回。没有找到则调用 <code>insertNew()</code>。主要用到了 HasTable 的 <code>idealBucket()</code> 和 <code>bucket()</code> 方法。</p>
+<p><code>_isOccupied()</code>：判断桶是否被占用。</p>
+<p><img src="/2023/01/15/Swift/集合类/24.png" alt="24"></p>
+<h4 id="HashTable"><a href="#HashTable" class="headerlink" title="HashTable"></a>HashTable</h4><p><code>idealBucket()</code>：找到对应的 bucket。<br><code>bucket()</code>：找到当前 bucket 的后一个 bucket。</p>
+<p><img src="/2023/01/15/Swift/集合类/25.png" alt="25"></p>
+<p>从 HashTable 的源码可以看到，<code>bucketMask = bucketCount &amp;-1</code>，与上 <code>-1</code> 可以保证 <code>bucket.offset &amp; bucketMask</code> 小于 bucketCount，<code>hashValue &amp; bucketMask</code> 小于 bucketCount。</p>
+<p><img src="/2023/01/15/Swift/集合类/26.png" alt="26"></p>
+<h4 id="NativeSet-的-insertNew"><a href="#NativeSet-的-insertNew" class="headerlink" title="_NativeSet 的 insertNew"></a>_NativeSet 的 insertNew</h4><p>_isDebugAssertConfiguration() 是 debug 代码，可以直接看 else 里的代码，是调用了 HashTable 的 <code>insertNew()</code> 方法。</p>
+<p><code>insertNew()</code> 根据 hashValue 找到 bucket，再调用 <code>uncheckedInitialize()</code> 插入数据。</p>
+<p><img src="/2023/01/15/Swift/集合类/27.png" alt="27"></p>
+<h4 id="HashTable-的-insertNew"><a href="#HashTable-的-insertNew" class="headerlink" title="HashTable 的 insertNew"></a>HashTable 的 insertNew</h4><p>根据 hashValue 找到可用的 bucket。</p>
+<p><img src="/2023/01/15/Swift/集合类/28.png" alt="28"></p>
+<h4 id="NativeSet-的-uncheckedInitialize"><a href="#NativeSet-的-uncheckedInitialize" class="headerlink" title="_NativeSet 的 uncheckedInitialize"></a>_NativeSet 的 uncheckedInitialize</h4><p>根据 <code>_elements</code> 首地址值加偏移量 <code>bucket.offset</code> 得到插入位置，插入数据。</p>
+<p><img src="/2023/01/15/Swift/集合类/29.png" alt="29"></p>
+<h2 id="字典"><a href="#字典" class="headerlink" title="字典"></a>字典</h2><p>字典：储存无序的互相关联的同一类型的键和同一类型的值的集合。</p>
+<p>字典类型的全写方式 <code>Dictionary&lt;Key, Value&gt;</code>，简写方式 <code>[Key: Value]</code>，建议使用简写方式。其中字典的 Key 必须是可哈希的。</p>
+<h3 id="创建空字典"><a href="#创建空字典" class="headerlink" title="创建空字典"></a>创建空字典</h3><p>1、初始器方式</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> dic = <span class="type">Dictionary</span>&lt;<span class="type">String</span>, <span class="type">Int</span>&gt;()</div></pre></td></tr></table></figure>
+<p>2、简写方式</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> dic = [<span class="type">String</span>: <span class="type">Int</span>]()</div></pre></td></tr></table></figure>
+<p>3、字面量方式</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> dic3: <span class="type">Dictionary</span>&lt;<span class="type">String</span>, <span class="type">Int</span>&gt; = [:]</div></pre></td></tr></table></figure>
+<h3 id="字面量创建字典"><a href="#字面量创建字典" class="headerlink" title="字面量创建字典"></a>字面量创建字典</h3><p>字典字面量：<code>[key1:value1, key2:value2, key3:value3]</code></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> dic = [<span class="string">"zhangsan"</span>: <span class="number">18</span>, <span class="string">"lishi"</span>: <span class="number">19</span>, <span class="string">"wangwu"</span>: <span class="number">20</span>]</div></pre></td></tr></table></figure>
+<h4 id="count-和-isEmpty"><a href="#count-和-isEmpty" class="headerlink" title="count 和 isEmpty"></a>count 和 isEmpty</h4><p><code>count</code>：只读属性，找出 Dictionary 拥有多少元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> dic = [<span class="string">"zhangsan"</span>: <span class="number">18</span>, <span class="string">"lishi"</span>: <span class="number">19</span>, <span class="string">"wangwu"</span>: <span class="number">20</span>]</div><div class="line"><span class="built_in">print</span>(dic.<span class="built_in">count</span>)</div><div class="line"><span class="comment">// Prints '3'</span></div></pre></td></tr></table></figure>
+<p><code>isEmpty</code>：布尔量属性，检查字典是否为空。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> dic = [<span class="string">"zhangsan"</span>: <span class="number">18</span>, <span class="string">"lishi"</span>: <span class="number">19</span>, <span class="string">"wangwu"</span>: <span class="number">20</span>]</div><div class="line"><span class="built_in">print</span>(dic.isEmpty)</div><div class="line"><span class="comment">// Prints 'false'</span></div></pre></td></tr></table></figure>
+<h3 id="遍历字典"><a href="#遍历字典" class="headerlink" title="遍历字典"></a>遍历字典</h3><p><code>For-In</code>循环</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> dic = [<span class="string">"zhangsan"</span>: <span class="number">18</span>, <span class="string">"lishi"</span>: <span class="number">19</span>, <span class="string">"wangwu"</span>: <span class="number">20</span>]</div><div class="line"></div><div class="line"><span class="keyword">for</span> (key, value) <span class="keyword">in</span> dic &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"name <span class="subst">\(key)</span>, age <span class="subst">\(value)</span>"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">name lishi, age <span class="number">19</span></div><div class="line">name wangwu, age <span class="number">20</span></div><div class="line">name zhangsan, age <span class="number">18</span></div></pre></td></tr></table></figure>
+<p>可以通过字典的 keys 或 values 属性遍历字典的键或值的集合。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> dic = [<span class="string">"zhangsan"</span>: <span class="number">18</span>, <span class="string">"lishi"</span>: <span class="number">19</span>, <span class="string">"wangwu"</span>: <span class="number">20</span>]</div><div class="line"></div><div class="line"><span class="keyword">for</span> key <span class="keyword">in</span> dic.keys &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"name <span class="subst">\(key)</span>"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">for</span> key <span class="keyword">in</span> dic.values &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"name <span class="subst">\(key)</span>"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">name zhangsan</div><div class="line">name wangwu</div><div class="line">name lishi</div><div class="line">name <span class="number">18</span></div><div class="line">name <span class="number">20</span></div><div class="line">name <span class="number">19</span></div></pre></td></tr></table></figure>
+<p>Swift 的 Dictionary 类型是无序的，可以通过对 keys 或 values 调用 sort() 方法排序，来遍历有序的键或值。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> dic = [<span class="string">"zhangsan"</span>: <span class="number">18</span>, <span class="string">"lishi"</span>: <span class="number">19</span>, <span class="string">"wangwu"</span>: <span class="number">20</span>]</div><div class="line"></div><div class="line"><span class="keyword">for</span> key <span class="keyword">in</span> dic.keys.sorted() &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"name <span class="subst">\(key)</span>, age <span class="subst">\(dic[key])</span>"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">name lishi, age <span class="type">Optional</span>(<span class="number">19</span>)</div><div class="line">name wangwu, age <span class="type">Optional</span>(<span class="number">20</span>)</div><div class="line">name zhangsan, age <span class="type">Optional</span>(<span class="number">18</span>)</div></pre></td></tr></table></figure>
+<h3 id="操作字典"><a href="#操作字典" class="headerlink" title="操作字典"></a>操作字典</h3><h4 id="添加或更新元素"><a href="#添加或更新元素" class="headerlink" title="添加或更新元素"></a>添加或更新元素</h4><p>1、使用下标添加或更新元素。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> dic = [<span class="string">"zhangsan"</span>: <span class="number">18</span>, <span class="string">"lishi"</span>: <span class="number">19</span>, <span class="string">"wangwu"</span>: <span class="number">20</span>]</div><div class="line">dic[<span class="string">"zhangsan"</span>] = <span class="number">28</span>  <span class="comment">// '["lishi": 19, "zhangsan": 28, "wangwu": 20]'</span></div></pre></td></tr></table></figure>
+<p>2、使用 <code>updateValue(_:forKey)</code> 方法添加或更新元素，返回一个字典值类型的可选项值。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> dic = [<span class="string">"zhangsan"</span>: <span class="number">18</span>, <span class="string">"lishi"</span>: <span class="number">19</span>, <span class="string">"wangwu"</span>: <span class="number">20</span>]</div><div class="line">dic.updateValue(<span class="number">29</span>, forKey: <span class="string">"lishi"</span>)  <span class="comment">// '["wangwu": 20, "zhangsan": 18, "lishi": 29]'</span></div></pre></td></tr></table></figure>
+<h4 id="字典-移除元素"><a href="#字典-移除元素" class="headerlink" title="字典-移除元素"></a>字典-移除元素</h4><p>1、可以使用下标脚本语法给一个键赋值 <code>nil</code>，实现从字典中移除该键值对。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> dic = [<span class="string">"zhangsan"</span>: <span class="number">18</span>, <span class="string">"lishi"</span>: <span class="number">19</span>, <span class="string">"wangwu"</span>: <span class="number">20</span>]</div><div class="line">dic[<span class="string">"zhangsan"</span>] = <span class="literal">nil</span>  <span class="comment">// '["lishi": 19, "wangwu": 20]'</span></div></pre></td></tr></table></figure>
+<p>2、也可以使用 <code>removeValue(forKey:)</code> 从字典中移除键值对。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> dic = [<span class="string">"zhangsan"</span>: <span class="number">18</span>, <span class="string">"lishi"</span>: <span class="number">19</span>, <span class="string">"wangwu"</span>: <span class="number">20</span>]</div><div class="line"><span class="built_in">print</span>(dic.removeValue(forKey: <span class="string">"zhangsan"</span>) ?? <span class="number">0</span>)  <span class="comment">// '18'</span></div><div class="line"><span class="built_in">print</span>(dic)                                       <span class="comment">// '["lishi": 19, "wangwu": 20]'</span></div><div class="line"><span class="built_in">print</span>(dic.removeValue(forKey: <span class="string">"zhangsan"</span>))       <span class="comment">// 'nil'</span></div></pre></td></tr></table></figure>
+<p>在使用这个方法移除键值对时，如果键值对存在则返回其 <code>value</code>，如果不存在则返回 <code>nil</code>。</p>
+<h4 id="合并两个字典"><a href="#合并两个字典" class="headerlink" title="合并两个字典"></a>合并两个字典</h4><p><code>merge(_:uniquingKeysWith:)</code></p>
+<p>1、保留旧值</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> dictionary = [<span class="string">"a"</span>: <span class="number">1</span>, <span class="string">"b"</span>: <span class="number">2</span>]</div><div class="line">dictionary.merge([<span class="string">"a"</span>: <span class="number">3</span>, <span class="string">"c"</span>: <span class="number">4</span>]) &#123; (current, <span class="number">_</span>) <span class="keyword">in</span> current &#125;</div><div class="line"><span class="built_in">print</span>(dictionary)</div><div class="line"><span class="comment">// Prints '["b": 2, "c": 4, "a": 1]'</span></div></pre></td></tr></table></figure>
+<p>2、保留新值</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> dictionary = [<span class="string">"a"</span>: <span class="number">1</span>, <span class="string">"b"</span>: <span class="number">2</span>]</div><div class="line">dictionary.merge([<span class="string">"a"</span>: <span class="number">5</span>, <span class="string">"d"</span>: <span class="number">6</span>]) &#123; (<span class="number">_</span>, new) <span class="keyword">in</span> new &#125;</div><div class="line"><span class="built_in">print</span>(dictionary)</div><div class="line"><span class="comment">// Prints '["a": 5, "b": 2, "d": 6, "c": 4]'</span></div></pre></td></tr></table></figure>
+<h4 id="firstIndex"><a href="#firstIndex" class="headerlink" title="firstIndex"></a>firstIndex</h4><p>虽然字典是无序的，但是每个kv对（键值对）在扩容之前的位置是确定的。可以通过 <code>firstIndex</code> 获取某个kv对的位置。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> imagePaths = [<span class="string">"star"</span>: <span class="string">"/glyphs/stat.png"</span>,</div><div class="line">                  <span class="string">"protrait"</span>: <span class="string">"/images/content/portrait.jpg"</span>,</div><div class="line">                  <span class="string">"spacer"</span>: <span class="string">"/images/shared/spacer.gif"</span>]</div><div class="line"><span class="keyword">let</span> glyphIndex = imagePaths.firstIndex(<span class="keyword">where</span>: &#123; $<span class="number">0</span>.value.hasPrefix(<span class="string">"/glyphs"</span>) &#125;)</div><div class="line"></div><div class="line"><span class="keyword">if</span> <span class="keyword">let</span> index = glyphIndex &#123;</div><div class="line">    <span class="built_in">print</span>(index)</div><div class="line">    <span class="built_in">print</span>(<span class="string">"The '<span class="subst">\(imagePaths[index].key)</span>' image is a glyph."</span>)</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="built_in">print</span>(<span class="string">"No glyphs found!"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Index(_variant: Swift.Dictionary&lt;Swift.String, Swift.String&gt;.Index._Variant.native(Swift._HashTable.Index(bucket: Swift._HashTable.Bucket(offset: <span class="number">1</span>), <span class="attr">age</span>: <span class="number">-1384877248</span>)))</div><div class="line">The <span class="string">'star'</span> image is a glyph.</div></pre></td></tr></table></figure>
+<p>如果需要保持顺序的kv对，可以是用 KeyValuePairs。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> recordTimes: <span class="type">KeyValuePairs</span> = [<span class="string">"Florence Griffith-Joyner"</span>: <span class="number">10.49</span>,</div><div class="line">                                  <span class="string">"Evelyn Ashford"</span>: <span class="number">10.76</span>,</div><div class="line">                                  <span class="string">"Evelyn Ashford"</span>: <span class="number">10.79</span>,</div><div class="line">                                  <span class="string">"Marlies Gohr"</span>: <span class="number">10.81</span>]</div><div class="line"><span class="built_in">print</span>(recordTimes.first)</div><div class="line"><span class="comment">// Prints 'Optional((key: "Florence Griffith-Joyner", value: 10.49))'</span></div></pre></td></tr></table></figure>
+<h3 id="字典实现探秘"><a href="#字典实现探秘" class="headerlink" title="字典实现探秘"></a>字典实现探秘</h3><p>从关键方法开始，沿着调用链阅读。从 set 方法开始。</p>
+<h4 id="从下标操作说起"><a href="#从下标操作说起" class="headerlink" title="从下标操作说起"></a>从下标操作说起</h4><p>字典的关键操作跟 set 方法类似，就是下标操作。</p>
+<p><code>subscript(key:)</code>：字典的 set 方法，参数是 <code>Key</code>，返回值是可选 <code>Value?</code>。</p>
+<p><img src="/2023/01/15/Swift/集合类/30.png" alt="30"></p>
+<p><code>lookup()</code>：get 方法通过 lookup() 方法找到对应的 value。</p>
+<p><code>setValue()</code>：写入新值。</p>
+<h4 id="Dictionary-Variant-的-setValue"><a href="#Dictionary-Variant-的-setValue" class="headerlink" title="Dictionary._Variant 的 setValue"></a>Dictionary._Variant 的 setValue</h4><p><code>setValue(_ value: __owned Value, forKey key: Key)</code>：写入新值。需要两个参数，值、键。</p>
+<p>源码包括 OC 和 Swift 两个实现，最后两行是 Swift 实现部分。</p>
+<p><img src="/2023/01/15/Swift/集合类/31.png" alt="31"></p>
+<p>调用链：<code>setValue()</code> → <code>asNative.setValue()</code>。</p>
+<p><code>isUniquelyReferenced()</code>：判断当前 Dictionary 是否唯一。</p>
+<p><code>asNative</code> 是 <code>_NativeDictionary</code>，主要负责实现 <code>setValue()</code> 方法👇。</p>
+<h4 id="NativeDictionary-的-setValue"><a href="#NativeDictionary-的-setValue" class="headerlink" title="_NativeDictionary 的 setValue"></a>_NativeDictionary 的 setValue</h4><p><code>setValue(_ value: __owned Value, forKey key: Key, isUnique: Bool)</code>：可以看到需要三个参数，值、键、是否唯一。</p>
+<p><img src="/2023/01/15/Swift/集合类/32.png" alt="32"></p>
+<p>实现部分和 <code>insertNew()</code> 类似，采用的也是开放寻址法。</p>
+<p>如果找到了，则根据 <code>_values</code> 首地址值加上桶的偏移量 <code>bucket.offset</code> 计算出位置，存放 value。</p>
+<p>如果没找到，则调用 <code>_insert()</code> 方法👇。</p>
+<h4 id="NativeDictionary-的-insert"><a href="#NativeDictionary-的-insert" class="headerlink" title="_NativeDictionary 的_insert"></a>_NativeDictionary 的_insert</h4><p><code>_insert(at bucket: Bucket, key: __owned Key, value: __owned Value)</code>：需要三个参数，桶、键、值。</p>
+<p><img src="/2023/01/15/Swift/集合类/33.png" alt="33"></p>
+<p><code>hashTable.insert(bucket)</code>：将桶插入到哈希表里。</p>
+<p><code>uncheckedInitialize()</code>：保存键值。</p>
+<blockquote>
+<p>两个关键操作：</p>
+<ol>
+<li>保存桶到哈希表。</li>
+<li>保存键值。</li>
+</ol>
+</blockquote>
+<h4 id="NativeDictionary-的-uncheckedInitialize"><a href="#NativeDictionary-的-uncheckedInitialize" class="headerlink" title="_NativeDictionary 的 uncheckedInitialize"></a>_NativeDictionary 的 uncheckedInitialize</h4><p><code>uncheckedInitialize(at bucket: Bucket, toKey key: __owned Key, value: __owned Value)</code>：需要三个参数，桶、键、值。</p>
+<p><img src="/2023/01/15/Swift/集合类/34.png" alt="34"></p>
+<p><code>(_keys + bucket.offset).initialize(to: key)</code>：根据 _keys 的首地址加上桶的偏移量 bucket.offset 计算出位置，存放 key。</p>
+<p><code>(_values + bucket.offset).initialize(to: value)</code>：根据 _values 的首地址加上桶的偏移量 bucket.offset 计算出位置，存放 key。</p>
+<blockquote>
+<p>两个关键操作：</p>
+<ol>
+<li>保存key。</li>
+<li>保存value。</li>
+</ol>
+</blockquote>
+<h4 id="NativeDictionary-的-findKey"><a href="#NativeDictionary-的-findKey" class="headerlink" title="_NativeDictionary 的 findKey"></a>_NativeDictionary 的 findKey</h4><p><code>find(_ key: Key, hashValue: Int) -&gt; (bucket: Bucket, found: Bool)</code>：需要两个参数，键、键的哈希值。返回结果包括两个内容，桶、是否存在。</p>
+<p><img src="/2023/01/15/Swift/集合类/35.png" alt="35"></p>
+<p><code>idealBucket()</code>：根据哈希值查找桶。</p>
+<p><code>_isOccupied()</code>：桶是否被占用。</p>
+<p><code>bucket(wrappedAfter:)</code>：从当前 bucket 开始向后查找桶。</p>
+<blockquote>
+<p>两个关键操作：</p>
+<ol>
+<li>根据哈希值查找对应的桶。</li>
+<li>查找没有被占用的桶。</li>
+</ol>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Swift/" rel="tag"># Swift</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/01/14/Swift/流程控制/" rel="next" title="流程控制">
+                <i class="fa fa-chevron-left"></i> 流程控制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/myAvatar.gif"
+              alt="Kevin" />
+          
+            <p class="site-author-name" itemprop="name">Kevin</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KevinYangGit" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yangqioffice@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_YangQI" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.cnblogs.com/mjios" title="M了个J" target="_blank">M了个J</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数组"><span class="nav-number">1.</span> <span class="nav-text">数组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建数组"><span class="nav-number">1.1.</span> <span class="nav-text">创建数组</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数组字面量"><span class="nav-number">1.1.1.</span> <span class="nav-text">数组字面量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#初始化器"><span class="nav-number">1.1.2.</span> <span class="nav-text">初始化器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#初始化器参数"><span class="nav-number">1.1.3.</span> <span class="nav-text">初始化器参数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数组遍历与索引"><span class="nav-number">1.2.</span> <span class="nav-text">数组遍历与索引</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#For-In"><span class="nav-number">1.2.1.</span> <span class="nav-text">For-In</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#forEach"><span class="nav-number">1.2.2.</span> <span class="nav-text">forEach</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#enumerated"><span class="nav-number">1.2.3.</span> <span class="nav-text">enumerated</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Iterator"><span class="nav-number">1.2.4.</span> <span class="nav-text">Iterator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#索引"><span class="nav-number">1.2.5.</span> <span class="nav-text">索引</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数组的查找操作"><span class="nav-number">1.3.</span> <span class="nav-text">数组的查找操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#判断是否包含指定元素"><span class="nav-number">1.3.1.</span> <span class="nav-text">判断是否包含指定元素</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#判断所有元素符合某个条件"><span class="nav-number">1.3.2.</span> <span class="nav-text">判断所有元素符合某个条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查找元素"><span class="nav-number">1.3.3.</span> <span class="nav-text">查找元素</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查找索引"><span class="nav-number">1.3.4.</span> <span class="nav-text">查找索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查找最大最小元素"><span class="nav-number">1.3.5.</span> <span class="nav-text">查找最大最小元素</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数组添加和删除"><span class="nav-number">1.4.</span> <span class="nav-text">数组添加和删除</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#在末尾添加"><span class="nav-number">1.4.1.</span> <span class="nav-text">在末尾添加</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在任意位置插入"><span class="nav-number">1.4.2.</span> <span class="nav-text">在任意位置插入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#字符串也是集合"><span class="nav-number">1.4.3.</span> <span class="nav-text">字符串也是集合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#移除单个元素"><span class="nav-number">1.4.4.</span> <span class="nav-text">移除单个元素</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#移除多个元素"><span class="nav-number">1.4.5.</span> <span class="nav-text">移除多个元素</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ArraySlice"><span class="nav-number">1.5.</span> <span class="nav-text">ArraySlice</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#通过-Drop-得到-ArraySlice"><span class="nav-number">1.5.1.</span> <span class="nav-text">通过 Drop 得到 ArraySlice</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过-prefix-得到-ArraySlice"><span class="nav-number">1.5.2.</span> <span class="nav-text">通过 prefix 得到 ArraySlice</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过-suffix-得到-ArraySlice"><span class="nav-number">1.5.3.</span> <span class="nav-text">通过 suffix 得到 ArraySlice</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过-Range-得到-ArraySlice"><span class="nav-number">1.5.4.</span> <span class="nav-text">通过 Range 得到 ArraySlice</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ArraySlice-转为-Array"><span class="nav-number">1.5.5.</span> <span class="nav-text">ArraySlice 转为 Array</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ArraySlice-和原-Array-相互独立"><span class="nav-number">1.5.6.</span> <span class="nav-text">ArraySlice 和原 Array 相互独立</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重排操作"><span class="nav-number">1.6.</span> <span class="nav-text">重排操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数组元素的随机化"><span class="nav-number">1.6.1.</span> <span class="nav-text">数组元素的随机化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数组的逆序"><span class="nav-number">1.6.2.</span> <span class="nav-text">数组的逆序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数组的分组"><span class="nav-number">1.6.3.</span> <span class="nav-text">数组的分组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数组的排序"><span class="nav-number">1.6.4.</span> <span class="nav-text">数组的排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#交换数组两个元素"><span class="nav-number">1.6.5.</span> <span class="nav-text">交换数组两个元素</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拼接操作"><span class="nav-number">1.7.</span> <span class="nav-text">拼接操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#字符串数组拼接"><span class="nav-number">1.7.1.</span> <span class="nav-text">字符串数组拼接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#元素为-Sequence-数组的拼接"><span class="nav-number">1.7.2.</span> <span class="nav-text">元素为 Sequence 数组的拼接</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#探秘数组"><span class="nav-number">1.8.</span> <span class="nav-text">探秘数组</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数组的协议结构"><span class="nav-number">1.8.1.</span> <span class="nav-text">数组的协议结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#顶层设计"><span class="nav-number">1.8.2.</span> <span class="nav-text">顶层设计</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Sequence"><span class="nav-number">1.8.2.1.</span> <span class="nav-text">Sequence</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#IteratorProtocol"><span class="nav-number">1.8.2.2.</span> <span class="nav-text">IteratorProtocol</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#定义自己的-Sequence"><span class="nav-number">1.8.2.3.</span> <span class="nav-text">定义自己的 Sequence</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Collection"><span class="nav-number">1.8.2.4.</span> <span class="nav-text">Collection</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Array-源码"><span class="nav-number">1.8.3.</span> <span class="nav-text">Array 源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Array-的迭代器"><span class="nav-number">1.8.4.</span> <span class="nav-text">Array 的迭代器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Array-的下标访问"><span class="nav-number">1.8.5.</span> <span class="nav-text">Array 的下标访问</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Array-的-buffer"><span class="nav-number">1.8.6.</span> <span class="nav-text">Array 的 buffer</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ContiguousArrayBuffer"><span class="nav-number">1.8.6.1.</span> <span class="nav-text">_ContiguousArrayBuffer</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ContiguousArrayBuffer-的-getElement"><span class="nav-number">1.8.6.2.</span> <span class="nav-text">_ContiguousArrayBuffer 的 getElement</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#UnsafeMutablePointer-的下标操作"><span class="nav-number">1.8.6.3.</span> <span class="nav-text">UnsafeMutablePointer 的下标操作</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#问题：endIndex-vs-count"><span class="nav-number">1.8.7.</span> <span class="nav-text">问题：endIndex vs count</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#探索-索引"><span class="nav-number">1.8.7.1.</span> <span class="nav-text">探索-索引</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#探索"><span class="nav-number">1.8.7.2.</span> <span class="nav-text">探索</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现栈和队列"><span class="nav-number">1.8.8.</span> <span class="nav-text">实现栈和队列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Stack"><span class="nav-number">1.8.9.</span> <span class="nav-text">Stack</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Queue"><span class="nav-number">1.8.10.</span> <span class="nav-text">Queue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#练习"><span class="nav-number">1.8.11.</span> <span class="nav-text">练习</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Set"><span class="nav-number">2.</span> <span class="nav-text">Set</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建-Set"><span class="nav-number">2.1.</span> <span class="nav-text">创建 Set</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Set-类型的哈希值"><span class="nav-number">2.2.</span> <span class="nav-text">Set 类型的哈希值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问和修改-Set"><span class="nav-number">2.3.</span> <span class="nav-text">访问和修改 Set</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#遍历-Set"><span class="nav-number">2.3.1.</span> <span class="nav-text">遍历 Set</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#访问-Set"><span class="nav-number">2.3.2.</span> <span class="nav-text">访问 Set</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加元素"><span class="nav-number">2.3.3.</span> <span class="nav-text">添加元素</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#移除元素"><span class="nav-number">2.3.4.</span> <span class="nav-text">移除元素</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本-Set-操作"><span class="nav-number">2.4.</span> <span class="nav-text">基本 Set 操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Set-判断方法"><span class="nav-number">2.4.1.</span> <span class="nav-text">Set 判断方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Set-练习"><span class="nav-number">2.5.</span> <span class="nav-text">Set-练习</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#思路1-位"><span class="nav-number">2.5.1.</span> <span class="nav-text">思路1-位</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#思路2-递归"><span class="nav-number">2.5.2.</span> <span class="nav-text">思路2-递归</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Set-实现探秘"><span class="nav-number">2.6.</span> <span class="nav-text">Set 实现探秘</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#从-Set-的-insert-说起"><span class="nav-number">2.6.1.</span> <span class="nav-text">从 Set 的 insert 说起</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NativeSet-的-find-方法"><span class="nav-number">2.6.2.</span> <span class="nav-text">_NativeSet 的 find 方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HashTable"><span class="nav-number">2.6.3.</span> <span class="nav-text">HashTable</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NativeSet-的-insertNew"><span class="nav-number">2.6.4.</span> <span class="nav-text">_NativeSet 的 insertNew</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HashTable-的-insertNew"><span class="nav-number">2.6.5.</span> <span class="nav-text">HashTable 的 insertNew</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NativeSet-的-uncheckedInitialize"><span class="nav-number">2.6.6.</span> <span class="nav-text">_NativeSet 的 uncheckedInitialize</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字典"><span class="nav-number">3.</span> <span class="nav-text">字典</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建空字典"><span class="nav-number">3.1.</span> <span class="nav-text">创建空字典</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字面量创建字典"><span class="nav-number">3.2.</span> <span class="nav-text">字面量创建字典</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#count-和-isEmpty"><span class="nav-number">3.2.1.</span> <span class="nav-text">count 和 isEmpty</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#遍历字典"><span class="nav-number">3.3.</span> <span class="nav-text">遍历字典</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#操作字典"><span class="nav-number">3.4.</span> <span class="nav-text">操作字典</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#添加或更新元素"><span class="nav-number">3.4.1.</span> <span class="nav-text">添加或更新元素</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#字典-移除元素"><span class="nav-number">3.4.2.</span> <span class="nav-text">字典-移除元素</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#合并两个字典"><span class="nav-number">3.4.3.</span> <span class="nav-text">合并两个字典</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#firstIndex"><span class="nav-number">3.4.4.</span> <span class="nav-text">firstIndex</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字典实现探秘"><span class="nav-number">3.5.</span> <span class="nav-text">字典实现探秘</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#从下标操作说起"><span class="nav-number">3.5.1.</span> <span class="nav-text">从下标操作说起</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dictionary-Variant-的-setValue"><span class="nav-number">3.5.2.</span> <span class="nav-text">Dictionary._Variant 的 setValue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NativeDictionary-的-setValue"><span class="nav-number">3.5.3.</span> <span class="nav-text">_NativeDictionary 的 setValue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NativeDictionary-的-insert"><span class="nav-number">3.5.4.</span> <span class="nav-text">_NativeDictionary 的_insert</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NativeDictionary-的-uncheckedInitialize"><span class="nav-number">3.5.5.</span> <span class="nav-text">_NativeDictionary 的 uncheckedInitialize</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NativeDictionary-的-findKey"><span class="nav-number">3.5.6.</span> <span class="nav-text">_NativeDictionary 的 findKey</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="/js/src/md5.min.js"></script>
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: '82b6ced795961ee1fcca',
+      clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
+      repo: 'KevinYangGit.github.io',
+      owner: 'KevinYangGit',
+      admin: ['KevinYangGit'],
+      id: md5(location.pathname),
+      distractionFreeMode: 'true'
+    })
+    gitalk.render('gitalk-container')
+  </script>
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
