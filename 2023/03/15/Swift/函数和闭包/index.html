@@ -86,7 +86,7 @@
 <meta property="og:image" content="http://yoursite.com/2023/03/15/Swift/Swift/函数和闭包/07.png">
 <meta property="og:image" content="http://yoursite.com/2023/03/15/Swift/Swift/函数和闭包/08.png">
 <meta property="og:image" content="http://yoursite.com/2023/03/15/Swift/Swift/函数和闭包/09.png">
-<meta property="og:updated_time" content="2023-04-19T03:15:22.178Z">
+<meta property="og:updated_time" content="2023-04-19T04:02:07.936Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="函数和闭包">
 <meta name="twitter:description" content="函数的定义 函数实际参数标签和形式参数名 函数类型和内嵌函数 闭包 高阶函数 函数式编程 并行">
@@ -340,11 +340,11 @@
 <li><a href="#并行">并行</a></li>
 </ul>
 <a id="more"></a>
-<p>函数是一个独立的代码块，用来执行特定的任务。通过给函数一个名字来定义它的功能，并且在需要的时候，通过这个名字来“调用”函数执行它的任务。</p>
+<h2 id="函数的定义"><a href="#函数的定义" class="headerlink" title="函数的定义"></a>函数的定义</h2><p>函数是一个独立的代码块，用来执行特定的任务。通过给函数一个名字来定义它的功能，并且在需要的时候，通过这个名字来“调用”函数执行它的任务。</p>
 <p>Swift 统一的函数语法十分灵活，可以表达从简单的无形式参数的 C 风格函数，到复杂的每一个形式参数都带有局部和外部形式参数名的 Object-C 风格方法的任何内容。</p>
 <p>形式参数能提供一个默认的值来简化函数的调用，也可以被当做输入输出形式参数被传递，它在函数执行完成时修改传递来的变量。</p>
 <p>Swfit 中的每一个函数都有类型，由函数的形式参数类型和返回类型组成。可以像 Swfit 中其它类型那样使用它。这使得能够方便的将一个函数当作一个形式参数传递到另外的一个函数中，也可以在一个函数中返回另一个函数。函数同时也可以写在其它函数内部，在内嵌范围封装有用的功能。</p>
-<h2 id="函数的定义"><a href="#函数的定义" class="headerlink" title="函数的定义"></a>函数的定义</h2><h3 id="定义和调用函数"><a href="#定义和调用函数" class="headerlink" title="定义和调用函数"></a>定义和调用函数</h3><p>在定义一个函数时，可以定义一个或者多个被命名的分类的值，作为函数的输入（形式参数）。在函数完成后，也可以定义将要传回的值作为输出的类型（返回类型）。</p>
+<h3 id="定义和调用函数"><a href="#定义和调用函数" class="headerlink" title="定义和调用函数"></a>定义和调用函数</h3><p>在定义一个函数时，可以定义一个或者多个被命名的分类的值，作为函数的输入（形式参数）。在函数完成后，也可以定义将要传回的值作为输出的类型（返回类型）。</p>
 <p>每一个函数都有一个函数名，它描述了函数执行的任务。要使用一个函数，可以通过“调用”函数的名字并且传入符合函数形式参数类型的输入值（实际参数）来调用这个函数。给函数提供的实际参数的顺序必须符合函数的形式参数列表顺序。</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> Foundation</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">greet</span><span class="params">(person: String)</span></span> -&gt; <span class="type">String</span> &#123;</div><div class="line">    <span class="keyword">let</span> greeting = <span class="string">"Hello, "</span> + person + <span class="string">"!"</span></div><div class="line">    <span class="keyword">return</span> greeting</div><div class="line">&#125;</div><div class="line"></div><div class="line">greet(person: <span class="string">"zhangsan"</span>)</div><div class="line"><span class="comment">// Prints 'Hello, zhangsan!'</span></div></pre></td></tr></table></figure>
 <h3 id="无形式参数的函数"><a href="#无形式参数的函数" class="headerlink" title="无形式参数的函数"></a>无形式参数的函数</h3><p>函数没有要求必须输入一个参数，可以没有形式参数。函数的定义需要在名字后边加一个圆括号<code>()</code>，即使在不接受形式参数时也得这样做。当函数被调用的时候同样要在函数的名字后边加一个空的圆括号<code>()</code>。</p>
