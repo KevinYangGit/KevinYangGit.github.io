@@ -115,7 +115,7 @@
 <meta property="og:image" content="http://yoursite.com/2022/09/30/Swift/基本数据类型/BasicDataType37.png">
 <meta property="og:image" content="http://yoursite.com/2022/09/30/Swift/基本数据类型/BasicDataType38.png">
 <meta property="og:image" content="http://yoursite.com/2022/09/30/Swift/基本数据类型/BasicDataType39.png">
-<meta property="og:updated_time" content="2023-04-07T02:14:40.826Z">
+<meta property="og:updated_time" content="2023-06-15T03:12:51.630Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基本数据类型">
 <meta name="twitter:description" content="常量和变量  基本数据类型  Tuple  Optional  字符串">
@@ -372,14 +372,14 @@
 </li>
 </ul>
 <a id="more"></a>
-<h2 id="常量和变量"><a href="#常量和变量" class="headerlink" title="常量和变量"></a>常量和变量</h2><h3 id="声明常量和变量"><a href="#声明常量和变量" class="headerlink" title="声明常量和变量"></a>声明常量和变量</h3><p>使用关键字 <code>let</code> 来声明常量</p>
+<h2 id="常量和变量"><a href="#常量和变量" class="headerlink" title="常量和变量"></a>常量和变量</h2><h3 id="声明常量和变量"><a href="#声明常量和变量" class="headerlink" title="声明常量和变量"></a>声明常量和变量</h3><p>1、使用关键字 <code>let</code> 来声明<strong>常量</strong></p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> maxNumber = <span class="number">10</span></div></pre></td></tr></table></figure>
-<p>使用关键字 <code>var</code> 来声明变量</p>
+<p>2、使用关键字 <code>var</code> 来声明<strong>变量</strong></p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> currentNumber = <span class="number">0</span></div></pre></td></tr></table></figure>
-<p>可以在一行中声明多个变量或常量，用逗号分隔</p>
+<p>3、可以在一行中声明多个变量或常量，用逗号分隔</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> x = <span class="number">0.0</span>, y = <span class="number">0.0</span>, z = <span class="number">0.0</span></div></pre></td></tr></table></figure>
-<p>不可以修改常量<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType01.png" alt="BasicDataType01"></p>
-<h3 id="类型标注"><a href="#类型标注" class="headerlink" title="类型标注"></a>类型标注</h3><p>类型标注：声明变量或常量的同时，指定其类型。在声明一个变量或常量的时候，通过提供类型标注，来明确该变量或常量能够储存值的类型。</p>
+<p>4、不可以修改常量<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType01.png" alt="BasicDataType01"></p>
+<h3 id="类型标注"><a href="#类型标注" class="headerlink" title="类型标注"></a>类型标注</h3><p><strong>类型标注</strong>：声明变量或常量的同时，指定其类型。在声明一个变量或常量的时候，通过提供类型标注，来明确该变量或常量能够储存值的类型。</p>
 <p>添加类型标注的方法：在变量或常量的名字后边加一个冒号，再跟一个空格，最后加上要使用的类型名称（声明变量或常量的要素：<strong>类型 + 变量名</strong>）</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> name: <span class="type">String</span></div></pre></td></tr></table></figure>
 <p>可以在一行中定义多个变量为相同的类型，用逗号分隔，只要在最后的变量名字后边加上类型标注</p>
@@ -389,10 +389,10 @@
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> π = <span class="number">3.14159</span></div><div class="line"><span class="keyword">let</span> 你好 = <span class="string">"你好世界"</span></div><div class="line"><span class="keyword">let</span> 🐶🐮 = <span class="string">"dogcow"</span></div></pre></td></tr></table></figure>
 <h3 id="打印常量和变量"><a href="#打印常量和变量" class="headerlink" title="打印常量和变量"></a>打印常量和变量</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> 你好 = <span class="string">"你好世界"</span></div><div class="line"><span class="built_in">print</span>(<span class="string">"欢迎语是<span class="subst">\(你好)</span>"</span>)</div></pre></td></tr></table></figure>
 <p>打印结果：</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">欢迎语是你好世界</div></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">欢迎语是你好世界</div></pre></td></tr></table></figure>
 <p>在Swift中使用<code>print(_:separator:terminator:)</code>作为打印方法。<code>\()</code>是字符串插值，可以实现字符串的拼接。</p>
 <h2 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h2><h3 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h3><p>Swift 提供了 8，16，32 和 64 位编码的有符号和无符号整数，例如 8 位无符号整数的类型是 <code>UInt8</code>，32 位有符号整数的类型是 <code>Int32</code>。Swift 提供了一个额外的整数类型：<code>Int</code>，它拥有与当前平台的原生字相同的长度。同时 Swift 也提供 <code>UInt</code> 类型，来表示平台长度相关的无符号整数。<strong>建议在用到整数的地方都是用 <code>Int</code></strong>。</p>
-<p>通过 <code>min</code> 和 <code>max</code> 属性来访问每个整数类型的最小值和最大值。</p>
+<p>通过 <code>min</code> 和 <code>max</code> 属性来访问每个整数类型的<strong>最小值</strong>和<strong>最大值</strong>。</p>
 <h3 id="浮点类型"><a href="#浮点类型" class="headerlink" title="浮点类型"></a>浮点类型</h3><ul>
 <li><p><code>Double</code>：64 位浮点数，至少有 15 位数字的精度。</p>
 </li>
@@ -403,26 +403,26 @@
 <h3 id="数值范围"><a href="#数值范围" class="headerlink" title="数值范围"></a>数值范围</h3><p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType03.png" alt="BasicDataType03"></p>
 <h3 id="Bool"><a href="#Bool" class="headerlink" title="Bool"></a>Bool</h3><p><code>Bool</code>：<code>true</code> 和 <code>false</code>。Swift 的类型安全机制会阻止用一个非布尔量的值替换掉 <code>Bool</code>。如下图，不可以直接判断一个变量，而是需要写成判断的方式（<code>i == 1</code>）<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType04.png" alt="BasicDataType04"></p>
 <h3 id="类型别名"><a href="#类型别名" class="headerlink" title="类型别名"></a>类型别名</h3><p>类型别名：为已存在类型定义一个可选择的名字。可以通过关键字 <code>typealias</code> 定义一个类型别名。</p>
-<p>如为一个已存在的类型，定义一个在上下文中看起来更合适更具有表达性的名字，来引用这个已存在的类型：</p>
+<p>如为一个已存在的类型定义一个新的名字，让其在上下文中看起来更合适、更具有表达性，用新的名字来引用这个已存在的类型：</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typealias</span> <span class="type">AudioSample</span> = <span class="type">UInt8</span></div><div class="line"><span class="keyword">let</span> sample: <span class="type">AudioSample</span> = <span class="number">32</span></div></pre></td></tr></table></figure>
-<h2 id="Tuple"><a href="#Tuple" class="headerlink" title="Tuple"></a>Tuple</h2><p>元组实现了把多个值合并成一个复合型的值。元组内的值可以是任何类型，而且可以不必是同一类型。</p>
-<h3 id="元素命名"><a href="#元素命名" class="headerlink" title="元素命名"></a>元素命名</h3><p>元组中的每一个元素可以指定对应的元素名称<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType07.png" alt="BasicDataType07"></p>
-<p>如果没有指定名称的元素也可以使用下标的方式来引用<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType06.png" alt="BasicDataType06"></p>
-<h3 id="Tuple-修改"><a href="#Tuple-修改" class="headerlink" title="Tuple 修改"></a>Tuple 修改</h3><p>用 <code>var</code> 定义的元组就是可变元组，<code>let</code> 定义的就是不可变元组。不管是可变还是不可变元组，元组在创建后就不能增加和删除元素。</p>
-<p>可以对可变元组的元素进行修改，但是不能改变其类型：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType08.png" alt="BasicDataType08"></p>
+<h2 id="Tuple"><a href="#Tuple" class="headerlink" title="Tuple"></a>Tuple</h2><p>元组实现了<strong>把多个值合并成一个复合型的值</strong>。元组内的值可以是任何类型，而且可以不必是同一类型。</p>
+<h3 id="元素命名"><a href="#元素命名" class="headerlink" title="元素命名"></a>元素命名</h3><p>元组中的每一个元素可以指定对应的<strong>元素名称</strong>：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType07.png" alt="BasicDataType07"></p>
+<p>如果没有指定名称的元素也可以使用<strong>下标</strong>的方式来引用：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType06.png" alt="BasicDataType06"></p>
+<h3 id="Tuple-修改"><a href="#Tuple-修改" class="headerlink" title="Tuple 修改"></a>Tuple 修改</h3><p>用 <code>var</code> 定义的元组就是<strong>可变元组</strong>，<code>let</code> 定义的就是<strong>不可变元组</strong>。不管是可变还是不可变元组，元组在创建后就不能<strong>增加和删除</strong>元素。</p>
+<p>可以对可变元组的元素进行修改，但是<strong>不能改变其类型</strong>：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType08.png" alt="BasicDataType08"></p>
 <p><code>any</code> 类型可以改为任何类型：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType09.png" alt="BasicDataType09"></p>
 <h3 id="Tuple-分解"><a href="#Tuple-分解" class="headerlink" title="Tuple 分解"></a>Tuple 分解</h3><p>将一个元组的内容分解成单独的常量或变量：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType10.png" alt="BasicDataType10"></p>
 <p>如果只需要使用其中的一部分数据，不需要的数据可以用下划线（ <code>_</code> ）代替：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType11.png" alt="BasicDataType11"></p>
 <h3 id="作为函数返回值"><a href="#作为函数返回值" class="headerlink" title="作为函数返回值"></a>作为函数返回值</h3><p>可以使用 Tuple 为函数返回多个值，返回值的 Tuple 可以在函数的返回类型部分被命名：</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">writeToFile</span><span class="params">(content: String)</span></span> -&gt; (errorCode: <span class="type">Int</span>, errorMessage: <span class="type">String</span>) &#123;</div><div class="line">    <span class="keyword">return</span> (<span class="number">1</span>, <span class="string">"没有权限"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="Optional"><a href="#Optional" class="headerlink" title="Optional"></a>Optional</h2><ul>
-<li>为什么需要 Optional？<br>在 Objective-C 里，<code>nil</code> 是无类型指针，所有对象变量都可以为 <code>nil</code>，但是数组、字典、集合等不允许放入 <code>nil</code>。<code>nil</code> 只能用在对象上，而在其他地方又用其他特殊值表示指的缺失，例如 <code>NSNotFound</code>。</li>
+<li>为什么需要 Optional？<br>在 Objective-C 里，<code>nil</code> 是无类型指针，所有对象变量都可以为 <code>nil</code>，但是数组、字典、集合等不允许放入 <code>nil</code>。<code>nil</code> 只能用在对象上，而在其他地方又用其他特殊值表示值的缺失，例如 <code>NSNotFound</code>。</li>
 </ul>
 <h3 id="Swift-中的-Optional"><a href="#Swift-中的-Optional" class="headerlink" title="Swift 中的 Optional"></a>Swift 中的 Optional</h3><ul>
-<li>通过在变量后面加 <code>?</code> 表示：<br><strong>这里有一个值，它等于 x</strong><br><strong>或者</strong><br><strong>这里根本没有值</strong>  </li>
+<li>通过在变量后面加 <code>?</code> 表示：<br><strong>这里有一个值，它等于 x</strong>  或者  <strong>这里根本没有值</strong>  </li>
 </ul>
-<p>在 Swift 中，<code>nil</code> 不是指针，他是值缺失的一种特殊类型，任何类型的可选项都可以设置成 <code>nil</code> 而不仅仅是对象类型。</p>
-<p>可以通过给可选变量赋值一个 <code>nil</code> 来将之设置为没有值，但是不可以给一个<strong>非可选变量</strong>赋值一个 <code>nil</code>：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType12.png" alt="BasicDataType12"></p>
+<p>在 Swift 中，<code>nil</code> 不是指针，他是值缺失的一种特殊类型，<strong>任何类型的可选项都可以设置成 <code>nil</code> 而不仅仅是对象类型</strong>。</p>
+<p>可以给<strong>可选变量</strong>赋值 <code>nil</code> 将之设置为没有值，但是不可以给一个非可选变量赋值一个 <code>nil</code>：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType12.png" alt="BasicDataType12"></p>
 <h3 id="Optional-if-语句以及强制展开"><a href="#Optional-if-语句以及强制展开" class="headerlink" title="Optional-if 语句以及强制展开"></a>Optional-if 语句以及强制展开</h3><p>可选项是没法直接使用的，需要用 <code>!</code> 展开之后才能使用：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType15.png" alt="BasicDataType15"></p>
 <p>不可以在没有展开的情况下直接使用：<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType13.png" alt="BasicDataType13"></p>
 <p>报错信息：编译器不知道 str 是否有值，需要使用 <code>!</code> 告诉编译器 <code>str</code> 一定有值。<br><img src="/2022/09/30/Swift/基本数据类型/BasicDataType14.png" alt="BasicDataType14"></p>
@@ -485,14 +485,15 @@
 <h4 id="字符串里的特殊字符"><a href="#字符串里的特殊字符" class="headerlink" title="字符串里的特殊字符"></a>字符串里的特殊字符</h4><ul>
 <li><p>转义特殊字符 <code>\0</code>（空字符），<code>\\</code>（反斜杠），<code>\t</code>（水平制表符），<code>\n</code>（换行符），<code>\r</code>（回车符），<code>\&quot;</code>（双引号）以及<code>\&#39;</code>（单引号）</p>
 </li>
-<li><p>任意的 Unicode 标量，写作 <code>\u{n}</code>，n 是一个 1-8 位的16进制数字，其值是合法 Unicode 值</p>
-</li>
 <li><p>在多行字符串字面量中包含双引号 <code>&quot;</code> 不需转义，要在多行字符串中包含文本 <code>&quot;&quot;&quot;</code>，转义至少一个双引号</p>
 </li>
 </ul>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> string = <span class="string">""</span><span class="string">"</span></div><div class="line"><span class="string">"</span><span class="string">"</span></div><div class="line"><span class="string">"</span><span class="string">"\"</span></div><div class="line"><span class="string">"</span><span class="string">""</span></div><div class="line"><span class="built_in">print</span>(string)</div></pre></td></tr></table></figure>
 <p>打印结果：</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="string">""</span></div><div class="line"><span class="string">""</span><span class="string">"</span></div></pre></td></tr></table></figure>
+<ul>
+<li>任意的 Unicode 标量，写作 <code>\u{n}</code>，n 是一个 1-8 位的16进制数字，其值是合法 Unicode 值</li>
+</ul>
 <p><img src="/2022/09/30/Swift/基本数据类型/BasicDataType26.png" alt="BasicDataType26"></p>
 <h4 id="扩展字符串分隔符（Raw-String）"><a href="#扩展字符串分隔符（Raw-String）" class="headerlink" title="扩展字符串分隔符（Raw String）"></a>扩展字符串分隔符（Raw String）</h4><ul>
 <li><p>在字符串字面量中放置扩展分隔符，使字符串中包含的特殊字符不生效，可以把字符串放在双引号（<code>&quot;</code>）内并由井号（<code>#</code>）包裹</p>

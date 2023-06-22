@@ -111,7 +111,7 @@
 <meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/33.png">
 <meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/34.png">
 <meta property="og:image" content="http://yoursite.com/2023/01/15/Swift/集合类/35.png">
-<meta property="og:updated_time" content="2023-04-07T02:14:40.828Z">
+<meta property="og:updated_time" content="2023-06-15T03:12:51.630Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="集合类">
 <meta name="twitter:description" content="数组 Set 字典">
@@ -500,7 +500,7 @@
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> array = [<span class="number">5</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">46</span>, <span class="number">99</span>]  <span class="comment">// [5, 2, 10, 1, 0, 100, 46, 99]</span></div><div class="line">array.<span class="built_in">dropFirst</span>()                          <span class="comment">// [2, 10, 1, 0, 100, 46, 99]</span></div><div class="line">array.<span class="built_in">dropFirst</span>(<span class="number">3</span>)                         <span class="comment">// [1, 0, 100, 46, 99]</span></div></pre></td></tr></table></figure>
 <p>移除后面指定个数的元素，每次操作得到一个新的 ArraySlice：</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> array = [<span class="number">5</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">46</span>, <span class="number">99</span>]  <span class="comment">// [5, 2, 10, 1, 0, 100, 46, 99]</span></div><div class="line">array.<span class="built_in">dropLast</span>()                           <span class="comment">// [5, 2, 10, 1, 0, 100, 46]</span></div><div class="line">array.<span class="built_in">dropLast</span>(<span class="number">3</span>)                          <span class="comment">// [5, 2, 10, 1, 0]</span></div></pre></td></tr></table></figure>
-<h4 id="通过-prefix-得到-ArraySlice"><a href="#通过-prefix-得到-ArraySlice" class="headerlink" title="通过 prefix 得到 ArraySlice"></a>通过 prefix 得到 ArraySlice</h4><p><code>prefix()</code>：获取数组前面指定个数的袁术组成 ArraySlice。</p>
+<h4 id="通过-prefix-得到-ArraySlice"><a href="#通过-prefix-得到-ArraySlice" class="headerlink" title="通过 prefix 得到 ArraySlice"></a>通过 prefix 得到 ArraySlice</h4><p><code>prefix()</code>：获取数组前面指定个数的元素组成 ArraySlice。</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> array = [<span class="number">5</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">46</span>, <span class="number">99</span>]  <span class="comment">// [5, 2, 10, 1, 0, 100, 46, 99]</span></div><div class="line">array.<span class="keyword">prefix</span>(<span class="number">4</span>)                            <span class="comment">// [5, 2, 10, 1]</span></div></pre></td></tr></table></figure>
 <p><code>prefix(upTo:)</code>：获取数组到指定位置（不包含指定位置）前面的元素组成 ArraySlice。</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> array = [<span class="number">5</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">46</span>, <span class="number">99</span>]  <span class="comment">// [5, 2, 10, 1, 0, 100, 46, 99]</span></div><div class="line">array.<span class="keyword">prefix</span>(upTo: <span class="number">4</span>)                      <span class="comment">// [5, 2, 10, 1]</span></div></pre></td></tr></table></figure>
@@ -572,8 +572,8 @@
 <p><img src="/2023/01/15/Swift/集合类/07.png" alt="07"></p>
 <h4 id="Array-源码"><a href="#Array-源码" class="headerlink" title="Array 源码"></a>Array 源码</h4><p>Array 的本质是一个 Sequence。</p>
 <p>Array 的迭代器实现基于数组的下标操作，数组的小标操作基于 <code>buffer.getElement()</code> 方法，<code>buffer.getElement()</code> 方法基于 <code>UnsafeMutablePointer</code> 的小标操作。</p>
-<h4 id="Array-的迭代器"><a href="#Array-的迭代器" class="headerlink" title="Array 的迭代器"></a>Array 的迭代器</h4><p>左侧是 Array 的迭代器的底层实现，<code>next()</code> 方法负责返回数组的下一个元素，超出数组容量则返回空。获取数组内部元素的方式是<strong>下标访问</strong>。</p>
-<p>右侧是 Array 的迭代器的创建，传入的是 <code>self</code>，也就是说左面的 element 是右面传入的 Collection。</p>
+<h4 id="Array-的迭代器"><a href="#Array-的迭代器" class="headerlink" title="Array 的迭代器"></a>Array 的迭代器</h4><p>左侧是 Array 的迭代器的底层实现。<code>next()</code> 方法负责返回数组的下一个元素，超出数组容量则返回空。获取数组内部元素的方式是<strong>下标访问</strong>。</p>
+<p>右侧是 Array 的迭代器的创建。调用 <code>IndexingItetator</code> 传入的是 <code>self</code>，也就是说左面的 element 是右面传入的 Collection。</p>
 <p><img src="/2023/01/15/Swift/集合类/09.png" alt="09"></p>
 <h4 id="Array-的下标访问"><a href="#Array-的下标访问" class="headerlink" title="Array 的下标访问"></a>Array 的下标访问</h4><p>下图是下标访问的代码实现，核心方法是 <code>_getElement()</code> 方法。下标方法的调用链是 <code>subscrip(index:)</code>→<code>_getElement()</code>→<code>_buffer.getElement()</code>。</p>
 <p><img src="/2023/01/15/Swift/集合类/10.png" alt="10"></p>

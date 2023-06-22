@@ -94,7 +94,7 @@
 <meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/15.png">
 <meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/16.png">
 <meta property="og:image" content="http://yoursite.com/2022/10/14/Swift/运算符/17.png">
-<meta property="og:updated_time" content="2023-04-07T02:14:40.827Z">
+<meta property="og:updated_time" content="2023-06-15T03:12:51.630Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="运算符">
 <meta name="twitter:description" content="溢出运算符 合并空值运算符 区间运算符 位运算符 位运算符经典算法 运算符的优先升级和结核性 自定义运算符">
@@ -455,7 +455,7 @@
 <li><code>&lt;&lt;</code> 位左移运算符，可以把所有位数的数字向左移动一个确定的位数。</li>
 <li><code>&gt;&gt;</code> 位右移运算符，可以把所有位数的数字向右移动一个确定的位数。</li>
 </ul>
-<p>位左移和位右移具有将整数乘以或除以二的效果。将一个数左移一位相当于把这个数翻倍，将一个数右移一位相当于把这个数减半。</p>
+<p><strong>位左移和位右移具有将整数乘以或除以二的效果。</strong>将一个数左移一位相当于把这个数翻倍，将一个数右移一位相当于把这个数减半。</p>
 <h3 id="无符号整数的移位操作"><a href="#无符号整数的移位操作" class="headerlink" title="无符号整数的移位操作"></a>无符号整数的移位操作</h3><p>实现过程：</p>
 <ol>
 <li>已经存在的比特位按指定的位数进行左移和右移；</li>
@@ -486,7 +486,7 @@
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">countOfOnes</span><span class="params">(num: UInt)</span></span> -&gt; <span class="type">UInt</span> &#123;</div><div class="line">    <span class="keyword">var</span> <span class="built_in">count</span>: <span class="type">UInt</span> = <span class="number">0</span></div><div class="line">    <span class="keyword">var</span> temp = num</div><div class="line">    <span class="keyword">while</span> temp != <span class="number">0</span> &#123;</div><div class="line">        <span class="built_in">count</span> += temp &amp; <span class="number">1</span></div><div class="line">        temp = temp &gt;&gt; <span class="number">1</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">count</span></div><div class="line">&#125;</div><div class="line"><span class="built_in">print</span>(countOfOnes(num: <span class="number">4</span>))</div><div class="line"><span class="built_in">print</span>(countOfOnes(num: <span class="number">5</span>))</div><div class="line"><span class="comment">// Prints 1</span></div><div class="line"><span class="comment">// Prints 2</span></div></pre></td></tr></table></figure>
 <p>思考：如果整数的二进制中有较多的 0，那么我们每一次右移一位做判断会很浪费，怎么改进呢？有没有办法让算法的复杂度只与“1”的个数有关？</p>
 <blockquote>
-<p>思路：为了简化这个问题，先考虑只有高位有“1”的情况。例如：11 000 000，如何跳过前面低位的 6 个 0，而直接判断第七位的 1？我们可以设计 11 000 000 和 10 111 111（也就是 11 000 000 - 1）做“与”操作，消去最低位的 1。如果得到的结果为 0，说明已经找到（消去）里面最后一个 1。如果不为 0，那么说明消去了最低位的 1，但是二进制中还有其它的 1，计数器加一继续上面的操作。</p>
+<p>思路：为了简化这个问题，先考虑只有高位有“1”的情况。例如：11 000 000，如何跳过前面低位的 6 个 0，而直接判断第七位的 1？我们可以设计 11 000 000 和 10 111 111（也就是 11 000 000 - 1）做“与”操作，<strong>消去最低位的 1</strong>。如果得到的结果为 0，说明已经找到（消去）里面最后一个 1。如果不为 0，那么说明消去了最低位的 1，但是二进制中还有其它的 1，计数器加一继续上面的操作。</p>
 <p>计数器 count = 0</p>
 <p>步骤一：整数不为0，说明二进制里肯定有 1，count = 1</p>
 <p>11 000 000 &amp; 10 111 111 = 10 000 000（消去第七位的 1）。</p>
