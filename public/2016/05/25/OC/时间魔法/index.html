@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="OC," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="简介总结了下Swift中关于时间的一些简单操作，顺便也把OC的有关NSDate的一些常用方法回顾了一遍，记录成这篇NSDate回忆录。  日期时间的比较 NSDate 简单实用 NSDateFormatter 对日期时间对象做格式化操作的类 NSDateComponents 的简单使用">
+<meta name="keywords" content="OC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="时间魔法-NSDate回忆录">
+<meta property="og:url" content="http://yoursite.com/2016/05/25/OC/时间魔法/index.html">
+<meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="简介总结了下Swift中关于时间的一些简单操作，顺便也把OC的有关NSDate的一些常用方法回顾了一遍，记录成这篇NSDate回忆录。  日期时间的比较 NSDate 简单实用 NSDateFormatter 对日期时间对象做格式化操作的类 NSDateComponents 的简单使用">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://o7ttfnm00.bkt.clouddn.com/1.jpg">
+<meta property="og:updated_time" content="2023-06-12T06:20:32.808Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="时间魔法-NSDate回忆录">
+<meta name="twitter:description" content="简介总结了下Swift中关于时间的一些简单操作，顺便也把OC的有关NSDate的一些常用方法回顾了一遍，记录成这篇NSDate回忆录。  日期时间的比较 NSDate 简单实用 NSDateFormatter 对日期时间对象做格式化操作的类 NSDateComponents 的简单使用">
+<meta name="twitter:image" content="http://o7ttfnm00.bkt.clouddn.com/1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/05/25/OC/时间魔法/"/>
+
+
+
+
+
+  <title>时间魔法-NSDate回忆录 | Kevin's  blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a073c6e38282486853e19b272e9e7c34";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's  blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/25/OC/时间魔法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">时间魔法-NSDate回忆录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-25T00:00:00+08:00">
+                2016-05-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>总结了下Swift中关于时间的一些简单操作，顺便也把OC的有关NSDate的一些常用方法回顾了一遍，记录成这篇NSDate回忆录。</p>
+<ul>
+<li>日期时间的比较</li>
+<li>NSDate 简单实用</li>
+<li>NSDateFormatter 对日期时间对象做格式化操作的类</li>
+<li>NSDateComponents 的简单使用</li>
+</ul>
+<hr>
+<a id="more"></a>
+<p><img src="http://o7ttfnm00.bkt.clouddn.com/1.jpg" alt="time_oc"></p>
+<h1 id="日期时间的比较"><a href="#日期时间的比较" class="headerlink" title="日期时间的比较"></a>日期时间的比较</h1><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 当前时间</span></div><div class="line"><span class="built_in">NSDate</span> *currentDate = [<span class="built_in">NSDate</span> date];</div><div class="line"><span class="comment">// 比当前时间晚一个小时的时间</span></div><div class="line"><span class="built_in">NSDate</span> *laterDate = [[<span class="built_in">NSDate</span> alloc] initWithTimeInterval:<span class="number">60</span>*<span class="number">60</span> sinceDate:[<span class="built_in">NSDate</span> date]];</div><div class="line"><span class="comment">// 比当前时间早一个小时的时间</span></div><div class="line"><span class="built_in">NSDate</span> *earlierDate = [[<span class="built_in">NSDate</span> alloc] initWithTimeInterval:<span class="number">-60</span>*<span class="number">60</span> sinceDate:[<span class="built_in">NSDate</span> date]];</div><div class="line"><span class="comment">// 比较哪个时间晚</span></div><div class="line"><span class="keyword">if</span> ([currentDate laterDate:laterDate]) &#123;</div><div class="line">    <span class="comment">// current-2016-05-25 13:50:27 +0000比later-2016-05-25 14:50:27 +0000晚</span></div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"current-%@比later-%@晚"</span>,currentDate,laterDate);</div><div class="line">&#125;</div><div class="line"><span class="comment">// 比较哪个时间早</span></div><div class="line"><span class="keyword">if</span> ([currentDate earlierDate:earlierDate]) &#123;</div><div class="line">    <span class="comment">// current-2016-05-25 13:50:27 +0000 比 earlier-2016-05-25 12:50:27 +0000 早</span></div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"current-%@ 比 earlier-%@ 早"</span>,currentDate,earlierDate);</div><div class="line">&#125;</div><div class="line"></div><div class="line">*</div><div class="line">- (<span class="built_in">NSComparisonResult</span>)compare:(<span class="built_in">NSDate</span> *)other;</div><div class="line">该方法用于排序时调用:</div><div class="line">. 当实例保存的日期值与anotherDate相同时返回<span class="built_in">NSOrderedSame</span></div><div class="line">. 当实例保存的日期值晚于anotherDate时返回<span class="built_in">NSOrderedDescending</span></div><div class="line">. 当实例保存的日期值早于anotherDate时返回<span class="built_in">NSOrderedAscending</span></div><div class="line">*/</div><div class="line"></div><div class="line"><span class="keyword">if</span> ([currentDate compare:earlierDate]==<span class="built_in">NSOrderedDescending</span>) &#123;</div><div class="line">    <span class="comment">// 打印结果</span></div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"current 晚"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> ([currentDate compare:currentDate]==<span class="built_in">NSOrderedSame</span>) &#123;</div><div class="line">    <span class="comment">// 打印结果</span></div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"时间相等"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> ([currentDate compare:laterDate]==<span class="built_in">NSOrderedAscending</span>) &#123;</div><div class="line">    <span class="comment">// 打印结果</span></div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"current 早"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h1 id="NSDate-简单实用"><a href="#NSDate-简单实用" class="headerlink" title="NSDate 简单实用"></a>NSDate 简单实用</h1><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//-获取当前日期时间的方法</span></div><div class="line"><span class="comment">//实例方法</span></div><div class="line"><span class="built_in">NSDate</span> *date1=[[<span class="built_in">NSDate</span> alloc]init];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"date1:%@"</span>,date1);  <span class="comment">//2016-05-25 13:06:12 +0000</span></div><div class="line"><span class="comment">//类方法</span></div><div class="line"><span class="built_in">NSDate</span> *date2=[<span class="built_in">NSDate</span> date];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"date2:%@"</span>,date2);  <span class="comment">//2016-05-25 13:06:12 +0000</span></div><div class="line"></div><div class="line"><span class="comment">//获取从1970年1月1日00:00到date2的秒数</span></div><div class="line"><span class="built_in">NSTimeInterval</span> interval= [date2 timeIntervalSince1970];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%f"</span>,interval);     <span class="comment">//1464182226.511477</span></div><div class="line"></div><div class="line"><span class="comment">//*********可以加一个延时操作</span></div><div class="line"><span class="comment">//[NSThread sleepForTimeInterval:2.f];</span></div><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10000</span>;i++)&#123;&#125;</div><div class="line"><span class="comment">//********* </span></div><div class="line"><span class="comment">//计算两个时间差（秒数）</span></div><div class="line">interval=[date2 timeIntervalSinceDate:date1];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%f"</span>,interval);     <span class="comment">//0.001625</span></div><div class="line"></div><div class="line"><span class="comment">//date1距现在的时间差</span></div><div class="line">interval=[date1 timeIntervalSinceNow];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%f"</span>,interval);     <span class="comment">//-0.001935</span></div><div class="line"></div><div class="line"><span class="comment">//-得到date2的后一天(单位-秒)的时间对象</span></div><div class="line"><span class="comment">//实例方法：</span></div><div class="line"><span class="built_in">NSDate</span> *date3=[date2 dateByAddingTimeInterval:<span class="number">24</span>*<span class="number">3600</span>];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"date3:%@"</span>,date3);  <span class="comment">//2016-05-26 13:18:21 +0000</span></div><div class="line"><span class="comment">//类方法：</span></div><div class="line"><span class="built_in">NSDate</span> *date4=[<span class="built_in">NSDate</span> dateWithTimeInterval:<span class="number">24</span>*<span class="number">3600</span> sinceDate:date2];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"date4:%@"</span>,date4);  <span class="comment">//2016-05-26 13:18:21 +0000</span></div><div class="line"></div><div class="line"><span class="comment">//得到距现在多少秒后的一个日期时间对象</span></div><div class="line"><span class="built_in">NSDate</span> *date5=[<span class="built_in">NSDate</span> dateWithTimeIntervalSinceNow:<span class="number">3</span>*<span class="number">24</span>*<span class="number">3600</span>];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"date5:%@"</span>,date5);  <span class="comment">//2016-05-28 13:18:21 +0000</span></div><div class="line"></div><div class="line"><span class="comment">//获取将来的一个日期时间对象</span></div><div class="line"><span class="built_in">NSDate</span> *date6=[<span class="built_in">NSDate</span> distantFuture];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"date6:%@"</span>,date6);  <span class="comment">//4001-01-01 00:00:00 +0000</span></div><div class="line">    </div><div class="line"><span class="comment">//获取过去的一个日期时间对象</span></div><div class="line"><span class="built_in">NSDate</span> *date7=[<span class="built_in">NSDate</span> distantPast];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"date7:%@"</span>,date7);  <span class="comment">//0000-12-30 00:00:00 +0000</span></div></pre></td></tr></table></figure>
+<hr>
+<h1 id="NSDateFormatter-对日期时间对象做格式化操作的类"><a href="#NSDateFormatter-对日期时间对象做格式化操作的类" class="headerlink" title="NSDateFormatter 对日期时间对象做格式化操作的类"></a>NSDateFormatter 对日期时间对象做格式化操作的类</h1><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSDateFormatter</span> *format=[[<span class="built_in">NSDateFormatter</span> alloc]init];</div><div class="line">[format setDateStyle:<span class="built_in">NSDateFormatterMediumStyle</span>]; <span class="comment">//设置日期的样式</span></div><div class="line">[format setTimeStyle:<span class="built_in">NSDateFormatterMediumStyle</span>]; <span class="comment">//设置时间的样式</span></div><div class="line">[dateFormatter setTimeZone:[<span class="built_in">NSTimeZone</span> timeZoneWithName:<span class="string">@"Asia/Shanghai"</span>]]; <span class="comment">//设置时区</span></div><div class="line"><span class="built_in">NSString</span> *styledate= [format stringFromDate:date1];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"styledate:%@"</span>,styledate);                 <span class="comment">//May 25, 2016, 9:18:21 PM</span></div><div class="line"></div><div class="line">[format setDateFormat:<span class="string">@"yyyy-MM-dd hh:mm:ss"</span>];    <span class="comment">//自定义格式字符串</span></div><div class="line"><span class="built_in">NSString</span> *sdate=[format stringFromDate:date1];    <span class="comment">//将NSDate对象转换为字符串</span></div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"sdate:%@"</span>,sdate);                         <span class="comment">//2016-05-25 09:18:21</span></div><div class="line"></div><div class="line"><span class="comment">//将字符串形式的日期时间转换为NSDate对象(保证字符串的形式与format中的形式一致)</span></div><div class="line"><span class="built_in">NSString</span> *str=<span class="string">@"2016-05-25 09:15:30"</span>;</div><div class="line"><span class="built_in">NSDate</span> *date8=[format dateFromString:str];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"date8:%@"</span>,date8); <span class="comment">//2015-07-09 16:10:30 +0000</span></div><div class="line"></div><div class="line"><span class="comment">//时间格式化字符串</span></div><div class="line"><span class="built_in">NSDate</span> *newdate=[<span class="built_in">NSDate</span> date];</div><div class="line"><span class="built_in">NSDateFormatter</span> *formatter = [[<span class="built_in">NSDateFormatter</span> alloc]init];</div><div class="line">[formatter setDateFormat:<span class="string">@"yyyy-MM-dd HH:mm:ss MMM eee a"</span>];</div><div class="line">[dateFormatter setTimeZone:[<span class="built_in">NSTimeZone</span> timeZoneWithName:<span class="string">@"Asia/Shanghai"</span>]]; <span class="comment">//设置时区</span></div><div class="line"><span class="built_in">NSString</span> *strdate = [formatter stringFromDate:newdate];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,strdate); <span class="comment">//2016-05-25 21:18:21 May Wed PM</span></div><div class="line"></div><div class="line"><span class="comment">//时间字符串转换为时间类型</span></div><div class="line"><span class="built_in">NSDateFormatter</span> * formatter2 = [[<span class="built_in">NSDateFormatter</span> alloc]init];</div><div class="line"><span class="built_in">NSString</span> * nstr =<span class="string">@"2016年05月25日 9点14分18秒"</span>;</div><div class="line">[formatter2 setDateFormat:<span class="string">@"yyyy年MM月dd日  hh点mm分ss秒"</span>];</div><div class="line">[dateFormatter setTimeZone:[<span class="built_in">NSTimeZone</span> timeZoneWithName:<span class="string">@"Asia/Shanghai"</span>]]; <span class="comment">//设置时区</span></div><div class="line"><span class="built_in">NSDate</span> * date9 = [formatter2 dateFromString:nstr];</div><div class="line"></div><div class="line">ps：<span class="built_in">NSDateFormatter</span> 是时间的一些配置项：对应的时区、展示的格式等等。如果服务器没有返回时间戳，而是返回了默认 “Asia/Shanghai” 时区的字符串时间（XXXX年X月X日），这时候在转<span class="built_in">NSDate</span>时就必须要设置清楚这个时间所属的时区，否则会被当做是零时区的时间。</div></pre></td></tr></table></figure>
+<hr>
+<h1 id="NSDateComponents-的简单使用"><a href="#NSDateComponents-的简单使用" class="headerlink" title="NSDateComponents 的简单使用"></a>NSDateComponents 的简单使用</h1><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//获取系统时间的年月日时分秒部分</span></div><div class="line"><span class="built_in">NSCalendar</span> *cal = [<span class="built_in">NSCalendar</span> currentCalendar];</div><div class="line"><span class="comment">//Mac 10.10以前的系统使用 NSYearCalendarUnit</span></div><div class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> unitFlags = <span class="built_in">NSCalendarUnitYear</span> |<span class="built_in">NSCalendarUnitMonth</span>|<span class="built_in">NSCalendarUnitDay</span>|<span class="built_in">NSCalendarUnitHour</span>|<span class="built_in">NSCalendarUnitMinute</span>|<span class="built_in">NSCalendarUnitSecond</span>;</div><div class="line"><span class="built_in">NSDateComponents</span> *d = [cal components:unitFlags fromDate:newdate];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"年=%ld"</span>,[d year]);   <span class="comment">//年=2016</span></div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"月=%ld"</span>,[d month]);  <span class="comment">//月=5</span></div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"日=%ld"</span>,[d day]);    <span class="comment">//日=25</span></div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"时=%ld"</span>,[d hour]);   <span class="comment">//时=21</span></div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"分=%ld"</span>,[d minute]); <span class="comment">//分=18</span></div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"秒=%ld"</span>,[d second]); <span class="comment">//秒=21</span></div><div class="line">   </div><div class="line"><span class="comment">//将传入时间字符串转换成需要的时间格式</span></div><div class="line"><span class="built_in">NSString</span> *dateStr=<span class="string">@"2013-08-13 20:28:40"</span>;</div><div class="line"><span class="built_in">NSDateFormatter</span> *format1=[[<span class="built_in">NSDateFormatter</span> alloc] init];</div><div class="line">[format1 setDateFormat:<span class="string">@"yyyy-MM-dd HH:mm:ss"</span>];</div><div class="line"><span class="built_in">NSDate</span> *fromdate=[format1 dateFromString:dateStr];</div><div class="line">     </div><div class="line"><span class="comment">//解决时分秒转换不准确问题--相差了8小时，是时区的问题</span></div><div class="line"><span class="built_in">NSTimeZone</span> *fzone = [<span class="built_in">NSTimeZone</span> systemTimeZone];</div><div class="line"><span class="built_in">NSInteger</span> finterval = [fzone secondsFromGMTForDate:date9];</div><div class="line"><span class="built_in">NSDate</span> *fDate = [date9  dateByAddingTimeInterval:finterval];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,fDate); <span class="comment">//2014-05-01 10:23:18 +0000</span></div><div class="line"></div><div class="line"><span class="comment">//将传入时间字符串转换成需要的时间格式</span></div><div class="line"><span class="built_in">NSString</span> *dateStr=<span class="string">@"2013-08-13 20:28:40"</span>;</div><div class="line"><span class="built_in">NSDateFormatter</span> *format1=[[<span class="built_in">NSDateFormatter</span> alloc] init];</div><div class="line">[format1 setDateFormat:<span class="string">@"yyyy-MM-dd HH:mm:ss"</span>];</div><div class="line"><span class="built_in">NSDate</span> *fromdate=[format1 dateFromString:dateStr];</div><div class="line"></div><div class="line"><span class="comment">//解决时分秒转换不准确问题</span></div><div class="line"><span class="built_in">NSTimeZone</span> *fromzone = [<span class="built_in">NSTimeZone</span> systemTimeZone];</div><div class="line"><span class="built_in">NSInteger</span> frominterval = [fromzone secondsFromGMTForDate: fromdate];</div><div class="line"><span class="built_in">NSDate</span> *fromDate = [fromdate  dateByAddingTimeInterval: frominterval];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"fromdate=%@"</span>,fromDate);</div><div class="line">    </div><div class="line"><span class="built_in">NSDate</span> *currentDate = [<span class="built_in">NSDate</span> date];</div><div class="line"><span class="built_in">NSString</span> *timeSp = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%ld"</span>, (<span class="keyword">long</span>)[currentDate timeIntervalSince1970]];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"currentDate == %@"</span>, timeSp); <span class="comment">//1464182301</span></div><div class="line"><span class="built_in">NSTimeInterval</span> time = [timeSp doubleValue];</div><div class="line"><span class="built_in">NSTimeInterval</span> addTime = <span class="number">60</span> * <span class="number">60</span> * <span class="number">24</span> * <span class="number">7</span>;</div><div class="line">time = time + addTime;</div><div class="line">    </div><div class="line"><span class="built_in">NSDateFormatter</span> *dateFormatter = [[<span class="built_in">NSDateFormatter</span> alloc] init];</div><div class="line">[dateFormatter setDateFormat:<span class="string">@"YYYY/MM/dd hh:mm:ss SS"</span>];</div><div class="line"><span class="built_in">NSString</span> *dateString = [dateFormatter stringFromDate:currentDate];</div><div class="line"><span class="built_in">NSString</span> *year = [dateString substringToIndex:<span class="number">4</span>];</div><div class="line"><span class="built_in">NSString</span> *month = [dateString substringWithRange:<span class="built_in">NSMakeRange</span>(<span class="number">5</span>, <span class="number">2</span>)];</div><div class="line"><span class="built_in">NSString</span> *day = [dateString substringWithRange:<span class="built_in">NSMakeRange</span>(<span class="number">8</span>, <span class="number">2</span>)];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"%@-%@-%@"</span>, year, month, day); <span class="comment">//2016-05-25</span></div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OC/" rel="tag"># OC</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/27/Swift/时间魔法Swift篇/" rel="prev" title="时间魔法 Swift篇">
+                时间魔法 Swift篇 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/myAvatar.gif"
+              alt="Kevin" />
+          
+            <p class="site-author-name" itemprop="name">Kevin</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KevinYangGit" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yangqioffice@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_YangQI" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.cnblogs.com/mjios" title="M了个J" target="_blank">M了个J</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#日期时间的比较"><span class="nav-number">2.</span> <span class="nav-text">日期时间的比较</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSDate-简单实用"><span class="nav-number">3.</span> <span class="nav-text">NSDate 简单实用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSDateFormatter-对日期时间对象做格式化操作的类"><span class="nav-number">4.</span> <span class="nav-text">NSDateFormatter 对日期时间对象做格式化操作的类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSDateComponents-的简单使用"><span class="nav-number">5.</span> <span class="nav-text">NSDateComponents 的简单使用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="/js/src/md5.min.js"></script>
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: '82b6ced795961ee1fcca',
+      clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
+      repo: 'KevinYangGit.github.io',
+      owner: 'KevinYangGit',
+      admin: ['KevinYangGit'],
+      id: md5(location.pathname),
+      distractionFreeMode: 'true'
+    })
+    gitalk.render('gitalk-container')
+  </script>
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

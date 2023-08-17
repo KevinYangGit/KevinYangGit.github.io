@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数据结构与算法," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="栈（stack）又名堆栈，它是一种运算受限的线性表。限定仅在表尾进行插入和删除操作的线性表。这一端被称为栈顶，相对地，把另一端称为栈底。向一个栈插入新元素又称作进栈、入栈或压栈，它是把新元素放到栈顶元素的上面，使之成为新的栈顶元素；从一个栈删除元素又称作出栈或退栈，它是把栈顶元素删除掉，使其相邻的元素成为新的栈顶元素。">
+<meta name="keywords" content="数据结构与算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="栈">
+<meta property="og:url" content="http://yoursite.com/2020/10/30/数据结构与算法/栈/index.html">
+<meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="栈（stack）又名堆栈，它是一种运算受限的线性表。限定仅在表尾进行插入和删除操作的线性表。这一端被称为栈顶，相对地，把另一端称为栈底。向一个栈插入新元素又称作进栈、入栈或压栈，它是把新元素放到栈顶元素的上面，使之成为新的栈顶元素；从一个栈删除元素又称作出栈或退栈，它是把栈顶元素删除掉，使其相邻的元素成为新的栈顶元素。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2020/10/30/数据结构与算法/栈/栈01.png">
+<meta property="og:image" content="http://yoursite.com/2020/10/30/数据结构与算法/栈/栈02.png">
+<meta property="og:image" content="http://yoursite.com/2020/10/30/数据结构与算法/栈/栈03.png">
+<meta property="og:image" content="http://yoursite.com/2020/10/30/数据结构与算法/栈/栈04.png">
+<meta property="og:image" content="http://yoursite.com/2020/10/30/数据结构与算法/栈/栈05.png">
+<meta property="og:image" content="http://yoursite.com/2020/10/30/数据结构与算法/栈/栈06.png">
+<meta property="og:image" content="http://yoursite.com/2020/10/30/数据结构与算法/栈/栈07.png">
+<meta property="og:image" content="http://yoursite.com/2020/10/30/数据结构与算法/栈/栈08.png">
+<meta property="og:updated_time" content="2023-06-12T06:20:33.208Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="栈">
+<meta name="twitter:description" content="栈（stack）又名堆栈，它是一种运算受限的线性表。限定仅在表尾进行插入和删除操作的线性表。这一端被称为栈顶，相对地，把另一端称为栈底。向一个栈插入新元素又称作进栈、入栈或压栈，它是把新元素放到栈顶元素的上面，使之成为新的栈顶元素；从一个栈删除元素又称作出栈或退栈，它是把栈顶元素删除掉，使其相邻的元素成为新的栈顶元素。">
+<meta name="twitter:image" content="http://yoursite.com/2020/10/30/数据结构与算法/栈/栈01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/10/30/数据结构与算法/栈/"/>
+
+
+
+
+
+  <title>栈 | Kevin's  blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a073c6e38282486853e19b272e9e7c34";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's  blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/30/数据结构与算法/栈/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">栈</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-10-30T11:53:52+08:00">
+                2020-10-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://baike.baidu.com/item/%E6%A0%88/12808149?fr=aladdin" target="_blank" rel="external">栈（stack）</a>又名堆栈，它是一种运算受限的线性表。限定仅在表尾进行插入和删除操作的线性表。这一端被称为栈顶，相对地，把另一端称为栈底。向一个栈插入新元素又称作进栈、入栈或压栈，它是把新元素放到栈顶元素的上面，使之成为新的栈顶元素；从一个栈删除元素又称作出栈或退栈，它是把栈顶元素删除掉，使其相邻的元素成为新的栈顶元素。</p>
+<a id="more"></a>
+<h1 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h1><p>栈是一种特殊的线性表，智能在一端进行操作：<br>往栈中添加元素的操作，一般叫做 push，入栈；<br>从栈中移除元素的操作，一般叫做 pop，出栈（只能移除站定元素，也叫做：弹出栈顶元素）；<br>后进先出的原则，Last In First Out ~ LIFO。  </p>
+<p><img src="/2020/10/30/数据结构与算法/栈/栈01.png" alt="栈01"></p>
+<h2 id="接口设计"><a href="#接口设计" class="headerlink" title="接口设计"></a>接口设计</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Stack</span>&lt;<span class="title">E</span>&gt; </span>&#123;</div><div class="line">	<span class="comment">/*</span></div><div class="line"><span class="comment">	 * 清空</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span> </span>&#123;</div><div class="line">		</div><div class="line">	&#125;</div><div class="line">	<span class="comment">/*</span></div><div class="line"><span class="comment">	 * 大小</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="comment">/*</span></div><div class="line"><span class="comment">	 * 判空</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="comment">/*</span></div><div class="line"><span class="comment">	 * 入栈</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">push</span><span class="params">(E element)</span> </span>&#123;</div><div class="line">		</div><div class="line">	&#125;</div><div class="line">	<span class="comment">/*</span></div><div class="line"><span class="comment">	 * 出栈</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="function"><span class="keyword">public</span> E <span class="title">pop</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="comment">/*</span></div><div class="line"><span class="comment">	 * 获取顶部元素</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="function"><span class="keyword">public</span> E <span class="title">top</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>因为动态数组和双向链表在添加删除随后一个元素的复杂度都是 O(1) 级别，所以这两种数据结构都可以用来实现栈。下面是采用动态数组实现的栈。<br><img src="/2020/10/30/数据结构与算法/栈/栈02.png" alt="栈02"></p>
+<h2 id="实现-继承"><a href="#实现-继承" class="headerlink" title="实现-继承"></a>实现-继承</h2><p>采用继承的方式实现栈，继承 ArrayList 实现：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> com.yq.<span class="built_in">list</span>.ArrayList;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Stack</span>&lt;E&gt; <span class="title">extends</span> <span class="title">ArrayList</span>&lt;E&gt;&#123;</span></div><div class="line">	<span class="comment">/*</span></div><div class="line"><span class="comment">	 * 入栈</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">push</span><span class="params">(E element)</span> </span>&#123;</div><div class="line">		add(element);</div><div class="line">	&#125;</div><div class="line">	<span class="comment">/*</span></div><div class="line"><span class="comment">	 * 出栈</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="function"><span class="keyword">public</span> E <span class="title">pop</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> remove(size<span class="number">-1</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="comment">/*</span></div><div class="line"><span class="comment">	 * 获取顶部元素</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="function"><span class="keyword">public</span> E <span class="title">top</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> get(size<span class="number">-1</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>clear()</code>、<code>size()</code>和<code>isEmpty()</code> 父类已经实现了。</p>
+<p>测试：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	Stack&lt;Integer&gt; <span class="built_in">stack</span> = <span class="keyword">new</span> Stack&lt;&gt;();</div><div class="line">	<span class="built_in">stack</span>.push(<span class="number">1</span>);</div><div class="line">	<span class="built_in">stack</span>.push(<span class="number">2</span>);</div><div class="line">	<span class="built_in">stack</span>.push(<span class="number">3</span>);</div><div class="line">	<span class="built_in">stack</span>.push(<span class="number">4</span>);</div><div class="line">	</div><div class="line">	<span class="keyword">while</span> (!<span class="built_in">stack</span>.isEmpty()) &#123;</div><div class="line">		System.out.println(<span class="built_in">stack</span>.pop());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="number">4</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">1</span></div></pre></td></tr></table></figure></p>
+<p>继承可以实现栈的效果，但是却存在一个问题：stack 可以访问到 ArrayList 所有的开放接口，<code>stack.add()</code>、<code>stack.remove()</code> 等。解决方案👇。</p>
+<h2 id="实现-组合"><a href="#实现-组合" class="headerlink" title="实现-组合"></a>实现-组合</h2><p>采用组合的方式实现栈，实现：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Stack2</span>&lt;E&gt; &#123;</span></div><div class="line">	ArrayList&lt;E&gt; <span class="built_in">list</span> = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">	<span class="comment">/*</span></div><div class="line"><span class="comment">	 * 清空</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="built_in">list</span>.clear();</div><div class="line">	&#125;</div><div class="line">	<span class="comment">/*</span></div><div class="line"><span class="comment">	 * 大小</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="built_in">list</span>.size();</div><div class="line">	&#125;</div><div class="line">	<span class="comment">/*</span></div><div class="line"><span class="comment">	 * 判空</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="function"><span class="keyword">public</span> boolean <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="built_in">list</span>.isEmpty();</div><div class="line">	&#125;</div><div class="line">	<span class="comment">/*</span></div><div class="line"><span class="comment">	 * 入栈</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">push</span><span class="params">(E element)</span> </span>&#123;</div><div class="line">		<span class="built_in">list</span>.add(element);</div><div class="line">	&#125;</div><div class="line">	<span class="comment">/*</span></div><div class="line"><span class="comment">	 * 出栈</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="function"><span class="keyword">public</span> E <span class="title">pop</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="built_in">list</span>.remove(<span class="built_in">list</span>.size()<span class="number">-1</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="comment">/*</span></div><div class="line"><span class="comment">	 * 获取顶部元素</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="function"><span class="keyword">public</span> E <span class="title">top</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="built_in">list</span>.get(<span class="built_in">list</span>.size()<span class="number">-1</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>测试：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">testStack2</span><span class="params">()</span> </span>&#123;</div><div class="line">	Stack&lt;Integer&gt; <span class="built_in">stack</span> = <span class="keyword">new</span> Stack&lt;&gt;();</div><div class="line">	<span class="built_in">stack</span>.push(<span class="number">1</span>);</div><div class="line">	<span class="built_in">stack</span>.push(<span class="number">2</span>);</div><div class="line">	<span class="built_in">stack</span>.push(<span class="number">3</span>);</div><div class="line">	<span class="built_in">stack</span>.push(<span class="number">4</span>);</div><div class="line">	</div><div class="line">	<span class="keyword">while</span> (!<span class="built_in">stack</span>.isEmpty()) &#123;</div><div class="line">		System.out.println(<span class="built_in">stack</span>.pop());</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	testStack2();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>打印结果：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="number">4</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">1</span></div></pre></td></tr></table></figure></p>
+<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><p>游览器的前进和后退就是通过栈来实现的：</p>
+<p>依次访问 jd.com、qq.com 和 baidu.com：<br><img src="/2020/10/30/数据结构与算法/栈/栈03.png" alt="栈03"><br>后退<br><img src="/2020/10/30/数据结构与算法/栈/栈04.png" alt="栈04"><br>后退<br><img src="/2020/10/30/数据结构与算法/栈/栈05.png" alt="栈05"><br>前进<br><img src="/2020/10/30/数据结构与算法/栈/栈06.png" alt="栈06"><br>访问 taobao.com<br><img src="/2020/10/30/数据结构与算法/栈/栈07.png" alt="栈07"></p>
+<p>类似场景：软件的撤销、恢复功能。</p>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p>Stack 继承自 Vector，Vector 也是动态数组，相较于 ArrayList，Vector 是线程安全的。<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div></pre></td><td class="code"><pre><div class="line">public <span class="built_in">class</span> Stack&lt;E&gt; extends Vector&lt;E&gt; &#123;</div><div class="line">	/**</div><div class="line">     * Creates an empty Stack.</div><div class="line">     */</div><div class="line">    public Stack() &#123;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * Pushes an <span class="built_in">item</span> <span class="keyword">onto</span> <span class="keyword">the</span> top <span class="keyword">of</span> this stack. This has exactly</div><div class="line">     * <span class="keyword">the</span> same effect <span class="keyword">as</span>:</div><div class="line">     * &lt;blockquote&gt;&lt;pre&gt;</div><div class="line">     * addElement(<span class="built_in">item</span>)&lt;/pre&gt;&lt;/blockquote&gt;</div><div class="line">     *</div><div class="line">     * @param   <span class="built_in">item</span>   <span class="keyword">the</span> <span class="built_in">item</span> <span class="keyword">to</span> be pushed <span class="keyword">onto</span> this stack.</div><div class="line">     * @<span class="literal">return</span>  <span class="keyword">the</span> &#123;@code <span class="built_in">item</span>&#125; argument.</div><div class="line">     * @see     java.util.Vector<span class="comment">#addElement</span></div><div class="line">     */</div><div class="line">    public E push(E <span class="built_in">item</span>) &#123;</div><div class="line">        addElement(<span class="built_in">item</span>);</div><div class="line"></div><div class="line"><span class="built_in">        return</span> <span class="built_in">item</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * Removes <span class="keyword">the</span> object <span class="keyword">at</span> <span class="keyword">the</span> top <span class="keyword">of</span> this stack <span class="keyword">and</span> returns <span class="keyword">that</span></div><div class="line">     * object <span class="keyword">as</span> <span class="keyword">the</span> value <span class="keyword">of</span> this function.</div><div class="line">     *</div><div class="line">     * @<span class="literal">return</span>  The object <span class="keyword">at</span> <span class="keyword">the</span> top <span class="keyword">of</span> this stack (<span class="keyword">the</span> <span class="keyword">last</span> <span class="built_in">item</span></div><div class="line">     *          <span class="keyword">of</span> <span class="keyword">the</span> &#123;@code Vector&#125; object).</div><div class="line">     * @throws  EmptyStackException  <span class="keyword">if</span> this stack <span class="keyword">is</span> empty.</div><div class="line">     */</div><div class="line">    public synchronized E pop() &#123;</div><div class="line">        E       obj;</div><div class="line">        int     len = size();</div><div class="line"></div><div class="line">        obj = peek();</div><div class="line">        removeElementAt(len - <span class="number">1</span>);</div><div class="line"></div><div class="line"><span class="built_in">        return</span> obj;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * Looks <span class="keyword">at</span> <span class="keyword">the</span> object <span class="keyword">at</span> <span class="keyword">the</span> top <span class="keyword">of</span> this stack <span class="keyword">without</span> removing <span class="keyword">it</span></div><div class="line">     * <span class="keyword">from</span> <span class="keyword">the</span> stack.</div><div class="line">     *</div><div class="line">     * @<span class="literal">return</span>  <span class="keyword">the</span> object <span class="keyword">at</span> <span class="keyword">the</span> top <span class="keyword">of</span> this stack (<span class="keyword">the</span> <span class="keyword">last</span> <span class="built_in">item</span></div><div class="line">     *          <span class="keyword">of</span> <span class="keyword">the</span> &#123;@code Vector&#125; object).</div><div class="line">     * @throws  EmptyStackException  <span class="keyword">if</span> this stack <span class="keyword">is</span> empty.</div><div class="line">     */</div><div class="line">    public synchronized E peek() &#123;</div><div class="line">        int     len = size();</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (len == <span class="number">0</span>)</div><div class="line">            throw new EmptyStackException();</div><div class="line"><span class="built_in">        return</span> elementAt(len - <span class="number">1</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * Tests <span class="keyword">if</span> this stack <span class="keyword">is</span> empty.</div><div class="line">     *</div><div class="line">     * @<span class="literal">return</span>  &#123;@code <span class="literal">true</span>&#125; <span class="keyword">if</span> <span class="keyword">and</span> only <span class="keyword">if</span> this stack <span class="keyword">contains</span></div><div class="line">     *          no items; &#123;@code <span class="literal">false</span>&#125; otherwise.</div><div class="line">     */</div><div class="line">    public <span class="built_in">boolean</span> empty() &#123;</div><div class="line"><span class="built_in">        return</span> size() == <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">	...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h1><h2 id="有效的括号"><a href="#有效的括号" class="headerlink" title="有效的括号"></a>有效的括号</h2><p><a href="https://leetcode-cn.com/problems/valid-parentheses/" target="_blank" rel="external">20. 有效的括号</a></p>
+<ol>
+<li>遇见左字符，将左字符入栈；</li>
+<li>遇见右字符：<br>如果展示空的，说明括号无效；<br>如果站不为空，将栈顶字符出出栈，与右字符匹配：<br>-&gt; 如果左右字符不匹配 -&gt; 括号无效；<br>-&gt; 如果左右字符匹配 -&gt; 继续扫描下一个字符；</li>
+<li>所有字符扫描完毕后：<br>栈为空 -&gt; 括号有效；<br>栈不为空 -&gt; 括号无效；<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> boolean <span class="title">isValid</span><span class="params">(String s)</span> </span>&#123;</div><div class="line">	Stack&lt;Character&gt; <span class="built_in">stack</span> = <span class="keyword">new</span> Stack&lt;&gt;();</div><div class="line">	</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i++) &#123;</div><div class="line">		<span class="keyword">char</span> c = s.charAt(i);</div><div class="line">		<span class="keyword">if</span> (c == <span class="string">'('</span> || c == <span class="string">'['</span> || c == <span class="string">'&#123;'</span>) &#123;</div><div class="line">			<span class="built_in">stack</span>.push(c);</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			<span class="keyword">if</span> (<span class="built_in">stack</span>.isEmpty()) <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">			</div><div class="line">			<span class="keyword">char</span> left = <span class="built_in">stack</span>.pop();</div><div class="line">			<span class="keyword">if</span> (left == <span class="string">'('</span> &amp;&amp; c != <span class="string">')'</span>) <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">			<span class="keyword">if</span> (left == <span class="string">'['</span> &amp;&amp; c != <span class="string">']'</span>) <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">			<span class="keyword">if</span> (left == <span class="string">'&#123;'</span> &amp;&amp; c != <span class="string">'&#125;'</span>) <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">		&#125;	</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="keyword">return</span> <span class="built_in">stack</span>.isEmpty();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="括号的分数"><a href="#括号的分数" class="headerlink" title="括号的分数"></a>括号的分数</h2><p><a href="https://leetcode-cn.com/problems/score-of-parentheses/" target="_blank" rel="external">856. 括号的分数</a><br><a href="https://leetcode-cn.com/problems/score-of-parentheses/solution/gua-hao-de-fen-shu-fang-fa-er-zhan-by-yang-h6/" target="_blank" rel="external">括号的分数 - 方法二：栈</a><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment"> * ()、(()(、()( 对于只有一层括号的情况，top == 0：</span></div><div class="line"><span class="comment"> * 1. 取出 top = pop();</span></div><div class="line"><span class="comment"> * 2. 修改 top = 1，并 push(top);</span></div><div class="line"><span class="comment"> * 3. 判断前一项是否可加</span></div><div class="line"><span class="comment"> *  </span></div><div class="line"><span class="comment"> * 示例：</span></div><div class="line"><span class="comment"> * ( : [0] ~&gt; () : [1] </span></div><div class="line"><span class="comment"> * (()( : [0, 1, 0] ~&gt; (()() : [0, 2]</span></div><div class="line"><span class="comment"> * ()(：[1, 0] ~&gt; ()()：[2]</span></div><div class="line"><span class="comment"> */</span></div><div class="line"> <span class="comment">/* </span></div><div class="line"><span class="comment"> * (())、(()()) 对于外层有括号的情况，top != 0：</span></div><div class="line"><span class="comment"> * 1. 取出 top = pop();</span></div><div class="line"><span class="comment"> * 2. 修改 top *=2，并 push(top);</span></div><div class="line"><span class="comment"> * 3. 判断前一项是否可加；</span></div><div class="line"><span class="comment"> * </span></div><div class="line"><span class="comment"> * 示例：</span></div><div class="line"><span class="comment"> * (() : [0, 1] ~&gt; (()) : [2]</span></div><div class="line"><span class="comment"> * (()() : [0, 1, 1] ~&gt; (()()) : [4]</span></div><div class="line"><span class="comment"> * (()(( : [0, 1, 0, 0] ~&gt; (()(() : [0, 1, 1]</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">scoreOfParentheses6</span><span class="params">(String S)</span> </span>&#123;</div><div class="line">	Stack&lt;Integer&gt; <span class="built_in">stack</span> = <span class="keyword">new</span> Stack&lt;&gt;();</div><div class="line">	<span class="built_in">stack</span>.push(<span class="number">0</span>);</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">char</span> c : S.toCharArray()) &#123;</div><div class="line">		<span class="keyword">if</span> (c == <span class="string">'('</span>) &#123;</div><div class="line">			<span class="built_in">stack</span>.push(<span class="number">0</span>);</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			<span class="keyword">int</span> top = <span class="built_in">stack</span>.pop();</div><div class="line">			<span class="keyword">int</span> left = <span class="built_in">stack</span>.pop();</div><div class="line">			<span class="built_in">stack</span>.push(left + Math.max(<span class="number">2</span> * top, <span class="number">1</span>));</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="built_in">stack</span>.pop();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="逆波兰表达式求值"><a href="#逆波兰表达式求值" class="headerlink" title="逆波兰表达式求值"></a>逆波兰表达式求值</h2><p><a href="https://baike.baidu.com/item/%E9%80%86%E6%B3%A2%E5%85%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F/9841727?fr=aladdin" target="_blank" rel="external">逆波兰表达式</a><br><img src="/2020/10/30/数据结构与算法/栈/栈08.png" alt="栈08"><br><a href="https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/" target="_blank" rel="external">150. 逆波兰表达式求值</a><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">evalRPN</span><span class="params">(String[] tokens)</span> </span>&#123;</div><div class="line">	Stack&lt;Integer&gt; <span class="built_in">stack</span> = <span class="keyword">new</span> Stack&lt;&gt;(); </div><div class="line">	<span class="keyword">for</span> (String s : tokens) &#123;</div><div class="line">		<span class="keyword">if</span> (s == <span class="string">"+"</span>) &#123;</div><div class="line">			<span class="built_in">stack</span>.push(<span class="built_in">stack</span>.pop() + <span class="built_in">stack</span>.pop());</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (s == <span class="string">"-"</span>) &#123;</div><div class="line">			<span class="built_in">stack</span>.push(-(<span class="built_in">stack</span>.pop() - <span class="built_in">stack</span>.pop()));</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (s == <span class="string">"*"</span>) &#123;</div><div class="line">			<span class="built_in">stack</span>.push(<span class="built_in">stack</span>.pop() * <span class="built_in">stack</span>.pop());</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (s == <span class="string">"/"</span>) &#123;</div><div class="line">			Integer s1 = <span class="built_in">stack</span>.pop();</div><div class="line">			<span class="built_in">stack</span>.push(<span class="built_in">stack</span>.pop() / s1);</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			<span class="built_in">stack</span>.push(Integer.valueOf(s));</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="built_in">stack</span>.pop();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>ps：<br><a href="https://baike.baidu.com/item/%E5%89%8D%E7%BC%80%E8%A1%A8%E8%BE%BE%E5%BC%8F" target="_blank" rel="external">前缀表达式</a><br><a href="https://baike.baidu.com/item/%E4%B8%AD%E7%BC%80%E8%A1%A8%E8%BE%BE%E5%BC%8F" target="_blank" rel="external">中缀表达式</a><br><a href="https://baike.baidu.com/item/%E9%80%86%E6%B3%A2%E5%85%B0%E5%BC%8F/128437?fromtitle=%E5%90%8E%E7%BC%80%E8%A1%A8%E8%BE%BE%E5%BC%8F&amp;fromid=6160580" target="_blank" rel="external">后缀表达式</a></p>
+<h2 id="基本计算器"><a href="#基本计算器" class="headerlink" title="基本计算器"></a>基本计算器</h2><p><a href="https://leetcode-cn.com/problems/basic-calculator/" target="_blank" rel="external">224. 基本计算器</a><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">calculate</span><span class="params">(String s)</span> </span>&#123;</div><div class="line">	Stack&lt;Integer&gt; <span class="built_in">stack</span> = <span class="keyword">new</span> Stack&lt;&gt;();</div><div class="line">	<span class="keyword">int</span> res = <span class="number">0</span>;</div><div class="line">	<span class="keyword">int</span> operand = <span class="number">0</span>; <span class="comment">//位数</span></div><div class="line">	<span class="keyword">int</span> sign = <span class="number">1</span>; <span class="comment">//+：1，-：-1</span></div><div class="line">	</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">char</span> c : s.toCharArray()) &#123;</div><div class="line">		<span class="keyword">if</span> (c == <span class="string">' '</span>)</div><div class="line">			<span class="keyword">continue</span>;</div><div class="line">		</div><div class="line">		<span class="keyword">if</span> (c &gt;= <span class="string">'0'</span> &amp;&amp; c &lt;= <span class="string">'9'</span>) &#123;</div><div class="line">			operand = operand*<span class="number">10</span> + (c - <span class="string">'0'</span>);</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (c == <span class="string">'+'</span> || c == <span class="string">'-'</span>) &#123;</div><div class="line">			res += operand*sign;</div><div class="line">			operand = <span class="number">0</span>; <span class="comment">// 重置位数</span></div><div class="line">			sign = c == <span class="string">'+'</span> ? <span class="number">1</span> : <span class="number">-1</span>; <span class="comment">// 重置符号</span></div><div class="line">			</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (c == <span class="string">'('</span>) &#123;</div><div class="line">			<span class="built_in">stack</span>.push(res);</div><div class="line">			<span class="built_in">stack</span>.push(sign);</div><div class="line">			res = <span class="number">0</span>;</div><div class="line">			sign = <span class="number">1</span>;</div><div class="line">		&#125; <span class="keyword">else</span> &#123; <span class="comment">// c == ')'</span></div><div class="line">			res += operand*sign;</div><div class="line">			operand = <span class="number">0</span>;</div><div class="line">			</div><div class="line">			<span class="keyword">int</span> a = <span class="built_in">stack</span>.pop(); <span class="comment">//上一次的 sign</span></div><div class="line">			<span class="keyword">int</span> b = <span class="built_in">stack</span>.pop(); <span class="comment">//上一次的 sum</span></div><div class="line">			</div><div class="line">			res += b*a;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> res + sign * operand;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构与算法/" rel="tag"># 数据结构与算法</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/10/20/数据结构与算法/链表/" rel="next" title="链表">
+                <i class="fa fa-chevron-left"></i> 链表
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/11/06/数据结构与算法/队列/" rel="prev" title="队列">
+                队列 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/myAvatar.gif"
+              alt="Kevin" />
+          
+            <p class="site-author-name" itemprop="name">Kevin</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KevinYangGit" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yangqioffice@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_YangQI" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.cnblogs.com/mjios" title="M了个J" target="_blank">M了个J</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#栈"><span class="nav-number">1.</span> <span class="nav-text">栈</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#接口设计"><span class="nav-number">1.1.</span> <span class="nav-text">接口设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现-继承"><span class="nav-number">1.2.</span> <span class="nav-text">实现-继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现-组合"><span class="nav-number">1.3.</span> <span class="nav-text">实现-组合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用"><span class="nav-number">1.4.</span> <span class="nav-text">应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源码分析"><span class="nav-number">1.5.</span> <span class="nav-text">源码分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#练习"><span class="nav-number">2.</span> <span class="nav-text">练习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#有效的括号"><span class="nav-number">2.1.</span> <span class="nav-text">有效的括号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#括号的分数"><span class="nav-number">2.2.</span> <span class="nav-text">括号的分数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逆波兰表达式求值"><span class="nav-number">2.3.</span> <span class="nav-text">逆波兰表达式求值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本计算器"><span class="nav-number">2.4.</span> <span class="nav-text">基本计算器</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="/js/src/md5.min.js"></script>
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: '82b6ced795961ee1fcca',
+      clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
+      repo: 'KevinYangGit.github.io',
+      owner: 'KevinYangGit',
+      admin: ['KevinYangGit'],
+      id: md5(location.pathname),
+      distractionFreeMode: 'true'
+    })
+    gitalk.render('gitalk-container')
+  </script>
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Other," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="Hexo-NEXT常用操作命令部署命令行1hexo clean &amp;amp;&amp;amp; hexo g &amp;amp;&amp;amp; hexo d 写作1hexo new “title” 标签12345---title: 多线程 — GCDdate: 2016-06-14 tags: OC //标签--- 文章内添加图片 把图片放到  source/_posts/自定义文件夹/image.png 文章中插入图">
+<meta name="keywords" content="Other">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo安装笔记">
+<meta property="og:url" content="http://yoursite.com/2018/08/08/Other/Hexo安装笔记/index.html">
+<meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="Hexo-NEXT常用操作命令部署命令行1hexo clean &amp;amp;&amp;amp; hexo g &amp;amp;&amp;amp; hexo d 写作1hexo new “title” 标签12345---title: 多线程 — GCDdate: 2016-06-14 tags: OC //标签--- 文章内添加图片 把图片放到  source/_posts/自定义文件夹/image.png 文章中插入图">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/08/08/Other/Hexo安装笔记/Hexo安装笔记01.png">
+<meta property="og:image" content="http://yoursite.com/2018/08/08/Other/Hexo安装笔记/Hexo安装笔记02.png">
+<meta property="og:updated_time" content="2023-06-12T06:20:32.935Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo安装笔记">
+<meta name="twitter:description" content="Hexo-NEXT常用操作命令部署命令行1hexo clean &amp;amp;&amp;amp; hexo g &amp;amp;&amp;amp; hexo d 写作1hexo new “title” 标签12345---title: 多线程 — GCDdate: 2016-06-14 tags: OC //标签--- 文章内添加图片 把图片放到  source/_posts/自定义文件夹/image.png 文章中插入图">
+<meta name="twitter:image" content="http://yoursite.com/2018/08/08/Other/Hexo安装笔记/Hexo安装笔记01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/08/Other/Hexo安装笔记/"/>
+
+
+
+
+
+  <title>Hexo安装笔记 | Kevin's  blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a073c6e38282486853e19b272e9e7c34";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's  blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/08/Other/Hexo安装笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Hexo安装笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-08T16:27:04+08:00">
+                2018-08-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Hexo-NEXT常用操作命令"><a href="#Hexo-NEXT常用操作命令" class="headerlink" title="Hexo-NEXT常用操作命令"></a>Hexo-NEXT常用操作命令</h2><h3 id="部署命令行"><a href="#部署命令行" class="headerlink" title="部署命令行"></a>部署命令行</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo d</div></pre></td></tr></table></figure>
+<h3 id="写作"><a href="#写作" class="headerlink" title="写作"></a>写作</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo <span class="keyword">new</span> “title”</div></pre></td></tr></table></figure>
+<h3 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: 多线程 — GCD</div><div class="line">date: <span class="number">2016</span><span class="number">-06</span><span class="number">-14</span> </div><div class="line">tags: OC <span class="comment">//标签</span></div><div class="line">---</div></pre></td></tr></table></figure>
+<h3 id="文章内添加图片"><a href="#文章内添加图片" class="headerlink" title="文章内添加图片"></a>文章内添加图片</h3><ol>
+<li>把图片放到  source/_posts/自定义文件夹/image.png</li>
+<li>文章中插入图片</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">![image](自定义文件夹/image.png)</div></pre></td></tr></table></figure>
+<h3 id="设置头像"><a href="#设置头像" class="headerlink" title="设置头像"></a>设置头像</h3><ol>
+<li>把图片放入 themes/next/source/images</li>
+<li>修改头像</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># Sidebar Avatar</div><div class="line"># in theme directory(source/images): /images/avatar.jpg</div><div class="line"># in site  directory(source/uploads): /uploads/avatar.jpg</div><div class="line">avatar: http:<span class="comment">//example.com/avatar.png</span></div></pre></td></tr></table></figure>
+<h2 id="本地头像"><a href="#本地头像" class="headerlink" title="本地头像"></a>本地头像</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">avatar: <span class="regexp">/images/</span>avatar.gif</div></pre></td></tr></table></figure>
+<p>Ps：图片格式我用.jpeg时加载不出了，改成.gif可以正常显示</p>
+<h2 id="Hexo-安装手记"><a href="#Hexo-安装手记" class="headerlink" title="Hexo 安装手记"></a>Hexo 安装手记</h2><ul>
+<li>2018/08/08</li>
+</ul>
+<h3 id="一、安装-Node-js"><a href="#一、安装-Node-js" class="headerlink" title="一、安装 Node.js"></a>一、安装 Node.js</h3><p><a href="https://nodejs.org" target="_blank" rel="external">下载Node.js</a></p>
+<h3 id="二、安装HEXO"><a href="#二、安装HEXO" class="headerlink" title="二、安装HEXO"></a>二、安装HEXO</h3><p>执行命令行，报错</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install -g hexo-cli</div></pre></td></tr></table></figure>
+<p><img src="/2018/08/08/Other/Hexo安装笔记/Hexo安装笔记01.png" alt="Hexo安装笔记01"></p>
+<p>改用👇，成功</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo npm install -g hexo</div></pre></td></tr></table></figure>
+<h3 id="三、初始化HEXO"><a href="#三、初始化HEXO" class="headerlink" title="三、初始化HEXO"></a>三、初始化HEXO</h3><p>cd 所在文件夹，执行命令👇，初始化</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo init</div></pre></td></tr></table></figure>
+<p><img src="/2018/08/08/Other/Hexo安装笔记/Hexo安装笔记02.png" alt="Hexo安装笔记02"><br>￼<br><code>Permission denied (publickey).</code> 问题解决：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">git config --global user.email “yagnqi_office@<span class="number">163.</span>com”</div><div class="line">git config --global user.name “KevinYangGit”</div><div class="line"></div><div class="line">ssh-keygen -t rsa -C <span class="string">"yangqi_office@163.com"</span></div></pre></td></tr></table></figure>
+<p>更新 github 里的 SSH</p>
+<h3 id="四、安装插件"><a href="#四、安装插件" class="headerlink" title="四、安装插件"></a>四、安装插件</h3><p>执行👇，安装插件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-deployer-git --save</div></pre></td></tr></table></figure>
+<h3 id="五、常用复合命令"><a href="#五、常用复合命令" class="headerlink" title="五、常用复合命令"></a>五、常用复合命令</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// （第一次要输入用户名和密码）</span></div><div class="line">hexo deploy -g </div><div class="line">hexo server -g</div></pre></td></tr></table></figure>
+<p>简写：</p>
+<p><code>hexo n</code> == <code>hexo new</code><br><code>hexo g</code> == <code>hexo generate</code><br><code>hexo s</code> == <code>hexo server</code><br><code>hexo d</code> == <code>hexo deploy</code></p>
+<h2 id="Hexo常见问题解决方案"><a href="#Hexo常见问题解决方案" class="headerlink" title="Hexo常见问题解决方案"></a>Hexo常见问题解决方案</h2><p>[[<a href="http://wp.huangshiyang.com/hexo%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88" target="_blank" rel="external">http://wp.huangshiyang.com/hexo%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88</a>]]</p>
+<p>[[<a href="https://cnodejs.org/topic/5502652573263b0e4eef9b26" target="_blank" rel="external">https://cnodejs.org/topic/5502652573263b0e4eef9b26</a>]]</p>
+<p>[[<a href="http://stackoverflow.com/questions/9484829/npm-cant-find-package-json" target="_blank" rel="external">http://stackoverflow.com/questions/9484829/npm-cant-find-package-json</a>]]</p>
+<p>[[<a href="http://www.jianshu.com/p/98e993305653" target="_blank" rel="external">http://www.jianshu.com/p/98e993305653</a>]]</p>
+<h2 id="博客样式"><a href="#博客样式" class="headerlink" title="博客样式"></a>博客样式</h2><p>[[<a href="https://github.com/hexojs/hexo/wiki/Themes" target="_blank" rel="external">https://github.com/hexojs/hexo/wiki/Themes</a>]]</p>
+<p>[[<a href="https://github.com/daisygao/hexo-themes-cover" target="_blank" rel="external">https://github.com/daisygao/hexo-themes-cover</a>]]</p>
+<p>[[<a href="https://github.com/A-limon/pacman" target="_blank" rel="external">https://github.com/A-limon/pacman</a>]]</p>
+<p>[[<a href="https://github.com/TryGhost/Casper" target="_blank" rel="external">https://github.com/TryGhost/Casper</a>]]</p>
+<p>[[<a href="https://github.com/huangjunhui/concise.git" target="_blank" rel="external">https://github.com/huangjunhui/concise.git</a>]]</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Other/" rel="tag"># Other</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/15/OC/AFHTTPSessionManager/AFHTTPSessionManager/" rel="next" title="AFHTTPSessionManager">
+                <i class="fa fa-chevron-left"></i> AFHTTPSessionManager
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/14/Other/不二医疗/不二医疗隐私政策/" rel="prev" title="不二医疗隐私政策">
+                不二医疗隐私政策 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/myAvatar.gif"
+              alt="Kevin" />
+          
+            <p class="site-author-name" itemprop="name">Kevin</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KevinYangGit" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yangqioffice@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_YangQI" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.cnblogs.com/mjios" title="M了个J" target="_blank">M了个J</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hexo-NEXT常用操作命令"><span class="nav-number">1.</span> <span class="nav-text">Hexo-NEXT常用操作命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#部署命令行"><span class="nav-number">1.1.</span> <span class="nav-text">部署命令行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写作"><span class="nav-number">1.2.</span> <span class="nav-text">写作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标签"><span class="nav-number">1.3.</span> <span class="nav-text">标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文章内添加图片"><span class="nav-number">1.4.</span> <span class="nav-text">文章内添加图片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置头像"><span class="nav-number">1.5.</span> <span class="nav-text">设置头像</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本地头像"><span class="nav-number">2.</span> <span class="nav-text">本地头像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hexo-安装手记"><span class="nav-number">3.</span> <span class="nav-text">Hexo 安装手记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、安装-Node-js"><span class="nav-number">3.1.</span> <span class="nav-text">一、安装 Node.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、安装HEXO"><span class="nav-number">3.2.</span> <span class="nav-text">二、安装HEXO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、初始化HEXO"><span class="nav-number">3.3.</span> <span class="nav-text">三、初始化HEXO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、安装插件"><span class="nav-number">3.4.</span> <span class="nav-text">四、安装插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、常用复合命令"><span class="nav-number">3.5.</span> <span class="nav-text">五、常用复合命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hexo常见问题解决方案"><span class="nav-number">4.</span> <span class="nav-text">Hexo常见问题解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#博客样式"><span class="nav-number">5.</span> <span class="nav-text">博客样式</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="/js/src/md5.min.js"></script>
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: '82b6ced795961ee1fcca',
+      clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
+      repo: 'KevinYangGit.github.io',
+      owner: 'KevinYangGit',
+      admin: ['KevinYangGit'],
+      id: md5(location.pathname),
+      distractionFreeMode: 'true'
+    })
+    gitalk.render('gitalk-container')
+  </script>
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
