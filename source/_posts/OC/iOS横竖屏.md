@@ -541,10 +541,46 @@ if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
 }
 ```
 
+### AFPlayer
+
+关于 transform 的使用，[ZFPlayer](https://github.com/renzifeng/ZFPlayer) 中有相关应用。
+
+AFPlayer 支持小屏竖屏、大屏横屏状态，分别针对iOS15和iOS16做了对应的横屏方案。不支持小屏横屏状态。
+
+iOS15
+
+小屏 -> 大屏
+
+1. 自定义 `ZFLandscapeWindow`，设置更控制器 `ZFLandscapeViewController_iOS15`，控制器中自定义一个 `playerSuperview`（`UIView`）；
+2. 全屏时，修改设备方向为横向；
+3. 设备方向改变时，触发`viewWillTransitionToSize:withTransitionCoordinator:`方法，将播放器添加到 `playerSuperview` 上，设置 playerSuperview、播放器 的大小为横屏大小；
+
+大屏 -> 小屏
+
+1. 修改设备方向为竖向；
+2. 设备方向改变时，触发`viewWillTransitionToSize:withTransitionCoordinator:`方法，将播放器添加到 `containerView` 上，`containerView` 是开发者创建播放器时的容器view，设置播放器的大小。
+
+iOS 16
+
+小屏 -> 大屏
+
+1. 自定义 `ZFLandscapeWindow`，设置更控制器 `ZFLandscapeViewController`；
+2. 全屏时，修改设备方向为横向；
+3. 设备方向改变时，触发`viewWillTransitionToSize:withTransitionCoordinator:`方法，将播放器添加到 `ZFLandscapeWindow.view` 上
+4. 旋转播放器为横向，设置播放器坐标为对应 Window 上的frame
+5. 调用`setNeedsUpdateOfSupportedInterfaceOrientations`重新设置内容方向，将播放器添加到 `ZFLandscapeViewController.view` 上，设置播放器大小为横屏大小
+
+大屏 -> 小屏
+
+1. 修改设备方向为竖向；
+2. 设备方向改变时，触发`viewWillTransitionToSize:withTransitionCoordinator:`方法，将播放器添加到 `ZFLandscapeWindow.view` 上
+3. 旋转播放器为横向，设置播放器坐标为对应 Window 上的frame
+4. 将播放器添加到 `containerView` 上，`containerView` 是开发者创建播放器时的容器view，设置播放器的大小。
+
 ## 横竖屏切换机制分析
 
 1. 工程配置文件没有设置支持横屏，为什么可以 push 出横屏页面？
-2. 工程配置、APPDelegate 和 UIViewController，在横竖屏切换过程的关系是什么？
+2. 工程配置、`APPDelegate` 和 `UIViewController`，在横竖屏切换过程的关系是什么？
 3. 自动旋转和手动旋转有什么区别？
 
 ### 系统如何知道 APP 对页面朝向的支持
