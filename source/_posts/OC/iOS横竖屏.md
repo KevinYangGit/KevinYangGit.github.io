@@ -18,7 +18,7 @@ tags: OC
 
 <!-- more -->
 
-# 基础概念
+## 基础概念
 
 * `UIDeviceOrientation`：设备朝向
 
@@ -26,7 +26,7 @@ tags: OC
 
 * `UIInterfaceOrientationMask`：页面支持的朝向
 
-## UIDeviceOrientation
+### UIDeviceOrientation
 
 `UIDeviceOrientation` 表示设备朝向，可以通过该方法获取：
 
@@ -48,7 +48,7 @@ typedef NS_ENUM(NSInteger, UIDeviceOrientation) {
 } API_UNAVAILABLE(tvos);
 ```
 
-## UIInterfaceOrientation
+### UIInterfaceOrientation
 
 `UIInterfaceOrientation` 表示页面内容朝向。
 
@@ -80,7 +80,7 @@ typedef NS_ENUM(NSInteger, UIInterfaceOrientation) {
 [[UIApplication shareApplication] statusBarOrientation];
 ```
 
-## UIInterfaceOrientationMask
+### UIInterfaceOrientationMask
 
 `UIInterfaceOrientationMask` 表示页面支持的朝向。
 
@@ -100,7 +100,7 @@ typedef NS_OPTIONS(NSUInteger, UIInterfaceOrientationMask) {
 
 比如 `UIInterfaceOrientationMaskLandscape` 是由 `MaskLandscapeLeft` 和 `MaskLandscapeRight` 组成，是由页面内容朝向的二进制偏移组成，这样可以方便设备支持两个横屏方向。
 
-# 横竖屏之UIViewController相关方法
+## 横竖屏之UIViewController相关方法
 
 * `- (BOOL)shouldAutorotate;`
 
@@ -108,7 +108,7 @@ typedef NS_OPTIONS(NSUInteger, UIInterfaceOrientationMask) {
 
 * `- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation;`
 
-## shouldAutorotate
+### shouldAutorotate
 
 ```swift
 - (BOOL)shouldAutorotate;
@@ -124,15 +124,15 @@ typedef NS_OPTIONS(NSUInteger, UIInterfaceOrientationMask) {
 
   解决方法：依赖于 `shouldAutorotate` 的应用程序应使用支持的视图控制器 `InterfaceOrientations` 反映其首选项。**如果支持的方向更改**，请使用 `-[UIViewController setNeedsUpdateOfSupportedInterface]`
 
-## supportedInterfaceOrientations
+### supportedInterfaceOrientations
 
 ```swift
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations;
 ```
 
-用来返回当前页面支持的页面朝向，可以返回四个朝向的任意组合。这个方法返回的前提是 `shouldAutorotate = YES`。 
+用来返回当前页面支持的页面朝向，可以返回四个朝向的任意组合。这个方法返回的前提是 `shouldAutorotate = YES`。
 
-## preferredInterfaceOrientationForPresentation
+### preferredInterfaceOrientationForPresentation
 
 ```swift
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation;
@@ -140,9 +140,9 @@ typedef NS_OPTIONS(NSUInteger, UIInterfaceOrientationMask) {
 
 当页面被 **present** 出来的时候，返回该页面支持的朝向。可以返回四个朝向的任意组合。如果没有返回，则 **present** 时和原来页面的方向保持一致。
 
-# 横竖屏之APPDelegate相关方法
+## 横竖屏之APPDelegate相关方法
 
-* 方法一 
+* 方法一
 
 在 XCode 的工程设置的 `General` 里，设置 iPhone 和 iPad 的页面朝向支持。
 
@@ -168,7 +168,9 @@ typedef NS_OPTIONS(NSUInteger, UIInterfaceOrientationMask) {
 
 该方法等效于 XCode 工程设置里的页面朝向支持，但是更灵活。
 
-# 自动旋转
+📢注意：以下内容都是基于设置了 `UIInterfaceOrientationMaskAll` 的情况下实现的，如果有其它情况会单独作补充。
+
+## 自动旋转
 
 关闭方向锁定，让屏幕随重力感应旋转。
 
@@ -180,18 +182,19 @@ typedef NS_OPTIONS(NSUInteger, UIInterfaceOrientationMask) {
   `+attemptRotationToDeviceOrientation` 是将界面朝向对齐设备朝向，是标准 api。  
   `-setOrientation:` 是调整设备朝向，是私有 api。
 
-*  iOS 16 相关改动：
+* iOS 16 相关改动：
 ![Orientation01](iOS横竖屏/Orientation01.png)
  `[UIViewController should Autorotate]` 已被弃用，不再受支持。`[UIViewController attmptRotationToDeviceOrientation]` 已被弃用，并替换为 `[UIViewController setNeedsUpdateOfSupportedInterfaceOrienttions]`。  
 
   解决方法：依赖于 `shouldAutorotate` 的应用程序应使用支持的视图控制器 `InterfaceOrientations` 反映其首选项。**如果支持的方向更改**，请使用 `-[UIViewController setNeedsUpdateOfSupportedInterface]`
 
-## App 自动旋转触发流程
+### App 自动旋转触发流程
 
 当手机的重力感应打开的时候，旋转手机，系统会触发 UIDeviceOrientationDidChangeNotification 事件，同时读取 plist 文件中的支持朝向。
 
 如果在 AppDelegate 中重写了下面这个方法👇，那么会以重写这个方法的返回值为准。
-```
+
+```swift
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
 ```
 
@@ -212,14 +215,15 @@ typedef NS_OPTIONS(NSUInteger, UIInterfaceOrientationMask) {
 
 📢注意：在 `- (BOOL)shouldAutorotate;` 返回 `YES` 时，系统会调用该页面的 `supportedInterfaceOrientations` 方法获取页面朝向。该页面的 `supportedInterfaceOrientations` 返回值，必须是 plist 文件中 `supportedInterfaceOrientations` 包含的值。否则会 crash。
 
-## App 自动旋转实现
+### App 自动旋转实现
 
-### 场景一
+#### 场景一
 
 此处需要横屏的 ViewController 是 AppDelegate 的 rootVC，或者是 modal 下的 vc。
 
 1. 先配置app支持的旋转方向，可以在 XCode 工程设置、info.plist 文件和 AppDelegate 三中方法中的任意一种。
-2. 指定横屏页面重写相关方法；  
+2. 指定横屏页面重写相关方法；
+  
 ```swift
 // ViewController.m 文件
 
@@ -239,8 +243,7 @@ typedef NS_OPTIONS(NSUInteger, UIInterfaceOrientationMask) {
 }
 ```
 
-
-### 场景二
+#### 场景二
 
 此处需要横屏的 ViewController 是被 push 过来的（非rootvc和modal下的vc）。
 
@@ -285,20 +288,21 @@ typedef NS_OPTIONS(NSUInteger, UIInterfaceOrientationMask) {
 
 📢注意：通过 present 方式进入的页面会调用 `preferredInterfaceOrientationForPresentation` 方法，确定初始显示方向。通过 push 的方式进入的页面，不会再加载页面时调用 `preferredInterfaceOrientationForPresentation` 方法。无法实现通过 push 方式，直接进入一个横屏页面，只有触发旋转才会横屏展示，想要实现一进入页面就展示横屏，只能以 present（modal） 的形式进入。
 
-### 场景三
+#### 场景三
 
 除了重写系统方法外，还可以通过 transform 的方式实现自动旋转。
 
 1. 监听 UIDeviceOrientationDidChangeNotification 在监听回调中获取设备方向；
 2. 根据设备方向对 view 做相应的 transform 操作；
 
-# 强制横屏
+## 强制横屏
 
 强制横屏的实现方案：
+
 1. 重写系统旋转方法；
 2. 视图适配：通过 transform 修改 layer，从而在视图上实现横屏，但是此时屏幕宽度、状态栏、安全距离等都保留竖屏状态，这种方式仅仅适用于横屏弹窗等部分场景。
 
-## 竖屏页面 present 横屏页面
+### 竖屏页面 present 横屏页面
 
 1. 设置 `secondViewController` 的 `modalPresentationStyle` 为 `UIModalPresentationFullScreen`；
 2. 在 `secondViewController.m` 文件，实现 `preferredInterfaceOrientationForPresentation` 方法，返回 `UIInterfaceOrientationLandscapeRight`;
@@ -325,14 +329,51 @@ typedef NS_OPTIONS(NSUInteger, UIInterfaceOrientationMask) {
 }
 ```
 
+补充：上面的代码有可能不生效，生效的前提是设置了 App 支持横屏方向，上面已经提到过，可以在 Xcode 里设置，也可以用代码设置👇
+
+```swift
+// AppDelegate.m 文件
+
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    return UIInterfaceOrientationMaskAll;
+}
+```
+
+如果这个方法返回的是 `[self.window.rootViewController supportedInterfaceOrientations]`，则上面的“竖屏 present 横屏”方案不生效。
+
+```swift
+// AppDelegate.m 文件
+
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    return [self.window.rootViewController supportedInterfaceOrientations];
+}
+```
+
+解决方案：在通用工具的单例里添加“是否支持横屏”的属性，在需要 present 横屏前设置为 true，不 dismiss 前设置为 false，并在 AppDelegate.m 文件的方法里返回对应方向👇。
+
+```swift
+// AppDelegate.m 文件
+
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    // present 前 true，dismiss 前 false
+    if ([CommonShared share].isSupportLandscapeRight) {
+        return UIInterfaceOrientationLandscapeRight
+    }
+    return [self.window.rootViewController supportedInterfaceOrientations];
+}
+```
+
 🤔思考：  
+
 1. 如何实现横屏转竖屏？
 2. 如何实现自定义旋转效果？
 3. 横屏返回竖屏需要怎么处理？
 
 📢注意：  
+
 1. 强制某一方向横屏只能在 modal 模式下实现，push 模式下不行。
 2. 通过 runtime 调用 setOrientation 的形式是不可行的，该方法仅支持 iOS6 以下的系统：
+
 ```swift
 //以下仅仅使用ios6以下的设备！
 
@@ -347,9 +388,9 @@ if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
 }
 ```
 
-## 竖屏页面 push 横屏页面
+### 竖屏页面 push 横屏页面
 
-### 方法一
+#### 方法一
 
 ```swift
 // AppDelegate.m 文件
@@ -377,10 +418,11 @@ if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
 ```
 
 🤔思考：
+
 1. 这里为什么没有用到 `UIViewController` 的三个方法？
 2. 在 viewDidLoad 方法内部调用的旋转方法是什么意思？
 
-### 方法二
+#### 方法二
 
 1. `UINavigationController` 内部实现相关方法，包括 `- (BOOL)shouldAutorotate;` 和 `- (UIInterfaceOrientationMask)supportedInterfaceOrientations;`
 2. `secondViewController` 内部实现相关方法，包括 `- (BOOL)shouldAutorotate;` 和 `- (UIInterfaceOrientationMask)supportedInterfaceOrientations;`
@@ -436,7 +478,8 @@ if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
 }
 ```
 
-## view 的 transform
+### view 的 transform
+
 该方法是将 view 进行一个90度的旋转，不改变系统的显示方向。
 
 ```swift
@@ -469,6 +512,7 @@ if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
 📢注意：在全面屏手机中，可以通过 `self.view.safeAreaInsets` 获取到安全区域。竖屏状态下获取安全区域是 `(40, 0, 34, 0)`，横屏状态下获取安全区域是 `(0, 44, 0, 34)`。因为通过 transform 方式旋转 view，系统方向还是竖屏状态，所以获取到的安全区域不对。
 
 自定义根据指定方向获取安全区域的方法：
+
 ```swift
 /**
  获取屏幕的安全区域
@@ -497,13 +541,13 @@ if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
 }
 ```
 
-# 横竖屏切换机制分析
+## 横竖屏切换机制分析
 
 1. 工程配置文件没有设置支持横屏，为什么可以 push 出横屏页面？
 2. 工程配置、APPDelegate 和 UIViewController，在横竖屏切换过程的关系是什么？
 3. 自动旋转和手动旋转有什么区别？
 
-## 系统如何知道 APP 对页面朝向的支持
+### 系统如何知道 APP 对页面朝向的支持
 
 * APP 启动前
   在 APP 启动前进程还未加载，代码无法运行，系统无法通过 `AppDelegate` 或者 `UIViewController` 这种代码的方式获取横竖屏的配置。所以，在这种情况下，工程配置中的 plist 文件中的横竖屏配置，可以帮助系统识别应该以什么样的朝向启动 APP。  
@@ -513,7 +557,7 @@ if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
   当 APP 进程加载完成，此时系统可以通过运行时询问的方式，来动态获取不同时机的界面朝向。  
   此时 APPDelegate 控制的事 UIWindow 层面的朝向，UIViewController 控制的是 ViewController 层级的朝向。需要注意的是，当我们返回 UIViewController 的朝向时，还要考虑父容器的朝向。通常一个 App 的界面层级是 UIWindow → RootViewController（父） → ViewController（子）。只在 UIWindow 返回界面朝向也是允许的，如上面的**竖屏页面 push 横屏页面**👆。
 
-## 朝向冲突
+### 朝向冲突
 
 在每次界面切换的时候，系统都会回调新的界面朝向，最终结果取 UIWindow 朝向、RootViewController 朝向、ViewController 朝向**三者的与**值。
 
@@ -523,9 +567,10 @@ if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
 
 在界面切换的过程中，如果没有返回朝向值或朝向值未确定，系统更倾向于保持当前朝向不变。
 
-# 横竖屏切换通知
+## 横竖屏切换通知
 
 NSNotification通知
+
 ```swift
 [[NSNotificationCenter defaultCenter] addObserverForName:UIDeviceOrientationDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
     NSLog(@"NSNotification:%@, orientation:%d", note.userInfo, [(UIDevice *)note.object orientation]);
@@ -533,6 +578,7 @@ NSNotification通知
 ```
 
 UIViewController回调
+
 ```swift
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator API_AVAILABLE(ios(8.0));
 ```
