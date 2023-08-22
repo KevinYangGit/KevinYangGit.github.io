@@ -56,7 +56,7 @@ tags: Github开源框架
 
 警告如下：
 
-![02](../Github开源框架/Masonry/02.png)
+![02](Masonry/02.png)
 
 ### 特点二
 
@@ -250,7 +250,7 @@ name2: wangwu
 
 来自 Masonry 说明文档里的示例：创建一个 view，它的上下左右四个边和父视图的四个边相距 10 的距离。
 
-![03](../Github开源框架/Masonry/03.png)
+![03](Masonry/03.png)
 
 方案一：使用 `NSLayoutConstraints` 布局的实现代码
 
@@ -462,7 +462,7 @@ typedef NS_ENUM(NSInteger, NSLayoutRelation) {
 
 ## Masonry的UML
 
-![01](../Github开源框架/Masonry/01.png)
+![01](Masonry/01.png)
 
 图中从左至右把 Masonry 分为三块：
 
