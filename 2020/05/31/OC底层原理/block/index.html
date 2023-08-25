@@ -368,7 +368,7 @@
 <p>即：<br><img src="/2020/05/31/OC底层原理/block/block03.png" alt="block03"></p>
 <h2 id="FuncPtr"><a href="#FuncPtr" class="headerlink" title="FuncPtr"></a>FuncPtr</h2><p>FuncPtr 是一个指针，指向 block 封装的代码块的函数地址。  </p>
 <p>在断点1处打印 FuncPtr 地址：<br><img src="/2020/05/31/OC底层原理/block/block01.png" alt="block01"></p>
-<figure class="highlight ceylon"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Printing description <span class="keyword">of</span> blockStruct-&gt;impl.FuncPtr:</div><div class="line">(<span class="keyword">void</span> *) FuncPtr = <span class="number">0</span>x<span class="number">0000000100000f</span><span class="number">00</span></div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Printing description <span class="keyword">of</span> blockStruct-&gt;impl.FuncPtr:</div><div class="line">(<span class="keyword">void</span> *) FuncPtr = <span class="number">0x0000000100000f00</span></div></pre></td></tr></table></figure>
 <p>在断点2处，选择 Debug -&gt; Debug Workflow -&gt; Always Show Disassembly:<br><img src="/2020/05/31/OC底层原理/block/block02.png" alt="block02"></p>
 <p>可以看到，block 里的开始地址值 100000f00 等于 FuncPtr 的地址值。说明 block 里的代码块的地址值被保存在了 <code>__block_impl</code> 里的 FuncPtr 中（函数调用），另外 <code>__main_block_impl_0</code> 里保存了外部变量 int a（调用环境），说明 block 是封装了函数调用以及函数调用环境的 OC 对象。</p>
 <h1 id="block-的本质"><a href="#block-的本质" class="headerlink" title="block 的本质"></a>block 的本质</h1><p>block 本质上是封装了函数调用以及函数调用环境的 OC 对象，它内部也有个 isa 指针。</p>
