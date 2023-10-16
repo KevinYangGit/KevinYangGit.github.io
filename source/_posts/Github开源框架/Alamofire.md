@@ -648,13 +648,22 @@ label.af.methodForLabel1()
 
 通过泛型 `AlamofireExtension<ExtendedType>` 实现了对`UIButton`和`UILabel`的同时支持，扩展约束 `where ExtendedType == UIButton` 实现了对`UIButton`和`UILabel`扩展方法的区分，这种区分可以从调用提示方法列表中看出来：
 
-`UIButton`提示方法列表：
+`UILabel`提示方法列表：
 ![06](Alamofire/06.png)
 
-`UILabel`提示方法列表：
+`UIButton`提示方法列表：
 ![07](Alamofire/07.png)
 
-通过`UIButton`和`UILabel`的扩展方式可以看出，在为类型扩展方法时，首先需要添加 `af` 计算属性来返回泛型包裹器`AlamofireExtension<ExtendedType>`。可以使用**泛型协议**和**扩展**的方式，添加默认实现，从而省略掉这一步。
+通过`UIButton`和`UILabel`的扩展方式可以看出，在为类型扩展方法时，首先需要添加 `af` 计算属性来返回泛型包裹器`AlamofireExtension<ExtendedType>`。
+
+```swift
+var af: AlamofireExtension<UIButton> {
+  // AlamofireExtension.init(self)
+  get { AlamofireExtension(self) }
+}
+```
+
+可以使用**泛型协议**和**扩展**的方式，添加默认实现，从而省略掉这一步。
 
 ### 第四种方式
 
@@ -872,7 +881,7 @@ extension EventMonitor {
 
 因为 `EventMonitor` 协议包含了 URLSession 和 Request 的各种事件，所以方法比较多。实现中什么也没做，只是提供了默认实现。
 
-`EventMonitor` 协议就像一个显示器，完整且全面的展示了 Alamofire 内部发生的各种事件，透过它可以大概了解 Alamofire 都做了些什么。然而，在Alamofire的逻辑代码部分用到的并不是它，而是遵循了 `EventMonitor` 协议的类 `CompositeEventMonitor`，负责处理 Alamofire 中的各种事件。
+`EventMonitor` 协议就像一个显示器，完整且全面的展示了 Alamofire 内部发生的各种事件，透过它可以大概了解 Alamofire 都做了些什么。然而，`EventMonitor` 只是一个抽象类，在Alamofire的逻辑代码部分用到的并不是它，而是遵循了 `EventMonitor` 协议的类 `CompositeEventMonitor`，负责处理 Alamofire 中的各种事件。
 
 ```swift
 /// `EventMonitor`包含在所有实例中。`[AlamofireNotifications（）]`默认情况下。
@@ -962,7 +971,7 @@ func performEvent(_ event: @escaping (EventMonitor) -> Void) {
 }
 ```
 
-`event(monitor)` 调用了闭包，`$0` 是参数 `monitor`：
+`event(monitor)` 调用了闭包，闭包内部实现👇，`$0` 是参数 `monitor`：
 
 ```swift
 $0.urlSession(session, didBecomeInvalidWithError: error)
@@ -982,7 +991,7 @@ eventMonitor = CompositeEventMonitor(monitors: defaultEventMonitors + eventMonit
 public let defaultEventMonitors: [EventMonitor] = [AlamofireNotifications()]
 ```
 
-提供Alamofire通知的事件监视器。
+`AlamofireNotifications` 提供Alamofire通知的事件监视器。
 
 1. 遵循 EventMonitor 协议；
 2. 实现需要监听的方法；
@@ -1023,7 +1032,7 @@ public final class AlamofireNotifications: EventMonitor {
 }
 ```
 
-在 `CompositeEventMonitor` 的 `performEvent` 方法里，会调用 `AlamofireNotifications`，触发对应的方法。
+在 `CompositeEventMonitor` 的 `performEvent` 方法里，`event(monitor)` 会调用 `AlamofireNotifications`，触发对应的方法。
 
 ### ClosureEventMonitor
 

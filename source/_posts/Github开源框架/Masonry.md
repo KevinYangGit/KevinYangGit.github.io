@@ -4,7 +4,7 @@ date: 2023-06-22 15:14:16
 tags: Github开源框架
 ---
 
-![01](../Github开源框架/Masonry/01.png)
+![01](Masonry/01.png)
 
 [Masonry](https://github.com/SnapKit/Masonry)
 
@@ -851,6 +851,8 @@ UIView *view1 = [[UIView alloc] init];
 
 时序图
 
+![04](Masonry/04.png)
+
 ```mermaid
     sequenceDiagram
         participant View       as UIView
@@ -975,6 +977,8 @@ UIView *view1 = [[UIView alloc] init];
 ```
 
 时序图
+
+![05](Masonry/05.png)
 
 ```mermaid
     sequenceDiagram
@@ -1335,6 +1339,8 @@ UIView *view1 = [[UIView alloc] init];
 ```
 
 时序图
+
+![06](Masonry/06.png)
 
 ```mermaid
     sequenceDiagram
