@@ -12,6 +12,8 @@ tags: Flutter
 
 <!-- more -->
 
+Dart源码：安装过 Flutter 后，可以在 `/Applications/flutter/bin/cache/dart-sdk/lib/core/` 找到 Dart 的源码。
+
 ## 环境搭建
 
 ![01](Flutter之Dart/01.png)
@@ -379,9 +381,13 @@ sum(int num1, int num2) => num1 + num2;
 
 ### 可选参数
 
-在 Dart 中没有函数重载。
+在 Dart 中没有函数重载。参数类型分为三类：
 
-必须参数
+1. 必选参数；
+2. 位置可选参数；
+3. 命名可选参数；
+
+#### 必选参数
 
 ```dart
 void main(List<String> args) {
@@ -396,10 +402,14 @@ void sayHello(String name) {
 
 可选参数有两种：
 
-1. 位置可选参数：{param1, param2, ...}；
-2. 命名可选参数：[param1, param2, ...]；
+1. 位置可选参数：[param1, param2, ...]；
+2. 命名可选参数：{param1, param2, ...}；
 
-位置可选参数
+#### 命名可选参数
+
+* 命名可选参数：{param1, param2, ...}；
+
+位置不确定，但是形参必须要写。
 
 ```dart
 void main(List<String> args) {
@@ -419,7 +429,11 @@ void sayHello3(String name, {int age = 0, double height = 0}) {
 }
 ```
 
-命名可选参数
+#### 位置可选参数
+
+* 位置可选参数：[param1, param2, ...]；
+
+不需要写名形参，实参和形参在进行匹配时，是根据位置的匹配。
 
 ```dart
 void main(List<String> args) {
@@ -875,7 +889,7 @@ class Person {
   final String name;
   final int age;
 
-  Person(this.name, {int age = 0}) : this.age = age {}
+  Person(this.name, {int? age}) : this.age = age ?? 0 {}
 
   @override
   String toString() {
@@ -884,12 +898,482 @@ class Person {
 }
 ```
 
-不传 `age`：
+在创建对象时，可以选择传或不传 `age`，不传使用默认值：
 
 ```dart
 void main(List<String> args) {
   var p = Person('Tom');
   print(p);
   // Prints "name is Tom, age is 0"
+}
+```
+
+Dart 3.0 后，使用 `?` 表示 `age` 可能为 `null`，在可选参数列表中使用 `??` 判断 `age` 是否有值。
+
+![05](Flutter之Dart/05.png)
+
+`widget` 中 `container` 的相关源码（路径`/Applications/flutter/packages/flutter/lib/src/widgets/container.dart`）：
+
+```dart
+Container({
+    super.key,
+    this.alignment,
+    this.padding,
+    this.color,
+    this.decoration,
+    this.foregroundDecoration,
+    double? width,
+    double? height,
+    BoxConstraints? constraints,
+    this.margin,
+    this.transform,
+    this.transformAlignment,
+    this.child,
+    this.clipBehavior = Clip.none,
+  }) : assert(margin == null || margin.isNonNegative),
+       assert(padding == null || padding.isNonNegative),
+       assert(decoration == null || decoration.debugAssertIsValid()),
+       assert(constraints == null || constraints.debugAssertIsValid()),
+       assert(decoration != null || clipBehavior == Clip.none),
+       assert(color == null || decoration == null,
+         'Cannot provide both a color and a decoration\n'
+         'To provide both, use "decoration: BoxDecoration(color: color)".',
+       ),
+       constraints =
+        (width != null || height != null)
+          ? constraints?.tighten(width: width, height: height)
+            ?? BoxConstraints.tightFor(width: width, height: height)
+          : constraints;
+```
+
+### 构造函数的重定向
+
+因为 Dart 不支持方法重载，所以对于有多个成员变量的类，不能写多个不同的构造方法：
+
+![06](Flutter之Dart/06.png)
+
+可以使用**构造函数重定向**来实现这种场景：
+
+```dart
+void main(List<String> args) {
+  var p = Person('name');
+  print(p.age);
+  // Prints "0"
+}
+
+class Person {
+  String name;
+  int age;
+
+  Person(String name) : this._internal(name, 0);
+
+  Person._internal(this.name, this.age);
+}
+```
+
+### 工厂构造函数
+
+普通的构造函数会自动返回创建出来的对象，不能手动返回：
+
+```dart
+void main(List<String> args) {
+  final p3 = Person('Jack', 'brown');
+  final p4 = Person('Jack', 'brown');
+  print(identical(p3, p4));
+  // Pritns "false"
+}
+
+class Person {
+  String name;
+  String color;
+
+  Person(this.name, this.color);
+}
+```
+
+工厂构造函数最大的特点是**可以手动返回一个对象**：
+
+```dart
+void main(List<String> args) {
+  final p1 = Person.withName('Tom');
+  final p2 = Person.withName('Tom');
+  print(identical(p1, p2));
+  // Prints "true"
+}
+
+class Person {
+  String name;
+  String color;
+
+  Person(this.name, this.color);
+
+  static final Map<String, Person> _nameCache = {};
+  static final Map<String, Person> _colorCache = {};
+
+  factory Person.withName(String name) {
+    if (_nameCache.containsKey(name)) {
+      return _nameCache[name]!;
+    } else {
+      final p = Person(name, 'default');
+      _nameCache[name] = p;
+      return p;
+    }
+  }
+
+  factory Person.withColor(String color) {
+    if (_colorCache.containsKey(color)) {
+      return _colorCache[color]!;
+    } else {
+      final p = Person('default', color);
+      _colorCache[color] = p;
+      return p;
+    }
+  }
+}
+```
+
+📢注意：这里的 `_nameCache[name]!` 加了 `!`，表明一定不为 `null`。这是 Dart 3.0 增加的能力-[空安全类型系统](https://dart.cn/codelabs/null-safety)。
+
+### setter 和 getter
+
+```dart
+void main(List<String> args) {
+  final p = Person();
+
+  p.name = 'Tom';
+  print(p.name);
+  // Prints "Tom"
+
+  p.setName = 'Jack';
+  print(p.name);
+  // Prints "Jack"
+  print(p.getName);
+  // Prints "Jack"
+}
+
+class Person {
+  String name;
+
+  Person({String? name}) : this.name = name ?? "";
+
+  // Setter
+  set setName(String name) => this.name = name;
+  // Getter
+  String get getName => name;
+}
+```
+
+### 类的继承
+
+1. 使用 `extends` 表示继承关系；
+2. 子类要调用**父类构造方法**；
+3. 子类要负责**父类的成员变量**。
+
+```dart
+void main(List<String> args) {
+  var t = Teacher(18, 'Tom');
+  print('name is ${t.name}, age is ${t.age}');
+  // Prints "name is Tom, age is 18"
+}
+
+class Person {
+  String name;
+  Person(this.name);
+}
+
+class Teacher extends Person {
+  int age;
+
+  Teacher(this.age, String name) : super(name);
+}
+```
+
+### 抽象类的使用
+
+📢注意一：继承自抽象类后，必须实现抽象类中没有实现的方法。
+
+![07](Flutter之Dart/07.png)
+
+📢注意二：抽象类不能实例化。
+
+![08](Flutter之Dart/08.png)
+
+必须实现抽象类中没有实现的方法：
+
+```dart
+void main(List<String> args) {
+  final t = Teacher();
+  print('name is ${t.getName()}, age is ${t.getAge()}');
+  // Prints "name is 名字, age is 18"
+}
+
+abstract class Person {
+  int getAge();
+  String getName() {
+    return '名字';
+  }
+}
+
+class Teacher extends Person {
+  @override
+  int getAge() {
+    return 18;
+  }
+}
+```
+
+可以重写抽象类中有实现的方法：
+
+```dart
+void main(List<String> args) {
+  final t = Teacher();
+  print('name is ${t.getName()}, age is ${t.getAge()}');
+  // Prints "name is Tom, age is 18"
+}
+
+abstract class Person {
+  int getAge();
+  String getName() {
+    return '名字';
+  }
+}
+
+class Teacher extends Person {
+  @override
+  int getAge() {
+    return 18;
+  }
+
+  @override
+  String getName() {
+    return 'Tom';
+  }
+}
+```
+
+### 隐式接口
+
+Dart 默认情况下所有的类都是隐式接口。在将一个类作为接口使用时，实现接口的类，必须实现这个接口中所有方法。
+
+定义一个 `Tom` 类，继承自 `Person`，使用 `Run`、`Swim` 类作为接口：
+
+```dart
+void main(List<String> args) {
+  var t = Tom();
+  t.running();
+}
+
+class Run {
+  void running() {}
+}
+
+class Swim {
+  void swimming() {}
+}
+
+class Person {
+  String name;
+  int age;
+
+  Person(this.name, this.age);
+}
+
+class Tom extends Person implements Run, Swim {
+  Tom() : super('Tom', 18);
+
+  @override
+  void running() {
+    print('Tom is good at running');
+  }
+
+  @override
+  void swimming() {
+    print('Tom is good at swimming');
+  }
+}
+```
+
+![09](Flutter之Dart/09.png)
+
+### mimix混入的使用
+
+特殊情况：`Tom` 将 `Run` 作为接口，`Person` 实现了隐式方法 `running`。😱
+
+```dart
+void main(List<String> args) {
+  var t = Tom();
+  t.running();
+}
+
+class Run {
+  void running() {
+    print('running');
+  }
+}
+
+class Swim {
+  void swimming() {}
+}
+
+class Person {
+  String name;
+  int age;
+
+  Person(this.name, this.age);
+
+  // 父类实现隐式接口
+  void running() {
+    print('running');
+  }
+}
+
+class Tom extends Person implements Run, Swim {
+  Tom() : super('Tom', 18);
+
+  @override
+  void swimming() {
+    print('Tom is good at swimming');
+  }
+}
+```
+
+### 类属性
+
+```dart
+void main(List<String> args) {
+  var p = Person('Tom');
+  Person.age = 18;
+}
+
+class Person {
+  String name;
+
+  static int age = 0;
+
+  Person(this.name);
+}
+```
+
+### 类方法
+
+```dart
+void main(List<String> args) {
+  var p = Person('Tom');
+  p.talkName();
+  // Prints "Tom"
+
+  Person.age = 18;
+  Person.tallAge();
+  // Prints "18"
+}
+
+class Person {
+  String name;
+
+  static int age = 0;
+
+  Person(this.name);
+
+  void talkName() {
+    print(name);
+  }
+
+  static void tallAge() {
+    print(age);
+  }
+}
+```
+
+### 枚举
+
+选择器必须覆盖枚举类型的全部情况，否则会报错：
+
+![10](Flutter之Dart/10.png)
+
+```dart
+void main(List<String> args) {
+  final color = Colors.red;
+
+  switch (color) {
+    case Colors.red:
+      print('红色');
+      break;
+    case Colors.blue:
+      print('蓝色');
+      break;
+    default:
+      print('绿色');
+      break;
+  }
+  // Prints "红色"
+}
+
+enum Colors { red, blue, green }
+```
+
+## Dart中库的使用
+
+### 一、使用系统库
+
+```dart
+import 'dart:math';
+
+void main(List<String> args) {
+  final num1 = 20;
+  final num2 = 30;
+  print(min(num1, num2));
+  // Prints "50"
+}
+```
+
+### 二、使用自定义库
+
+![11](Flutter之Dart/11.png)
+
+1、`as` 关键字给库起别名。
+
+```dart
+import 'utils/math_utils.dart' as mUtils;
+```
+
+2、默认情况下，导入一个库时就是导入这个库中所有的内容。
+
+`show`：执行要导入的内容。
+
+```dart
+import "utils/math_utils.dart" show sum, mul;
+```
+
+`hide`：隐藏某个要导入的内容，导入其它内容。
+
+```dart
+import "utils/math_utils.dart" hide mul;
+```
+
+3、将需要导入的库，使用 `export` 抽取到公共的 dart 文件
+
+![12](Flutter之Dart/12.png)
+
+```dart
+import "utils/utils.dart";
+
+void main(List<String> args) {
+  print(sum(20, 30));
+  // Prints "50"
+  print(min(10, 11));
+  // Prints "10"
+}
+```
+
+### 使用第三方库
+
+```dart
+import 'package:http/http.dart' as http;
+
+main(List<String> args) async {
+  var url = 'http://123.207.32.32:8000/home/multidata';
+  var response = await http.get(url);
+  print('Response status: ${response.statusCode}');
+  print('Response body: ${response.body}');
 }
 ```
