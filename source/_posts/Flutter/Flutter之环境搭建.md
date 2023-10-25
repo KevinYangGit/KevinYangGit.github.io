@@ -16,6 +16,8 @@ tags: Flutter
 
 [Android项目仓库配置国内加速阿里云镜像](https://blog.csdn.net/aa390481978/article/details/123823571)
 
+[Flutter SDK archive](https://docs.flutter.dev/release/archive?tab=macos)
+
 <!-- more -->
 
 ## 环境搭建整体流程

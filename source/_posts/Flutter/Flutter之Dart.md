@@ -119,14 +119,14 @@ print(age.runtimeType);
 // Prints "Int"
 ```
 
-### 非零即真
+### 布尔类型
 
 Dart 中不能判断非零即真，或者非空即真。Bool 类型必须是一个确定的实体。
 
 ```dart
 void main(List<String> args) {
   var flag = "abc"
-  // if (flag) {
+  // if (flag) { ❌
   //   print("hello dart");
   // }
   if (flag != null) {
@@ -184,6 +184,8 @@ nba
  nba
 ```
 
+* 字符串的拼接
+
 字符串和其他变量或表达式拼接时，使用`${expression}`表达式，如果 expression 是一个标识符，那么 `{}` 可以省略：
 
 ```dart
@@ -215,6 +217,39 @@ void main(List<String> args) {
   // Prints "name is Tom.runtimeType, age is 18, height is 180。"
   print(desc4);
   // Prints "name is String, age is 18, height is 180。"
+}
+```
+
+数字转字符串：
+
+```dart
+void main(List<String> args) {
+  int age = 18; // int
+
+  double height = 1.88; // double
+
+  var ageString = age.toString(); // 18 String
+
+  var heightString = height.toString(); // 1.88 String
+}
+```
+
+字符串转数字：
+
+```dart
+void main(List<String> args) {
+  int age = 18; // int
+
+  double height = 1.88; // double
+
+  var ageString = age.toString(); // 18 String
+
+  var heightString = height.toString(); // 1.88 String
+
+  print(int.parse(ageString));
+  // Prints "18"
+  print(double.parse(heightString));
+  // Priints "1.88"
 }
 ```
 
@@ -823,6 +858,11 @@ class Person {
   double height = 0;
 
   Person(this.name, this.age);
+  // 等同
+  //Person(String name, int age) {
+  //  this.name = name;
+  //  this.age = age;
+  //}
 
   Person.custom(this.name, this.age, this.height);
 
@@ -859,20 +899,6 @@ class Person {
   }
 }
 ```
-
-### Object 和 dynamic 的区别
-
-Dart 中所有类型都是 Object 的子类，包括 Function 和 Null。
-
-* dynamic 与 Object 声明的变量都可以赋值任意对象，且后期可以改变赋值的类型。
-
-![03](Flutter之Dart/03.png)
-
-* Object 对象使用的属性和方法若不存在，**编译时会报错**。
-
-* dynamic 对象使用的属性和方法若不存在，**编译时不会报错，运行时会报错**。
-
-![04](Flutter之Dart/04.png)
 
 ### 初始化列表
 
@@ -946,7 +972,7 @@ Container({
           : constraints;
 ```
 
-### 构造函数的重定向
+### 重定向构造方法
 
 因为 Dart 不支持方法重载，所以对于有多个成员变量的类，不能写多个不同的构造方法：
 
@@ -971,7 +997,7 @@ class Person {
 }
 ```
 
-### 工厂构造函数
+### 工厂构造方法
 
 普通的构造函数会自动返回创建出来的对象，不能手动返回：
 
@@ -1066,8 +1092,8 @@ class Person {
 ### 类的继承
 
 1. 使用 `extends` 表示继承关系；
-2. 子类要调用**父类构造方法**；
-3. 子类要负责**父类的成员变量**。
+2. 子类的构造方法在执行前，将隐含调用父类的无参默认构造方法（没有参数且与类同名的构造方法）。
+3. 如果父类没有无参默认构造方法，则子类的构造方法必须在初始化列表中通过`super`显式调用父类的某个构造方法。
 
 ```dart
 void main(List<String> args) {
@@ -1087,6 +1113,22 @@ class Teacher extends Person {
   Teacher(this.age, String name) : super(name);
 }
 ```
+
+
+
+### Object 和 dynamic 的区别
+
+Dart 中所有类型都是 Object 的子类，包括 Function 和 Null。
+
+* dynamic 与 Object 声明的变量都可以赋值任意对象，且后期可以改变赋值的类型。
+
+![03](Flutter之Dart/03.png)
+
+* Object 对象使用的属性和方法若不存在，**编译时会报错**。
+
+* dynamic 对象使用的属性和方法若不存在，**编译时不会报错，运行时会报错**。
+
+![04](Flutter之Dart/04.png)
 
 ### 抽象类的使用
 
@@ -1153,7 +1195,7 @@ class Teacher extends Person {
 
 ### 隐式接口
 
-Dart 默认情况下所有的类都是隐式接口。在将一个类作为接口使用时，实现接口的类，必须实现这个接口中所有方法。
+Dart 默认情况下所有的类都是隐式接口。在将一个类作为接口使用时，实现接口的类，必须实现这个接口中所有方法。通常将用于给别人实现的类声明为抽象类。
 
 定义一个 `Tom` 类，继承自 `Person`，使用 `Run`、`Swim` 类作为接口：
 
@@ -1163,11 +1205,11 @@ void main(List<String> args) {
   t.running();
 }
 
-class Run {
+abstract class Run {
   void running() {}
 }
 
-class Swim {
+abstract class Swim {
   void swimming() {}
 }
 
@@ -1195,24 +1237,39 @@ class Tom extends Person implements Run, Swim {
 
 ![09](Flutter之Dart/09.png)
 
-### mimix混入的使用
+通过 `implements` 实现某个类时，必须重新实现类定义的所有方法(无论这个类是否已经对方法实现)。如果想要直接复用之前类的原有实现方案，则可以使用 `mixin`混入。
 
-特殊情况：`Tom` 将 `Run` 作为接口，`Person` 实现了隐式方法 `running`。😱
+### mixin混入的使用
+
+想要直接复用之前类的原有实现方案，一般采取继承。但是因为 Dart 只支持单继承，所以无法直接复用多个类原有的实现方案。
+
+想要**直接复用多个类原有的实现方案**，可以采用 Mixin 混入的方式：
+
+1. 使用 `mixin` 关键字定义一个类；
+2. 使用 `with` 关键字来实现混入；
 
 ```dart
 void main(List<String> args) {
   var t = Tom();
   t.running();
+  // Prints "running"
+  t.swimming();
+  // Prints "swimming"
 }
 
-class Run {
+/**
+1、使用 mixin 关键字定义类
+*/
+mixin Run {
   void running() {
     print('running');
   }
 }
 
-class Swim {
-  void swimming() {}
+mixin Swim {
+  void swimming() {
+    print('swimming');
+  }
 }
 
 class Person {
@@ -1227,13 +1284,50 @@ class Person {
   }
 }
 
-class Tom extends Person implements Run, Swim {
+/**
+2、使用 with 实现混入，不需要重写方法
+*/
+class Tom extends Person with Run, Swim {
   Tom() : super('Tom', 18);
+}
+```
 
-  @override
-  void swimming() {
-    print('Tom is good at swimming');
+如果要类比的话，`mixin` 混入和 Swift 的协议有异曲同工之妙。
+
+`implements` 和 `with` 关键字一起使用时，`implements` 要放最后：
+
+```dart
+void main(List<String> args) {
+  var t = Tom();
+  t.running();
+}
+
+abstract class Run {
+  void running() {
+    print('running');
   }
+}
+
+mixin Swim {
+  void swimming() {
+    print('swimming');
+  }
+}
+
+class Person {
+  String name;
+  int age;
+
+  Person(this.name, this.age);
+
+  // 父类实现隐式接口
+  void running() {
+    print('running');
+  }
+}
+
+class Tom extends Person with Swim implements Run {
+  Tom() : super('Tom', 18);
 }
 ```
 
@@ -1315,6 +1409,8 @@ enum Colors { red, blue, green }
 
 ### 一、使用系统库
 
+使用 `import '库的url'` 的形式导入一个库。
+
 ```dart
 import 'dart:math';
 
@@ -1326,11 +1422,35 @@ void main(List<String> args) {
 }
 ```
 
+库url有三种方式：
+
+1、使用 `dart:` 表示 dart 标准库，
+
+```dart
+import 'dart:io';
+import 'dart:math';
+import 'dart:html';
+```
+
+2、使用相对路径，导入项目中自定义的 .dart 文件：
+
+```dart
+import 'utils/math_utils.dart'
+```
+
+3、Pub包管理系统中的库，使用前缀 `package:`：
+
+```dart
+import 'package:http/http.dart'
+```
+
 ### 二、使用自定义库
 
 ![11](Flutter之Dart/11.png)
 
 1、`as` 关键字给库起别名。
+
+当各个库有命名冲突的时候，可以使用 `as` 关键字来使用命名空间：
 
 ```dart
 import 'utils/math_utils.dart' as mUtils;
@@ -1377,3 +1497,5 @@ main(List<String> args) async {
   print('Response body: ${response.body}');
 }
 ```
+
+参考 [http 1.1.0 ](https://pub.dev/packages/http/install)
