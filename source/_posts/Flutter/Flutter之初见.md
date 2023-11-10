@@ -4,11 +4,22 @@ date: 2023-10-20 17:43:11
 tags:
 ---
 
-[《Flutter实战·第二版》](https://book.flutterchina.club/)
-
-[Flutter(六)之Flutter开发初体验](https://juejin.cn/post/6844903949271564302)
+* [创建一个Flutter项目](#创建一个flutter项目)
+* [Android studio 简介](#android-studio-简介)
+* [第一个项目 Hello world](#第一个项目-hello-world)
+* [同意协议](#同意协议)
+* [列表](#列表)
+* [计数器](#计数器)
+* [StatefulWidget](#statefulwidget)
+* [StatefulWidget 声明周期](#statefulwidget-声明周期)
 
 <!-- more -->
+
+相关文档：
+
+[Flutter(六)之Flutter开发初体验](https://juejin.cn/post/6844903949271564302)
+[Flutter(七)之有状态的StatefulWidget](https://juejin.cn/post/6844903951058354190)
+[《Flutter实战·第二版》](https://book.flutterchina.club/)
 
 ## 创建一个Flutter项目
 
@@ -412,6 +423,23 @@ setState(() {
 ## 列表
 
 ### Column
+
+```dart
+class Column extends Flex {
+  const Column({
+    super.key,               // 唯一标识
+    super.mainAxisAlignment, // 主轴对齐方式
+    super.mainAxisSize,      // 轴线大小
+    super.crossAxisAlignment,// 交叉轴对齐方式
+    super.textDirection,     // 文本方向
+    super.verticalDirection, // 垂直方向
+    super.textBaseline,      // 文本基准线
+    super.children,          // 子控件集合
+  }) : super(
+    direction: Axis.vertical,// 方向
+  );
+}
+```
 
 使用 Column 实现自动垂直布局，类比 Row：
 
@@ -1491,3 +1519,31 @@ flutter: KYState build
 2. Flutter 在执行**热重启**或**热重载**时，会刷新所有的 dirty state，调用其对应 Widget 的 build() 方法，同时将其标记为为 clean state。
 
 3. Flutter 会忽略 clean state 标记的 Widget。
+
+## @requested
+
+必传参数：如果不传，**编译时会报错**。
+
+`@requested`修饰的参数：如果不传，**编译时不会报错**，但是运行时会报错。
+
+## 快捷键
+
+开发工具：Android studio
+
+`option + command + b`：查看抽象类的子类，抽象类只声明方法不实现，子类负责实现。
+
+![22](Flutter之初见/22.png)
+
+option + Enter 扩展功能
+
+CMD + option + M 将选中代码提取到某个方法中
+
+CMD + option + W 将选中代码提取生成一个新的Widget
+
+command + N生成构造函数
+
+菜单栏: Code —> Generate —> Constructorƒ
+
+Command + Shift + F全局搜索
+
+## 代码块
