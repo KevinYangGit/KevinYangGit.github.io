@@ -1,7 +1,7 @@
 ---
 title: Flutter之初见
 date: 2023-10-20 17:43:11
-tags:
+tags: Flutter
 ---
 
 * [创建一个Flutter项目](#创建一个flutter项目)
@@ -272,6 +272,20 @@ class KYBody extends StatelessWidget {
 * `StatefulWidget`：有状态的 `Widget`，内容在 APP 运行过程中**会发生改变**。
 
 因为在 Hello World 代码中，没有可变的内容，所有用的是 `StatelessWidget`。
+
+## StatelessWidget
+
+StatelessWidget 继承自 Widget，它没有状态。
+
+继承自 StatelessWidget 的自定义控件，不需要维护状态，只需要在构造函数中初始化状态即可。
+
+继承自 StatelessWidget 的自定义控件，必须要实现 build 方法，build 方法返回一个 Widget 对象。
+
+build 方法的调用时机：
+
+1. 第一次创建控件时调用；
+2. 控件状态改变时调用；
+3. 调用 setState 方法时调用。
 
 ## 同意协议
 

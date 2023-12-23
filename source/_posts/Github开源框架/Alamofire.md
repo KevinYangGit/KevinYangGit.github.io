@@ -1,7 +1,7 @@
 ---
 title: Alamofire
 date: 2023-07-25 16:03:03
-tags: Github开源框架
+tags: Swift
 ---
 
 [Alamofire](https://github.com/Alamofire/Alamofire/tree/master)
