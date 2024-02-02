@@ -774,14 +774,18 @@ iOS 支持两套图形API族：
 - (void)drawRect:(CGRect)rect {
     // 设置填充色：红色
     [[UIColor redColor] setFill];
+    // 设置填充范围
+    UIRectFill(CGRectMake(50, 50, 100, 100));
     // 把context压入栈中，并把context设置为当前绘图上下文
     UIGraphicsPushContext(UIGraphicsGetCurrentContext());
     // 设置填充色：蓝色
     [[UIColor blueColor] setFill];
+    // 设置填充范围
+    UIRectFill(CGRectMake(50, 200, 100, 100));
     // 将栈顶的上下文弹出，恢复先前的上下文，但是绘图状态不变
     UIGraphicsPopContext();
     // 设置填充范围
-    UIRectFill(CGRectMake(10, 10, 80, 80));
+    UIRectFill(CGRectMake(50, 350, 100, 100));
 }
 ```
 
@@ -793,14 +797,18 @@ iOS 支持两套图形API族：
 - (void)drawRect:(CGRect)rect {
     // 设置填充色：红色
     [[UIColor redColor] setFill]; // red
+    // 设置填充范围
+    UIRectFill(CGRectMake(50, 50, 100, 100));
     // 保存状态
     CGContextSaveGState(UIGraphicsGetCurrentContext()); // red
     // 设置填充色：蓝色
     [[UIColor blueColor] setFill]; // blue
-    // 回复状态
+    // 设置填充范围
+    UIRectFill(CGRectMake(50, 200, 100, 100));
+    // 恢复状态
     CGContextRestoreGState(UIGraphicsGetCurrentContext()); // red
     // 设置填充范围
-    UIRectFill(CGRectMake(10, 10, 80, 80)); // red
+    UIRectFill(CGRectMake(50, 350, 100, 100)); // red
 }
 ```
 
@@ -816,29 +824,27 @@ iOS 支持两套图形API族：
 
 有两种获取上下文的常用方法：
 
-一、创建一个图片类型的上下文
+一、重载 UIView 的 `- (void)drawRect:(CGRect)rect` 方法，利用 Cocoa 自动生成的上下文
 
-1. 调用 `UIGraphicsBeginImageContext()` 或 `UIGraphicsBeginImageContextWithOptions()` 函数可以获得处理图片的图形上下文。
-
-2. 调用 `UIGraphicsGetImageFromCurrentImageContext()` 函数可以从画布（上下文）中获取一个 UIImag 对象。
-
-3. 调用 `UIGraphicsEndImageContext()` 函数关闭图形上下文。
-
-二、利用 Cocoa 自动生成的上下文（`drawRect:`方法）。
-
-1. 子类化 UIView 并实现 `drawRect:`` 方法，一旦 `drawRect:`` 方法被调用，Cocoa 就会创建一个图形上下文。
+1. 子类化 `UIView` 并实现 `drawRect:` 方法，一旦 `drawRect:` 方法被调用，Cocoa 就会创建一个图形上下文；
 
 2. 调用 `UIGraphicsGetCurrentContext()` 函数，获取到当前的图形上下文；
 
-3. 进行绘图操作，所有操作都会显示在当前上下文对应的 UIView 上。
+3. 进行绘图操作，所有操作都会显示在当前上下文对应的 UIView 上；
 
-### 思考：UIView 和上下文是什么关系❓
+4. 重绘：`setNeedDisplay`。
 
+二、创建一个图片类型的上下文
 
+1. 调用 `UIGraphicsBeginImageContext()` 或 `UIGraphicsBeginImageContextWithOptions()` 函数可以获得处理图片的图形上下文；
+
+2. 调用 `UIGraphicsGetImageFromCurrentImageContext()` 函数可以从画布（上下文）中获取一个 UIImag 对象；
+
+3. 调用 `UIGraphicsEndImageContext()` 函数关闭图形上下文。
 
 ### UIGraphicsBeginImageContext
 
-在 `drawRect:` 方法外完成绘图操作：
+在 `drawRect:` 方法**外**完成绘图操作：
 
 ```js
 - (void)withoutDrawRect {
@@ -874,8 +880,262 @@ iOS 支持两套图形API族：
 
 这里使用 `UIGraphicsBeginImageContext()` 方法，完成了在 `drawRect:` 方法外绘图的操作。
 
-## 其它
+## Core Animation
 
-先关文档：
+### CALayer
+
+一、重载 CALayer 的 `- (void)drawInContext:(CGContextRef)ctx` 方法，利用 Cocoa 自动生成的上下文
+
+1. 子类化 `CALayer` 并实现 `- (void)drawInContext:(CGContextRef)ctx` 方法，一旦 `- (void)drawInContext:(CGContextRef)ctx` 方法被调用，Cocoa 就会创建一个图形上下文；
+
+2. 调用 `UIGraphicsGetCurrentContext()` 函数，获取到当前的图形上下文；
+
+3. 进行绘图操作，所有操作都会显示在当前上下文对应的 UIView 上；
+
+4. 重绘：`setNeedDisplay`。
+
+因为 `- (void)drawInContext:(CGContextRef)ctx` 方法内部会调用 CALayerDelegate 协议中的 `-drawLayer:inContext:` 方法，所以也可以实现`-drawLayer:inContext:` 方法获取到当前上下文。
+
+```js
+/* If defined, called by the default implementation of -drawInContext: */
+
+- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;
+```
+
+### CAShapeLayer
+
+`CAShapeLayer` 是一个通过矢量图形而不是 bitmap（位图）来绘制的图层子类。可以设置颜色和线宽，用 `CGPath` 定义图形，让 `CAShapeLayer` 自动渲染出来。先比用 Core Graphics 直接向原始的 CALayer 的内容中绘制路径，使用 CAShapeLayer 有四点优势：
+
+1. 渲染快速。
+2. 高效使用内存。
+3. 不会被图层边界剪裁掉。
+4. 不会出现像素化。
+
+`CAShapeLayer` 可以绘制所有能够通过 CGPath 来表示的形状。这个形状不一定要闭合，图层路径也不一定要不间断，可以在一个图层上绘制好几个不同的形状。
+
+`CAShapeLayer` 有图形属性，如 `lineWidth`（线宽，用点表示单位），`lineCap`（线条结尾的样子），和 `lineJoin`（线条之间的结合点的样子）等等。
+
+在图层层面，只有一次机会设置这些属性，如果想用不同颜色或风格来绘制多个形状，就不得不为每个形状准备一个图层了。 
+
+### CAShapeLayer & Core Graphics
+
+术语**绘图**通常在 Core Animation 的上下文中指代软件绘图，即不由 GPU 协助的绘图。在 iOS 中，软件绘图通常是由 Core Graphics 框架完成。但是，在一些必要的情况下，Core Graphics 要比 Core Animation 和 OpenGL 慢很多。
+
+软件绘图不仅效率低，而且还会消耗较大的内存。一旦实现了 CALayerDelegate 协议中的 -drawLayer:inContext: 方法或者 UIView 中的 -drawRect: 方法（对前者的包装），图层就会创建一个绘制上下文，这个上下文需要的内存大小如下，宽高的单位是**像素**：
+
+```js
+上下文大小 = 图层宽 * 图层高 * 4字节
+```
+
+对于一个在 Retina iPad 上的全屏图层来说，这个内存量就是 `2048 * 1526 * 4 字节 = 12MB`。图层每次重绘的时候都需要**重新抹掉内存然后重新分配**。
+
+软件绘图的代价昂贵，除非绝对必要，应该避免重绘视图。
+
+而提高绘制性能的秘诀就是避免绘制，如使用 CAShapeLayer 代替 Core Graphics。
+
+### 显示的大致流程
+
+1. **布局** - 准备视图/图层的层级关系，以及设置图层属性（位置，背景色，边框等）的阶段；
+2. **显示** - 绘制图层的寄宿图的阶段。绘制有可能涉及到 UIView 的 -drawRect: 和 CALayer 的 -drawLayer:inContext: 方法的调用路径；
+3. **准备** - Core Animation 准备发送数据到渲染服务的阶段；
+4. **光栅化** - 对所有的图层属性计算中间值，设置 OpenGL 几何形状（纹理化的三角形）来执行渲染；
+5. **渲染** - 在屏幕上渲染可见的三角形。
+
+### UIView - CALayer - Core Graphics
+
+![24](../iOS/UIBezierPath/24.png)
+
+* 继承关系：`UIView —> UIResponder —> NSObject`，`CALayer —> NSObject`。
+
+* 响应时间：因为 UIView 继承自 UIResponder，所以 UIView 可以响应时间。因为 CALayer 继承自 NSObject，所以 CALayer 不能响应事件。
+
+* 框架：UIView 在 UIKit 框架中定义，用来构建界面、响应事件。CALayer 在 QuartzCore 框架中定义，绘制 2D 图像。
+
+* 寄宿图：即图层中包含的图。UIView 内部联图了一个 CALayer 图层，即 backing layer。CALayer 内部包含一个 content 属性指向一块缓冲区，即 backing store，里面存放位图（bitmap）。iOS 中奖缓存区的图片称为寄宿图。寄宿图有两种设置方式：1、想 content 设置 CGImage 图片，这需要以来 Core Image 提供图片；2、实现 UIView 的 drawRect: 方法自定义绘图，这需要依赖 Core Graphics 绘制图形，再由 CALayer 生成图片。
+
+* UIView 的显示原理：CALayer 会创建一个图形上下文（CGContextRef），然后调用 CALayerDelegate 协议（这里是 UIView 实现）的 `-drawLayer:inContext:` 方法，传入创建好的图形上下文（CGContextRef）对象，在 `-drawLayer:inContext:` 方法内部再调用 UIView 的 `-drawRect:` 方法。
+
+## 应用
+
+### 虚线圆形
+
+问题：因为在设置虚线的线段长度和间隙长度时会不等于周长，所以就会出现虚线的尾部和头部的结合部分不匀称。
+
+解决方案：通过计算得到实际的间隙长度，代替期望的间隙长度。
+
+1. 半径 * M_PI * 2.0 = 周长；
+2. 周长 / (线段长度 + 期望间隙长度) = 线段数量；
+3. (周长 / 线段数量) - 线段长度 = 实际间隙长度；
+
+```js
+// 虚线圆
+- (void)setDashedLineCirclePath:(CGRect)frame fill:(UIColor *)fillColor stroke:(UIColor *)strokeColor {
+    // 虚线直径
+    CGFloat dotDiameter = self.xAxisDashDotDiameter;
+    // 期望的虚线间隙
+    CGFloat expDotSpacing = self.xAxisDashExpDotSpacing;
+    // 圆的大小
+    CGSize s = frame.size;
+    // 圆圈的半径，计算方式为，宽度或高度的一半（以较小者为准）减去点半径。
+    CGFloat radius = (s.width < s.height) ? s.width*0.5-dotDiameter*0.5 : s.height*0.5-dotDiameter*0.5;
+    // 周长
+    CGFloat circum = M_PI*radius*2.0;
+    // 虚线数量
+    NSUInteger numberOfDots = round(circum/(dotDiameter+expDotSpacing));
+    // 计算出的点间距，由周长除以点的数量减去点的直径得出。
+    CGFloat dotSpacing = (circum/numberOfDots)-dotDiameter;
+    // 圆形路径-以层的中心为中心，从弧的顶部开始。
+    UIBezierPath* path = [UIBezierPath bezierPathWithArcCenter:(CGPoint){frame.origin.x + s.width*0.5, frame.origin.y + s.height*0.5} radius:radius startAngle:-M_PI*0.5 endAngle:M_PI*1.5 clockwise:YES];
+    // 每个点的直径
+    path.lineWidth = dotDiameter;
+    // 点的形状
+    path.lineCapStyle = kCGLineCapSquare;
+    // 填充线段的长度（根据线宽计算的半径），点直径加上未填充线段的点间距
+    CGFloat dash[] = {0.0, dotSpacing+dotDiameter};
+    [path setLineDash:dash count:2 phase:0];
+    // 填充色
+    if (fillColor) {
+        [fillColor set];
+        [path fill];
+    }
+    // 线框色
+    if (strokeColor) {
+        [strokeColor setStroke];
+        [path stroke];
+    }
+}
+```
+
+![21](../iOS/UIBezierPath/21.png)
+
+### 渐变多边形
+
+```js
+- (void)setYAxisLayer:(NSArray *)series {
+    CGFloat max_r = self.bounds.size.width * 0.5;
+    CGFloat r = max_r;
+    CGFloat x = 0;
+    CGFloat y = 0;
+    CGFloat angle = 360.0 / series.count;
+    
+    CGFloat top  = max_r * 2.0;
+    CGFloat bottom = 0;
+    
+    NSMutableArray *dotPointArray = [NSMutableArray arrayWithCapacity:series.count];
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    for (int i = 0; i < series.count; i++) {
+        NSNumber *num = series[i];
+        CGFloat radian = kDegreesToRadian(angle * i);
+        r = (num.floatValue / self.maxValue) * max_r;
+        r = MIN(r, max_r);
+        x = max_r + sinf(radian) * r;
+        y = max_r - cosf(radian) * r;
+        CGPoint p = CGPointMake(x, y);
+        if (i == 0) {
+            [path moveToPoint:p];
+        } else {
+            [path addLineToPoint:p];
+        }
+        [dotPointArray addObject:[NSValue valueWithCGPoint:p]];
+        
+        top  = top < y ? top : y;
+        bottom = bottom > y ? bottom : y;
+    }
+    path.lineWidth = 1.0;
+    [path closePath];
+    [path stroke];
+    
+    CAShapeLayer *layer = [[CAShapeLayer alloc] init];
+    layer.strokeColor = vkColorFromHex(self.yAxisHex).CGColor;
+    layer.fillColor = vkColorFromHex(self.yAxisHex).CGColor;
+    layer.path = path.CGPath;
+    
+    CGFloat color01 = top / (max_r * 2.0);
+    CGFloat color02 = bottom / (max_r * 2.0);
+    // gLayer 的坐标从 layer 的 (0, 0) 点开始
+    CAGradientLayer *gLayer = [CAGradientLayer layer];
+    gLayer.frame = self.bounds;
+    gLayer.locations = @[@(color01), @(color02)];
+    gLayer.colors = @[(__bridge id)vkColorFromHex(self.yAxisHex).CGColor,
+                      (__bridge id)[UIColor colorWithHex:self.yAxisHex alpha:0.24].CGColor];
+    gLayer.startPoint = CGPointMake(0.5, 0);
+    gLayer.endPoint = CGPointMake(0.5, 1);
+    gLayer.mask = layer;
+    [self.layer addSublayer:gLayer];
+    
+    CAShapeLayer *lineLayer = [[CAShapeLayer alloc] init];
+    lineLayer.strokeColor = vkColorFromHex(self.yAxisHex).CGColor;
+    lineLayer.fillColor = [UIColor clearColor].CGColor;
+    lineLayer.path = path.CGPath;
+    lineLayer.lineWidth = 1.0;
+    // 角过尖锐的话，会超出UI范围
+    lineLayer.lineCap = @"bevel"; //线条拐角
+    lineLayer.lineJoin = @"bevel"; //终点处理
+    [self.layer addSublayer:lineLayer];
+    
+    for (NSValue *value in dotPointArray) {
+        CGPoint textPoint = value.CGPointValue;
+        [self setDotLayer:textPoint];
+    }
+}
+```
+
+![22](../iOS/UIBezierPath/22.png)
+
+### 提示框
+
+```swift
+override func draw(_ rect: CGRect) {
+    // 圆角
+    let r = 8.0
+    // 箭头高度
+    let offset = 10.0
+    // 箭头位置
+    let positionNum = rect.size.width / 2.0
+    // 移动量（坐标点）
+    let changeNum = r + offset
+    // 划线 长 宽
+    let w = rect.size.width
+    let h = rect.size.height
+    
+    // 获取文本
+    let context = UIGraphicsGetCurrentContext()!
+    // 边框宽度
+    context.setLineWidth(1.5);
+    // 边框颜色
+    context.setStrokeColor(UIColor(hex6: 0x272733).cgColor)
+    // 填充颜色
+    context.setFillColor(UIColor.clear.cgColor)
+    
+    // 开始坐标【左上角】（r, offset）
+    context.move(to: CGPoint(x: r, y: offset))
+    
+    // 向右划线 (r, offset) + (positionNum - 10, h - offset)
+    context.addLine(to: CGPoint(x: positionNum - 10, y: offset))
+    // 向右上划线 (positionNum - 10, offset) + (positionNum, 0)
+    context.addLine(to: CGPoint(x: positionNum, y: 0))
+    // 向右下划线 (positionNum, 0) + (positionNum + 10, offset)
+    context.addLine(to: CGPoint(x: positionNum + 10, y: offset))
+    
+    // 【右上角】设置弧线，三个点组成的直角：(r, offset) + (w, offset) + (w, r + offset)
+    context.addArc(tangent1End: CGPoint(x: w, y: offset), tangent2End: CGPoint(x: w, y: changeNum), radius: r)
+    // 【右下角】设置弧线，三个点组成的直角：(w, r + offset) + (w, h) + (w - r, h)
+    context.addArc(tangent1End: CGPoint(x: w, y: h), tangent2End: CGPoint(x: w - r, y: h), radius: r)
+    // 【左下角】设置弧线，三个点组成的直角：(w - r, h) + (0, h) + (0, h - r)
+    context.addArc(tangent1End: CGPoint(x: 0, y: h), tangent2End: CGPoint(x: 0, y: h - r), radius: r)
+    // 【左上角】设置弧线，三个点组成的直角：(0, h - r) + (0, offset) + (r, offset)
+    context.addArc(tangent1End: CGPoint(x: 0, y: offset), tangent2End: CGPoint(x: r, y: offset), radius: r)
+    
+    // 根据坐标绘制路径
+    context.drawPath(using: .fillStroke)
+    
+    super.draw(rect)
+  }
+```
+
+![23](../iOS/UIBezierPath/23.png)
+
+相关文档：
 
 1. [iOS绘图教程](https://www.cnblogs.com/xdream86/archive/2012/12/12/2814552.html)
+2. [iOS-Core-Animation-Advanced-Techniques](https://github.com/qunten/iOS-Core-Animation-Advanced-Techniques)
