@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="OC底层原理," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="思考：  对象的 isa 指针指向哪里？ OC 的类信息存放在哪里？">
+<meta name="keywords" content="OC底层原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="isa和superclass">
+<meta property="og:url" content="http://yoursite.com/2020/05/11/OC底层原理/isa和superclass/index.html">
+<meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="思考：  对象的 isa 指针指向哪里？ OC 的类信息存放在哪里？">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2020/05/11/OC底层原理/isa和superclass/isa和superclass01.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/11/OC底层原理/isa和superclass/isa和superclass02.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/11/OC底层原理/isa和superclass/isa和superclass09.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/11/OC底层原理/isa和superclass/isa和superclass03.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/11/OC底层原理/isa和superclass/isa和superclass04.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/11/OC底层原理/isa和superclass/isa和superclass05.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/11/OC底层原理/isa和superclass/isa和superclass06.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/11/OC底层原理/isa和superclass/isa和superclass07.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/11/OC底层原理/isa和superclass/isa和superclass08.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/11/OC底层原理/isa和superclass/isa和superclass12.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/11/OC底层原理/isa和superclass/isa和superclass11.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/11/OC底层原理/isa和superclass/isa和superclass13.png">
+<meta property="og:image" content="http://yoursite.com/2020/05/11/OC底层原理/isa和superclass/isa和superclass14.png">
+<meta property="og:updated_time" content="2023-08-22T09:52:13.984Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="isa和superclass">
+<meta name="twitter:description" content="思考：  对象的 isa 指针指向哪里？ OC 的类信息存放在哪里？">
+<meta name="twitter:image" content="http://yoursite.com/2020/05/11/OC底层原理/isa和superclass/isa和superclass01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/05/11/OC底层原理/isa和superclass/"/>
+
+
+
+
+
+  <title>isa和superclass | Kevin's  blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a073c6e38282486853e19b272e9e7c34";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's  blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/11/OC底层原理/isa和superclass/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">isa和superclass</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-11T14:35:58+08:00">
+                2020-05-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>思考：</p>
+<ul>
+<li>对象的 isa 指针指向哪里？</li>
+<li>OC 的类信息存放在哪里？</li>
+</ul>
+<a id="more"></a>
+<h1 id="图解"><a href="#图解" class="headerlink" title="图解"></a>图解</h1><p><img src="/2020/05/11/OC底层原理/isa和superclass/isa和superclass01.png" alt="isa和superclass"></p>
+<ul>
+<li>instance 的 isa 指向 class</li>
+<li>class 的 isa 指向 meta-class</li>
+<li>meta-class 的 isa 指向基类的 meta-class</li>
+<li>class 的 superclass 指向父类的 class，如果没有父类，superclass 指针为nil</li>
+<li>meta-class 的 superclass 指向父类的 meta-class，基类的 meta-class 的 superclass 指向基类的 class</li>
+<li>instance 调用对象方法的轨迹：isa 找到 class，方法不存在，就通过 superclass 找父类</li>
+<li>class 调用类方法的轨迹：isa 找 meta-class，方法不存在，就通过 superclass 找父类</li>
+</ul>
+<h1 id="isa"><a href="#isa" class="headerlink" title="isa"></a>isa</h1><h2 id="instance-对象、class-对象-和-meta-class-对象之间的-isa-关系"><a href="#instance-对象、class-对象-和-meta-class-对象之间的-isa-关系" class="headerlink" title="instance 对象、class 对象 和 meta-class 对象之间的 isa 关系"></a>instance 对象、class 对象 和 meta-class 对象之间的 isa 关系</h2><p><img src="/2020/05/11/OC底层原理/isa和superclass/isa和superclass02.png" alt="isa和superclass"></p>
+<h3 id="定义-Person"><a href="#定义-Person" class="headerlink" title="定义 Person"></a>定义 Person</h3><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@interface</span> <span class="attribute">Person </span>: NSObject &lt;NSCopying&gt;</div><div class="line">&#123;</div><div class="line">    <span class="variable">@public</span></div><div class="line">    int _age;</div><div class="line">&#125;</div><div class="line"><span class="variable">@property</span> (nonatomic, assign) int no;</div><div class="line"><span class="selector-tag">-</span> (void)<span class="selector-tag">personInstanceMethod</span>;</div><div class="line">+ (void)<span class="selector-tag">personClassMethod</span>;</div><div class="line">@<span class="selector-tag">end</span></div><div class="line"></div><div class="line">@<span class="selector-tag">implementation</span> <span class="selector-tag">Person</span></div><div class="line">@<span class="selector-tag">end</span></div></pre></td></tr></table></figure>
+<p>创建 Person 的实例对象<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span>(<span class="params"><span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]</span>) </span>&#123;</div><div class="line">    @autoreleasepool &#123;</div><div class="line">        </div><div class="line">        Person *person = [[Person alloc] init];</div><div class="line">        </div><div class="line">        person-&gt;_age = <span class="number">10</span>;</div><div class="line"></div><div class="line">        [<span class="meta">person personInstanceMethod</span>];</div><div class="line">        </div><div class="line">        [<span class="meta">Person personClassMethod</span>];</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="将-OC-代码转换为-C-C-代码"><a href="#将-OC-代码转换为-C-C-代码" class="headerlink" title="将 OC 代码转换为 C\C++ 代码"></a>将 OC 代码转换为 C\C++ 代码</h3><p>找到 main.m 所在文件，在终端输入：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> xcrun -sdk iphoneos clang -arch arm64  -rewrite-objc main.m</span></div></pre></td></tr></table></figure></p>
+<p>没有通过 ‘-o’ 生成指定文件时，默认生成 main.cpp 文件，打开 main.cpp 文件。找到 main 函数：<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">int main(<span class="name">int</span> argc, const char * argv[]) &#123;</div><div class="line">    /* @autoreleasepool */ &#123; __AtAutoreleasePool __autoreleasepool; </div><div class="line"></div><div class="line">        Person *person = ((<span class="name">Person</span> *(*)(<span class="name">id</span>, SEL))(<span class="name">void</span> *)objc_msgSend)((id)((Person *(<span class="name">*</span>)(<span class="name">id</span>, SEL))(<span class="name">void</span> *)objc_msgSend)((id)objc_getClass("Person"), sel_registerName("alloc")), sel_registerName("init"));</div><div class="line"></div><div class="line">        (*(<span class="name">int</span> *)((char *)person + OBJC_IVAR_$_Person$_age)) = <span class="number">10</span><span class="comment">;</span></div><div class="line"></div><div class="line">        ((<span class="name">void</span> (<span class="name">*</span>)(<span class="name">id</span>, SEL))(<span class="name">void</span> *)objc_msgSend)((id)person, sel_registerName("personInstanceMethod"));</div><div class="line"></div><div class="line">        ((void (*)(<span class="name">id</span>, SEL))(<span class="name">void</span> *)objc_msgSend)((id)objc_getClass("Person"), sel_registerName("personClassMethod"));</div><div class="line"></div><div class="line">    &#125;</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>找到 objc_msgSend：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">((<span class="keyword">void</span> (*)(<span class="keyword">id</span>, SEL))(<span class="keyword">void</span> *)objc_msgSend)((<span class="keyword">id</span>)person, sel_registerName(<span class="string">"personInstanceMethod"</span>));</div><div class="line"></div><div class="line">((<span class="keyword">void</span> (*)(<span class="keyword">id</span>, SEL))(<span class="keyword">void</span> *)objc_msgSend)((<span class="keyword">id</span>)objc_getClass(<span class="string">"Person"</span>), sel_registerName(<span class="string">"personClassMethod"</span>));</div><div class="line"></div><div class="line"><span class="comment">//简化后：</span></div><div class="line">objc_msgSend(person, sel_registerName(<span class="string">"personInstanceMethod"</span>));</div><div class="line"></div><div class="line">objc_msgSend(objc_getClass(<span class="string">"Person"</span>), sel_registerName(<span class="string">"personClassMethod"</span>));</div></pre></td></tr></table></figure></p>
+<p><code>[person personInstanceMethod]</code> 的具体实现是 <code>objc_msgSend(person, sel_registerName(&quot;personInstanceMethod&quot;))</code>。<br>即在实例对象 person 调用 <code>-(void)personInstanceMethod</code> 对象方法的时候，向实例对象 person 发送一条 “personInstanceMethod” 消息。  </p>
+<p><code>[Person personClassMethod]</code> 的具体实现是 <code>objc_msgSend(objc_getClass(&quot;Person&quot;), sel_registerName(&quot;personClassMethod&quot;))</code>。<br>即在类对象 Person 调用 <code>+(void)personClassMethod</code> 类方法的时候，向类对象 Person 发送一条 “personClassMethod” 消息。  </p>
+<h3 id="方法调用与对象的关系"><a href="#方法调用与对象的关系" class="headerlink" title="方法调用与对象的关系"></a>方法调用与对象的关系</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="section">[person personInstanceMethod]</span><span class="comment">;</span></div><div class="line"><span class="section">[Person personClassMethod]</span><span class="comment">;</span></div></pre></td></tr></table></figure>
+<p>上面👆两个方法调用表现出来的是，实例对象 person 可以调用存在 Person 类对象里的对象方法， Person 类对象可以调用存储在 Person 元类对象里的类方法。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ul>
+<li>instance 对象的 isa 指针指向 class 对象。当调用对象方法时，通过 instance 对象的 isa 指针找到 class 对象，最后找到对象方法的实现进行调用。</li>
+<li>class 对象的 isa 指针指向 meta-class 对象。当调用类方法时，通过 class 对象的 isa 指针找到 meta-class对象，最后找到类方法的实现进行调用。</li>
+</ul>
+<h2 id="ISA-MASK"><a href="#ISA-MASK" class="headerlink" title="ISA_MASK"></a>ISA_MASK</h2><!-- ![isa和superclass](isa和superclass/isa和superclass10.png) -->
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        </div><div class="line">        Person *person = [[Person alloc] init];</div><div class="line">        </div><div class="line">        Class personClass = [Person <span class="keyword">class</span>];</div><div class="line"></div><div class="line">        Class personMetaClass = object_getClass(personClass);</div><div class="line"></div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"%p %p %p"</span>, person, personClass, personMetaClass);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="实例对象的-isa-指针"><a href="#实例对象的-isa-指针" class="headerlink" title="实例对象的 isa 指针"></a>实例对象的 isa 指针</h3><p>打印 Person-&gt;isa、personClass：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">(lldb) p/x (long)person-&gt;isa <span class="comment">//指针地址格式设置16进制</span></div><div class="line">(long) $<span class="number">2</span> = <span class="number">0x001d8001000014f1</span></div><div class="line">(lldb) p/x personClass</div><div class="line">(Class) $<span class="number">3</span> = <span class="number">0x00000001000014f0</span> Person</div></pre></td></tr></table></figure></p>
+<p>上面👆的打印结果可以看到，Person 的类对象地址是 0x00000001000014f0，而 Person 的实例对象的 isa 指针的地址是 0x001d8001000014f1。</p>
+<p>不相等原因是在 64bit 之前 isa 指针的地址等于被指向对象的地址，从 64bit 开始 isa 需要进行一次位运算，才能计算出真实地址：<br><img src="/2020/05/11/OC底层原理/isa和superclass/isa和superclass09.png" alt="isa和superclass"></p>
+<p>ISA_MASK 在源码 <a href="https://opensource.apple.com/tarballs/objc4/" target="_blank" rel="external">objc4-781</a> 中的定义：<br><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># if __arm64__</span></div><div class="line"><span class="comment">#   define ISA_MASK        0x0000000ffffffff8ULL</span></div><div class="line"><span class="comment">#   define ISA_MAGIC_MASK  0x000003f000000001ULL</span></div><div class="line"><span class="comment">#   define ISA_MAGIC_VALUE 0x000001a000000001ULL</span></div><div class="line"><span class="comment">#   define ISA_BITFIELD                                                      \</span></div><div class="line">      uintptr_t nonpointer        : <span class="number">1</span><span class="comment">;                                       \</span></div><div class="line">      uintptr_t has_assoc         : <span class="number">1</span><span class="comment">;                                       \</span></div><div class="line">      uintptr_t has_cxx_dtor      : <span class="number">1</span><span class="comment">;                                       \</span></div><div class="line">      uintptr_t <span class="keyword">shiftcls </span>         : <span class="number">33</span><span class="comment">; /*MACH_VM_MAX_ADDRESS 0x1000000000*/ \</span></div><div class="line">      uintptr_t magic             : <span class="number">6</span><span class="comment">;                                       \</span></div><div class="line">      uintptr_t weakly_referenced : <span class="number">1</span><span class="comment">;                                       \</span></div><div class="line">      uintptr_t deallocating      : <span class="number">1</span><span class="comment">;                                       \</span></div><div class="line">      uintptr_t has_sidetable_rc  : <span class="number">1</span><span class="comment">;                                       \</span></div><div class="line">      uintptr_t <span class="keyword">extra_rc </span>         : <span class="number">19</span></div><div class="line"><span class="comment">#   define RC_ONE   (1ULL&lt;&lt;45)</span></div><div class="line"><span class="comment">#   define RC_HALF  (1ULL&lt;&lt;18)</span></div><div class="line"></div><div class="line"><span class="comment"># elif __x86_64__</span></div><div class="line"><span class="comment">#   define ISA_MASK        0x00007ffffffffff8ULL</span></div><div class="line"><span class="comment">#   define ISA_MAGIC_MASK  0x001f800000000001ULL</span></div><div class="line"><span class="comment">#   define ISA_MAGIC_VALUE 0x001d800000000001ULL</span></div><div class="line"><span class="comment">#   define ISA_BITFIELD                                                        \</span></div><div class="line">      uintptr_t nonpointer        : <span class="number">1</span><span class="comment">;                                         \</span></div><div class="line">      uintptr_t has_assoc         : <span class="number">1</span><span class="comment">;                                         \</span></div><div class="line">      uintptr_t has_cxx_dtor      : <span class="number">1</span><span class="comment">;                                         \</span></div><div class="line">      uintptr_t <span class="keyword">shiftcls </span>         : <span class="number">44</span><span class="comment">; /*MACH_VM_MAX_ADDRESS 0x7fffffe00000*/ \</span></div><div class="line">      uintptr_t magic             : <span class="number">6</span><span class="comment">;                                         \</span></div><div class="line">      uintptr_t weakly_referenced : <span class="number">1</span><span class="comment">;                                         \</span></div><div class="line">      uintptr_t deallocating      : <span class="number">1</span><span class="comment">;                                         \</span></div><div class="line">      uintptr_t has_sidetable_rc  : <span class="number">1</span><span class="comment">;                                         \</span></div><div class="line">      uintptr_t <span class="keyword">extra_rc </span>         : <span class="number">8</span></div><div class="line"><span class="comment">#   define RC_ONE   (1ULL&lt;&lt;56)</span></div><div class="line"><span class="comment">#   define RC_HALF  (1ULL&lt;&lt;7)</span></div></pre></td></tr></table></figure></p>
+<p>iPhoneOS 是 <strong>arm64</strong> 架构，ISA_MASK：0x0000000ffffffff8。<br>MacOS 是 <strong>x86_64</strong> 架构，ISA_MASK：0x00007ffffffffff8ULL。  </p>
+<p>打印 person-&gt;isa &amp; ISA_MASK<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">(lldb) p/x <span class="number">0x001d8001000014f1</span> &amp; <span class="number">0x00007ffffffffff8</span></div><div class="line">(long) $<span class="number">4</span> = <span class="number">0x00000001000014f0</span></div></pre></td></tr></table></figure></p>
+<p>上面👆的打印结果可以看出，Person 实例对象的 isa 指针 &amp; ISA_MASK 就是 Person 类对象的地址。</p>
+<h3 id="类对象的-isa-指针"><a href="#类对象的-isa-指针" class="headerlink" title="类对象的 isa 指针"></a>类对象的 isa 指针</h3><p>类对象的类型 Class 是一个指向结构体 objc_class 的指针：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">objc_class</span> *<span class="title">Class</span>;</span></div></pre></td></tr></table></figure></p>
+<p>Jump TO Definition -&gt; objc_class：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">objc_class</span> &#123;</span></div><div class="line">    Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> !__OBJC2__</span></div><div class="line">    Class _Nullable super_class                              OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> * _Nonnull name                               OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">long</span> version                                             OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">long</span> info                                                OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">long</span> instance_size                                       OBJC2_UNAVAILABLE;</div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">objc_ivar_list</span> * _<span class="title">Nullable</span> <span class="title">ivars</span>                  <span class="title">OBJC2_UNAVAILABLE</span>;</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">objc_method_list</span> * _<span class="title">Nullable</span> * _<span class="title">Nullable</span> <span class="title">methodLists</span>                    <span class="title">OBJC2_UNAVAILABLE</span>;</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">objc_cache</span> * _<span class="title">Nonnull</span> <span class="title">cache</span>                       <span class="title">OBJC2_UNAVAILABLE</span>;</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">objc_protocol_list</span> * _<span class="title">Nullable</span> <span class="title">protocols</span>          <span class="title">OBJC2_UNAVAILABLE</span>;</span></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line"></div><div class="line">&#125; OBJC2_UNAVAILABLE;</div></pre></td></tr></table></figure></p>
+<p>👆 objc_class 的 isa 是不支持外部访问的，所以 personClass-&gt;isa 获取不到 isa 指针地址，所以要自定义一个 test_objc_class 结构体，再将 personClass 的类型强转为 test_objc_class 类型：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">test_objc_class</span> &#123;</span></div><div class="line">    Class isa;</div><div class="line">    Class superclass;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[])</span> </span>&#123;</div><div class="line">    @autoreleasepool &#123;</div><div class="line">        Class personClass = [Person class];</div><div class="line"></div><div class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">test_objc_class</span> *<span class="title">personClass2</span> = (__<span class="title">bridge</span> <span class="title">struct</span> <span class="title">test_objc_class</span> *)(<span class="title">personClass</span>);</span> </div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>因为 personClass 是 OC 对象，将 OC 代码专为 c++ 代码需要用到桥接 (__bridge struct test_objc_class *)。  </p>
+<p>打印 personClass2-&gt;isa、personMetaClass 和 personClass2-&gt;isa &amp; ISA_MASK：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">(lldb) p/x personClass2-&gt;isa</div><div class="line">(Class) $<span class="number">5</span> = <span class="number">0x001d8001000014c9</span></div><div class="line">(lldb) p/x personMetaClass</div><div class="line">(Class) $<span class="number">6</span> = <span class="number">0x00000001000014c8</span></div><div class="line">(lldb) p/x <span class="number">0x001d8001000014c9</span> &amp; <span class="number">0x00007ffffffffff8</span></div><div class="line">(long) $<span class="number">7</span> = <span class="number">0x00000001000014c8</span></div></pre></td></tr></table></figure></p>
+<p>上面👆的打印结果可以看出，Person 类对象的 isa 指针 &amp; ISA_MASK 就是 Person 元类对象的地址。</p>
+<h1 id="superclass"><a href="#superclass" class="headerlink" title="superclass"></a>superclass</h1><p>定义 Student 继承自 Person：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Student</span> : <span class="title">Person</span> &lt;<span class="title">NSCoding</span>&gt;</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">@public</span></div><div class="line">    <span class="keyword">int</span> _weight;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">assign</span>) <span class="keyword">int</span> height;</div><div class="line">- (<span class="keyword">void</span>)studentInstanceMethod;</div><div class="line">+ (<span class="keyword">void</span>)studentClassMethod;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Student</span></span></div><div class="line">- (<span class="keyword">void</span>)studentInstanceMethod</div><div class="line">&#123;</div><div class="line">    </div><div class="line">&#125;</div><div class="line">+ (<span class="keyword">void</span>)studentClassMethod</div><div class="line">&#123;</div><div class="line">    </div><div class="line">&#125;</div><div class="line">- (<span class="keyword">id</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> <span class="literal">nil</span>;</div><div class="line">&#125;</div><div class="line">- (<span class="keyword">void</span>)encodeWithCoder:(<span class="built_in">NSCoder</span> *)aCoder</div><div class="line">&#123;</div><div class="line">    </div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<p>创建 Student 的实例对象<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span>(<span class="params"><span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]</span>) </span>&#123;</div><div class="line">    @autoreleasepool &#123;</div><div class="line">        </div><div class="line">         Student *student = [[Student alloc] init];</div><div class="line">         </div><div class="line">         [<span class="meta">student personInstanceMethod</span>];</div><div class="line">         </div><div class="line">         [<span class="meta">student init</span>];</div><div class="line">         </div><div class="line">         [<span class="meta">Student studentClassMethod</span>];</div><div class="line">         </div><div class="line">         [<span class="meta">Student personClassMethod</span>];</div><div class="line">         </div><div class="line">         [<span class="meta">Student load</span>];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="class-对象的-superclass-指针"><a href="#class-对象的-superclass-指针" class="headerlink" title="class 对象的 superclass 指针"></a>class 对象的 superclass 指针</h2><p>Student 类对象、Person 类对象 和 NSObject 类对象之间的 superclass 关系：<br><img src="/2020/05/11/OC底层原理/isa和superclass/isa和superclass03.png" alt="isa和superclass"></p>
+<p>获取 test_objc_class 类型的 Person 类对象和 Student 类对象：<br><figure class="highlight pony"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> test_objc_class *personClass = (__bridge <span class="keyword">struct</span> test_objc_class *)([<span class="type">Person</span> <span class="class"><span class="keyword">class</span>]);</span></div><div class="line"></div><div class="line"><span class="keyword">struct</span> test_objc_class *studentClass = (__bridge <span class="keyword">struct</span> test_objc_class *)([<span class="type">Student</span> <span class="class"><span class="keyword">class</span>]);</span></div></pre></td></tr></table></figure></p>
+<p>打印 personClass、studentClass 和 studentClass-&gt;superclass：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">(lldb) p personClass</div><div class="line">(test_objc_class *) $<span class="number">0</span> = <span class="number">0x00000001000014b8</span></div><div class="line">(lldb) p studentClass</div><div class="line">(test_objc_class *) $<span class="number">1</span> = <span class="number">0x0000000100001508</span></div><div class="line">(lldb) p/x studentClass-&gt;superclass</div><div class="line">(Class) $<span class="number">2</span> = <span class="number">0x00000001000014b8</span> Person</div></pre></td></tr></table></figure></p>
+<p>上面👆的打印结果可以看出，Student 类对象的 superclass 指针地址就是 Person 类对象的地址。</p>
+<h3 id="Student-的实例对象调用父类-Person-里的对象方法："><a href="#Student-的实例对象调用父类-Person-里的对象方法：" class="headerlink" title="Student 的实例对象调用父类 Person 里的对象方法："></a>Student 的实例对象调用父类 Person 里的对象方法：</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="section">[student personInstanceMethod]</span><span class="comment">;</span></div></pre></td></tr></table></figure>
+<p>对象方法 <code>-(void)personInstanceMethod</code> 保存在 Person 的类对象里，<code>[student personInstanceMethod]</code> 首先通过 student 的 isa 指针找到 Student 的类对象，再通过 Student 类对象里的 superclass 找到 Person 的类对象，最后在 Person 类对象里找到了对象方法 <code>-(void)personInstanceMethod</code>。</p>
+<h3 id="Student-的实例对象调用父类-NSObject-里的对象方法："><a href="#Student-的实例对象调用父类-NSObject-里的对象方法：" class="headerlink" title="Student 的实例对象调用父类 NSObject 里的对象方法："></a>Student 的实例对象调用父类 NSObject 里的对象方法：</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="section">[student init]</span><span class="comment">;</span></div></pre></td></tr></table></figure>
+<p>对象方法 <code>-(void)init</code> 方法保存在 NSObject 的类对象里，<code>[student init]</code> 首先通过 student 的 isa 指针找到 Student 的类对象，再通过 Student 类对象里的 superclass 找到 Person 的类对象，再通过 Person 类对象里的 superclass 找到 NSObject 的类对象，最后在 NSObject 类对象里找到了对象方法 <code>-(void)init</code>。</p>
+<h3 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h3><ul>
+<li>具有继承关系的不同的类之间，是通过 superlass 指针连接的。有了 superlass 指针的连接，就实现了子类调用父类方法的逻辑。</li>
+<li>当 Student 的 instance 对象在调用 Person 的对象方法时，会先通过 isa 找到 Student 的 class，然后通过 superclass 找到 Person 的 class，最后找到对象方法的实现进行调用。</li>
+</ul>
+<h2 id="meta-class-对象的-superclass-指针"><a href="#meta-class-对象的-superclass-指针" class="headerlink" title="meta-class 对象的 superclass 指针"></a>meta-class 对象的 superclass 指针</h2><p>Student 元类对象、Person 元类对象 和 NSObject 元类对象之间的 superclass 关系：<br><img src="/2020/05/11/OC底层原理/isa和superclass/isa和superclass04.png" alt="isa和superclass"></p>
+<h3 id="Student-类对象调用-Student-元类对象里的类方法："><a href="#Student-类对象调用-Student-元类对象里的类方法：" class="headerlink" title="Student 类对象调用 Student 元类对象里的类方法："></a>Student 类对象调用 Student 元类对象里的类方法：</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="section">[Student studentClassMethod]</span><span class="comment">;</span></div></pre></td></tr></table></figure>
+<p>首先通过 Student 类对象里的 isa 指针找到 Student 元类对象，最终在 Student 元类对象里找到类方法 <code>+(void)studentClassMethod</code>。</p>
+<h3 id="Student-类对象调用父类-Person-元类对象里的类方法："><a href="#Student-类对象调用父类-Person-元类对象里的类方法：" class="headerlink" title="Student 类对象调用父类 Person 元类对象里的类方法："></a>Student 类对象调用父类 Person 元类对象里的类方法：</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="section">[Student personClassMethod]</span><span class="comment">;</span></div></pre></td></tr></table></figure>
+<p>首先通过 Student 类对象里的 isa 指针找到 Student 元类对象，再通过 Student 元类对象里的 superclass 找到 Person 元类对象，最终在 Person 元类对象里找到类方法 <code>+(void)personClassMethod</code>。</p>
+<h3 id="Student-类对象调用父类-NSObject-元类对象里的类方法："><a href="#Student-类对象调用父类-NSObject-元类对象里的类方法：" class="headerlink" title="Student 类对象调用父类 NSObject 元类对象里的类方法："></a>Student 类对象调用父类 NSObject 元类对象里的类方法：</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="section">[Student load]</span><span class="comment">;</span></div></pre></td></tr></table></figure>
+<p>首先通过 Student 类对象里的 isa 指针找到 Student 元类对象，再通过 Student 元类对象里的 superclass 找到 Person 元类对象，再通过 Person 元类对象里的 superclass 找到 NSObject 元类对象，最终在 NSObject 元类对象里找到类方法 <code>+(void)load</code>。</p>
+<h1 id="instance-对象调用对象方法流程"><a href="#instance-对象调用对象方法流程" class="headerlink" title="instance 对象调用对象方法流程"></a>instance 对象调用对象方法流程</h1><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="section">[student unrecoginzedSelector]</span><span class="comment">;</span></div></pre></td></tr></table></figure>
+<p>向实例对象 student 发送一条 “unrecoginzedSelector” 消息。student 通过 isa 指针找到 Student 类对象，在类对象里查找对象方法 <code>-(void)unrecoginzedSelector</code>。如果没有，Student 类对象会通过 superclass 指针找到 Student 父类的类对象，并在父类的类对象里查找对象方法 <code>-(void)unrecoginzedSelector</code>。如果还是没有找到，再通过 superclass 查找父类的类对象。以此往复，直找到基类 NSObject 的类对象。流程图：<br><img src="/2020/05/11/OC底层原理/isa和superclass/isa和superclass05.png" alt="isa和superclass"></p>
+<h2 id="unrecoginzed-selector-sent-to-instance"><a href="#unrecoginzed-selector-sent-to-instance" class="headerlink" title="unrecoginzed selector sent to instance"></a>unrecoginzed selector sent to instance</h2><p>如果在 NSObject 的类对象里也没有查找到对象方法 <code>-(void)unrecoginzedSelector</code>，就会返回出现‘unrecoginzed selector sent to instance’错误。</p>
+<h2 id="子类重写父类的对象方法"><a href="#子类重写父类的对象方法" class="headerlink" title="子类重写父类的对象方法"></a>子类重写父类的对象方法</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span> &lt;<span class="title">NSCopying</span>&gt;</span></div><div class="line">- (<span class="keyword">void</span>)test;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></div><div class="line">- (<span class="keyword">void</span>)test </div><div class="line">&#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Student</span> : <span class="title">Person</span> &lt;<span class="title">NSCoding</span>&gt;</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Student</span></span></div><div class="line">- (<span class="keyword">void</span>)test</div><div class="line">&#123;</div><div class="line">    </div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        </div><div class="line">         Student *student = [[Student alloc] init];</div><div class="line">         </div><div class="line">         [student test];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>向实例对象 student 发送一条 “test” 消息。studnet 通过 isa 指针找到 Student 类对象，在类对象里查找对象方法 -(void)test，找到后返回，不在查找父类的类对象。</p>
+<h1 id="class-对象调用类方法流程"><a href="#class-对象调用类方法流程" class="headerlink" title="class 对象调用类方法流程"></a>class 对象调用类方法流程</h1><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="section">[Student unrecoginzedSelector]</span><span class="comment">;</span></div></pre></td></tr></table></figure>
+<p>向类对象 Student 发送一条 “unrecoginzedSelector” 消息。Student 通过 isa 指针找到 Student 元类对象，在元类对象里查找类方法 <code>-(void)unrecoginzedSelector</code> 。如果没有，Student 元类对象会通过 superclass 指针找到 Student 父类的元类对象，并在父类的元类对象里查找类方法 <code>-(void)unrecoginzedSelector</code>。如果还是没有找到，再通过 superclass 查找父类的元类对象。以此往复，直找到基类 NSObject 的元类对象。如果在 NSObject 的元类对象里也没有查找到类方法 <code>-(void)unrecoginzedSelector</code>，就会通过 superclass 指针找到 NSObject 的类对象查找类方法 <code>-(void)unrecoginzedSelector</code>。流程图：<br><img src="/2020/05/11/OC底层原理/isa和superclass/isa和superclass06.png" alt="isa和superclass"></p>
+<h2 id="unrecoginzed-selector-sent-to-class"><a href="#unrecoginzed-selector-sent-to-class" class="headerlink" title="unrecoginzed selector sent to class"></a>unrecoginzed selector sent to class</h2><p>如果在 NSObject 的类对象里也没找到类方法 <code>-(void)unrecoginzedSelector</code>，就会返回出现‘unrecoginzed selector sent to class’错误。</p>
+<h2 id="子类重写父类的类方法"><a href="#子类重写父类的类方法" class="headerlink" title="子类重写父类的类方法"></a>子类重写父类的类方法</h2><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@interface</span> <span class="attribute">Person </span>: NSObject &lt;NSCopying&gt;</div><div class="line">+ (void)test;</div><div class="line"><span class="variable">@end</span></div><div class="line"></div><div class="line"><span class="variable">@implementation</span> Person</div><div class="line">+ (void)test </div><div class="line">&#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"><span class="variable">@end</span></div><div class="line"></div><div class="line"><span class="variable">@interface</span> <span class="attribute">Student </span>: Person &lt;NSCoding&gt;</div><div class="line"><span class="variable">@end</span></div><div class="line"></div><div class="line"><span class="variable">@implementation</span> Student</div><div class="line">+ (void)test</div><div class="line">&#123;</div><div class="line">    </div><div class="line">&#125;</div><div class="line"><span class="variable">@end</span></div><div class="line"></div><div class="line">int main(int argc, const char * argv[]) &#123;</div><div class="line">    <span class="variable">@autoreleasepool</span> &#123;</div><div class="line">         </div><div class="line">         <span class="selector-attr">[Student test]</span>;</div><div class="line">    &#125;</div><div class="line">    return <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>向类对象 Student 发送一条 “test” Student 通过 isa 指针找到 Student 元类对象，在元类对象里查找类方法 +(void)test，找到后返回，不在查找父类的元类对象。</p>
+<h1 id="class-对象调用对象方法流程"><a href="#class-对象调用对象方法流程" class="headerlink" title="class 对象调用对象方法流程"></a>class 对象调用对象方法流程</h1><h2 id="定义-NSObject-test"><a href="#定义-NSObject-test" class="headerlink" title="定义 NSObject+test"></a>定义 NSObject+test</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSObject</span> (<span class="title">Test</span>)</span></div><div class="line">+ (<span class="keyword">void</span>)test;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NSObject</span> (<span class="title">Test</span>)</span></div><div class="line">- (<span class="keyword">void</span>)test</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"-[NSObject test] - %p"</span>, <span class="keyword">self</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span> &lt;<span class="title">NSCopying</span>&gt;</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"[Person class] - %p"</span>, [Person <span class="keyword">class</span>]);</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"[NSObject class] - %p"</span>, [<span class="built_in">NSObject</span> <span class="keyword">class</span>]);</div><div class="line">        </div><div class="line">        [Person test];</div><div class="line">        [<span class="built_in">NSObject</span> test];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印结果：<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[Person class] - <span class="number">0x1000011e0</span></div><div class="line">[NSObject class] - <span class="number">0x7fffaa791140</span></div><div class="line">[NSObject <span class="keyword">test</span>] - <span class="number">0x1000011e0</span> //[Person <span class="keyword">test</span>] 打印结果</div><div class="line">[NSObject <span class="keyword">test</span>] - <span class="number">0x7fffaa791140</span> //[NSObject <span class="keyword">test</span>] 打印结果</div></pre></td></tr></table></figure></p>
+<h2 id="Person-test"><a href="#Person-test" class="headerlink" title="[Person test]"></a>[Person test]</h2><p>向类对象 Person 发送一条 “test” 消息。Person 通过 isa 指针找到 Person 元类对象，在元类对象里查找类方法 <code>+(void)test</code>。如果没有，Person 元类对象会通过 superclass 指针找到 NSObject 的元类对象，并在 NSObject 的元类对象里查找类方法 <code>+(void)test</code>。如果还是没有找到，再通过 superclass 指针找到 NSObject 的类对象，在类对象中找到对象方法 <code>-(void)test</code> 并返回。  </p>
+<p>NSObject+test 里打印的 self，是 objc_msgSend() 里的对象，即接收‘test’消息的对象。[Person test] 中，因为是向 Person 发送了一条”test“消息，所以打印的 self 是 Person 的类对象。流程图：<br><img src="/2020/05/11/OC底层原理/isa和superclass/isa和superclass07.png" alt="isa和superclass"></p>
+<h3 id="void-test-与-void-test-同时存在"><a href="#void-test-与-void-test-同时存在" class="headerlink" title="+ (void)test 与 - (void)test 同时存在"></a>+ (void)test 与 - (void)test 同时存在</h3><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@interface</span> NSObject (Test)</div><div class="line">+ (void)test;</div><div class="line"><span class="variable">@end</span></div><div class="line"></div><div class="line"><span class="variable">@implementation</span> NSObject (Test)</div><div class="line">+ (void)test</div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">NSLog</span>(@<span class="string">"+[NSObject test] - %p"</span>, self);</div><div class="line">&#125;</div><div class="line"><span class="selector-tag">-</span> (void)<span class="selector-tag">test</span></div><div class="line">&#123;</div><div class="line">    <span class="selector-tag">NSLog</span>(@<span class="string">"-[NSObject test] - %p"</span>, self);</div><div class="line">&#125;</div><div class="line">@<span class="selector-tag">end</span></div></pre></td></tr></table></figure>
+<p>此时 [Person test] 调用的就是类方法 <code>+(void)test</code> 了。因为 <code>+(void)test</code> 存储在 NSObject 元类对象里，而 <code>-(void)test</code> 存储在 NSObject 类对象里。查找类方法 <code>+(void)test</code> 时，会优先找到 NSObject 元类对象，在元类对象里找到类方法 <code>+(void)test</code> 后返回，不再到类对象里找了。</p>
+<h2 id="NSObject-test"><a href="#NSObject-test" class="headerlink" title="[NSObject test]"></a>[NSObject test]</h2><p>向类对象 NSObject 发送一条 “test” 消息。NSObject 通过 isa 指针找到 NSObject 元类对象，在元类对象里查找类方法 +(void)test 。如果没有，NSObject 元类对象再通过 superclass 指针找到 NSObject 的类对象，在类对象中找到对象方法 -(void)test 并返回。流程图:<br><img src="/2020/05/11/OC底层原理/isa和superclass/isa和superclass08.png" alt="isa和superclass">  </p>
+<h2 id="class-对象调用对象方法的可能性"><a href="#class-对象调用对象方法的可能性" class="headerlink" title="class 对象调用对象方法的可能性"></a>class 对象调用对象方法的可能性</h2><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="section">[Person test]</span><span class="comment">;</span></div></pre></td></tr></table></figure>
+<p>上面👆这句代码的本质是：<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">objc_msgSend(<span class="name">objc_getClass</span>(<span class="string">"Person"</span>), sel_registerName(<span class="string">"test"</span>))<span class="comment">;</span></div></pre></td></tr></table></figure></p>
+<p>向类对象 Person 发送一条 “test” 消息，这条消息里并没有包含方法的类型，即不区分类方法和对象方法。</p>
+<h1 id="窥探-struct-objc-class-的结构"><a href="#窥探-struct-objc-class-的结构" class="headerlink" title="窥探 struct objc_class 的结构"></a>窥探 struct objc_class 的结构</h1><h2 id="废弃的-struct-objc-class"><a href="#废弃的-struct-objc-class" class="headerlink" title="废弃的 struct objc_class"></a>废弃的 struct objc_class</h2><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">Class personClass</span> = [Person class];</div><div class="line"></div><div class="line"><span class="attribute">Class personMetaClass</span> = object_getClass(personClass);</div></pre></td></tr></table></figure>
+<p>在上面👆类对象的 isa 处提到过，类对象和元类对象的类型 Class 是一个指向结构体 objc_class 的指针：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">objc_class</span> *<span class="title">Class</span>;</span></div></pre></td></tr></table></figure></p>
+<p><img src="/2020/05/11/OC底层原理/isa和superclass/isa和superclass12.png" alt="isa和superclass"></p>
+<p>Jump TO Definition -&gt; objc_class：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">objc_class</span> &#123;</span></div><div class="line">    Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> !__OBJC2__</span></div><div class="line">    Class _Nullable super_class                              OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> * _Nonnull name                               OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">long</span> version                                             OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">long</span> info                                                OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">long</span> instance_size                                       OBJC2_UNAVAILABLE;</div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">objc_ivar_list</span> * _<span class="title">Nullable</span> <span class="title">ivars</span>                  <span class="title">OBJC2_UNAVAILABLE</span>;</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">objc_method_list</span> * _<span class="title">Nullable</span> * _<span class="title">Nullable</span> <span class="title">methodLists</span>                    <span class="title">OBJC2_UNAVAILABLE</span>;</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">objc_cache</span> * _<span class="title">Nonnull</span> <span class="title">cache</span>                       <span class="title">OBJC2_UNAVAILABLE</span>;</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">objc_protocol_list</span> * _<span class="title">Nullable</span> <span class="title">protocols</span>          <span class="title">OBJC2_UNAVAILABLE</span>;</span></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line"></div><div class="line">&#125; OBJC2_UNAVAILABLE;</div></pre></td></tr></table></figure></p>
+<p>代码中包含以下代码：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"><span class="keyword">if</span> !__OBJC2__</span></div><div class="line"></div><div class="line"><span class="meta">#</span><span class="bash">endif</span></div><div class="line"></div><div class="line">OBJC2_UNAVAILABLE</div></pre></td></tr></table></figure></p>
+<p>说明，结构体 struct objc_class 在 <strong>OBJC2</strong> 里被废弃掉了。</p>
+<h2 id="新版-struct-objc-class"><a href="#新版-struct-objc-class" class="headerlink" title="新版 struct objc_class"></a>新版 struct objc_class</h2><p>可以在 <a href="https://opensource.apple.com/tarballs/objc4/" target="_blank" rel="external">objc4-781</a> 找到最新的源码，打开 objc-runtime-new.h :</p>
+<p>objc_class：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">objc_class</span> :</span> objc_object &#123;</div><div class="line">    <span class="comment">// Class ISA;</span></div><div class="line">    Class superclass;</div><div class="line">    <span class="keyword">cache_t</span> cache;             <span class="comment">// 方法缓存</span></div><div class="line">    <span class="keyword">class_data_bits_t</span> bits;    <span class="comment">// 用于获取具体的类信息</span></div><div class="line"></div><div class="line">    <span class="keyword">class_rw_t</span> *data() <span class="keyword">const</span> &#123;</div><div class="line">        <span class="keyword">return</span> bits.data();</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setData</span><span class="params">(<span class="keyword">class_rw_t</span> *newData)</span> </span>&#123;</div><div class="line">        bits.setData(newData);</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">    ...</div><div class="line">    ... 一堆方法</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>objc_object：<br><figure class="highlight capnproto"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">objc_object</span> </span>&#123;</div><div class="line">    Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>class_rw_ext_t、class_rw_t：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">class_rw_ext_t</span> &#123;</span></div><div class="line">    <span class="keyword">const</span> <span class="keyword">class_ro_t</span> *ro;</div><div class="line">    <span class="keyword">method_array_t</span> methods; <span class="comment">//方法列表</span></div><div class="line">    <span class="keyword">property_array_t</span> properties; <span class="comment">//属性列表</span></div><div class="line">    <span class="keyword">protocol_array_t</span> protocols; <span class="comment">//协议列表</span></div><div class="line">    <span class="keyword">char</span> *demangledName;</div><div class="line">    <span class="keyword">uint32_t</span> version;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">class_rw_t</span> &#123;</span></div><div class="line">    <span class="comment">// Be warned that Symbolication knows the layout of this structure.</span></div><div class="line">    <span class="keyword">uint32_t</span> flags;</div><div class="line">    <span class="keyword">uint16_t</span> witness;</div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> SUPPORT_INDEXED_ISA</span></div><div class="line">    <span class="keyword">uint16_t</span> index;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line"></div><div class="line">    explicit_atomic&lt;<span class="keyword">uintptr_t</span>&gt; ro_or_rw_ext;</div><div class="line"></div><div class="line">    Class firstSubclass;</div><div class="line">    Class nextSiblingClass;</div><div class="line"></div><div class="line"><span class="keyword">private</span>:</div><div class="line">    <span class="keyword">using</span> <span class="keyword">ro_or_rw_ext_t</span> = objc::PointerUnion&lt;<span class="keyword">const</span> <span class="keyword">class_ro_t</span> *, <span class="keyword">class_rw_ext_t</span> *&gt;;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">const</span> ro_or_rw_ext_t <span class="title">get_ro_or_rwe</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">ro_or_rw_ext_t</span>&#123;ro_or_rw_ext&#125;;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">set_ro_or_rwe</span><span class="params">(<span class="keyword">const</span> <span class="keyword">class_ro_t</span> *ro)</span> </span>&#123;</div><div class="line">        <span class="keyword">ro_or_rw_ext_t</span>&#123;ro&#125;.storeAt(ro_or_rw_ext, memory_order_relaxed);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">set_ro_or_rwe</span><span class="params">(<span class="keyword">class_rw_ext_t</span> *rwe, <span class="keyword">const</span> <span class="keyword">class_ro_t</span> *ro)</span> </span>&#123;</div><div class="line">        <span class="comment">// the release barrier is so that the class_rw_ext_t::ro initialization</span></div><div class="line">        <span class="comment">// is visible to lockless readers</span></div><div class="line">        rwe-&gt;ro = ro;</div><div class="line">        <span class="keyword">ro_or_rw_ext_t</span>&#123;rwe&#125;.storeAt(ro_or_rw_ext, memory_order_release);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">class_rw_ext_t</span> *extAlloc(<span class="keyword">const</span> <span class="keyword">class_ro_t</span> *ro, <span class="keyword">bool</span> deep = <span class="literal">false</span>);</div><div class="line"></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setFlags</span><span class="params">(<span class="keyword">uint32_t</span> <span class="built_in">set</span>)</span></span></div><div class="line"><span class="function">    </span>&#123;</div><div class="line">        __c11_atomic_fetch_or((_Atomic(<span class="keyword">uint32_t</span>) *)&amp;flags, <span class="built_in">set</span>, __ATOMIC_RELAXED);</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">    ...</div><div class="line">    ... 一堆方法</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>class_rw_t 可以翻译为 class_readWrite_table，即读写表。在 objc4 的旧版本里，class_rw_ext_t 里的成员变量是直接定义在 class_rw_t 里的。</p>
+<p>class_ro_t：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">class_ro_t</span> &#123;</span></div><div class="line">    <span class="keyword">uint32_t</span> flags;</div><div class="line">    <span class="keyword">uint32_t</span> instanceStart;</div><div class="line">    <span class="keyword">uint32_t</span> instanceSize; <span class="comment">//instance 对象占用的内存空间</span></div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __LP64__</span></div><div class="line">    <span class="keyword">uint32_t</span> reserved;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">uint8_t</span> * ivarLayout;</div><div class="line">    </div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> * name; <span class="comment">//类名</span></div><div class="line">    <span class="keyword">method_list_t</span> * baseMethodList; <span class="comment">//方法列表</span></div><div class="line">    <span class="keyword">protocol_list_t</span> * baseProtocols; <span class="comment">//协议列表</span></div><div class="line">    <span class="keyword">const</span> <span class="keyword">ivar_list_t</span> * ivars; <span class="comment">//成员变量列表</span></div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">uint8_t</span> * weakIvarLayout;</div><div class="line">    <span class="keyword">property_list_t</span> *baseProperties; <span class="comment">//属性列表</span></div><div class="line"></div><div class="line">    <span class="comment">// This field exists only when RO_HAS_SWIFT_INITIALIZER is set.</span></div><div class="line">    _objc_swiftMetadataInitializer __ptrauth_objc_method_list_imp _swiftMetadataInitializer_NEVER_USE[<span class="number">0</span>];</div><div class="line"></div><div class="line">    _<span class="function">objc_swiftMetadataInitializer <span class="title">swiftMetadataInitializer</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (flags &amp; RO_HAS_SWIFT_INITIALIZER) &#123;</div><div class="line">            <span class="keyword">return</span> _swiftMetadataInitializer_NEVER_USE[<span class="number">0</span>];</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> nil;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">method_list_t</span> *baseMethods() <span class="keyword">const</span> &#123;</div><div class="line">        <span class="keyword">return</span> baseMethodList;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">class_ro_t</span> *duplicate() <span class="keyword">const</span> &#123;</div><div class="line">        <span class="keyword">if</span> (flags &amp; RO_HAS_SWIFT_INITIALIZER) &#123;</div><div class="line">            <span class="keyword">size_t</span> size = <span class="keyword">sizeof</span>(*<span class="keyword">this</span>) + <span class="keyword">sizeof</span>(_swiftMetadataInitializer_NEVER_USE[<span class="number">0</span>]);</div><div class="line">            <span class="keyword">class_ro_t</span> *ro = (<span class="keyword">class_ro_t</span> *)memdup(<span class="keyword">this</span>, size);</div><div class="line">            ro-&gt;_swiftMetadataInitializer_NEVER_USE[<span class="number">0</span>] = <span class="keyword">this</span>-&gt;_swiftMetadataInitializer_NEVER_USE[<span class="number">0</span>];</div><div class="line">            <span class="keyword">return</span> ro;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">size_t</span> size = <span class="keyword">sizeof</span>(*<span class="keyword">this</span>);</div><div class="line">            <span class="keyword">class_ro_t</span> *ro = (<span class="keyword">class_ro_t</span> *)memdup(<span class="keyword">this</span>, size);</div><div class="line">            <span class="keyword">return</span> ro;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>class_ro_t 可以翻译为 class_readOnly_table，即只读表。</p>
+<p>class_data_bits_t：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">class_data_bits_t</span> &#123;</span></div><div class="line">    ...</div><div class="line"></div><div class="line">    <span class="keyword">class_rw_t</span>* data() <span class="keyword">const</span> &#123;</div><div class="line">        <span class="keyword">return</span> (<span class="keyword">class_rw_t</span> *)(bits &amp; FAST_DATA_MASK);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    ...</div></pre></td></tr></table></figure></p>
+<p>class_data_bits_t 内部通过 bits &amp; FAST_DATA_MASK 找到 class_rw_t。</p>
+<p>objc_class、class_rw_t 和 class_ro_t 之间的关系可以简化为：<br><img src="/2020/05/11/OC底层原理/isa和superclass/isa和superclass11.png" alt="isa和superclass"></p>
+<h2 id="查看-objc-class-对象的真实结构"><a href="#查看-objc-class-对象的真实结构" class="headerlink" title="查看 objc_class 对象的真实结构"></a>查看 objc_class 对象的真实结构</h2><p>导入 ClassInfo.h，定义 Person 和 Student 类：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></div><div class="line"><span class="meta">#import <span class="meta-string">&lt;objc/runtime.h&gt;</span></span></div><div class="line"><span class="meta">#import <span class="meta-string">"ClassInfo.h"</span></span></div><div class="line"></div><div class="line"><span class="comment">//Person</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span> &lt;<span class="title">NSCopying</span>&gt;</span></div><div class="line">&#123;</div><div class="line"><span class="keyword">@public</span></div><div class="line">    <span class="keyword">int</span> _age;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">assign</span>) <span class="keyword">int</span> no;</div><div class="line">- (<span class="keyword">void</span>)personInstanceMethod;</div><div class="line">+ (<span class="keyword">void</span>)personClassMethod;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)test</div><div class="line">&#123;</div><div class="line">    </div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)personInstanceMethod</div><div class="line">&#123;</div><div class="line">    </div><div class="line">&#125;</div><div class="line">+ (<span class="keyword">void</span>)personClassMethod</div><div class="line">&#123;</div><div class="line">    </div><div class="line">&#125;</div><div class="line">- (<span class="keyword">id</span>)copyWithZone:(<span class="built_in">NSZone</span> *)zone</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> <span class="literal">nil</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="comment">//Student</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Student</span> : <span class="title">MJPerson</span> &lt;<span class="title">NSCoding</span>&gt;</span></div><div class="line">&#123;</div><div class="line"><span class="keyword">@public</span></div><div class="line">    <span class="keyword">int</span> _weight;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">assign</span>) <span class="keyword">int</span> height;</div><div class="line">- (<span class="keyword">void</span>)studentInstanceMethod;</div><div class="line">+ (<span class="keyword">void</span>)studentClassMethod;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Student</span></span></div><div class="line">- (<span class="keyword">void</span>)test</div><div class="line">&#123;</div><div class="line">    </div><div class="line">&#125;</div><div class="line">- (<span class="keyword">void</span>)studentInstanceMethod</div><div class="line">&#123;</div><div class="line">    </div><div class="line">&#125;</div><div class="line">+ (<span class="keyword">void</span>)studentClassMethod</div><div class="line">&#123;</div><div class="line">    </div><div class="line">&#125;</div><div class="line">- (<span class="keyword">id</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> <span class="literal">nil</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)encodeWithCoder:(<span class="built_in">NSCoder</span> *)aCoder</div><div class="line">&#123;</div><div class="line">    </div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        Student *stu = [[Student alloc] init];</div><div class="line">        stu-&gt;_weight = <span class="number">10</span>;</div><div class="line">        </div><div class="line">        test_objc_class *studentClass = (__bridge test_objc_class *)([Student <span class="keyword">class</span>]);</div><div class="line">        test_objc_class *personClass = (__bridge test_objc_class *)([Person <span class="keyword">class</span>]);</div><div class="line">        </div><div class="line">        class_rw_t *studentClassData = studentClass-&gt;data();</div><div class="line">        class_rw_t *personClassData = personClass-&gt;data();</div><div class="line">        </div><div class="line">        class_rw_t *studentMetaClassData = studentClass-&gt;metaClass()-&gt;data();</div><div class="line">        class_rw_t *personMetaClassData = personClass-&gt;metaClass()-&gt;data();</div><div class="line"></div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"1111"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>加断点后，可以在控制栏里看到每个类内部的具体信息了。</p>
+<p>studentClassData:<br><img src="/2020/05/11/OC底层原理/isa和superclass/isa和superclass13.png" alt="isa和superclass"></p>
+<p>可以看到 Student 的类对象里存储了属性、对象方法、协议、成员变量信息。</p>
+<p>studentMetaClassData:<br><img src="/2020/05/11/OC底层原理/isa和superclass/isa和superclass14.png" alt="isa和superclass"></p>
+<p>可以看到 Student 的元类对象里存储了类方法、协议。属性、成员变量信息都为 NULL。  </p>
+<p>元类对象中存储的协议信息与类对象中存储的协议信息地址相同，所以是同一份。如何确定协议信息是存储在类对象中还是元类对象中呢？还是两个都存储了？ </p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li><p>对象的 isa 指针指向哪里？<br>instance 对象的 isa 指向 class 对象<br>class 对象的 isa 指向 meta-class 对象<br>meta-class 对象的 isa 指向基类的 meta-class 对象</p>
+</li>
+<li><p>OC 的类信息存放在哪里？<br>对象方法、属性、成员变量、协议信息，存放在 class 对象中<br>类方法，存放在 meta-class 对象中<br>成员变量的具体值，存放在 instance 对象</p>
+</li>
+</ul>
+<p>ps:<br>ClassInfo.h<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> ClassInfo_h</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> ClassInfo_h</span></div><div class="line"></div><div class="line"><span class="meta"># <span class="meta-keyword">if</span> __arm64__</span></div><div class="line"><span class="meta">#   <span class="meta-keyword">define</span> ISA_MASK        0x0000000ffffffff8ULL</span></div><div class="line"><span class="meta"># <span class="meta-keyword">elif</span> __x86_64__</span></div><div class="line"><span class="meta">#   <span class="meta-keyword">define</span> ISA_MASK        0x00007ffffffffff8ULL</span></div><div class="line"><span class="meta"># <span class="meta-keyword">endif</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> __LP64__</span></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">uint32_t</span> <span class="keyword">mask_t</span>;</div><div class="line"><span class="meta">#<span class="meta-keyword">else</span></span></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">uint16_t</span> <span class="keyword">mask_t</span>;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">uintptr_t</span> <span class="keyword">cache_key_t</span>;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">bucket_t</span> &#123;</span></div><div class="line">    <span class="keyword">cache_key_t</span> _key;</div><div class="line">    IMP _imp;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">cache_t</span> &#123;</span></div><div class="line">    <span class="keyword">bucket_t</span> *_buckets;</div><div class="line">    <span class="keyword">mask_t</span> _mask;</div><div class="line">    <span class="keyword">mask_t</span> _occupied;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">entsize_list_tt</span> &#123;</span></div><div class="line">    <span class="keyword">uint32_t</span> entsizeAndFlags;</div><div class="line">    <span class="keyword">uint32_t</span> count;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">method_t</span> &#123;</span></div><div class="line">    SEL name;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *types;</div><div class="line">    IMP imp;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">method_list_t</span> :</span> entsize_list_tt &#123;</div><div class="line">    <span class="keyword">method_t</span> first;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ivar_t</span> &#123;</span></div><div class="line">    <span class="keyword">int32_t</span> *offset;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *name;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *type;</div><div class="line">    <span class="keyword">uint32_t</span> alignment_raw;</div><div class="line">    <span class="keyword">uint32_t</span> size;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ivar_list_t</span> :</span> entsize_list_tt &#123;</div><div class="line">    <span class="keyword">ivar_t</span> first;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">property_t</span> &#123;</span></div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *name;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *attributes;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">property_list_t</span> :</span> entsize_list_tt &#123;</div><div class="line">    <span class="keyword">property_t</span> first;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">chained_property_list</span> &#123;</span></div><div class="line">    chained_property_list *next;</div><div class="line">    <span class="keyword">uint32_t</span> count;</div><div class="line">    <span class="keyword">property_t</span> <span class="built_in">list</span>[<span class="number">0</span>];</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">uintptr_t</span> <span class="keyword">protocol_ref_t</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">protocol_list_t</span> &#123;</span></div><div class="line">    <span class="keyword">uintptr_t</span> count;</div><div class="line">    <span class="keyword">protocol_ref_t</span> <span class="built_in">list</span>[<span class="number">0</span>];</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">class_ro_t</span> &#123;</span></div><div class="line">    <span class="keyword">uint32_t</span> flags;</div><div class="line">    <span class="keyword">uint32_t</span> instanceStart;</div><div class="line">    <span class="keyword">uint32_t</span> instanceSize;  <span class="comment">// instance对象占用的内存空间</span></div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __LP64__</span></div><div class="line">    <span class="keyword">uint32_t</span> reserved;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line">    <span class="keyword">const</span> <span class="keyword">uint8_t</span> * ivarLayout;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> * name;  <span class="comment">// 类名</span></div><div class="line">    <span class="keyword">method_list_t</span> * baseMethodList;</div><div class="line">    <span class="keyword">protocol_list_t</span> * baseProtocols;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">ivar_list_t</span> * ivars;  <span class="comment">// 成员变量列表</span></div><div class="line">    <span class="keyword">const</span> <span class="keyword">uint8_t</span> * weakIvarLayout;</div><div class="line">    <span class="keyword">property_list_t</span> *baseProperties;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">class_rw_t</span> &#123;</span></div><div class="line">    <span class="keyword">uint32_t</span> flags;</div><div class="line">    <span class="keyword">uint32_t</span> version;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">class_ro_t</span> *ro;</div><div class="line">    <span class="keyword">method_list_t</span> * methods;    <span class="comment">// 方法列表</span></div><div class="line">    <span class="keyword">property_list_t</span> *properties;    <span class="comment">// 属性列表</span></div><div class="line">    <span class="keyword">const</span> <span class="keyword">protocol_list_t</span> * protocols;  <span class="comment">// 协议列表</span></div><div class="line">    Class firstSubclass;</div><div class="line">    Class nextSiblingClass;</div><div class="line">    <span class="keyword">char</span> *demangledName;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> FAST_DATA_MASK          0x00007ffffffffff8UL</span></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">class_data_bits_t</span> &#123;</span></div><div class="line">    <span class="keyword">uintptr_t</span> bits;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">class_rw_t</span>* data() &#123;</div><div class="line">        <span class="keyword">return</span> (<span class="keyword">class_rw_t</span> *)(bits &amp; FAST_DATA_MASK);</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">/* OC对象 */</span></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">test_objc_object</span> &#123;</span></div><div class="line">    <span class="keyword">void</span> *isa;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">/* 类对象 */</span></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">test_objc_class</span> :</span> test_objc_object &#123;</div><div class="line">    Class superclass;</div><div class="line">    <span class="keyword">cache_t</span> cache;</div><div class="line">    <span class="keyword">class_data_bits_t</span> bits;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">class_rw_t</span>* data() &#123;</div><div class="line">        <span class="keyword">return</span> bits.data();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function">test_objc_class* <span class="title">metaClass</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> (test_objc_class *)((<span class="keyword">long</span> <span class="keyword">long</span>)isa &amp; ISA_MASK);</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">/* ClassInfo_h */</span></span></div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OC底层原理/" rel="tag"># OC底层原理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/09/OC底层原理/OC对象的分类/" rel="next" title="OC对象的分类">
+                <i class="fa fa-chevron-left"></i> OC对象的分类
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/13/OC底层原理/KVO/" rel="prev" title="KVO">
+                KVO <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/myAvatar.gif"
+              alt="Kevin" />
+          
+            <p class="site-author-name" itemprop="name">Kevin</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">54</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KevinYangGit" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yangqioffice@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_YangQI" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.cnblogs.com/mjios" title="M了个J" target="_blank">M了个J</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#图解"><span class="nav-number">1.</span> <span class="nav-text">图解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#isa"><span class="nav-number">2.</span> <span class="nav-text">isa</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#instance-对象、class-对象-和-meta-class-对象之间的-isa-关系"><span class="nav-number">2.1.</span> <span class="nav-text">instance 对象、class 对象 和 meta-class 对象之间的 isa 关系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义-Person"><span class="nav-number">2.1.1.</span> <span class="nav-text">定义 Person</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将-OC-代码转换为-C-C-代码"><span class="nav-number">2.1.2.</span> <span class="nav-text">将 OC 代码转换为 C\C++ 代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法调用与对象的关系"><span class="nav-number">2.1.3.</span> <span class="nav-text">方法调用与对象的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">2.1.4.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ISA-MASK"><span class="nav-number">2.2.</span> <span class="nav-text">ISA_MASK</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实例对象的-isa-指针"><span class="nav-number">2.2.1.</span> <span class="nav-text">实例对象的 isa 指针</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类对象的-isa-指针"><span class="nav-number">2.2.2.</span> <span class="nav-text">类对象的 isa 指针</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#superclass"><span class="nav-number">3.</span> <span class="nav-text">superclass</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#class-对象的-superclass-指针"><span class="nav-number">3.1.</span> <span class="nav-text">class 对象的 superclass 指针</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Student-的实例对象调用父类-Person-里的对象方法："><span class="nav-number">3.1.1.</span> <span class="nav-text">Student 的实例对象调用父类 Person 里的对象方法：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Student-的实例对象调用父类-NSObject-里的对象方法："><span class="nav-number">3.1.2.</span> <span class="nav-text">Student 的实例对象调用父类 NSObject 里的对象方法：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结-1"><span class="nav-number">3.1.3.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#meta-class-对象的-superclass-指针"><span class="nav-number">3.2.</span> <span class="nav-text">meta-class 对象的 superclass 指针</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Student-类对象调用-Student-元类对象里的类方法："><span class="nav-number">3.2.1.</span> <span class="nav-text">Student 类对象调用 Student 元类对象里的类方法：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Student-类对象调用父类-Person-元类对象里的类方法："><span class="nav-number">3.2.2.</span> <span class="nav-text">Student 类对象调用父类 Person 元类对象里的类方法：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Student-类对象调用父类-NSObject-元类对象里的类方法："><span class="nav-number">3.2.3.</span> <span class="nav-text">Student 类对象调用父类 NSObject 元类对象里的类方法：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#instance-对象调用对象方法流程"><span class="nav-number">4.</span> <span class="nav-text">instance 对象调用对象方法流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#unrecoginzed-selector-sent-to-instance"><span class="nav-number">4.1.</span> <span class="nav-text">unrecoginzed selector sent to instance</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#子类重写父类的对象方法"><span class="nav-number">4.2.</span> <span class="nav-text">子类重写父类的对象方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#class-对象调用类方法流程"><span class="nav-number">5.</span> <span class="nav-text">class 对象调用类方法流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#unrecoginzed-selector-sent-to-class"><span class="nav-number">5.1.</span> <span class="nav-text">unrecoginzed selector sent to class</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#子类重写父类的类方法"><span class="nav-number">5.2.</span> <span class="nav-text">子类重写父类的类方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#class-对象调用对象方法流程"><span class="nav-number">6.</span> <span class="nav-text">class 对象调用对象方法流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义-NSObject-test"><span class="nav-number">6.1.</span> <span class="nav-text">定义 NSObject+test</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Person-test"><span class="nav-number">6.2.</span> <span class="nav-text">[Person test]</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#void-test-与-void-test-同时存在"><span class="nav-number">6.2.1.</span> <span class="nav-text">+ (void)test 与 - (void)test 同时存在</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NSObject-test"><span class="nav-number">6.3.</span> <span class="nav-text">[NSObject test]</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#class-对象调用对象方法的可能性"><span class="nav-number">6.4.</span> <span class="nav-text">class 对象调用对象方法的可能性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#窥探-struct-objc-class-的结构"><span class="nav-number">7.</span> <span class="nav-text">窥探 struct objc_class 的结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#废弃的-struct-objc-class"><span class="nav-number">7.1.</span> <span class="nav-text">废弃的 struct objc_class</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新版-struct-objc-class"><span class="nav-number">7.2.</span> <span class="nav-text">新版 struct objc_class</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看-objc-class-对象的真实结构"><span class="nav-number">7.3.</span> <span class="nav-text">查看 objc_class 对象的真实结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="/js/src/md5.min.js"></script>
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: '82b6ced795961ee1fcca',
+      clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
+      repo: 'KevinYangGit.github.io',
+      owner: 'KevinYangGit',
+      admin: ['KevinYangGit'],
+      id: md5(location.pathname),
+      distractionFreeMode: 'true'
+    })
+    gitalk.render('gitalk-container')
+  </script>
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

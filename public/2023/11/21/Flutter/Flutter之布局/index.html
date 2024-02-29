@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Flutter," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="Align Center Padding Container BoxDecoration Flex Row Expand Column Stack">
+<meta name="keywords" content="Flutter">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter之布局">
+<meta property="og:url" content="http://yoursite.com/2023/11/21/Flutter/Flutter之布局/index.html">
+<meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="Align Center Padding Container BoxDecoration Flex Row Expand Column Stack">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2023/11/21/Flutter/Flutter之布局/01.png">
+<meta property="og:image" content="http://yoursite.com/2023/11/21/Flutter/Flutter之布局/02.png">
+<meta property="og:image" content="http://yoursite.com/2023/11/21/Flutter/Flutter之布局/03.png">
+<meta property="og:image" content="http://yoursite.com/2023/11/21/Flutter/Flutter之布局/04.png">
+<meta property="og:image" content="http://yoursite.com/2023/11/21/Flutter/Flutter之布局/05.png">
+<meta property="og:image" content="http://yoursite.com/2023/11/21/Flutter/Flutter之布局/06.png">
+<meta property="og:image" content="http://yoursite.com/2023/11/21/Flutter/Flutter之布局/07.png">
+<meta property="og:image" content="http://yoursite.com/2023/11/21/Flutter/Flutter之布局/08.png">
+<meta property="og:image" content="http://yoursite.com/2023/11/21/Flutter/Flutter之布局/09.png">
+<meta property="og:updated_time" content="2023-12-23T13:26:30.932Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flutter之布局">
+<meta name="twitter:description" content="Align Center Padding Container BoxDecoration Flex Row Expand Column Stack">
+<meta name="twitter:image" content="http://yoursite.com/2023/11/21/Flutter/Flutter之布局/01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2023/11/21/Flutter/Flutter之布局/"/>
+
+
+
+
+
+  <title>Flutter之布局 | Kevin's  blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a073c6e38282486853e19b272e9e7c34";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's  blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/11/21/Flutter/Flutter之布局/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Flutter之布局</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-11-21T17:10:46+08:00">
+                2023-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li><a href="#align">Align</a></li>
+<li><a href="#center">Center</a></li>
+<li><a href="#padding">Padding</a></li>
+<li><a href="#container">Container</a></li>
+<li><a href="#boxdecoration">BoxDecoration</a></li>
+<li><a href="#flex">Flex</a></li>
+<li><a href="#row">Row</a></li>
+<li><a href="#expand">Expand</a></li>
+<li><a href="#column">Column</a></li>
+<li><a href="#stack">Stack</a></li>
+</ul>
+<a id="more"></a>
+<h2 id="Align"><a href="#Align" class="headerlink" title="Align"></a>Align</h2><p>Align 的使用：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="string">'package:flutter/material.dart'</span>;</div><div class="line"></div><div class="line">main() =&gt; runApp(MyApp());</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> MaterialApp(</div><div class="line">      home: MyHome(),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyHome</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> Scaffold(</div><div class="line">      appBar: AppBar(</div><div class="line">        title: Text(<span class="string">"Align"</span>),</div><div class="line">      ),</div><div class="line">      body: MyBody(),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment">Align</span></div><div class="line"><span class="comment">*/</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyBody</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> Container(</div><div class="line">      color: Colors.green,</div><div class="line">      child: Align(</div><div class="line">        alignment: Alignment.topLeft,</div><div class="line">        widthFactor: <span class="number">3</span>,</div><div class="line">        heightFactor: <span class="number">3</span>,</div><div class="line">        child: Container(</div><div class="line">          decoration: BoxDecoration(border: Border.all(color: Colors.red)),</div><div class="line">          child: Icon(</div><div class="line">            Icons.people_alt,</div><div class="line">            size: <span class="number">40</span>,</div><div class="line">          ),</div><div class="line">        ),</div><div class="line">      ),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="/2023/11/21/Flutter/Flutter之布局/01.png" alt="01"></p>
+<p><code>Align</code> 定义：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Align</span> <span class="keyword">extends</span> <span class="title">SingleChildRenderObjectWidget</span> </span>&#123;</div><div class="line">  <span class="keyword">const</span> Align(&#123;</div><div class="line">    <span class="keyword">super</span>.key,</div><div class="line">    <span class="keyword">this</span>.alignment = Alignment.center, <span class="comment">// 对齐方式默认居中</span></div><div class="line">    <span class="keyword">this</span>.widthFactor,                  <span class="comment">// 将宽度设置为子部件的宽度乘以 widthFactor</span></div><div class="line">    <span class="keyword">this</span>.heightFactor,                 <span class="comment">// 将高度设置为子部件的高度乘以 heightFactor</span></div><div class="line">    <span class="keyword">super</span>.child,                       <span class="comment">// 子部件</span></div><div class="line">  &#125;) : <span class="keyword">assert</span>(widthFactor == <span class="keyword">null</span> || widthFactor &gt;= <span class="number">0.0</span>),</div><div class="line">       <span class="keyword">assert</span>(heightFactor == <span class="keyword">null</span> || heightFactor &gt;= <span class="number">0.0</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>继承关系 <code>Align</code> 继承自 <code>SingleChildRenderObjectWidget</code>，<code>SingleChildRenderObjectWidget</code> 继承自 <code>RenderObjectWidget</code>，<code>RenderObjectWidget</code> 继承自 <code>Widget</code>。</p>
+<blockquote>
+<p>RenderObjectWidgets 提供了 [RenderObjectElement] 的配置，RenderObjectElement 包装了 [RenderObject]，RenderObject 提供了实际渲染应用程序的功能。</p>
+</blockquote>
+<p>alignment 提供多种对齐方式，包括：center、left、top、right、bottom 等等。</p>
+<p>widthFactor 和 heightFactor：</p>
+<ol>
+<li><p>用来设置父部件的宽高，如当 widthFactor = 3，则父部件的宽度为子部件的 3 倍。</p>
+</li>
+<li><p>因为在对部件进行布局时，需要先确定父部件的大小，然后根据父部件的大小对子部件布局，所以需要设置 widthFactor 和 heightFactor。如果不设置，则Align会尽可能的大（等于其父部件的大小）。</p>
+</li>
+</ol>
+<h2 id="Center"><a href="#Center" class="headerlink" title="Center"></a>Center</h2><p>Center 的使用：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyBody</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> Container(</div><div class="line">      color: Colors.green,</div><div class="line">      child: Center(</div><div class="line">        widthFactor: <span class="number">2</span>,</div><div class="line">        heightFactor: <span class="number">1</span>,</div><div class="line">        child: Container(</div><div class="line">          decoration: BoxDecoration(color: Colors.red),</div><div class="line">          child: Icon(</div><div class="line">            Icons.email,</div><div class="line">            size: <span class="number">60</span>,</div><div class="line">          ),</div><div class="line">        ),</div><div class="line">      ),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="/2023/11/21/Flutter/Flutter之布局/02.png" alt="02"></p>
+<p>Center 的定义：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Center</span> <span class="keyword">extends</span> <span class="title">Align</span> </span>&#123;</div><div class="line">  <span class="keyword">const</span> Center(&#123; <span class="keyword">super</span>.key, <span class="keyword">super</span>.widthFactor, <span class="keyword">super</span>.heightFactor, <span class="keyword">super</span>.child &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>Center</code> 继承自 <code>Align</code>，使用 <code>Align</code> 默认的 <code>alignment</code>（.center），不支持修改。 </p>
+<h2 id="Padding"><a href="#Padding" class="headerlink" title="Padding"></a>Padding</h2><p>Padding 的使用：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyBody</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> Container(</div><div class="line">      color: Colors.lightGreen,</div><div class="line">      child: Padding(</div><div class="line">        padding: EdgeInsets.all(<span class="number">20</span>),</div><div class="line">        child: Container(</div><div class="line">          decoration: BoxDecoration(border: Border.all(color: Colors.red)),</div><div class="line">          child: Text(</div><div class="line">              <span class="string">"风急天高猿啸哀，渚清沙白鸟飞回。无边落木萧萧下，不尽长江滚滚来。万里悲秋常作客，百年多病独登台。艰难苦恨繁霜鬓，潦倒新停浊酒杯。"</span>),</div><div class="line">        ),</div><div class="line">      ),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="/2023/11/21/Flutter/Flutter之布局/03.png" alt="03"></p>
+<p>Padding 的定义：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Padding</span> <span class="keyword">extends</span> <span class="title">SingleChildRenderObjectWidget</span> </span>&#123;</div><div class="line">  <span class="keyword">const</span> Padding(&#123;</div><div class="line">    <span class="keyword">super</span>.key,</div><div class="line">    required <span class="keyword">this</span>.padding,</div><div class="line">    <span class="keyword">super</span>.child,</div><div class="line">  &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Padding 用来设置内边距（父部件），或外边距（子部件）。</p>
+<h2 id="Container"><a href="#Container" class="headerlink" title="Container"></a>Container</h2><p>Container 的定义：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Container</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  Container(&#123;</div><div class="line">    <span class="keyword">super</span>.key,</div><div class="line">    <span class="keyword">this</span>.alignment,                <span class="comment">// 对齐方式</span></div><div class="line">    <span class="keyword">this</span>.padding,                  <span class="comment">// 内边距</span></div><div class="line">    <span class="keyword">this</span>.color,                    <span class="comment">// 背景色</span></div><div class="line">    <span class="keyword">this</span>.decoration,               <span class="comment">// 背景装饰</span></div><div class="line">    <span class="keyword">this</span>.foregroundDecoration,     <span class="comment">// 前景装饰</span></div><div class="line">    <span class="built_in">double</span>? width,                 <span class="comment">// 宽度</span></div><div class="line">    <span class="built_in">double</span>? height,                <span class="comment">// 高度</span></div><div class="line">    BoxConstraints? constraints,   <span class="comment">// 约束</span></div><div class="line">    <span class="keyword">this</span>.margin,                   <span class="comment">// 外边距</span></div><div class="line">    <span class="keyword">this</span>.transform,                <span class="comment">// 变换</span></div><div class="line">    <span class="keyword">this</span>.transformAlignment,       <span class="comment">// 变换对齐方式</span></div><div class="line">    <span class="keyword">this</span>.child,                    <span class="comment">// 子部件</span></div><div class="line">    <span class="keyword">this</span>.clipBehavior = Clip.none, <span class="comment">// 超出部分是否裁剪</span></div><div class="line">  &#125;) : <span class="keyword">assert</span>(margin == <span class="keyword">null</span> || margin.isNonNegative),</div><div class="line">       <span class="keyword">assert</span>(padding == <span class="keyword">null</span> || padding.isNonNegative),</div><div class="line">       <span class="keyword">assert</span>(decoration == <span class="keyword">null</span> || decoration.debugAssertIsValid()),</div><div class="line">       <span class="keyword">assert</span>(constraints == <span class="keyword">null</span> || constraints.debugAssertIsValid()),</div><div class="line">       <span class="keyword">assert</span>(decoration != <span class="keyword">null</span> || clipBehavior == Clip.none),</div><div class="line">       <span class="keyword">assert</span>(color == <span class="keyword">null</span> || decoration == <span class="keyword">null</span>,</div><div class="line">         <span class="string">'Cannot provide both a color and a decoration\n'</span></div><div class="line">         <span class="string">'To provide both, use "decoration: BoxDecoration(color: color)".'</span>,</div><div class="line">       ),</div><div class="line">       constraints =</div><div class="line">        (width != <span class="keyword">null</span> || height != <span class="keyword">null</span>)</div><div class="line">          ? constraints?.tighten(width: width, height: height)</div><div class="line">            ?? BoxConstraints.tightFor(width: width, height: height)</div><div class="line">          : constraints;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Container 相当于 iOS 的 UIView，用来设置布局，可以设置背景色、边框、圆角等。</p>
+<p>如果需要一个有背景色、边框、圆角、阴影、固定尺寸、图像时，可以考虑 Container。</p>
+<h2 id="BoxDecoration"><a href="#BoxDecoration" class="headerlink" title="BoxDecoration"></a>BoxDecoration</h2><p>BoxDecoration 的使用：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyBody</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> Container(</div><div class="line">      width: <span class="number">200</span>,</div><div class="line">      height: <span class="number">200</span>,</div><div class="line">      child: Icon(Icons.phone),</div><div class="line">      decoration: BoxDecoration(</div><div class="line">        color: Colors.lightGreen,</div><div class="line">        border: Border.all(</div><div class="line">          color: Colors.red,</div><div class="line">          width: <span class="number">5.0</span>,</div><div class="line">          style: BorderStyle.solid,</div><div class="line">        ),</div><div class="line">        <span class="comment">// border: Border(</span></div><div class="line">        <span class="comment">//   top: BorderSide(color: Colors.red, width: 5),</span></div><div class="line">        <span class="comment">//   right: BorderSide(color: Colors.blue, width: 10),</span></div><div class="line">        <span class="comment">// ),</span></div><div class="line">        borderRadius: BorderRadius.circular(<span class="number">20</span>),</div><div class="line">        boxShadow: [</div><div class="line">          BoxShadow(</div><div class="line">            color: Colors.yellow,</div><div class="line">            offset: Offset(<span class="number">5</span>, <span class="number">5</span>),</div><div class="line">            blurRadius: <span class="number">20</span>,</div><div class="line">          ),</div><div class="line">        ],</div><div class="line">        gradient: LinearGradient(</div><div class="line">          colors: [</div><div class="line">            Colors.blue,</div><div class="line">            Colors.red,</div><div class="line">          ],</div><div class="line">        ),</div><div class="line">      ),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="/2023/11/21/Flutter/Flutter之布局/04.png" alt="04"></p>
+<p>圆角图片：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyBody</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> Center(</div><div class="line">      child: Container(</div><div class="line">        width: <span class="number">200</span>,</div><div class="line">        height: <span class="number">200</span>,</div><div class="line">        decoration: BoxDecoration(</div><div class="line">          borderRadius: BorderRadius.circular(<span class="number">20</span>),</div><div class="line">          image: DecorationImage(</div><div class="line">              image: NetworkImage(</div><div class="line">                  <span class="string">"https://pic4.zhimg.com/v2-cb75f239dfd0c1c42c23dfc9011965a3_b.jpg"</span>)),</div><div class="line">        ),</div><div class="line">      ),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>BoxDecoration 的定义：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">BoxDecoration</span> <span class="keyword">extends</span> <span class="title">Decoration</span> </span>&#123;</div><div class="line">  <span class="keyword">const</span> BoxDecoration(&#123;</div><div class="line">    <span class="keyword">this</span>.color,                      <span class="comment">// 背景色，跟 Container 的背景色冲突</span></div><div class="line">    <span class="keyword">this</span>.image,                      <span class="comment">// 图片</span></div><div class="line">    <span class="keyword">this</span>.border,                     <span class="comment">// 边框</span></div><div class="line">    <span class="keyword">this</span>.borderRadius,               <span class="comment">// 圆角</span></div><div class="line">    <span class="keyword">this</span>.boxShadow,                  <span class="comment">// 阴影</span></div><div class="line">    <span class="keyword">this</span>.gradient,                   <span class="comment">// 渐变效果</span></div><div class="line">    <span class="keyword">this</span>.backgroundBlendMode,        <span class="comment">// 背景混合</span></div><div class="line">    <span class="keyword">this</span>.shape = BoxShape.rectangle, <span class="comment">// 形变</span></div><div class="line">  &#125;) : <span class="keyword">assert</span>(</div><div class="line">         backgroundBlendMode == <span class="keyword">null</span> || color != <span class="keyword">null</span> || gradient != <span class="keyword">null</span>,</div><div class="line">         <span class="string">"backgroundBlendMode applies to BoxDecoration's background color or "</span></div><div class="line">         <span class="string">'gradient, but no color or gradient was provided.'</span>,</div><div class="line">       );</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="/2023/11/21/Flutter/Flutter之布局/05.png" alt="05"></p>
+<h2 id="Flex"><a href="#Flex" class="headerlink" title="Flex"></a>Flex</h2><figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">```</div><div class="line"></div><div class="line">## Row</div><div class="line"></div><div class="line">Row 的使用：</div><div class="line"></div><div class="line">```dart</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyBody</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> Container(</div><div class="line">      decoration: BoxDecoration(border: Border.all(color: Colors.red)),</div><div class="line">      child: Row(</div><div class="line">        mainAxisAlignment: MainAxisAlignment.spaceEvenly,</div><div class="line">        crossAxisAlignment: CrossAxisAlignment.end,</div><div class="line">        mainAxisSize: MainAxisSize.max,</div><div class="line">        children: [</div><div class="line">          Container(color: Colors.red, width: <span class="number">80</span>, height: <span class="number">88</span>),</div><div class="line">          Container(color: Colors.blue, width: <span class="number">66</span>, height: <span class="number">66</span>),</div><div class="line">          Container(color: Colors.lightGreenAccent, width: <span class="number">55</span>, height: <span class="number">55</span>),</div><div class="line">          Container(color: Colors.yellow, width: <span class="number">44</span>, height: <span class="number">44</span>),</div><div class="line">        ],</div><div class="line">      ),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="/2023/11/21/Flutter/Flutter之布局/06.png" alt="06"></p>
+<h2 id="Expand"><a href="#Expand" class="headerlink" title="Expand"></a>Expand</h2><p>Expand 的使用：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyBody</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> Container(</div><div class="line">      decoration: BoxDecoration(border: Border.all(color: Colors.red)),</div><div class="line">      child: Row(</div><div class="line">        mainAxisAlignment: MainAxisAlignment.spaceEvenly,</div><div class="line">        crossAxisAlignment: CrossAxisAlignment.start,</div><div class="line">        mainAxisSize: MainAxisSize.max,</div><div class="line">        children: [</div><div class="line">          Expanded(</div><div class="line">            child: Container(color: Colors.red, width: <span class="number">88</span>, height: <span class="number">88</span>),</div><div class="line">          ),</div><div class="line">          Container(color: Colors.blue, width: <span class="number">66</span>, height: <span class="number">66</span>),</div><div class="line">          Container(color: Colors.green, width: <span class="number">55</span>, height: <span class="number">55</span>),</div><div class="line">          Expanded(</div><div class="line">            child: Container(color: Colors.yellow, width: <span class="number">44</span>, height: <span class="number">44</span>),</div><div class="line">          ),</div><div class="line">        ],</div><div class="line">      ),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="/2023/11/21/Flutter/Flutter之布局/07.png" alt="07"></p>
+<h2 id="Column"><a href="#Column" class="headerlink" title="Column"></a>Column</h2><p>Column 的使用：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyBody</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> Container(</div><div class="line">      decoration: BoxDecoration(border: Border.all(color: Colors.red)),</div><div class="line">      child: Column(</div><div class="line">        mainAxisAlignment: MainAxisAlignment.spaceEvenly,</div><div class="line">        crossAxisAlignment: CrossAxisAlignment.start,</div><div class="line">        mainAxisSize: MainAxisSize.max,</div><div class="line">        children: [</div><div class="line">          Expanded(</div><div class="line">            child: Container(color: Colors.red, width: <span class="number">88</span>, height: <span class="number">88</span>),</div><div class="line">          ),</div><div class="line">          Container(color: Colors.blue, width: <span class="number">66</span>, height: <span class="number">66</span>),</div><div class="line">          Container(color: Colors.green, width: <span class="number">55</span>, height: <span class="number">55</span>),</div><div class="line">          Expanded(</div><div class="line">            child: Container(color: Colors.yellow, width: <span class="number">44</span>, height: <span class="number">44</span>),</div><div class="line">          ),</div><div class="line">        ],</div><div class="line">      ),</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="/2023/11/21/Flutter/Flutter之布局/08.png" alt="08"></p>
+<h2 id="Stack"><a href="#Stack" class="headerlink" title="Stack"></a>Stack</h2><p>Stack 的使用：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyBody</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</div><div class="line">  <span class="meta">@override</span></div><div class="line">  Widget build(BuildContext context) &#123;</div><div class="line">    <span class="keyword">return</span> Stack(</div><div class="line">      children: [</div><div class="line">        Container(</div><div class="line">          color: Colors.green,</div><div class="line">          width: <span class="number">200</span>,</div><div class="line">          height: <span class="number">200</span>,</div><div class="line">        ),</div><div class="line">        Positioned(</div><div class="line">          top: <span class="number">20</span>,</div><div class="line">          left: <span class="number">20</span>,</div><div class="line">          child: Icon(Icons.people_alt),</div><div class="line">        ),</div><div class="line">        Positioned(</div><div class="line">          bottom: <span class="number">20</span>,</div><div class="line">          right: <span class="number">20</span>,</div><div class="line">          child: Text(<span class="string">"Kevin Young"</span>),</div><div class="line">        ),</div><div class="line">      ],</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="/2023/11/21/Flutter/Flutter之布局/09.png" alt="09"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Flutter/" rel="tag"># Flutter</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/11/03/Flutter/Flutter之基础Widget/" rel="next" title="Flutter之基础Widget">
+                <i class="fa fa-chevron-left"></i> Flutter之基础Widget
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2024/02/20/iOS/iOS绘图之贝塞尔曲线/" rel="prev" title="iOS绘图之贝塞尔曲线">
+                iOS绘图之贝塞尔曲线 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/myAvatar.gif"
+              alt="Kevin" />
+          
+            <p class="site-author-name" itemprop="name">Kevin</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">54</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KevinYangGit" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yangqioffice@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_YangQI" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.cnblogs.com/mjios" title="M了个J" target="_blank">M了个J</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Align"><span class="nav-number">1.</span> <span class="nav-text">Align</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Center"><span class="nav-number">2.</span> <span class="nav-text">Center</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Padding"><span class="nav-number">3.</span> <span class="nav-text">Padding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Container"><span class="nav-number">4.</span> <span class="nav-text">Container</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BoxDecoration"><span class="nav-number">5.</span> <span class="nav-text">BoxDecoration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flex"><span class="nav-number">6.</span> <span class="nav-text">Flex</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Expand"><span class="nav-number">7.</span> <span class="nav-text">Expand</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Column"><span class="nav-number">8.</span> <span class="nav-text">Column</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stack"><span class="nav-number">9.</span> <span class="nav-text">Stack</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="/js/src/md5.min.js"></script>
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: '82b6ced795961ee1fcca',
+      clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
+      repo: 'KevinYangGit.github.io',
+      owner: 'KevinYangGit',
+      admin: ['KevinYangGit'],
+      id: md5(location.pathname),
+      distractionFreeMode: 'true'
+    })
+    gitalk.render('gitalk-container')
+  </script>
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Other," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="Documentation Documentation Technologies Documentation Archive Opensource Srource Opensource tarballs Opensource Github Of Apple Swift Book Develop">
+<meta name="keywords" content="Other">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apple官方文档阅读指南">
+<meta property="og:url" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/index.html">
+<meta property="og:site_name" content="Kevin&#39;s  blog">
+<meta property="og:description" content="Documentation Documentation Technologies Documentation Archive Opensource Srource Opensource tarballs Opensource Github Of Apple Swift Book Develop">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/21.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/22.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/23.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/24.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/25.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/26.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/27.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/28.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/29.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/01.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/02.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/03.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/04.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/05.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/06.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/07.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/08.png">
+<meta property="og:updated_time" content="2023-08-22T09:52:14.037Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Apple官方文档阅读指南">
+<meta name="twitter:description" content="Documentation Documentation Technologies Documentation Archive Opensource Srource Opensource tarballs Opensource Github Of Apple Swift Book Develop">
+<meta name="twitter:image" content="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/21.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/"/>
+
+
+
+
+
+  <title>Apple官方文档阅读指南 | Kevin's  blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a073c6e38282486853e19b272e9e7c34";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's  blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/10/13/Other/Apple官方文档阅读指南/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kevin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/myAvatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's  blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Apple官方文档阅读指南</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-10-13T16:08:08+08:00">
+                2022-10-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li><a href="https://developer.apple.com/documentation/" target="_blank" rel="external">Documentation</a></li>
+<li><a href="https://developer.apple.com/documentation/technologies" target="_blank" rel="external">Documentation Technologies</a></li>
+<li><a href="https://developer.apple.com/library/archive/navigation/" target="_blank" rel="external">Documentation Archive</a></li>
+<li><a href="https://opensource.apple.com/source/" target="_blank" rel="external">Opensource Srource</a></li>
+<li><a href="https://opensource.apple.com/tarballs/" target="_blank" rel="external">Opensource tarballs</a></li>
+<li><a href="https://opensource.apple.com/" target="_blank" rel="external">Opensource</a></li>
+<li><a href="https://github.com/apple" target="_blank" rel="external">Github Of Apple</a></li>
+<li><a href="https://docs.swift.org/swift-book/" target="_blank" rel="external">Swift Book</a></li>
+<li><a href="https://developer.apple.com/develop/" target="_blank" rel="external">Develop</a></li>
+</ul>
+<a id="more"></a>
+<h1 id="苹果Xcode帮助文档阅读指南-官方文档"><a href="#苹果Xcode帮助文档阅读指南-官方文档" class="headerlink" title="苹果Xcode帮助文档阅读指南/官方文档"></a>苹果Xcode帮助文档阅读指南/官方文档</h1><p>转自：<a href="https://blog.csdn.net/YLGWHYH/article/details/41806103" target="_blank" rel="external">苹果Xcode帮助文档阅读指南/官方文档</a></p>
+<h2 id="Xcode文档的结构"><a href="#Xcode文档的结构" class="headerlink" title="Xcode文档的结构"></a>Xcode文档的结构</h2><p><img src="/2022/10/13/Other/Apple官方文档阅读指南/21.png" alt="21"></p>
+<p>如上图，打开文档后，整个文档界面由 <strong>左面的侧栏</strong> 和 <strong>右面的内容区域</strong> 构成。左面的侧栏可以选择不同的文档库，右面的内容区域是对应文档库的所有文档列表。你的 Xcode 里面一般来说有一组不同版本的 iOS 文档库、一组不同版本的 OS X 文档库，以及一个 Xcode 文档库。</p>
+<p>如果这里没有你要查看的文档库，你可以选择 Xcode 的 Preferences 菜单，然后选择 <strong>Downloads -&gt; Documentation</strong>。在这里可以看到已经下载安装了的文档库，还没有下载的文档库，可以酌情选择。如下图：</p>
+<p><img src="/2022/10/13/Other/Apple官方文档阅读指南/22.png" alt="22"></p>
+<p>然后我们看，文档内容区域的左侧导航区域，这里揭示了<strong>文档库的结构</strong>。如下图：</p>
+<p><img src="/2022/10/13/Other/Apple官方文档阅读指南/23.png" alt="23"></p>
+<h3 id="文档库侧栏"><a href="#文档库侧栏" class="headerlink" title="文档库侧栏"></a>文档库侧栏</h3><h4 id="Resource-Types"><a href="#Resource-Types" class="headerlink" title="Resource Types"></a>Resource Types</h4><p>首先是 <strong>Resource Types</strong>，也就是资源类型，标签。文档库里面所有的文档是属于不同类型的，该类型是以下这几种类型中的一种：</p>
+<ul>
+<li><p><strong>Getting Started</strong> — 新手入门。一般来说，是给完全的新手看的。建议初学者看看，这里面有一些建立观念的东西，有了这些建立观念的东西，后面的学习就比较容易了。</p>
+</li>
+<li><p><strong>Guides</strong> — 指南。指南是 Xcode 里面最酷最好的部分，学会看指南则大多数情况完全不用买书。Xcode 文档里面的指南，就是一个一个问题的，从一个问题或者系统的一个方面出发，一步一步详细介绍怎么使用 Cocoa 库的文档。一般程序员比较熟悉的是 Reference，就是你查某个类、方法、函数的文档时候，冒出来的东西（<code>option +</code>）。那些其实是一点一点的细碎知识，光看那些东西就完全没有脉络。而 Guides 就是帮你整理好的学习的脉络。</p>
+</li>
+<li><p><strong>Reference</strong> — 参考资料。一个一个框架一个一个类组织起来的文档，包含了每个方法的使用方法。</p>
+</li>
+<li><p><strong>Release Notes</strong> — 发布说明。一个 iOS 新版本带来了哪些新特性，这样的信息，熟悉新 iOS，比较不同 iOS 版本 API 不同，都需要参考这些文档。</p>
+</li>
+<li><p><strong>Sample Code</strong> — 示例代码。苹果官方提供的一些示例代码，帮助你学习某些技术某些 API。非常强烈建议学习的时候参考，一方面光看文档有时候还是很难弄明白具体实现是怎么回事儿。另外一方面这些示例代码都是苹果的工程师写的，你从示例代码的变迁可以看到苹果官方推荐的代码风格变化。</p>
+</li>
+<li><p><strong>Technical Notes</strong> — 技术说明。一些技术主题文章，有空的时候可以浏览一下。往往会有一些收获。</p>
+</li>
+<li><p><strong>Technical Q&amp;A</strong> — 常见技术问答。这是技术社区里面一些常见问题以及回答的整理。</p>
+</li>
+<li><p><strong>Video</strong> — 视频。目前主要是 WWDC 的视频，实际上是登录到开发者网站上去浏览的，这里就是快捷方式。想深入学习的话，一定不能错过，大量的看，不仅可以学好技术，还可以练好英文。</p>
+</li>
+</ul>
+<p>总结一下，这里面的 <code>Reference、Release Notes、Sample Code、Technical Notes、Technical Q&amp;A</code>，一般来说只是备查的。主要要看的是 <code>Getting Started</code> 和 <code>Guides</code>。</p>
+<h4 id="Topics"><a href="#Topics" class="headerlink" title="Topics"></a>Topics</h4><p>然后下面是 Topics，也就是话题，被分为：</p>
+<ol>
+<li><strong>Audio &amp; Video</strong> — 音视频</li>
+<li><strong>Languages &amp; Utilities</strong> — 语言和工具，Objective-C 的一些知识，App Store 的管理工具等。</li>
+<li><strong>Mathematical Computation</strong> — 数学计算。</li>
+<li><strong>Xcode</strong></li>
+<li><strong>Data Management</strong> — 数据管理。</li>
+<li><strong>General</strong> — 一般性的问题。</li>
+<li><strong>Graphics &amp; Animation</strong> — 图形和动画。</li>
+<li><strong>Networking &amp; Internet</strong> — 网络问题。</li>
+<li><strong>Performance</strong> — 性能。</li>
+<li><strong>Security</strong> — 安全。</li>
+<li><strong>User Experience</strong> — 用户体验。</li>
+</ol>
+<p>这里不多说，大多数都是顾名思义的问题。但是值得一提的就是有很多初学者说，我想好好了解下图形和动画的技术，但是文档里面找不到，这就只能说，你睁着大大的眼睛，为毛左看右看看不到呢？</p>
+<h4 id="Frameworks"><a href="#Frameworks" class="headerlink" title="Frameworks"></a>Frameworks</h4><p>最下面是 <strong>Frameworks</strong>（框架），分为：</p>
+<ol>
+<li><strong>Cocoa Touch Layer</strong></li>
+<li><strong>Media Layer</strong></li>
+<li><strong>Core Services Layer</strong></li>
+<li><strong>Core OS Layer</strong></li>
+</ol>
+<p>这里我们先不讨论这个东西，后面会仔细讲。</p>
+<p>总体来说左边的导航区域就是用三种不同的维度，来帮你精准定位你需要的内容。</p>
+<h2 id="内容区域"><a href="#内容区域" class="headerlink" title="内容区域"></a>内容区域</h2><p>现在我们看内容区域的右边。<strong>注意上面的文档过滤器</strong>。如下图：</p>
+<p><img src="/2022/10/13/Other/Apple官方文档阅读指南/24.png" alt="24"></p>
+<p>假设，你现在想看关于性能方面的 Guides，那么你应该做的就是在左面的导航，点击 <strong>Topics -&gt; Performance</strong>，然后在右边的文档过滤器上面输入 <strong>Guides</strong>。</p>
+<p>或者你也可以在左边的导航，点击 <strong>Resource Types -&gt; Guides</strong>，然后在文档过滤器里面输入 <strong>Performance</strong>。</p>
+<p>熟练使用导航和文档过滤器的话，学习就会非常方便快捷。</p>
+<h2 id="文档导读"><a href="#文档导读" class="headerlink" title="文档导读"></a>文档导读</h2><p>前面我们讲 Xcode 的文档结构是在介绍如何能够快速定位到你要找的内容。但是很多人的问题可能是一开始就根本不知道要读什么。</p>
+<p>这里我们就介绍自学 iOS 开发应该遵循或者说我们推荐的必读文档的阅读顺序。</p>
+<p>阅读顺序：</p>
+<ol>
+<li><strong>《马上着手开发 iOS 应用程序 (Start Developing iOS Apps Today)》</strong></li>
+<li><strong>《Your First iOS App》</strong></li>
+<li><strong>《Your Second iOS App: Storyboards》</strong></li>
+<li><strong>《Your Third iOS App: iCloud》</strong></li>
+<li><strong>《iOS Technology Overview》</strong></li>
+<li><strong>《iOS Human Interface Guidelines》</strong></li>
+<li><strong>《Learning Objective-C: A Primer》</strong> 和 <strong>《Programming with Objective-C》</strong></li>
+<li><strong>《iOS App Programming Guide》</strong></li>
+<li><strong>《View Programming Guide for iOS》和《View Controller Programming Guide for iOS》</strong></li>
+<li><strong>《Table View Programming Guide for iOS》</strong></li>
+</ol>
+<h3 id="马上着手开发-iOS-应用程序-Start-Developing-iOS-Apps-Today-》"><a href="#马上着手开发-iOS-应用程序-Start-Developing-iOS-Apps-Today-》" class="headerlink" title="马上着手开发 iOS 应用程序 (Start Developing iOS Apps Today)》"></a>马上着手开发 iOS 应用程序 (Start Developing iOS Apps Today)》</h3><p>首先应该看的是 <strong>Getting Started</strong> 里面的 <strong>《马上着手开发 iOS 应用程序 (Start Developing iOS Apps Today)》</strong>（中英文版本皆有，苹果官方的翻译）。这个文档讲的很浅，但是是建立概念的文档，你以后在开发里面经常遇到的概念，在这里都有包含，特别注 意是，这个文档看起来简单，但是每页下面的相关文章，不是选读，都是必读。</p>
+<p>即使是很多做了 iOS 开发很久的同学，其实也有很多概念上的误解，现代程序开发越来越简单，工具越来越强大，往往有些误解也可以继续前行，但是实际上不建立扎实的基础是很吃亏的，往往后面理解和解决一个不难解决小问题都要付出很多辛苦。</p>
+<p>阅读这个文档的目的和检测标准是，以后你看到iOS开发中的基本概念，都大致所有了解。</p>
+<h3 id="《Your-First-iOS-App》"><a href="#《Your-First-iOS-App》" class="headerlink" title="《Your First iOS App》"></a>《Your First iOS App》</h3><p>读完 <strong>《马上着手开发 iOS 应用程序 (Start Developing iOS Apps Today)》</strong> 后，应该去看 <strong>Your XXX iOS App</strong> 系列这个系列不是什么很难的文章，你也不必着急先去学习 Objective-C，学什么 C 语言就更不要着急。我推荐的学习方法是有成就的逐步学习法。在学习系统体系架构、Objective-C之 前，你可以先按照文档写一个全天下最简单的 App，完成学习过程中第一个里程碑。在这个过程中不用担心 有什么疑问，有什么不懂，先照着做就是。</p>
+<p>阅读这三个文档的目的和检测标准是，把这三个 Demo App 做出来在模拟器上跑起来。</p>
+<p>在这个过程中，你对开发工具的基本认识就建立起来了，也有了成就感，去了魅（就是消除了对 iOS 开发的神秘感）。</p>
+<h3 id="《iOS-Technology-Overview》"><a href="#《iOS-Technology-Overview》" class="headerlink" title="《iOS Technology Overview》"></a>《iOS Technology Overview》</h3><p>再往下，建议你去看 <strong>《iOS Technology Overview》</strong>（iOS技术概览），iOS 不是一个技术，而是一堆技术，前一篇讲到文档导航区域的分类，框架分类的时候，我说不细讲的原因就在于此， 你要做一个动画应该用 Core Animation 还是 OpenGL？你要做一些文本相关操作应该用 Core Text 还是什么，就是看这里。</p>
+<p>学习现代的程序开发，语言和框架并重。我们 Tiny4Cocoa 叫做这个名字的原因就是，iOS/Mac 开发者的代表往往就是这个 Cocoa 框架，就是这个 SDK。大多数你所需要的功能都躺在框架里面，你知道框架的结构，你才知道怎么去寻找相关的技术资料。</p>
+<p>阅读这个文档的目的和检测标准是，遇到具体问题，知道应该去看哪方面的文档。</p>
+<h3 id="《iOS-Human-Interface-Guidelines》"><a href="#《iOS-Human-Interface-Guidelines》" class="headerlink" title="《iOS Human Interface Guidelines》"></a>《iOS Human Interface Guidelines》</h3><p>再下来，建议阅读的是 <strong>《iOS Human Interface Guidelines》</strong>，Mac/iOS 平台虽然也是百花齐放各类程序、App都有，但是总体看来，大多数优秀 App 的 UI 看起来都和整个系统很协调。这 和 Windows 以及很多其他平台完全不同。这是为什么呢？</p>
+<p>很大程度就归功于 <strong>《Human Interface Guidelines》</strong> 文化，所谓 Human Interface Guidelines 就是用户界面的规范，在苹果它还专门有一个缩写叫做 HIG，是天条一样的东西。所有的 App 都推荐遵循 HIG，遵循了 HIG，你做的东西用户看起来就会觉得和整个系统很协调。即使是你要做一些创新的设计，你势必会打破 HIG 的限制，但是你这个时候仍旧应该遵循 HIG 的精神。</p>
+<p>此外，你阅读 HIG 的很重要一点是了解整个 UI 结构和 UE 行为的逻辑机理，这样才能在你设计界面的时候有所依据。</p>
+<p>阅读这个文档的目的和检测标准是，看到任何一个App，你可以知道它的任何一个 UI 是系统控件，还是自定义控件，它的层次关系等等。</p>
+<h3 id="《Learning-Objective-C-A-Primer》-和-《Programming-with-Objective-C》"><a href="#《Learning-Objective-C-A-Primer》-和-《Programming-with-Objective-C》" class="headerlink" title="《Learning Objective-C: A Primer》 和 《Programming with Objective-C》"></a>《Learning Objective-C: A Primer》 和 《Programming with Objective-C》</h3><p><strong>《Learning Objective-C: A Primer》</strong> 是非常初级和简单的入门，适合先阅读。<strong>《Programming with Objective-C》</strong> 超微复杂一点点，适合后阅读。</p>
+<p>一般人建议先学习语言，我反之建议先做了一个App，然后再学习语言。原因有几个，首先现代开发工具，往往不是用来开发控制台程序的，上来就会有框架，光懂语言不会使用 IDE，甚至可能会更麻烦。再其次就是，其实现代语言发展到了面向对象以后，库往往比语言更复杂，更重要，或者说更多的时候，我们是在学习库，而不是语言，语言只是库的一个载体。</p>
+<p>比如，Delegate 和 Block 等等都和 Cocoa 的 UI 异步机制关系紧密，光看代码，这些语言元素非常难以学习，也完全不知道其意义在哪里。</p>
+<p>阅读这个文档的目的和检测标准是，看得懂基本的 Objective-C 代码，方便后面的学习和阅读各种示例代码。</p>
+<h3 id="《iOS-App-Programming-Guide》"><a href="#《iOS-App-Programming-Guide》" class="headerlink" title="《iOS App Programming Guide》"></a>《iOS App Programming Guide》</h3><p><strong>《iOS App Programming Guide》</strong> 基本上介绍的就是开发一个 App 的完整流程，包括 App 的生命周期、休眠、激活等等，里面介绍的细节颇多。正式开发第一个上线的 App 之前必看。或者开发了一个 App，临到提交前必看的文档。</p>
+<p>阅读这个文档的目的和检测标准是，了解全部流程和很多细节问题。</p>
+<h3 id="《View-Programming-Guide-for-iOS》-和-《View-Controller-Programming-Guide-for-iOS》"><a href="#《View-Programming-Guide-for-iOS》-和-《View-Controller-Programming-Guide-for-iOS》" class="headerlink" title="《View Programming Guide for iOS》 和 《View Controller Programming Guide for iOS》"></a>《View Programming Guide for iOS》 和 《View Controller Programming Guide for iOS》</h3><p><strong>《View Programming Guide for iOS》</strong> 和 <strong>《View Controller Programming Guide for iOS》</strong> 非常重要。View 是整个图形界面里面最重要的概念。所有的图形、界面绘制都基于 View。你看到的一切复杂的用户界面，就是各种不同的View 的组合堆叠。</p>
+<p>View Controller 是 View 和某种逻辑在一起的组合，本质上这种组合不是必须的，但是是大大降低编程复杂度的一种设计。很多人不懂什么是 View 什么是 View Controller，这样写起代码来就很痛苦。</p>
+<p>阅读这个文档的目的和检测标准是，深刻理解什么是 View，什么是 View Controller，理解什么情况用 View，什么情况用 View Controller。</p>
+<p>UITableView 是最重要的一个控件，是最常用的 UI 界面元素。在 UICollectionView 出现之前，大量的内容列表展示的自定义控件都是基于 UITableView，比如很多书架、图片 Grid 其实都是 UITableView 做的。</p>
+<p>所以 <strong>《Table View Programming Guide for iOS》</strong> 非常重要，一定要好好阅读。</p>
+<p>阅读这个文档的目的和检测标准是，深刻理解 UITableView／UITableViewController 的理论和使用方法。</p>
+<p>我推荐的必读文档就这么多，仔细看的话，最多也就是今天就看完了。学习一个东西，如果有一点点耐心，有正确的方法其实不难，不是说脑子非要很聪明，大多数人都可以做到一个星期就学会 iOS 开发，其实就是读完这些文档，大多数人就会了。</p>
+<p>就像我强调了无数次，阅读英文文档不难，我自己从当年看英文文档非常吃力，必须查词典开始，认真的看英文文档，不会就查词典，一个多月过去，读英文文档就完全不需要查词典了。</p>
+<p>我们公司主程 @sycx 老师，也说他原来英语也很不好，甚至现在英语仍旧很烂，但是看英文文档完全没有问题，也就是几个星期的认真学习以后就突破了。</p>
+<p>其实学习iOS也如此。当然我不是说你看懂这10组文档就再也不用看别的了。而是说，如果你看懂了这10组文档，你就从初学者，或者是虽然会写一些程序，但是对iOS其实还不懂的状态，变成了一个入门者。</p>
+<p>我不希望这个文章可以一句一句的帮你学会iOS是什么，这个文章的目的是帮你快速入门。一旦你入门了，你再遇到问题该看什么，你就不需要我讲了，你自己就知道了。一旦入门了，你就会发现，Xcode里面别的文档讲的内容虽然不同，但是结构你已经很清楚了，你学习起来很方便。</p>
+<p>阅读本文的目的和检测标准是，遇到问题，知道看什么文档，想提升自己技术的时候，知道按照什么脉络自己组织阅读。</p>
+<h2 id="如何查询文档"><a href="#如何查询文档" class="headerlink" title="如何查询文档"></a>如何查询文档</h2><h3 id="Quick-Help"><a href="#Quick-Help" class="headerlink" title="Quick Help"></a>Quick Help</h3><p>最快捷的查询帮助文档的方法是不需要键入任何关键词的。你只需要在 Xcode 代码编辑器里，按住 <strong>Option 键</strong>，然后点击你想查询的关键词，就会获得关键词的帮助信息。如下图：</p>
+<p><img src="/2022/10/13/Other/Apple官方文档阅读指南/25.png" alt="25"></p>
+<p>帮助信息会包括，一些简单的描述、哪个 iOS 操作系统开始提供，头文件，参考文档。头文件和参考文档是可以直接点击的。</p>
+<p>即使你点击的关键字不是 Cocoa 库的内容，是自己代码里面的类或者方法，也可以获得相关的定义信息。如下图：</p>
+<p><img src="/2022/10/13/Other/Apple官方文档阅读指南/26.png" alt="26"></p>
+<p>与之相关的热键是 <strong>Command 键加鼠标点击</strong>，即可跳到任何一个类名或者方法名的所定义的头文件。</p>
+<p>快速查询帮助的另外一个方法是直接打开 <strong>Quick Help</strong> 栏，如下图，首先找到“<strong>右侧栏开关</strong>”，然后找到“<strong>Quick Help</strong>”开关即可打开。</p>
+<p><img src="/2022/10/13/Other/Apple官方文档阅读指南/27.png" alt="27"></p>
+<p><strong>Quick Help</strong> 栏的作用机制是，只要它在打开状态，只要输入光标在什么关键字上，<strong>Quick Help</strong> 栏就会显示跟关键字相关的简要帮助信息，跟 <strong>Option 键加点击</strong> 的信息基本一致，但可能略微丰富一点。</p>
+<p>写代码的时候，在大多数情况下，查询下快速帮助，看看头文件，就足以了。</p>
+<h3 id="搜索帮助"><a href="#搜索帮助" class="headerlink" title="搜索帮助"></a>搜索帮助</h3><p>文档阅读界面最左面的上端的放大镜按钮就是搜索界面。下图是我们搜索 <code>uiimage</code>，得到的搜索结果。</p>
+<p><img src="/2022/10/13/Other/Apple官方文档阅读指南/28.png" alt="28"></p>
+<p>首先值得注意的是，结果也是分类的，分为 <strong>Reference、System Guides、Tools Guides、Sample Code</strong> 这四类。类别很利于我们快速找到我们需要的信息。前面已经介绍过类别，跟那个基本一致，参照即可。</p>
+<p>另外需要注意的是，搜索框下面的选项，首先是 <strong>Hits Must</strong>（什么样的结果才会命中），包含了三项：</p>
+<ol>
+<li><strong>contain search term</strong> — 这是最常见的就是结果包含搜索词</li>
+<li><strong>start with search term</strong> — 由搜索词开始</li>
+<li><strong>match search term</strong> — 必须完全匹配搜索词</li>
+</ol>
+<p>然后是 <strong>Languages</strong>（语言选项），包含 Javascript、C++、Java、Objective-C、C 语言。</p>
+<p>然后是，<strong>Find in</strong>（在哪些文档库搜索），包含了你 Xcode 里面安装的全部文档库。</p>
+<h3 id="阅读文档"><a href="#阅读文档" class="headerlink" title="阅读文档"></a>阅读文档</h3><p>最后，我们简单介绍下怎么阅读文档。文档的阅读界面如下图：</p>
+<p><img src="/2022/10/13/Other/Apple官方文档阅读指南/29.png" alt="29"></p>
+<p>值得注意的是，标题下面这几样：</p>
+<ol>
+<li><strong>Inherits from</strong> — 继承关系，继承自</li>
+<li><strong>Conforms to</strong> — 遵循什么协议</li>
+<li><strong>Framework</strong> — 属于什么框架</li>
+<li><strong>Availability</strong> — 从什么iOS版本开始支持</li>
+<li><strong>Declared in</strong> — 头文件</li>
+<li><strong>Related sample code</strong> — 相关例子代码</li>
+<li><strong>Companion guide</strong> — 相关的指南（<code>UIImage</code> 没有，很多其他的类有）</li>
+</ol>
+<p>在其次一个很重要的东西，其实是标题上面那一条窄窄的导航栏，那是一个多层树状导航栏，看文档的时候，可以点击那个栏的不同位置浏览。</p>
+<p>其实这个栏包含了整个文档库的组织结构树状图，可惜只有在这个界面才能浏览。有兴趣的可以慢慢浏览，里面信息量其实非常大。</p>
+<h1 id="《苹果官方文档》"><a href="#《苹果官方文档》" class="headerlink" title="《苹果官方文档》"></a>《苹果官方文档》</h1><ul>
+<li><a href="https://developer.apple.com/documentation/" target="_blank" rel="external">Documentation</a></li>
+<li><a href="https://developer.apple.com/documentation/technologies" target="_blank" rel="external">Documentation Technologies</a></li>
+<li><a href="https://developer.apple.com/library/archive/navigation/" target="_blank" rel="external">Documentation Archive</a></li>
+<li><a href="https://opensource.apple.com/source/" target="_blank" rel="external">Opensource Srource</a></li>
+<li><a href="https://opensource.apple.com/tarballs/" target="_blank" rel="external">Opensource tarballs</a></li>
+<li><a href="https://opensource.apple.com/" target="_blank" rel="external">Opensource</a></li>
+<li><a href="https://github.com/apple" target="_blank" rel="external">Github Of Apple</a></li>
+<li><a href="https://docs.swift.org/swift-book/" target="_blank" rel="external">Swift Book</a></li>
+<li><a href="https://developer.apple.com/develop/" target="_blank" rel="external">Develop</a></li>
+</ul>
+<p>转自：<a href="https://blog.csdn.net/rccrx/article/details/115405502" target="_blank" rel="external">苹果官方文档</a></p>
+<h2 id="Documentation"><a href="#Documentation" class="headerlink" title="Documentation"></a>Documentation</h2><p>跳转链接：<a href="https://developer.apple.com/documentation/" target="_blank" rel="external">Documentation</a></p>
+<p>点击右边搜索按钮，搜索结果比较细节，基本是标题中包含关键字才搜到却不一定匹配这个主题比如 <code>runtime</code>，结果指向综合框架文档下的其中一篇文档。而且这个搜索区分大小写，比如 <code>AVfoundation</code> 和 <code>avfoundation</code> 的搜索结果数量不一样。</p>
+<p><img src="/2022/10/13/Other/Apple官方文档阅读指南/01.png" alt="01"></p>
+<p>点击左边的“<strong>Documentation</strong>”文字进行搜索 Technologies，其实是过滤筛选下面的238个框架文档中匹配关键字的框架，搜索结果指向概论，可以从概论链接跳转到细节。</p>
+<p><img src="/2022/10/13/Other/Apple官方文档阅读指南/02.png" alt="02"></p>
+<p>Documentation 基本上是<strong>框架、类、方法</strong>的说明文档，也会有文章加代码片段指导如何开发，也会有一些编程示例可供下载。（Documentation 首页，也是点击右边 <strong>Featured</strong> 显示的页面，第一张图片就有指示“Apple Developer Documentation —— Browse the latest developer documentation, including tutorials, sample code, articles, and API reference.”）</p>
+<p>Documentation 首页的最下方有4个链接，最后一个是“<strong>Documentation Archive</strong>”，并且说明了归档是一些不会再更新的文档和示例代码。</p>
+<p><img src="/2022/10/13/Other/Apple官方文档阅读指南/03.png" alt="03"></p>
+<h2 id="Documentation-Archive"><a href="#Documentation-Archive" class="headerlink" title="Documentation Archive"></a>Documentation Archive</h2><p>跳转链接：<a href="https://developer.apple.com/library/archive/navigation/" target="_blank" rel="external">Documentation Archive</a></p>
+<p>在 <strong>Documents 旁边的搜索框</strong>搜索文档，例如输入 <code>runtime</code> 选择 Objective-C Runtime Programming Guide。输入 <code>loop</code> 选择 <strong>Run Loops</strong>（打开会提示该文章已经被取代了，去 Threading Programming Guide 查看 run loop 信息）。<strong>Documents 旁边的搜索框</strong>，可以根据关键字筛选5219篇文档中的匹配文档。Safari 输入文字时很卡，Chrome 不卡。</p>
+<p>在上方搜索框 <strong>Search Documentation Archive</strong> 搜索，结果和在 Documentation 搜索一样。</p>
+<p><img src="/2022/10/13/Other/Apple官方文档阅读指南/04.png" alt="04"></p>
+<p>主要是一些编程指导 Programming Guide，但是这些文档比较旧且不再更新（点击进去一个文档最下面显示最后更新时间 <code>Updated: 2009-10-19</code>），Archive 首页也有提示“This library is no longer being updated. Find the latest API reference, articles, and sample code on our Developer Documentation page.”去 <strong>Documentation</strong> 查看最新文档。</p>
+<p><strong>有的文章只在 Archive 不在 Documentation</strong>，比如 《Objective-C Runtime Programming Guide》 和 《Run Loops》，而且 Documentation 搜索结果总是搜不到专题总是细化到一个不一定相关的类，而去 Technologies 搜索专题也不一定有，所以<strong>一般先去 Archive 搜索专题文档，然后去 Documentation 查看相关框架和类的最新文档</strong>。</p>
+<h3 id="Archive-和-Documentation-比较"><a href="#Archive-和-Documentation-比较" class="headerlink" title="Archive 和 Documentation 比较"></a>Archive 和 Documentation 比较</h3><ol>
+<li><p>AVFoundation 框架：Documentation 的示例使用 <a href="https://developer.apple.com/documentation/avfoundation/photo_capture/capturing_photos_in_raw_and_apple_proraw_formats?language=objc" target="_blank" rel="external">PHPhotoLibrary</a>，而 Archive 使用过期的 <a href="https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/AVFoundationPG/Articles/03_Editing.html" target="_blank" rel="external">ALAssetsLibrary</a>；</p>
+</li>
+<li><p>Runtime：Archive 有而 Documentation 没有，但是 Documentation 的 <strong>See Also</strong> 下有跳转到 Archive 的链接。</p>
+</li>
+<li><strong>Archive 基本都是专题文章</strong>（Programming Guide），比如 Runtime 会描述运行时机制、消息传递、类型编码等；而 <strong>Documentation 基本都是类和方法的说明</strong>（API Reference），比如 Runtime 会说明有哪些运行时相关的方法函数，开发者可以调用的方法，Archive 的代码示例中用到的方法。</li>
+</ol>
+<h2 id="开源代码"><a href="#开源代码" class="headerlink" title="开源代码"></a>开源代码</h2><ul>
+<li><a href="https://opensource.apple.com/source/" target="_blank" rel="external">https://opensource.apple.com/source/</a>：在线查看源码，比如查找 <code>objc4</code> 可以找到 runtime 源码。</li>
+</ul>
+<p>搜索 <code>objc4</code>：<br><img src="/2022/10/13/Other/Apple官方文档阅读指南/05.png" alt="05"></p>
+<p>进入目录 <code>objc4</code>：<br><img src="/2022/10/13/Other/Apple官方文档阅读指南/06.png" alt="06"></p>
+<ul>
+<li><p><a href="https://opensource.apple.com/tarballs" target="_blank" rel="external">https://opensource.apple.com/tarballs</a>：源码压缩包，可下载。</p>
+</li>
+<li><p><a href="https://opensource.apple.com" target="_blank" rel="external">https://opensource.apple.com</a>：可以按操作系统和版本号导航开源代码，例如Release-&gt;macOS-&gt;11.0-&gt;11.2，打开页面中的“objc4-818.2”，Runtime的源码在macOS而不是iOS。</p>
+</li>
+<li><p><a href="https://github.com/apple" target="_blank" rel="external">https://github.com/apple</a>：比如darwin-xnu。</p>
+</li>
+<li><p><a href="https://developer.apple.com/opensource/" target="_blank" rel="external">https://developer.apple.com/opensource/</a></p>
+</li>
+</ul>
+<h2 id="Xcode-中的文档"><a href="#Xcode-中的文档" class="headerlink" title="Xcode 中的文档"></a>Xcode 中的文档</h2><ul>
+<li><strong>Developer Documentation</strong>（是离线版的 Documentation，内容基本一样），可以利用左边的导航视图找到所需框架，也可以点击搜索框搜索。</li>
+</ul>
+<p><img src="/2022/10/13/Other/Apple官方文档阅读指南/07.png" alt="07"></p>
+<ul>
+<li><p><a href="https://docs.swift.org/swift-book/" target="_blank" rel="external">Swift Programing Language Book</a></p>
+</li>
+<li><p>Xcode使用“<strong>Control+Command+鼠标点击</strong>”一个类名，跳到类头文件中，查看文件中方法和属性的注释（和官方文档 Documentation 中的说明差不多且包含各个参数说明，而类头文件对整个类的注释说明不够详细，看 Documentation 更能知道这个类的作用）。</p>
+</li>
+</ul>
+<h2 id="Develop"><a href="#Develop" class="headerlink" title="Develop"></a>Develop</h2><p><a href="https://developer.apple.com/develop/" target="_blank" rel="external">https://developer.apple.com/develop/</a>：最下方的 Media and Web 的“Audio”、“AVFoundation”、“HTTP Live Streaming”有这些开发文档的链接；点击最上方的“Documentation”可以跳到文档搜索中心。</p>
+<p><img src="/2022/10/13/Other/Apple官方文档阅读指南/08.png" alt="08"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Other/" rel="tag"># Other</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/09/30/Swift/基本数据类型/" rel="next" title="基本数据类型">
+                <i class="fa fa-chevron-left"></i> 基本数据类型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/10/14/Swift/运算符/" rel="prev" title="运算符">
+                运算符 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/myAvatar.gif"
+              alt="Kevin" />
+          
+            <p class="site-author-name" itemprop="name">Kevin</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">54</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/KevinYangGit" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:yangqioffice@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/_YangQI" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.cnblogs.com/mjios" title="M了个J" target="_blank">M了个J</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#苹果Xcode帮助文档阅读指南-官方文档"><span class="nav-number">1.</span> <span class="nav-text">苹果Xcode帮助文档阅读指南/官方文档</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Xcode文档的结构"><span class="nav-number">1.1.</span> <span class="nav-text">Xcode文档的结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文档库侧栏"><span class="nav-number">1.1.1.</span> <span class="nav-text">文档库侧栏</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Resource-Types"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">Resource Types</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Topics"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">Topics</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Frameworks"><span class="nav-number">1.1.1.3.</span> <span class="nav-text">Frameworks</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内容区域"><span class="nav-number">1.2.</span> <span class="nav-text">内容区域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文档导读"><span class="nav-number">1.3.</span> <span class="nav-text">文档导读</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#马上着手开发-iOS-应用程序-Start-Developing-iOS-Apps-Today-》"><span class="nav-number">1.3.1.</span> <span class="nav-text">马上着手开发 iOS 应用程序 (Start Developing iOS Apps Today)》</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#《Your-First-iOS-App》"><span class="nav-number">1.3.2.</span> <span class="nav-text">《Your First iOS App》</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#《iOS-Technology-Overview》"><span class="nav-number">1.3.3.</span> <span class="nav-text">《iOS Technology Overview》</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#《iOS-Human-Interface-Guidelines》"><span class="nav-number">1.3.4.</span> <span class="nav-text">《iOS Human Interface Guidelines》</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#《Learning-Objective-C-A-Primer》-和-《Programming-with-Objective-C》"><span class="nav-number">1.3.5.</span> <span class="nav-text">《Learning Objective-C: A Primer》 和 《Programming with Objective-C》</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#《iOS-App-Programming-Guide》"><span class="nav-number">1.3.6.</span> <span class="nav-text">《iOS App Programming Guide》</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#《View-Programming-Guide-for-iOS》-和-《View-Controller-Programming-Guide-for-iOS》"><span class="nav-number">1.3.7.</span> <span class="nav-text">《View Programming Guide for iOS》 和 《View Controller Programming Guide for iOS》</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何查询文档"><span class="nav-number">1.4.</span> <span class="nav-text">如何查询文档</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Quick-Help"><span class="nav-number">1.4.1.</span> <span class="nav-text">Quick Help</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搜索帮助"><span class="nav-number">1.4.2.</span> <span class="nav-text">搜索帮助</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读文档"><span class="nav-number">1.4.3.</span> <span class="nav-text">阅读文档</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#《苹果官方文档》"><span class="nav-number">2.</span> <span class="nav-text">《苹果官方文档》</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Documentation"><span class="nav-number">2.1.</span> <span class="nav-text">Documentation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Documentation-Archive"><span class="nav-number">2.2.</span> <span class="nav-text">Documentation Archive</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Archive-和-Documentation-比较"><span class="nav-number">2.2.1.</span> <span class="nav-text">Archive 和 Documentation 比较</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开源代码"><span class="nav-number">2.3.</span> <span class="nav-text">开源代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Xcode-中的文档"><span class="nav-number">2.4.</span> <span class="nav-text">Xcode 中的文档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Develop"><span class="nav-number">2.5.</span> <span class="nav-text">Develop</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="/js/src/md5.min.js"></script>
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: '82b6ced795961ee1fcca',
+      clientSecret: '4a2f24a39c6fcd85813d80031c6e0262a65404f5',
+      repo: 'KevinYangGit.github.io',
+      owner: 'KevinYangGit',
+      admin: ['KevinYangGit'],
+      id: md5(location.pathname),
+      distractionFreeMode: 'true'
+    })
+    gitalk.render('gitalk-container')
+  </script>
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

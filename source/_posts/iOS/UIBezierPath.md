@@ -1,12 +1,14 @@
 ---
 title: iOS横竖屏
-date: 2022-10-19 17:03:48
-tags: OC
+date: 2024-01-19 17:03:48
+tags: iOS
 ---
 
-## UIBezierPath
-
 `UIBezierPath` 是在 UIKit 中定义的类，可以用来创建基于矢量的**路径**，可以用来创建矩形、椭圆、曲线等等。`UIBezierPath`` 本质是对 Core Graphics 框架中的 CGPathRef 的封装。
+
+<!-- more -->
+
+## UIBezierPath
 
 ### API
 

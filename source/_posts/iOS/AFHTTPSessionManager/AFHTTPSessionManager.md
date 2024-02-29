@@ -1,7 +1,7 @@
 ---
 title: AFHTTPSessionManager
 date: 2017-07-15 
-tags: OC
+tags: iOS
 ---
 
 # 概述
