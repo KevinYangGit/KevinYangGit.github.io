@@ -11,6 +11,9 @@ tags: Flutter
 - [BoxDecoration](#boxdecoration)
 - [Flex](#flex)
 - [Row](#row)
+  - [MainAxisAlignment](#mainaxisalignment)
+  - [CrossAxisAlignment](#crossaxisalignment)
+  - [MainAxisSize](#mainaxissize)
 - [Expand](#expand)
 - [Column](#column)
 - [Stack](#stack)
@@ -378,6 +381,74 @@ enum MainAxisAlignment {
 
   /// 在子项之间以及第一个和最后一个子项之前和之后均匀地放置可用空间。
   spaceEvenly,
+}
+```
+
+### CrossAxisAlignment
+
+```dart
+/// 如何在弹性布局中沿着交叉轴放置子项。
+enum CrossAxisAlignment {
+  /// 放置子项，使其起始边与横轴的起始边对齐。
+  ///
+  /// 例如，在 [TextDirection] 为 [TextDirection.ltr] 的列（具有垂直轴的 Flex）中，这会将子项的左边缘沿列的左边缘对齐。 
+  ///
+  /// 如果在水平方向使用此值，则必须可使用 [TextDirection] 来确定起点是左侧还是右侧。
+  ///
+  /// 如果在垂直方向使用此值，则必须可使用 [VerticalDirection] 来确定起点是顶部还是底部。
+  start,
+
+  /// 将子项放置在尽可能靠近横轴末端的位置。
+  ///
+  /// 例如，在 [TextDirection] 为 [TextDirection.ltr] 的列（具有垂直轴的 Flex）中，这会将子项的右边缘沿列的右边缘对齐。
+  ///
+  /// 如果该值用于水平方向，则必须有 [TextDirection] 来确定末端是左侧还是右侧。
+  ///
+  /// 如果该值用于垂直方向，则必须有 [VerticalDirection] 来确定末端是顶部还是底部。
+  end,
+
+  /// 放置子项，使其中心与横轴的中间对齐。
+  ///
+  /// 这是默认的横轴对齐方式。
+  center,
+
+  /// 要求子项填充交叉轴。
+  ///
+  /// 这会导致传递给子级的约束在横轴上紧密。
+  stretch,
+
+  /// 将子项沿交叉轴放置，使它们的基线匹配。
+  ///
+  /// 因为基线始终是水平的，所以这种对齐方式适用于水平主轴。 如果主轴是垂直的，则该值将被视为[start]。
+  ///
+  /// 对于水平主轴，如果传递给 Flex 布局的最小高度约束超过横轴的固有高度，则子项将尽可能靠近顶部对齐，同时遵循基线对齐。 换句话说，额外的空间将位于所有子项的下方。
+  ///
+  /// 报告没有基线的子项将顶部对齐。
+  baseline,
+}
+```
+
+### MainAxisSize
+
+```dart
+/// 主轴上应占据多少空间。
+///
+/// 在弹性布局期间，沿主轴的可用空间被分配给子级。 分配空间后，可能还有一些剩余的可用空间。
+/// 该值控制是否最大化或最小化可用空间量，受传入布局约束的影响。
+enum MainAxisSize {
+  /// 根据传入的布局约束，最小化沿主轴的可用空间量。
+  ///
+  /// 如果传入的布局约束具有足够大的 [BoxConstraints.minWidth] 或 [BoxConstraints.minHeight]，则可能仍然存在非零的可用空间。
+  ///
+  /// 如果传入的布局约束是无界的，并且任何子级都有非零的 [FlexParentData.flex] 和 [FlexFit.tight] 适合（由 [Expanded] 应用），[RenderFlex] 将断言，因为有 将是无限的剩余可用空间，并且盒子不能被赋予无限的大小。
+  min,
+
+  /// 根据传入的布局约束，最大化沿主轴的可用空间量。
+  ///
+  /// 如果传入的布局约束具有足够小的 [BoxConstraints.maxWidth] 或 [BoxConstraints.maxHeight]，则可能仍然没有可用空间。
+  ///
+  /// 如果传入的布局约束是无界的，[RenderFlex] 将断言，因为将有无限的剩余可用空间，并且盒子不能被赋予无限的大小。
+  max,
 }
 ```
 
