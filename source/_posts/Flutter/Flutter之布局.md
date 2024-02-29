@@ -313,8 +313,10 @@ class BoxDecoration extends Decoration {
 
 ## Flex
 
-```dart
-```
+Row/Column 继承自 Flex，通常使用 Row/Column 进行布局，很少直接使用 Flex 布局。
+
+`Axis.vertical: Column` 以**垂直方向**为主轴布局，**水平方向**为交叉轴。
+`Axis.horizontal: Row` 以**水平方向**为主轴布局，**垂直方向**为交叉轴。
 
 ## Row
 
@@ -327,7 +329,9 @@ class MyBody extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(border: Border.all(color: Colors.red)),
       child: Row(
+        // 所有间距平分空间
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        // 在主轴的结束位置依次摆放元素
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -343,6 +347,39 @@ class MyBody extends StatelessWidget {
 ```
 
 ![06](Flutter之布局/06.png)
+
+### MainAxisAlignment
+
+```dart
+/// 如何在弹性布局中沿着主轴放置子项。
+enum MainAxisAlignment {
+  /// 将子项放置在尽可能靠近主轴起点的位置。
+  ///
+  /// 如果在水平方向使用此值，则必须可使用 [TextDirection] 来确定起点是左侧还是右侧。
+  ///
+  /// 如果在垂直方向使用此值，则必须可使用 [VerticalDirection] 来确定起点是顶部还是底部。
+  start,
+
+  /// 将子项放置在尽可能靠近主轴末端的位置。
+  ///
+  /// 如果该值用于水平方向，则必须有 [TextDirection] 来确定末端是左侧还是右侧。
+  ///
+  /// 如果在垂直方向使用此值，则必须可使用 [VerticalDirection] 来确定末端是顶部还是底部。
+  end,
+
+  /// 将子项放置在尽可能靠近主轴线中间的位置。
+  center,
+
+  /// 在子项之间均匀地放置自由空间。
+  spaceBetween,
+
+  /// 将可用空间均匀地放置在子项之间以及第一个和最后一个子项之前和之后的一半空间。
+  spaceAround,
+
+  /// 在子项之间以及第一个和最后一个子项之前和之后均匀地放置可用空间。
+  spaceEvenly,
+}
+```
 
 ## Expand
 
