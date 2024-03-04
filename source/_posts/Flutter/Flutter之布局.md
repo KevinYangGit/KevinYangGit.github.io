@@ -325,6 +325,14 @@ Row/Column 继承自 Flex，通常使用 Row/Column 进行布局，很少直接�
 
 Row 的使用：
 
+1. 默认水平方向尽可能占据更多的空间，垂直方向包裹内容；
+
+水平方向希望包裹内容而不是占据更多的空间，可以设置：
+
+```dart
+mainAxisSize = min
+```
+
 ```dart
 class MyBody extends StatelessWidget {
   @override
