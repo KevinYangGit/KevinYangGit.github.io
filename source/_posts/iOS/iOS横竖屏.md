@@ -1,7 +1,8 @@
 ---
 title: iOS横竖屏
 date: 2022-10-19 17:03:48
-tags: OC
+tags: iOS 
+categories: iOS
 ---
 
 * UIDeviceOrientation

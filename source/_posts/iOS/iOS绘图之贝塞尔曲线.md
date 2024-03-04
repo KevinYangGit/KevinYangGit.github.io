@@ -1,6 +1,6 @@
 ---
 title: iOS绘图之贝塞尔曲线
-date: 2024-02-20 15:48:00
+date: 2024-01-20 15:48:00
 tags: iOS
 ---
 
@@ -246,7 +246,7 @@ NS_HEADER_AUDIT_END(nullability, sendability)
 }
 ```
 
-![01](../iOS/iOS绘图之贝塞尔曲线/01.png)
+![01](iOS绘图之贝塞尔曲线/01.png)
 
 ### 虚线
 
@@ -276,7 +276,7 @@ NS_HEADER_AUDIT_END(nullability, sendability)
 
 如果数组长度是偶数，如 `{10, 20}`，则 10 是虚线长度，20 是虚线间隙长度。
 
-![03](../iOS/iOS绘图之贝塞尔曲线/03.png)
+![03](iOS绘图之贝塞尔曲线/03.png)
 
 ```js
 - (void)drawRect:(CGRect)rect {
@@ -296,11 +296,11 @@ NS_HEADER_AUDIT_END(nullability, sendability)
 
 如果数组长度是奇数，如 `{10, 20, 40}`，则 10 即是虚线长度也是间隙长度，如下图：
 
-![02](../iOS/iOS绘图之贝塞尔曲线/02.png)
+![02](iOS绘图之贝塞尔曲线/02.png)
 
 `setLineDash:count:` 中的 count 表示线段个数，dash 是线段长度数组。如果 dash 等于 {10, 20}，count 等于3，则第三个线段长度默认为0，交替方式为：
 
-![04](../iOS/iOS绘图之贝塞尔曲线/04.png)
+![04](iOS绘图之贝塞尔曲线/04.png)
 
 ### 三角行
 
@@ -347,17 +347,17 @@ NS_HEADER_AUDIT_END(nullability, sendability)
 }
 ```
 
-![05](../iOS/iOS绘图之贝塞尔曲线/05.png)
+![05](iOS绘图之贝塞尔曲线/05.png)
 
 `lineJoinStyle` 是设置斜接长度
 
 `kCGLineJoinMiter`：
 
-![11](../iOS/iOS绘图之贝塞尔曲线/11.png)
+![11](iOS绘图之贝塞尔曲线/11.png)
 
 `kCGLineJoinBevel`：
 
-![12](../iOS/iOS绘图之贝塞尔曲线/12.png)
+![12](iOS绘图之贝塞尔曲线/12.png)
 
 ### 图形
 
@@ -426,11 +426,11 @@ NS_HEADER_AUDIT_END(nullability, sendability)
 }
 ```
 
-![06](../iOS/iOS绘图之贝塞尔曲线/06.png)
+![06](iOS绘图之贝塞尔曲线/06.png)
 
 绘制圆形的角度关系
 
-![10](../iOS/iOS绘图之贝塞尔曲线/10.png)
+![10](iOS绘图之贝塞尔曲线/10.png)
 
 ### 曲线
 
@@ -455,15 +455,15 @@ NS_HEADER_AUDIT_END(nullability, sendability)
 }
 ```
 
-![07](../iOS/iOS绘图之贝塞尔曲线/07.png)
+![07](iOS绘图之贝塞尔曲线/07.png)
 
 二次曲线：包括两个起点，一个控制点。
 
-![09](../iOS/iOS绘图之贝塞尔曲线/09.png)
+![09](iOS绘图之贝塞尔曲线/09.png)
 
 三次曲线：包括两个起点，两个控制点。
 
-![08](../iOS/iOS绘图之贝塞尔曲线/08.png)
+![08](iOS绘图之贝塞尔曲线/08.png)
 
 ## Core Graphics
 
@@ -523,7 +523,7 @@ iOS 支持两套图形API族：
 }
 ```
 
-![01](../iOS/iOS绘图之贝塞尔曲线/01.png)
+![01](iOS绘图之贝塞尔曲线/01.png)
 
 ### 虚线
 
@@ -562,7 +562,7 @@ iOS 支持两套图形API族：
 }
 ```
 
-![13](../iOS/iOS绘图之贝塞尔曲线/13.png)
+![13](iOS绘图之贝塞尔曲线/13.png)
 
 ### 三角形
 
@@ -619,7 +619,7 @@ iOS 支持两套图形API族：
 }
 ```
 
-![05](../iOS/iOS绘图之贝塞尔曲线/05.png)
+![05](iOS绘图之贝塞尔曲线/05.png)
 
 ### 更多图形
 
@@ -662,7 +662,7 @@ iOS 支持两套图形API族：
 }
 ```
 
-![14](../iOS/iOS绘图之贝塞尔曲线/14.png)
+![14](iOS绘图之贝塞尔曲线/14.png)
 
 填充样式：
 
@@ -704,7 +704,7 @@ iOS 支持两套图形API族：
 }
 ```
 
-![15](../iOS/iOS绘图之贝塞尔曲线/15.png)
+![15](iOS绘图之贝塞尔曲线/15.png)
 
 ### 贝塞尔曲线
 
@@ -732,7 +732,7 @@ iOS 支持两套图形API族：
 }
 ```
 
-![16](../iOS/iOS绘图之贝塞尔曲线/16.png)
+![16](iOS绘图之贝塞尔曲线/16.png)
 
 ### 高级API
 
@@ -768,7 +768,7 @@ iOS 支持两套图形API族：
 }
 ```
 
-![17](../iOS/iOS绘图之贝塞尔曲线/17.png)
+![17](iOS绘图之贝塞尔曲线/17.png)
 
 ### push
 
@@ -791,7 +791,7 @@ iOS 支持两套图形API族：
 }
 ```
 
-![18](../iOS/iOS绘图之贝塞尔曲线/18.png)
+![18](iOS绘图之贝塞尔曲线/18.png)
 
 ### SaveGState
 
@@ -814,7 +814,7 @@ iOS 支持两套图形API族：
 }
 ```
 
-![19](../iOS/iOS绘图之贝塞尔曲线/19.png)
+![19](iOS绘图之贝塞尔曲线/19.png)
 
 ## drawRect
 
@@ -878,7 +878,7 @@ iOS 支持两套图形API族：
 }
 ```
 
-![20](../iOS/iOS绘图之贝塞尔曲线/20.png)
+![20](iOS绘图之贝塞尔曲线/20.png)
 
 这里使用 `UIGraphicsBeginImageContext()` 方法，完成了在 `drawRect:` 方法外绘图的操作。
 
@@ -945,7 +945,7 @@ iOS 支持两套图形API族：
 
 ### UIView - CALayer - Core Graphics
 
-![24](../iOS/iOS绘图之贝塞尔曲线/24.png)
+![24](iOS绘图之贝塞尔曲线/24.png)
 
 * 继承关系：`UIView —> UIResponder —> NSObject`，`CALayer —> NSObject`。
 
@@ -1008,7 +1008,7 @@ iOS 支持两套图形API族：
 }
 ```
 
-![21](../iOS/iOS绘图之贝塞尔曲线/21.png)
+![21](iOS绘图之贝塞尔曲线/21.png)
 
 ### 渐变多边形
 
@@ -1082,7 +1082,7 @@ iOS 支持两套图形API族：
 }
 ```
 
-![22](../iOS/iOS绘图之贝塞尔曲线/22.png)
+![22](iOS绘图之贝塞尔曲线/22.png)
 
 ### 提示框
 
@@ -1135,7 +1135,7 @@ override func draw(_ rect: CGRect) {
   }
 ```
 
-![23](../iOS/iOS绘图之贝塞尔曲线/23.png)
+![23](iOS绘图之贝塞尔曲线/23.png)
 
 相关文档：
 
