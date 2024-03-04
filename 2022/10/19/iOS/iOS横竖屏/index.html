@@ -73,19 +73,19 @@
 <meta name="keywords" content="OC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS横竖屏">
-<meta property="og:url" content="http://yoursite.com/2022/10/19/OC/iOS横竖屏/index.html">
+<meta property="og:url" content="http://yoursite.com/2022/10/19/iOS/iOS横竖屏/index.html">
 <meta property="og:site_name" content="Kevin&#39;s  blog">
 <meta property="og:description" content="UIDeviceOrientation  UIInterfaceOrientation  UIInterfaceOrientationMask  - (BOOL)shouldAutorotate;  - (UIInterfaceOrientationMask)supportedInterfaceOrientations;  - (UIInterfaceOrientation)preferredI">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/2022/10/19/OC/iOS横竖屏/Orientation01.png">
-<meta property="og:image" content="http://yoursite.com/2022/10/19/OC/iOS横竖屏/Orientation02.png">
-<meta property="og:image" content="http://yoursite.com/2022/10/19/OC/iOS横竖屏/Orientation03.png">
-<meta property="og:image" content="http://yoursite.com/2022/10/19/OC/iOS横竖屏/Orientation01.png">
-<meta property="og:updated_time" content="2023-08-22T09:52:13.917Z">
+<meta property="og:image" content="http://yoursite.com/2022/10/19/iOS/iOS横竖屏/Orientation01.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/19/iOS/iOS横竖屏/Orientation02.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/19/iOS/iOS横竖屏/Orientation03.png">
+<meta property="og:image" content="http://yoursite.com/2022/10/19/iOS/iOS横竖屏/Orientation01.png">
+<meta property="og:updated_time" content="2024-01-17T08:27:01.338Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS横竖屏">
 <meta name="twitter:description" content="UIDeviceOrientation  UIInterfaceOrientation  UIInterfaceOrientationMask  - (BOOL)shouldAutorotate;  - (UIInterfaceOrientationMask)supportedInterfaceOrientations;  - (UIInterfaceOrientation)preferredI">
-<meta name="twitter:image" content="http://yoursite.com/2022/10/19/OC/iOS横竖屏/Orientation01.png">
+<meta name="twitter:image" content="http://yoursite.com/2022/10/19/iOS/iOS横竖屏/Orientation01.png">
 
 
 
@@ -115,7 +115,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2022/10/19/OC/iOS横竖屏/"/>
+  <link rel="canonical" href="http://yoursite.com/2022/10/19/iOS/iOS横竖屏/"/>
 
 
 
@@ -258,7 +258,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/10/19/OC/iOS横竖屏/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/10/19/iOS/iOS横竖屏/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kevin">
@@ -377,7 +377,7 @@
 <ul>
 <li><p>默认值是 <code>YES</code>，表示当前页面允许跟随设备旋转而自动旋转。</p>
 </li>
-<li><p>iOS 16 相关改动：<br><img src="/2022/10/19/OC/iOS横竖屏/Orientation01.png" alt="Orientation01"><br><code>[UIViewController should Autorotate]</code> 已被弃用，不再受支持。<code>[UIViewController attmptRotationToDeviceOrientation]</code> 已被弃用，并替换为 <code>[UIViewController setNeedsUpdateOfSupportedInterfaceOrienttions]</code>。  </p>
+<li><p>iOS 16 相关改动：<br><img src="/2022/10/19/iOS/iOS横竖屏/Orientation01.png" alt="Orientation01"><br><code>[UIViewController should Autorotate]</code> 已被弃用，不再受支持。<code>[UIViewController attmptRotationToDeviceOrientation]</code> 已被弃用，并替换为 <code>[UIViewController setNeedsUpdateOfSupportedInterfaceOrienttions]</code>。  </p>
 <p>解决方法：依赖于 <code>shouldAutorotate</code> 的应用程序应使用支持的视图控制器 <code>InterfaceOrientations</code> 反映其首选项。<strong>如果支持的方向更改</strong>，请使用 <code>-[UIViewController setNeedsUpdateOfSupportedInterface]</code></p>
 </li>
 </ul>
@@ -389,12 +389,12 @@
 <li>方法一</li>
 </ul>
 <p>在 XCode 的工程设置的 <code>General</code> 里，设置 iPhone 和 iPad 的页面朝向支持。</p>
-<p><img src="/2022/10/19/OC/iOS横竖屏/Orientation02.png" alt="Orientation02"></p>
+<p><img src="/2022/10/19/iOS/iOS横竖屏/Orientation02.png" alt="Orientation02"></p>
 <p>这种修改配置的方式其实就是修改 info.plist 文件，所以可以直接修改 info.plist 文件👇。</p>
 <ul>
 <li>方法二</li>
 </ul>
-<p><img src="/2022/10/19/OC/iOS横竖屏/Orientation03.png" alt="Orientation01"></p>
+<p><img src="/2022/10/19/iOS/iOS横竖屏/Orientation03.png" alt="Orientation01"></p>
 <ul>
 <li>方法三  </li>
 </ul>
@@ -408,7 +408,7 @@
 </li>
 <li><p>手动旋转<br>也可以说成主动旋转，通过调用修改设备方向的 api 来修改设备当前的朝向。如 UIViewController 的 <code>+attemptRotationToDeviceOrientation</code>，UIDievice 的 <code>-setOrientation:</code> 方法。<br><code>+attemptRotationToDeviceOrientation</code> 是将界面朝向对齐设备朝向，是标准 api。<br><code>-setOrientation:</code> 是调整设备朝向，是私有 api。</p>
 </li>
-<li><p>iOS 16 相关改动：<br><img src="/2022/10/19/OC/iOS横竖屏/Orientation01.png" alt="Orientation01"><br><code>[UIViewController should Autorotate]</code> 已被弃用，不再受支持。<code>[UIViewController attmptRotationToDeviceOrientation]</code> 已被弃用，并替换为 <code>[UIViewController setNeedsUpdateOfSupportedInterfaceOrienttions]</code>。  </p>
+<li><p>iOS 16 相关改动：<br><img src="/2022/10/19/iOS/iOS横竖屏/Orientation01.png" alt="Orientation01"><br><code>[UIViewController should Autorotate]</code> 已被弃用，不再受支持。<code>[UIViewController attmptRotationToDeviceOrientation]</code> 已被弃用，并替换为 <code>[UIViewController setNeedsUpdateOfSupportedInterfaceOrienttions]</code>。  </p>
 <p>解决方法：依赖于 <code>shouldAutorotate</code> 的应用程序应使用支持的视图控制器 <code>InterfaceOrientations</code> 反映其首选项。<strong>如果支持的方向更改</strong>，请使用 <code>-[UIViewController setNeedsUpdateOfSupportedInterface]</code></p>
 </li>
 </ul>
@@ -662,7 +662,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">53</span>
+                <span class="site-state-item-count">54</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -675,7 +675,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
